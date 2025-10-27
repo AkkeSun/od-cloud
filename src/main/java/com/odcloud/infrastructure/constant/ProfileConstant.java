@@ -8,8 +8,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
-    @NotBlank
-    String jasyptPassword,
     Jwt jwt
 ) {
 

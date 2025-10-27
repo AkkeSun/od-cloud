@@ -1,6 +1,5 @@
 package com.odcloud.infrastructure.config;
 
-import com.odcloud.infrastructure.constant.ProfileConstant;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
@@ -12,13 +11,11 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class JasyptConfig {
 
-    private final ProfileConstant constant;
-
     @Bean
     public StringEncryptor jasyptStringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword(constant.jasyptPassword());
+        config.setPassword("od-cloud");
         config.setAlgorithm("PBEWithMD5AndDES");
         config.setPoolSize("1");
         encryptor.setConfig(config);
