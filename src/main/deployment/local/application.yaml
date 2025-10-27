@@ -1,3 +1,6 @@
 spring:
   application:
     name: od-cloud
+
+service-constant:
+  jasypt-password: od-cloud
