@@ -24,6 +24,7 @@ public class JwtUtilImpl implements JwtUtil {
     public String createAccessToken(Account account) {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(account.getUsername());
+        claims.put("role", account.getRole());
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
