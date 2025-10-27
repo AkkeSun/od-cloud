@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,13 @@ import lombok.NoArgsConstructor;
 public class Account {
 
     private String id;
-    private String password;
     private String username;
+    private String password;
     private LocalDateTime regDt;
+
+    public static Account of(Claims claims) {
+        return Account.builder()
+            .username(claims.getSubject())
+            .build();
+    }
 }
