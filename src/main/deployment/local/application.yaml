@@ -12,10 +12,10 @@ spring:
       hibernate:
         format_sql: true
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: akkessun@gmail.com
-    password: ffotcgwhdsmoodmo
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     protocol: smtp
     default-encoding: utf-8
     properties:
