@@ -18,7 +18,11 @@ public enum ErrorCode {
     ACCESS_DENIED(3001, "접근권한이 없습니다"),
     ACCESS_DENIED_BY_SECURITY(3099, "접근권한이 없습니다"),
 
+    // status code 500 (4001 - 4099) : Internal Server Error
+    Business_SEND_EMAIL_ERROR(4001, "이메일 전송에 실패했습니다"),
+    
     ;
+
 
     private final int code;
     private final String message;

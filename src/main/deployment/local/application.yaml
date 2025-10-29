@@ -11,6 +11,24 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: akkessun@gmail.com
+    password: ffotcgwhdsmoodmo
+    protocol: smtp
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connection:
+            timeout: 5000
+            write-timeout: 5000
+          ssl:
+            enable: false
 
   datasource:
     url: jdbc:h2:mem:accounts-test;MODE=MySQL
