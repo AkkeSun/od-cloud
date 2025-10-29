@@ -15,16 +15,17 @@ public class Account {
 
     private String id;
     private String username;
+    private String email;
     private String password;
     private String role;
     private String twoFactorSecret;
-    private boolean twoFactorEnabled;
     private LocalDateTime regDt;
 
     public static Account of(Claims claims) {
         return Account.builder()
             .username(claims.getSubject())
             .role(claims.get("role").toString())
+            .email(claims.get("email").toString())
             .build();
     }
 }

@@ -25,6 +25,7 @@ public class JwtUtilImpl implements JwtUtil {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(account.getUsername());
         claims.put("role", account.getRole());
+        claims.put("email", account.getEmail());
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
