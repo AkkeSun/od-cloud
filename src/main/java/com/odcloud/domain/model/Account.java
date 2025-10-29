@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import com.odcloud.application.port.in.command.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Account {
 
-    private String id;
+    private Long id;
     private String username;
     private String email;
-    private String password;
     private String role;
     private String twoFactorSecret;
     private LocalDateTime regDt;
@@ -26,6 +26,16 @@ public class Account {
             .username(claims.getSubject())
             .role(claims.get("role").toString())
             .email(claims.get("email").toString())
+            .build();
+    }
+
+    public static Account of(RegisterAccountCommand command, String twoFactorSecret) {
+        return Account.builder()
+            .username(command.username())
+            .email(command.email())
+            .role(command.role())
+            .twoFactorSecret(twoFactorSecret)
+            .regDt(LocalDateTime.now())
             .build();
     }
 }
