@@ -70,6 +70,18 @@ public class ExceptionAdvice {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(CustomBusinessException.class)
+    ApiResponse<Object> customBusinessException(CustomBusinessException e) {
+        return ApiResponse.of(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorResponse.builder()
+                .errorCode(e.getErrorCode().getCode())
+                .errorMessage(e.getErrorCode().getMessage())
+                .build()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     ApiResponse<Object> notFoundException(Exception e) {
         return ApiResponse.of(
