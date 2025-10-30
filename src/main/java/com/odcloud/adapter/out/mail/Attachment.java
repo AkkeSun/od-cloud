@@ -1,4 +1,4 @@
-package com.odcloud.adapter.out.persistence.mail;
+package com.odcloud.adapter.out.mail;
 
 import lombok.Builder;
 import org.springframework.core.io.Resource;

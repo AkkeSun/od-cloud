@@ -1,4 +1,4 @@
-package com.odcloud.adapter.out.persistence.mail;
+package com.odcloud.adapter.out.mail;
 
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.GoogleOTPUtil;

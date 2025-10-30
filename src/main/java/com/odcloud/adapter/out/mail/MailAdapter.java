@@ -1,4 +1,4 @@
-package com.odcloud.adapter.out.persistence.mail;
+package com.odcloud.adapter.out.mail;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SEND_EMAIL_ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
