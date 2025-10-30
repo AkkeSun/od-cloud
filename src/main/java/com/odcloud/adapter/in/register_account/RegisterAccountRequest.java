@@ -18,6 +18,9 @@ record RegisterAccountRequest(
     @Size(max = 30, message = "접속 계정은 30자 이하로 입력 가능 합니다", groups = SizeGroups.class)
     String username,
 
+    @NotBlank(message = "비밀번호는 필수값 입니다", groups = NotBlankGroups.class)
+    String password,
+
     @NotBlank(message = "이메일은 필수값 입니다", groups = NotBlankGroups.class)
     @Size(max = 30, message = "이메일은 30자 이하로 입력 가능 합니다", groups = SizeGroups.class)
     String email,
@@ -31,6 +34,7 @@ record RegisterAccountRequest(
     RegisterAccountCommand toCommand() {
         return RegisterAccountCommand.builder()
             .username(username)
+            .password(password)
             .email(email)
             .role(role)
             .build();

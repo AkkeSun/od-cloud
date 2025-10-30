@@ -29,6 +29,9 @@ class AccountEntity {
     @Column(name = "USERNAME")
     private String username;
 
+    @Column(name = "PASSWORD")
+    private String password;
+
     @Column(name = "EMAIL")
     private String email;
 
@@ -45,10 +48,23 @@ class AccountEntity {
         return AccountEntity.builder()
             .id(account.getId())
             .username(account.getUsername())
+            .password(account.getPassword())
             .email(account.getEmail())
             .role(account.getRole())
             .twoFactorSecret(account.getTwoFactorSecret())
             .regDt(account.getRegDt())
+            .build();
+    }
+
+    Account toDomain() {
+        return Account.builder()
+            .id(id)
+            .username(username)
+            .password(password)
+            .email(email)
+            .role(role)
+            .twoFactorSecret(twoFactorSecret)
+            .regDt(regDt)
             .build();
     }
 }

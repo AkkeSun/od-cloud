@@ -16,6 +16,7 @@ public class Account {
 
     private Long id;
     private String username;
+    private String password;
     private String email;
     private String role;
     private String twoFactorSecret;
@@ -32,10 +33,15 @@ public class Account {
     public static Account of(RegisterAccountCommand command, String twoFactorSecret) {
         return Account.builder()
             .username(command.username())
+            .password(command.password())
             .email(command.email())
             .role(command.role())
             .twoFactorSecret(twoFactorSecret)
             .regDt(LocalDateTime.now())
             .build();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

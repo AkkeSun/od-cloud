@@ -7,6 +7,8 @@ public record RegisterAccountCommand(
 
     String username,
 
+    String password,
+
     String email,
     
     String role
