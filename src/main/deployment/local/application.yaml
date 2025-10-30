@@ -1,6 +1,8 @@
 spring:
   application:
     name: od-cloud
+  config:
+    import: optional:file:.env
   jpa:
     hibernate:
       ddl-auto: create
@@ -39,4 +41,4 @@ spring:
 service-constant:
   jwt:
     ttl: 3600000 # 1 hour
-    secretKey: ENC(csG5ltVnv01zZ1pql649hKCQ6hiCeHdh)
+    secretKey: ${JWT_SECRET}
