@@ -41,6 +41,9 @@ class AccountEntity {
     @Column(name = "TWO_FACTOR_SECRET")
     private String twoFactorSecret;
 
+    @Column(name = "IS_ADMIN_APPROVED")
+    private Boolean isAdminApproved;
+
     @Column(name = "REG_DATE_TIME")
     private LocalDateTime regDt;
 
@@ -52,6 +55,7 @@ class AccountEntity {
             .email(account.getEmail())
             .role(account.getRole())
             .twoFactorSecret(account.getTwoFactorSecret())
+            .isAdminApproved(account.getIsAdminApproved())
             .regDt(account.getRegDt())
             .build();
     }
@@ -64,6 +68,7 @@ class AccountEntity {
             .email(email)
             .role(role)
             .twoFactorSecret(twoFactorSecret)
+            .isAdminApproved(isAdminApproved)
             .regDt(regDt)
             .build();
     }

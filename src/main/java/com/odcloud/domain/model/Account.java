@@ -20,13 +20,16 @@ public class Account {
     private String email;
     private String role;
     private String twoFactorSecret;
+    private Boolean isAdminApproved;
     private LocalDateTime regDt;
 
     public static Account of(Claims claims) {
+        Object role = claims.get("role");
+        Object id = claims.get("id");
         return Account.builder()
             .username(claims.getSubject())
-            .role(claims.get("role").toString())
-            .email(claims.get("email").toString())
+            .role(role == null ? null : role.toString())
+            .email(id == null ? null : id.toString())
             .build();
     }
 
@@ -37,11 +40,16 @@ public class Account {
             .email(command.email())
             .role(command.role())
             .twoFactorSecret(twoFactorSecret)
+            .isAdminApproved(Boolean.FALSE)
             .regDt(LocalDateTime.now())
             .build();
     }
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public Boolean isAdminApproved() {
+        return isAdminApproved;
     }
 }
