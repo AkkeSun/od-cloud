@@ -40,5 +40,7 @@ spring:
 
 service-constant:
   jwt:
-    ttl: 3600000 # 1 hour
+    temp-token-ttl: 180000 # 3min
+    access-token-ttl: 1800000 # 30 min
+    refresh-token-ttl: 7200000 # 2 hour
     secretKey: ${JWT_SECRET}

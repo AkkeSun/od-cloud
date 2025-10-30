@@ -7,4 +7,6 @@ public interface AccountStoragePort {
     void register(Account account);
 
     boolean existsByUsername(String username);
+
+    Account findByUsernameAndPassword(String username, String password);
 }

@@ -13,7 +13,11 @@ public record ProfileConstant(
 
     public record Jwt(
         @NotNull
-        Long ttl,
+        Long tempTokenTtl,
+        @NotNull
+        Long accessTokenTtl,
+        @NotNull
+        Long refreshTokenTtl,
         @NotBlank
         String secretKey
     ) {

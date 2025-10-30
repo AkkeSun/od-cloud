@@ -2,7 +2,6 @@ package com.odcloud.infrastructure.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -21,15 +20,13 @@ public class JwtUtilImpl implements JwtUtil {
     private final ProfileConstant constant;
 
     @Override
-    public String createAccessToken(Account account) {
+    public String createTempToken(String username) {
         Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(account.getUsername());
-        claims.put("role", account.getRole());
-        claims.put("email", account.getEmail());
+        Claims claims = Jwts.claims().setSubject(username);
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
-            .setExpiration(new Date(now.getTime() + constant.jwt().ttl()))
+            .setExpiration(new Date(now.getTime() + constant.jwt().tempTokenTtl()))
             .signWith(SignatureAlgorithm.HS256, constant.jwt().secretKey())
             .compact();
     }

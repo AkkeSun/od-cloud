@@ -21,6 +21,8 @@ public enum ErrorCode {
     // status code 500 (4001 - 4099) : Internal Server Error
     Business_SEND_EMAIL_ERROR(4001, "이메일 전송에 실패했습니다"),
     Business_SAVED_USER(4002, "등록된 사용자 정보 입니다"),
+    Business_NOT_FOUND_ACCOUNT(4003, "조회된 사용자 정보가 없습니다"),
+    Business_INVALID_PASSWORD(4004, "유효하지 않은 비밀번호 입니다"),
 
     ;
 
