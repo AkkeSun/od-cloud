@@ -37,4 +37,4 @@ out/
 .vscode/
 
 # Secrets
-.env
+src/main/resources/.env
