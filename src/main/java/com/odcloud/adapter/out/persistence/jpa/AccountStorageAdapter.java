@@ -30,6 +30,13 @@ class AccountStorageAdapter implements AccountStoragePort {
     }
 
     @Override
+    public Account findByUsername(String username) {
+        AccountEntity entity = repository.findByUsername(username)
+            .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
+        return entity.toDomain();
+    }
+
+    @Override
     public Account findByUsernameAndPassword(String username, String password) {
         AccountEntity entity = repository.findByUsername(username)
             .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));

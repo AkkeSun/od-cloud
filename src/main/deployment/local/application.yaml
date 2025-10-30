@@ -13,6 +13,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      timeout: 3000
+
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
@@ -40,7 +47,9 @@ spring:
 
 service-constant:
   jwt:
-    temp-token-ttl: 180000 # 3min
+    temp-token-ttl: 300000 # 5 min
     access-token-ttl: 1800000 # 30 min
     refresh-token-ttl: 7200000 # 2 hour
     secretKey: ${JWT_SECRET}
+  redis-key:
+    token: token::%s-%s

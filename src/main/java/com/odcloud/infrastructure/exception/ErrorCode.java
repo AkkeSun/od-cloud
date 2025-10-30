@@ -23,6 +23,8 @@ public enum ErrorCode {
     Business_SAVED_USER(4002, "등록된 사용자 정보 입니다"),
     Business_NOT_FOUND_ACCOUNT(4003, "조회된 사용자 정보가 없습니다"),
     Business_INVALID_PASSWORD(4004, "유효하지 않은 비밀번호 입니다"),
+    Business_INVALID_OTP(4005, "유효하지 않은 OTP 입니다"),
+    Business_ADMIN_NOT_APPROVED(4006, "관리자 승인이 필요합니다"),
 
     ;
 

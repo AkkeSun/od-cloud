@@ -8,7 +8,8 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
-    Jwt jwt
+    Jwt jwt,
+    RedisKey redisKey
 ) {
 
     public record Jwt(
@@ -24,4 +25,30 @@ public record ProfileConstant(
 
     }
 
+    public record RedisKey(
+        @NotBlank
+        String token
+    ) {
+
+    }
+
+    public String getTokenRedisKey() {
+        return redisKey.token;
+    }
+
+    public Long getRefreshTokenTtl() {
+        return jwt().refreshTokenTtl;
+    }
+
+    public Long getTempTokenTtl() {
+        return jwt().tempTokenTtl;
+    }
+
+    public Long getAccessTokenTtl() {
+        return jwt().accessTokenTtl;
+    }
+
+    public String getJwtSecretKey() {
+        return jwt().secretKey;
+    }
 }

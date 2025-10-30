@@ -20,7 +20,11 @@ public class GoogleOTPUtil {
         return GoogleAuthenticatorQRGenerator.getOtpAuthURL("od-cloud", account.getUsername(), key);
     }
 
-    public static boolean valid(String twoFactorSecret, int code) {
-        return gAuth.authorize(twoFactorSecret, code);
+    public static boolean valid(String twoFactorSecret, String code) {
+        try {
+            return gAuth.authorize(twoFactorSecret, Integer.parseInt(code));
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
