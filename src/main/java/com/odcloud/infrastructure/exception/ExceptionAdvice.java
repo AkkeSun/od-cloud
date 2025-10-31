@@ -1,5 +1,6 @@
 package com.odcloud.infrastructure.exception;
 
+import com.odcloud.infrastructure.aop.ExceptionHandlerLog;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class ExceptionAdvice {
         );
     }
 
-
+    @ExceptionHandlerLog
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(CustomAuthenticationException.class)
     ApiResponse<Object> customAuthenticationException(CustomAuthenticationException e) {
@@ -57,6 +58,7 @@ public class ExceptionAdvice {
         );
     }
 
+    @ExceptionHandlerLog
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(CustomAuthorizationException.class)
     ApiResponse<Object> customAuthorizationException(CustomAuthorizationException e) {
@@ -69,6 +71,7 @@ public class ExceptionAdvice {
         );
     }
 
+    @ExceptionHandlerLog
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(CustomBusinessException.class)
     ApiResponse<Object> customBusinessException(CustomBusinessException e) {
@@ -81,6 +84,7 @@ public class ExceptionAdvice {
         );
     }
 
+    @ExceptionHandlerLog
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     ApiResponse<Object> notFoundException(Exception e) {
