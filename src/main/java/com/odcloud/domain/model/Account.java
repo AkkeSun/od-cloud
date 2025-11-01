@@ -17,6 +17,7 @@ public class Account {
     private Long id;
     private String username;
     private String password;
+    private String name;
     private String email;
     private String role;
     private String twoFactorSecret;
@@ -37,6 +38,7 @@ public class Account {
         return Account.builder()
             .username(command.username())
             .password(command.password())
+            .name(command.name())
             .email(command.email())
             .role(command.role())
             .twoFactorSecret(twoFactorSecret)
@@ -51,5 +53,9 @@ public class Account {
 
     public Boolean isAdminApproved() {
         return isAdminApproved;
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
     }
 }

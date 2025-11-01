@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
     Jwt jwt,
-    RedisKey redisKey
+    RedisKey redisKey,
+    @NotBlank
+    String aesSecretKey
 ) {
 
     public record Jwt(
@@ -51,4 +53,5 @@ public record ProfileConstant(
     public String getJwtSecretKey() {
         return jwt().secretKey;
     }
+
 }

@@ -1,6 +1,5 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.domain.model.Account;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +31,9 @@ class AccountEntity {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "NAME")
+    private String name;
+
     @Column(name = "EMAIL")
     private String email;
 
@@ -46,30 +48,4 @@ class AccountEntity {
 
     @Column(name = "REG_DATE_TIME")
     private LocalDateTime regDt;
-
-    static AccountEntity of(Account account) {
-        return AccountEntity.builder()
-            .id(account.getId())
-            .username(account.getUsername())
-            .password(account.getPassword())
-            .email(account.getEmail())
-            .role(account.getRole())
-            .twoFactorSecret(account.getTwoFactorSecret())
-            .isAdminApproved(account.getIsAdminApproved())
-            .regDt(account.getRegDt())
-            .build();
-    }
-
-    Account toDomain() {
-        return Account.builder()
-            .id(id)
-            .username(username)
-            .password(password)
-            .email(email)
-            .role(role)
-            .twoFactorSecret(twoFactorSecret)
-            .isAdminApproved(isAdminApproved)
-            .regDt(regDt)
-            .build();
-    }
 }

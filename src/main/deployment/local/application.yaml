@@ -51,3 +51,4 @@ service-constant:
     secretKey: ${JWT_SECRET}
   redis-key:
     token: token::%s-%s
+  aes-secret-key: ${AES_SECRET}
