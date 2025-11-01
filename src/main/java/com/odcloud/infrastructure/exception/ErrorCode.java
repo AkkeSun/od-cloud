@@ -25,6 +25,7 @@ public enum ErrorCode {
     Business_INVALID_PASSWORD(4004, "유효하지 않은 비밀번호 입니다"),
     Business_INVALID_OTP(4005, "유효하지 않은 OTP 입니다"),
     Business_ADMIN_NOT_APPROVED(4006, "관리자 승인이 필요합니다"),
+    Business_SLACK_CLIENT_ERROR(4007, "슬랙 클라이언트 호출에 실패했습니다"),
 
     ;
 

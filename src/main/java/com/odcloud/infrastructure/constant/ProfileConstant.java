@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
     Jwt jwt,
-    RedisKey redisKey,
+    Slack slack,
+    @NotBlank
+    String tokenRedisKey,
     @NotBlank
     String aesSecretKey
 ) {
@@ -27,15 +29,13 @@ public record ProfileConstant(
 
     }
 
-    public record RedisKey(
+    public record Slack(
+        @NotBlank
+        String host,
         @NotBlank
         String token
     ) {
 
-    }
-
-    public String getTokenRedisKey() {
-        return redisKey.token;
     }
 
     public Long getRefreshTokenTtl() {

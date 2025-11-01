@@ -49,6 +49,10 @@ service-constant:
     access-token-ttl: 1800000 # 30 min
     refresh-token-ttl: 7200000 # 2 hour
     secretKey: ${JWT_SECRET}
-  redis-key:
-    token: token::%s-%s
+
+  slack:
+    host: https://slack.com
+    token: ${SLACK_TOKEN}
+
+  token-redis-key: token::%s-%s
   aes-secret-key: ${AES_SECRET}

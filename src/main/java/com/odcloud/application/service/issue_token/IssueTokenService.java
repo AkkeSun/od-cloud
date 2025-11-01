@@ -39,7 +39,7 @@ class IssueTokenService implements IssueTokenUseCase {
         String accessToken = jwtUtil.createAccessToken(account);
         String refreshToken = jwtUtil.createRefreshToken(account);
 
-        redisStoragePort.register(String.format(constant.getTokenRedisKey(), account.getUsername(),
+        redisStoragePort.register(String.format(constant.tokenRedisKey(), account.getUsername(),
             userAgentUtil.getUserAgent()), refreshToken, constant.getRefreshTokenTtl());
 
         return IssueTokenServiceResponse.builder()
