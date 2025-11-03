@@ -26,6 +26,11 @@ class AccountStorageAdapter implements AccountStoragePort {
     }
 
     @Override
+    public void update(Account account) {
+        repository.save(toEntityForUpdate(account));
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
@@ -45,6 +50,21 @@ class AccountStorageAdapter implements AccountStoragePort {
             throw new CustomBusinessException(Business_NOT_FOUND_ACCOUNT);
         }
         return toDomain(entity);
+    }
+
+
+    private AccountEntity toEntityForUpdate(Account account) {
+        return AccountEntity.builder()
+            .id(account.getId())
+            .username(account.getUsername())
+            .password(account.getPassword())
+            .name(aesUtil.encryptText(account.getName()))
+            .email(account.getEmail())
+            .role(account.getRole())
+            .twoFactorSecret(account.getTwoFactorSecret())
+            .isAdminApproved(account.getIsAdminApproved())
+            .regDt(account.getRegDt())
+            .build();
     }
 
     private AccountEntity toEntity(Account account) {

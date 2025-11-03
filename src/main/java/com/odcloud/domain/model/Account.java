@@ -47,15 +47,11 @@ public class Account {
             .build();
     }
 
-    public void updatePassword(String password) {
-        this.password = password;
-    }
-
     public Boolean isAdminApproved() {
         return isAdminApproved;
     }
 
-    public void updateUsername(String username) {
-        this.username = username;
+    public void approve() {
+        isAdminApproved = true;
     }
 }

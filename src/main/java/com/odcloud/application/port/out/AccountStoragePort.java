@@ -6,6 +6,8 @@ public interface AccountStoragePort {
 
     void register(Account account);
 
+    void update(Account account);
+
     boolean existsByUsername(String username);
 
     Account findByUsername(String username);
