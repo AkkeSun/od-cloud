@@ -59,6 +59,11 @@ public class JwtUtilImpl implements JwtUtil {
     }
 
     @Override
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    @Override
     public boolean validateTokenExceptExpiration(String token) {
         try {
             Claims claims = getClaims(token);

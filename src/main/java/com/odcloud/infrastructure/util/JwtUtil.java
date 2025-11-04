@@ -13,6 +13,8 @@ public interface JwtUtil {
 
     String createRefreshToken(Account account);
 
+    String getUsername(String token);
+
     boolean validateTokenExceptExpiration(String token);
 
     Claims getClaims(String token);
