@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000
+  mail:
+    host: localhost
+    port: 25
+    username: test@example.com
+    password: testpassword
+    protocol: smtp
+    default-encoding: utf-8
+
+service-constant:
+  jwt:
+    temp-token-ttl: 300000
+    access-token-ttl: 1800000
+    refresh-token-ttl: 604800000
+    secretKey: test-secret-key-for-jwt-must-be-long-enough-for-hmac-sha256
+  slack:
+    host: http://localhost:8080
+    token: test-token-12345
+  token-redis-key: token::%s-%s
+  aes-secret-key: test-aes-secret-key
