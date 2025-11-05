@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 public record ProfileConstant(
     Jwt jwt,
     Slack slack,
+    GoogleOAuth2 googleOAuth2,
     @NotBlank
     String tokenRedisKey,
     @NotBlank
@@ -34,6 +35,17 @@ public record ProfileConstant(
         String host,
         @NotBlank
         String token
+    ) {
+
+    }
+
+    public record GoogleOAuth2(
+        @NotBlank
+        String clientId,
+        @NotBlank
+        String clientSecret,
+        @NotBlank
+        String redirectUri
     ) {
 
     }

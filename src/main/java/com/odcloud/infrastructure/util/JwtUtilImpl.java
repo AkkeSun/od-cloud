@@ -1,7 +1,13 @@
 package com.odcloud.infrastructure.util;
 
+import static com.odcloud.infrastructure.exception.ErrorCode.INVALID_GOOGLE_TOKEN;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.api.client.auth.openidconnect.IdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
@@ -10,6 +16,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -81,6 +88,21 @@ public class JwtUtilImpl implements JwtUtil {
                 .parseClaimsJws(token).getBody();
         } catch (Exception e) {
             throw new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN);
+        }
+    }
+
+    @Override
+    public Payload getGooglePayload(String token) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new NetHttpTransport(),
+                new GsonFactory())
+                .setAudience(Collections.singletonList(constant.googleOAuth2().clientId()))
+                .build();
+
+            return verifier.verify(token).getPayload();
+        } catch (Exception e) {
+            throw new CustomAuthenticationException(INVALID_GOOGLE_TOKEN);
         }
     }
 

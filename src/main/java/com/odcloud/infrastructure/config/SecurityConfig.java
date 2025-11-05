@@ -43,6 +43,7 @@ public class SecurityConfig {
             // --------------- 인가 정책 ---------------
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/docs/**").permitAll()
+                    .requestMatchers("/favicon.ico").permitAll()
                     .requestMatchers("/accounts").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/accounts/{username}/approval").hasRole("ADMIN")
