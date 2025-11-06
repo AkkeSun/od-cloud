@@ -43,9 +43,16 @@ class SlackAdapterTest {
             "test-token-12345"
         );
 
+        ProfileConstant.GoogleOAuth2 googleOAuth2 = new ProfileConstant.GoogleOAuth2(
+            "test-client-id",
+            "test-client-secret",
+            "http://localhost:8080/callback"
+        );
+
         ProfileConstant profileConstant = new ProfileConstant(
             jwtConfig,
             slackConfig,
+            googleOAuth2,
             "test-redis-key",
             "test-aes-secret-key"
         );

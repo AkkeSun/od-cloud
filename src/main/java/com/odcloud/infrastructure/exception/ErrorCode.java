@@ -28,6 +28,7 @@ public enum ErrorCode {
     Business_ADMIN_NOT_APPROVED(4006, "관리자 승인이 필요합니다"),
     Business_SLACK_CLIENT_ERROR(4007, "슬랙 클라이언트 호출에 실패했습니다"),
     Business_APPROVE_USER(4008, "이미 관리자 승인이 완료된 사용자 입니다"),
+    Business_SAVED_GROUP(4009, "등록된 그룹 정보 입니다"),
 
     ;
 

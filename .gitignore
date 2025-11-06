@@ -38,3 +38,7 @@ out/
 
 # Secrets
 src/main/resources/.env
+
+# Cluade
+CLAUDE.md
+HEXAGONAL_TEST_GUIDE.md
