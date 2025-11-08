@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 public record Group(
     String id,
+    String ownerEmail,
     String description,
     LocalDateTime regDt
 ) {
@@ -14,6 +15,7 @@ public record Group(
     public static Group of(RegisterGroupCommand command) {
         return Group.builder()
             .id(command.id())
+            .ownerEmail(command.ownerEmail())
             .description(command.description())
             .regDt(LocalDateTime.now())
             .build();

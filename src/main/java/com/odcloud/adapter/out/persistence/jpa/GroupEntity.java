@@ -1,6 +1,7 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import com.odcloud.domain.model.Group;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,15 +20,22 @@ import lombok.NoArgsConstructor;
 class GroupEntity {
 
     @Id
+    @Column(name = "ID")
     private String id;
 
+    @Column(name = "OWNER_EMAIL")
+    private String ownerEmail;
+
+    @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "REG_DT")
     private LocalDateTime regDt;
 
     static GroupEntity of(Group group) {
         return GroupEntity.builder()
             .id(group.id())
+            .ownerEmail(group.ownerEmail())
             .description(group.description())
             .regDt(group.regDt())
             .build();
@@ -37,6 +45,7 @@ class GroupEntity {
     Group toDomain() {
         return Group.builder()
             .id(id)
+            .ownerEmail(ownerEmail)
             .description(description)
             .regDt(regDt)
             .build();

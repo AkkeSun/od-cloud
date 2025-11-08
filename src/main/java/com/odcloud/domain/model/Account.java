@@ -43,7 +43,7 @@ public class Account {
             .nickname(userInfo.name())
             .name(command.name())
             .picture(userInfo.picture())
-            .groups(Set.of(Group.of(command.group())))
+            .groups(Set.of(Group.of(command.groupId())))
             .isAdminApproved(Boolean.FALSE)
             .regDt(LocalDateTime.now())
             .build();

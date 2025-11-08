@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.register_group;
 
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.domain.model.Account;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -13,9 +14,10 @@ record RegisterGroupRequest(
     String description
 ) {
 
-    RegisterGroupCommand toCommand() {
+    RegisterGroupCommand toCommand(Account account) {
         return RegisterGroupCommand.builder()
             .id(id)
+            .ownerEmail(account.getEmail())
             .description(description)
             .build();
     }

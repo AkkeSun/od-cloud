@@ -11,15 +11,15 @@ record RegisterAccountRequest(
     @NotBlank(message = "이름은 필수값 입니다")
     String name,
 
-    @NotEmpty(message = "그룹은 필수값 입니다")
-    String group
+    @NotEmpty(message = "그룹 아이디는 필수값 입니다")
+    String groupId
 ) {
 
     RegisterAccountCommand toCommand(String googleAuthorization) {
         return RegisterAccountCommand.builder()
             .googleAuthorization(googleAuthorization)
             .name(name)
-            .group(group)
+            .groupId(groupId)
             .build();
     }
 
