@@ -17,8 +17,8 @@ class RegisterGroupController {
 
     private final RegisterGroupUseCase useCase;
 
-    @PostMapping("/accounts/groups")
-    ApiResponse<RegisterGroupResponse> registerGroup(
+    @PostMapping("/groups")
+    ApiResponse<RegisterGroupResponse> register(
         @RequestBody @Valid RegisterGroupRequest request,
         @LoginAccount Account account
     ) {
