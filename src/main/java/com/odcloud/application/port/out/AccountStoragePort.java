@@ -4,13 +4,13 @@ import com.odcloud.domain.model.Account;
 
 public interface AccountStoragePort {
 
-    void register(Account account);
+    Account register(Account account);
 
     void update(Account account);
 
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
-    Account findByUsername(String username);
-
-    Account findByUsernameAndPassword(String username, String password);
+    Account findByEmail(String email);
+    
+    Account findById(Long id);
 }

@@ -20,7 +20,6 @@ class RegisterGroupController {
         @RequestBody @Valid RegisterGroupRequest request
     ) {
         RegisterGroupServiceResponse serviceResponse = useCase.register(request.toCommand());
-
         return ApiResponse.ok(RegisterGroupResponse.of(serviceResponse));
     }
 }

@@ -7,8 +7,8 @@ import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.util.AesUtil;
 import jakarta.transaction.Transactional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,80 +18,67 @@ class AccountStorageAdapter implements AccountStoragePort {
 
     private final AesUtil aesUtil;
     private final AccountRepository repository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void register(Account account) {
-        repository.save(toEntity(account));
+    public Account register(Account account) {
+        AccountEntity entity = toEntity(account);
+        repository.save(entity);
+        return toDomain(entity);
     }
 
     @Override
     public void update(Account account) {
-        repository.save(toEntityForUpdate(account));
+        repository.save(toEntity(account));
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return repository.existsByUsername(username);
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 
     @Override
-    public Account findByUsername(String username) {
-        AccountEntity entity = repository.findByUsername(username)
+    public Account findByEmail(String email) {
+        AccountEntity entity = repository.findByEmail(email)
             .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
         return toDomain(entity);
     }
 
     @Override
-    public Account findByUsernameAndPassword(String username, String password) {
-        AccountEntity entity = repository.findByUsername(username)
-            .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
-        if (!passwordEncoder.matches(password, entity.getPassword())) {
-            throw new CustomBusinessException(Business_NOT_FOUND_ACCOUNT);
-        }
+    public Account findById(Long id) {
+        AccountEntity entity = repository.findById(id).orElseThrow(
+            () -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
         return toDomain(entity);
-    }
-
-
-    private AccountEntity toEntityForUpdate(Account account) {
-        return AccountEntity.builder()
-            .id(account.getId())
-            .username(account.getUsername())
-            .password(account.getPassword())
-            .name(aesUtil.encryptText(account.getName()))
-            .email(account.getEmail())
-            .role(account.getRole())
-            .twoFactorSecret(account.getTwoFactorSecret())
-            .isAdminApproved(account.getIsAdminApproved())
-            .regDt(account.getRegDt())
-            .build();
     }
 
     private AccountEntity toEntity(Account account) {
         return AccountEntity.builder()
             .id(account.getId())
-            .username(account.getUsername())
-            .password(passwordEncoder.encode(account.getPassword()))
-            .name(aesUtil.encryptText(account.getName()))
             .email(account.getEmail())
-            .role(account.getRole())
-            .twoFactorSecret(account.getTwoFactorSecret())
+            .nickname(account.getNickname())
+            .name(aesUtil.encryptText(account.getName()))
+            .picture(account.getPicture())
+            .groups(account.getGroups().stream()
+                .map(GroupEntity::of)
+                .collect(Collectors.toSet()))
             .isAdminApproved(account.getIsAdminApproved())
             .regDt(account.getRegDt())
+            .updateDt(account.getUpdateDt())
             .build();
     }
 
     private Account toDomain(AccountEntity entity) {
         return Account.builder()
             .id(entity.getId())
-            .username(entity.getUsername())
-            .password(entity.getPassword())
-            .name(aesUtil.decryptText(entity.getName()))
             .email(entity.getEmail())
-            .role(entity.getRole())
-            .twoFactorSecret(entity.getTwoFactorSecret())
+            .nickname(entity.getNickname())
+            .name(aesUtil.decryptText(entity.getName()))
+            .picture(entity.getPicture())
+            .groups(entity.getGroups().stream()
+                .map(GroupEntity::toDomain)
+                .collect(Collectors.toSet()))
             .isAdminApproved(entity.getIsAdminApproved())
             .regDt(entity.getRegDt())
+            .updateDt(entity.getUpdateDt())
             .build();
     }
 }

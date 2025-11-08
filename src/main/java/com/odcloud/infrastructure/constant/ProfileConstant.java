@@ -11,8 +11,7 @@ public record ProfileConstant(
     Jwt jwt,
     Slack slack,
     GoogleOAuth2 googleOAuth2,
-    @NotBlank
-    String tokenRedisKey,
+    RedisKey redisKey,
     @NotBlank
     String aesSecretKey
 ) {
@@ -45,7 +44,18 @@ public record ProfileConstant(
         @NotBlank
         String clientSecret,
         @NotBlank
-        String redirectUri
+        String redirectUri,
+        @NotBlank
+        String userInfoApi
+    ) {
+
+    }
+
+    public record RedisKey(
+        @NotBlank
+        String token,
+        @NotBlank
+        String group
     ) {
 
     }

@@ -1,13 +1,7 @@
 package com.odcloud.infrastructure.util;
 
-import static com.odcloud.infrastructure.exception.ErrorCode.INVALID_GOOGLE_TOKEN;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.api.client.auth.openidconnect.IdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
@@ -16,7 +10,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -28,23 +21,11 @@ public class JwtUtilImpl implements JwtUtil {
     private final ProfileConstant constant;
 
     @Override
-    public String createTempToken(Account account) {
-        Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(account.getUsername());
-        return "Bearer " + Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(new Date(now.getTime() + constant.getTempTokenTtl()))
-            .signWith(SignatureAlgorithm.HS256, constant.getJwtSecretKey())
-            .compact();
-    }
-
-    @Override
     public String createAccessToken(Account account) {
         Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(account.getUsername());
+        Claims claims = Jwts.claims().setSubject(account.getEmail());
         claims.put("id", account.getId());
-        claims.put("role", account.getRole());
+        claims.put("groups", account.getGroupIds());
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
@@ -56,7 +37,7 @@ public class JwtUtilImpl implements JwtUtil {
     @Override
     public String createRefreshToken(Account account) {
         Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(account.getUsername());
+        Claims claims = Jwts.claims().setSubject(account.getEmail());
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
@@ -66,7 +47,7 @@ public class JwtUtilImpl implements JwtUtil {
     }
 
     @Override
-    public String getUsername(String token) {
+    public String getEmail(String token) {
         return getClaims(token).getSubject();
     }
 
@@ -88,21 +69,6 @@ public class JwtUtilImpl implements JwtUtil {
                 .parseClaimsJws(token).getBody();
         } catch (Exception e) {
             throw new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN);
-        }
-    }
-
-    @Override
-    public Payload getGooglePayload(String token) {
-        try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                new NetHttpTransport(),
-                new GsonFactory())
-                .setAudience(Collections.singletonList(constant.googleOAuth2().clientId()))
-                .build();
-
-            return verifier.verify(token).getPayload();
-        } catch (Exception e) {
-            throw new CustomAuthenticationException(INVALID_GOOGLE_TOKEN);
         }
     }
 

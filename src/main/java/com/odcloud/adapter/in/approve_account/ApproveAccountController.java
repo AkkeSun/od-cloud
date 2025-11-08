@@ -14,9 +14,9 @@ class ApproveAccountController {
 
     private final ApproveAccountUseCase useCase;
 
-    @PutMapping("/accounts/{username}/approval")
-    ApiResponse<ApproveAccountResponse> confirm(@PathVariable String username) {
-        ApproveAccountServiceResponse serviceResponse = useCase.approve(username);
+    @PutMapping("/accounts/{userId}/approval")
+    ApiResponse<ApproveAccountResponse> confirm(@PathVariable Long userId) {
+        ApproveAccountServiceResponse serviceResponse = useCase.approve(userId);
 
         return ApiResponse.ok(ApproveAccountResponse.of(serviceResponse));
     }

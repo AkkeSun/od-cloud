@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -11,7 +12,12 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 
 public class JsonUtil {
 
-    public final static ObjectMapper objectMapper = new ObjectMapper();
+    public final static ObjectMapper objectMapper;
+
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+    }
 
     public static <T> T parseJson(String json, Class<T> valueType) {
         try {

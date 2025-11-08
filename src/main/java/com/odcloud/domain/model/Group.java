@@ -18,4 +18,10 @@ public record Group(
             .regDt(LocalDateTime.now())
             .build();
     }
+
+    public static Group of(String id) {
+        return Group.builder()
+            .id(id)
+            .build();
+    }
 }

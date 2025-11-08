@@ -30,8 +30,8 @@ class ReissueTokenService implements ReissueTokenUseCase {
             throw new CustomAuthenticationException(INVALID_REFRESH_TOKEN);
         }
 
-        String username = jwtUtil.getUsername(refreshToken);
-        String redisKey = String.format(constant.tokenRedisKey(), username,
+        String email = jwtUtil.getEmail(refreshToken);
+        String redisKey = String.format(constant.redisKey().token(), email,
             userAgent.getUserAgent());
 
         String savedRefreshToken = redisStoragePort.findData(redisKey, String.class);
@@ -39,7 +39,7 @@ class ReissueTokenService implements ReissueTokenUseCase {
             throw new CustomAuthenticationException(INVALID_REFRESH_TOKEN);
         }
 
-        Account account = accountStoragePort.findByUsername(username);
+        Account account = accountStoragePort.findByEmail(email);
         String newRefreshToken = jwtUtil.createRefreshToken(account);
 
         redisStoragePort.register(redisKey, newRefreshToken, constant.getRefreshTokenTtl());

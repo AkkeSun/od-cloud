@@ -21,8 +21,8 @@ class ApproveAccountService implements ApproveAccountUseCase {
 
     @Override
     @Transactional
-    public ApproveAccountServiceResponse approve(String username) {
-        Account account = accountStoragePort.findByUsername(username);
+    public ApproveAccountServiceResponse approve(Long id) {
+        Account account = accountStoragePort.findById(id);
         if (account.isAdminApproved()) {
             throw new CustomBusinessException(Business_APPROVE_USER);
         }

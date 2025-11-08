@@ -58,6 +58,10 @@ service-constant:
     client-id: ${GOOGLE_CLIENT_ID}
     client-secret: ${GOOGLE_CLIENT_SECRET}
     redirect-uri: http://localhost:8080/auth/google
+    user-info-api: https://www.googleapis.com
 
-  token-redis-key: token::%s-%s
+  redis-key:
+    token: token::%s-%s
+    group: group
+
   aes-secret-key: ${AES_SECRET}

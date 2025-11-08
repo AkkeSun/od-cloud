@@ -32,4 +32,13 @@ class GroupEntity {
             .regDt(group.regDt())
             .build();
     }
+
+
+    Group toDomain() {
+        return Group.builder()
+            .id(id)
+            .description(description)
+            .regDt(regDt)
+            .build();
+    }
 }

@@ -1,17 +1,10 @@
 package com.odcloud.application.service.register_account;
 
-import lombok.Builder;
-
-@Builder
 public record RegisterAccountServiceResponse(
-    Boolean result,
-    String otpUrl
+    Boolean result
 ) {
 
-    public static RegisterAccountServiceResponse of(String otpAuthUrl) {
-        return RegisterAccountServiceResponse.builder()
-            .result(true)
-            .otpUrl(otpAuthUrl)
-            .build();
+    public static RegisterAccountServiceResponse ofSuccess() {
+        return new RegisterAccountServiceResponse(Boolean.TRUE);
     }
 }

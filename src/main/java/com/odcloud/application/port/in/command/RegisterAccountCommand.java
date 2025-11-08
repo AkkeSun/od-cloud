@@ -5,15 +5,11 @@ import lombok.Builder;
 @Builder
 public record RegisterAccountCommand(
 
-    String username,
-
-    String password,
+    String googleAuthorization,
 
     String name,
 
-    String email,
-    
-    String role
+    String group
 ) {
 
 }

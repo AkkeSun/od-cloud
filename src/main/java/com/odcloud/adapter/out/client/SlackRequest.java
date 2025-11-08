@@ -15,12 +15,11 @@ public record SlackRequest(
             .text(String.format("""
                 [신규 사용자 등록 안내]
                 
-                - 계정: %s
                 - 이름: %s
                 - 이메일: %s
                 
                 관리자 승인 처리가 필요합니다.
-                """, account.getUsername(), account.getName(), account.getEmail()))
+                """, account.getName(), account.getEmail()))
             .build();
     }
 }

@@ -4,5 +4,5 @@ import com.odcloud.application.service.approve_account.ApproveAccountServiceResp
 
 public interface ApproveAccountUseCase {
 
-    ApproveAccountServiceResponse approve(String username);
+    ApproveAccountServiceResponse approve(Long id);
 }

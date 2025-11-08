@@ -43,6 +43,9 @@ public class SecurityConfig {
             // --------------- 인가 정책 ---------------
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/docs/**").permitAll()
+                    
+                    .requestMatchers("/**").permitAll() // for test
+
                     .requestMatchers("/favicon.ico").permitAll()
                     .requestMatchers("/accounts").permitAll()
                     .requestMatchers("/auth/**").permitAll()

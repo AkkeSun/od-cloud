@@ -1,8 +1,12 @@
 package com.odcloud.domain.model;
 
+import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
 import com.odcloud.application.port.in.command.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,43 +19,48 @@ import lombok.NoArgsConstructor;
 public class Account {
 
     private Long id;
-    private String username;
-    private String password;
-    private String name;
     private String email;
-    private String role;
-    private String twoFactorSecret;
+    private String nickname;
+    private String name;
+    private String picture;
+    private Set<Group> groups;
     private Boolean isAdminApproved;
+    private LocalDateTime updateDt;
     private LocalDateTime regDt;
 
     public static Account of(Claims claims) {
-        Object role = claims.get("role");
-        Object id = claims.get("id");
+        List<String> groupIds = (List<String>) claims.get("groups");
         return Account.builder()
-            .username(claims.getSubject())
-            .role(role == null ? null : role.toString())
-            .email(id == null ? null : id.toString())
+            .email(claims.getSubject())
+            .id((Long) claims.get("id"))
+            .groups(groupIds.stream().map(Group::of).collect(Collectors.toSet()))
             .build();
     }
 
-    public static Account of(RegisterAccountCommand command, String twoFactorSecret) {
+    public static Account of(GoogleUserInfoResponse userInfo, RegisterAccountCommand command) {
         return Account.builder()
-            .username(command.username())
-            .password(command.password())
+            .email(userInfo.email())
+            .nickname(userInfo.name())
             .name(command.name())
-            .email(command.email())
-            .role(command.role())
-            .twoFactorSecret(twoFactorSecret)
+            .picture(userInfo.picture())
+            .groups(Set.of(Group.of(command.group())))
             .isAdminApproved(Boolean.FALSE)
             .regDt(LocalDateTime.now())
             .build();
+    }
+
+    public void approve() {
+        this.isAdminApproved = true;
+        this.updateDt = LocalDateTime.now();
     }
 
     public Boolean isAdminApproved() {
         return isAdminApproved;
     }
 
-    public void approve() {
-        isAdminApproved = true;
+    public List<String> getGroupIds() {
+        return groups.stream()
+            .map(Group::id)
+            .collect(Collectors.toList());
     }
 }

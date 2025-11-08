@@ -1,8 +1,11 @@
 package com.odcloud.adapter.out.persistence.redis;
 
 import static com.odcloud.infrastructure.util.JsonUtil.parseJson;
+import static com.odcloud.infrastructure.util.JsonUtil.parseJsonList;
 
 import com.odcloud.application.port.out.RedisStoragePort;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,11 @@ import org.springframework.util.StringUtils;
 class RedisStorageAdapter implements RedisStoragePort {
 
     private final RedisTemplate<String, String> redisTemplate;
+
+    @Override
+    public void register(String key, String data) {
+        redisTemplate.opsForValue().set(key, data);
+    }
 
     @Override
     public void register(String key, String data, long ttl) {
@@ -33,5 +41,14 @@ class RedisStorageAdapter implements RedisStoragePort {
         }
         
         return parseJson(redisData, clazz);
+    }
+
+    @Override
+    public <T> List<T> findDataList(String key, Class<T> clazz) {
+        String redisData = redisTemplate.opsForValue().get(key);
+        if (!StringUtils.hasText(redisData)) {
+            return Collections.emptyList();
+        }
+        return parseJsonList(redisData, clazz);
     }
 }
