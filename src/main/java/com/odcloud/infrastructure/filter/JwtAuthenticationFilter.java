@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,11 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private Authentication makeAuthToken(String token) {
         Claims claims = jwtUtil.getClaims(token);
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-            claims.get("role", String.class));
-        return new UsernamePasswordAuthenticationToken(
-            claims.getSubject(), "", List.of(authority)
-        );
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Object group : claims.get("groups", List.class)) {
+            authorities.add(new SimpleGrantedAuthority(String.valueOf("ROLE_" + group)));
+        }
+        return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
     }
 }
 

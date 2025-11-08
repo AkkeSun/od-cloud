@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtilImpl implements JwtUtil {
 
     private final ProfileConstant constant;
-
+    
     @Override
     public String createAccessToken(Account account) {
         Date now = new Date();

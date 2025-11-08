@@ -10,4 +10,6 @@ public interface GroupStoragePort {
     boolean existsById(String id);
 
     List<Group> findAll();
+
+    Group findById(String id);
 }
