@@ -2,6 +2,7 @@ package com.odcloud.adapter.in.register_group;
 
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.util.ToStringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -20,5 +21,10 @@ record RegisterGroupRequest(
             .ownerEmail(account.getEmail())
             .description(description)
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringUtil.toString(this);
     }
 }
