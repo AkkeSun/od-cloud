@@ -18,9 +18,24 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Component
 class GoogleOAuth2ClientAdapter implements GoogleOAuth2Port {
 
+    private final GoogleTokenClient tokenClient;
     private final GoogleUserInfoClient userInfoClient;
+    private final ProfileConstant constant;
 
     GoogleOAuth2ClientAdapter(ProfileConstant constant) {
+        this.constant = constant;
+        this.tokenClient = HttpServiceProxyFactory.builder()
+            .exchangeAdapter(RestClientAdapter.create(
+                RestClient.builder()
+                    .baseUrl(constant.googleOAuth2().tokenApi())
+                    .requestFactory(ClientHttpRequestFactories.get(
+                        ClientHttpRequestFactorySettings.DEFAULTS
+                            .withConnectTimeout(Duration.ofSeconds(1))
+                            .withReadTimeout(Duration.ofSeconds(5))))
+                    .build()))
+            .build()
+            .createClient(GoogleTokenClient.class);
+        
         this.userInfoClient = HttpServiceProxyFactory.builder()
             .exchangeAdapter(RestClientAdapter.create(
                 RestClient.builder()
@@ -32,6 +47,21 @@ class GoogleOAuth2ClientAdapter implements GoogleOAuth2Port {
                     .build()))
             .build()
             .createClient(GoogleUserInfoClient.class);
+    }
+
+    @Override
+    public GoogleTokenResponse getToken(String code) {
+        try {
+            return tokenClient.getToken(code,
+                constant.googleOAuth2().clientId(),
+                constant.googleOAuth2().clientSecret(),
+                constant.googleOAuth2().redirectUri(),
+                "authorization_code"
+            );
+        } catch (Exception e) {
+            log.error("GoogleOAuth2ClientAdapter getToken - {}", e.getMessage());
+            throw new CustomBusinessException(Business_GOOGLE_USER_INFO_ERROR);
+        }
     }
 
     @Override

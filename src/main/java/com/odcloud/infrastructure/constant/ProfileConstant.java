@@ -46,6 +46,8 @@ public record ProfileConstant(
         @NotBlank
         String redirectUri,
         @NotBlank
+        String tokenApi,
+        @NotBlank
         String userInfoApi
     ) {
 
