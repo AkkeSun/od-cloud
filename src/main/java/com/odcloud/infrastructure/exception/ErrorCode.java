@@ -23,14 +23,12 @@ public enum ErrorCode {
     Business_SEND_EMAIL_ERROR(4001, "이메일 전송에 실패했습니다"),
     Business_SAVED_USER(4002, "등록된 사용자 정보 입니다"),
     Business_NOT_FOUND_ACCOUNT(4003, "조회된 사용자 정보가 없습니다"),
-    Business_INVALID_PASSWORD(4004, "유효하지 않은 비밀번호 입니다"),
-    Business_INVALID_OTP(4005, "유효하지 않은 OTP 입니다"),
-    Business_ADMIN_NOT_APPROVED(4006, "관리자 승인이 필요합니다"),
-    Business_SLACK_CLIENT_ERROR(4007, "슬랙 클라이언트 호출에 실패했습니다"),
-    Business_APPROVE_USER(4008, "이미 관리자 승인이 완료된 사용자 입니다"),
-    Business_SAVED_GROUP(4009, "등록된 그룹 정보 입니다"),
-    Business_GOOGLE_USER_INFO_ERROR(4010, "구글 사용자 정보 조회중 오류가 발생했습니다"),
-    Business_DoesNotExists_GROUP(4011, "등록되지 않은 그룹 입니다"),
+    Business_EMPTY_GROUP_ACCOUNT(4004, "승인된 그룹이 없는 사용자 입니다"),
+    Business_SLACK_CLIENT_ERROR(4005, "슬랙 클라이언트 호출에 실패했습니다"),
+    Business_APPROVE_USER(4006, "이미 관리자 승인이 완료된 사용자 입니다"),
+    Business_SAVED_GROUP(4007, "등록된 그룹 정보 입니다"),
+    Business_GOOGLE_USER_INFO_ERROR(4008, "구글 사용자 정보 조회중 오류가 발생했습니다"),
+    Business_DoesNotExists_GROUP(4009, "등록되지 않은 그룹 입니다"),
 
     ;
 
