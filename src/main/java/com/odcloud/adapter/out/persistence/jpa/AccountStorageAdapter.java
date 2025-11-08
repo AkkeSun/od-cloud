@@ -60,7 +60,6 @@ class AccountStorageAdapter implements AccountStoragePort {
             .groups(account.getGroups().stream()
                 .map(GroupEntity::of)
                 .collect(Collectors.toSet()))
-            .isAdminApproved(account.getIsAdminApproved())
             .regDt(account.getRegDt())
             .updateDt(account.getUpdateDt())
             .build();
@@ -76,7 +75,6 @@ class AccountStorageAdapter implements AccountStoragePort {
             .groups(entity.getGroups().stream()
                 .map(GroupEntity::toDomain)
                 .collect(Collectors.toSet()))
-            .isAdminApproved(entity.getIsAdminApproved())
             .regDt(entity.getRegDt())
             .updateDt(entity.getUpdateDt())
             .build();

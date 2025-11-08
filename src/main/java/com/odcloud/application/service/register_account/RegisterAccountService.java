@@ -38,7 +38,7 @@ class RegisterAccountService implements RegisterAccountUseCase {
         boolean existsGroup = redisStoragePort.findDataList(
                 constant.redisKey().group(), Group.class)
             .stream()
-            .anyMatch(group -> group.id().equals(command.group()));
+            .anyMatch(group -> group.id().equals(command.groupId()));
 
         if (!existsGroup) {
             throw new CustomBusinessException(Business_DoesNotExists_GROUP);

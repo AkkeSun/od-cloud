@@ -24,7 +24,6 @@ public class Account {
     private String name;
     private String picture;
     private Set<Group> groups;
-    private Boolean isAdminApproved;
     private LocalDateTime updateDt;
     private LocalDateTime regDt;
 
@@ -44,20 +43,10 @@ public class Account {
             .name(command.name())
             .picture(userInfo.picture())
             .groups(Set.of(Group.of(command.groupId())))
-            .isAdminApproved(Boolean.FALSE)
             .regDt(LocalDateTime.now())
             .build();
     }
-
-    public void approve() {
-        this.isAdminApproved = true;
-        this.updateDt = LocalDateTime.now();
-    }
-
-    public Boolean isAdminApproved() {
-        return isAdminApproved;
-    }
-
+    
     public List<String> getGroupIds() {
         return groups.stream()
             .map(Group::id)
