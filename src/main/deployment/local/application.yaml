@@ -50,10 +50,6 @@ service-constant:
     refresh-token-ttl: 7200000 # 2 hour
     secretKey: ${JWT_SECRET}
 
-  slack:
-    host: https://slack.com
-    token: ${SLACK_TOKEN}
-
   google-oauth2:
     client-id: ${GOOGLE_CLIENT_ID}
     client-secret: ${GOOGLE_CLIENT_SECRET}

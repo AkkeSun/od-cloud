@@ -1,7 +1,5 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.adapter.out.client.SlackRequest;
-import com.odcloud.application.port.out.SlackPort;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

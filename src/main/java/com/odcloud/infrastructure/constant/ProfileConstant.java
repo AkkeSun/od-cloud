@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
     Jwt jwt,
-    Slack slack,
     GoogleOAuth2 googleOAuth2,
     RedisKey redisKey,
     @NotBlank
@@ -25,15 +24,6 @@ public record ProfileConstant(
         Long refreshTokenTtl,
         @NotBlank
         String secretKey
-    ) {
-
-    }
-
-    public record Slack(
-        @NotBlank
-        String host,
-        @NotBlank
-        String token
     ) {
 
     }
