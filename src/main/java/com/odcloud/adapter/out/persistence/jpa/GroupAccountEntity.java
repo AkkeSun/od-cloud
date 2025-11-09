@@ -1,5 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
+import com.odcloud.domain.model.GroupAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,32 +18,37 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_ACCOUNT")
-class AccountEntity {
+@Table(name = "TBL_GROUP_ACCOUNT")
+class GroupAccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "EMAIL")
-    private String email;
+    @Column(name = "GROUP_ID")
+    private String groupId;
 
-    @Column(name = "NICK_NAME")
-    private String nickname;
+    @Column(name = "ACCOUNT_ID")
+    private Long accountId;
 
-    @Column(name = "NAME")
-    private String name;
-
-    @Column(name = "PICTURE")
-    private String picture;
-
-    @Column(name = "IS_ADMIN_APPROVED")
-    private Boolean isAdminApproved;
+    @Column(name = "STATUS")
+    private String status;
 
     @Column(name = "UPDATE_DT")
     private LocalDateTime updateDt;
 
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
+
+    static GroupAccountEntity of(GroupAccount groupAccount) {
+        return GroupAccountEntity.builder()
+            .id(groupAccount.getId())
+            .groupId(groupAccount.getGroupId())
+            .accountId(groupAccount.getAccountId())
+            .status(groupAccount.getStatus())
+            .updateDt(groupAccount.getUpdateDt())
+            .regDt(groupAccount.getRegDt())
+            .build();
+    }
 }

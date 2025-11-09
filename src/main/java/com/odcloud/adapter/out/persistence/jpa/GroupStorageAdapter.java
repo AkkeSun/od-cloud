@@ -4,9 +4,9 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExi
 
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,29 +14,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class GroupStorageAdapter implements GroupStoragePort {
 
-    private final GroupRepository groupRepository;
+    private final GroupRepository queryDsl;
 
     @Override
-    public void register(Group group) {
-        groupRepository.save(GroupEntity.of(group));
+    public void save(Group group) {
+        queryDsl.save(group);
+    }
+
+    @Override
+    public void save(GroupAccount groupAccount) {
+        queryDsl.saveGroupMember(groupAccount);
     }
 
     @Override
     public boolean existsById(String id) {
-        return groupRepository.findById(id).isPresent();
+        return queryDsl.existsById(id);
     }
 
     @Override
     public List<Group> findAll() {
-        return groupRepository.findAll().stream()
-            .map(GroupEntity::toDomain)
-            .collect(Collectors.toList());
+        return queryDsl.findAll();
     }
 
     @Override
     public Group findById(String id) {
-        GroupEntity entity = groupRepository.findById(id).orElseThrow(
+        return queryDsl.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP));
-        return entity.toDomain();
     }
 }

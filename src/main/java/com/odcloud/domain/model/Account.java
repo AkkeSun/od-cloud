@@ -5,7 +5,6 @@ import com.odcloud.application.port.in.command.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class Account {
     private String nickname;
     private String name;
     private String picture;
-    private Set<Group> groups;
+    private List<Group> groups;
     private LocalDateTime updateDt;
     private LocalDateTime regDt;
 
@@ -32,7 +31,7 @@ public class Account {
         return Account.builder()
             .email(claims.getSubject())
             .id((Long) claims.get("id"))
-            .groups(groupIds.stream().map(Group::of).collect(Collectors.toSet()))
+            .groups(groupIds.stream().map(Group::of).collect(Collectors.toList()))
             .build();
     }
 
@@ -42,14 +41,14 @@ public class Account {
             .nickname(userInfo.name())
             .name(command.name())
             .picture(userInfo.picture())
-            .groups(Set.of(Group.of(command.groupId())))
+            .groups(List.of(Group.of(command.groupId())))
             .regDt(LocalDateTime.now())
             .build();
     }
     
     public List<String> getGroupIds() {
         return groups.stream()
-            .map(Group::id)
+            .map(Group::getId)
             .collect(Collectors.toList());
     }
 }

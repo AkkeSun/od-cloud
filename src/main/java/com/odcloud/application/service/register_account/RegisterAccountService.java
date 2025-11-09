@@ -12,7 +12,9 @@ import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.application.port.out.MailPort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +28,16 @@ class RegisterAccountService implements RegisterAccountUseCase {
     private final AccountStoragePort accountStoragePort;
 
     @Override
+    @Transactional
     public RegisterAccountServiceResponse register(RegisterAccountCommand command) {
         GoogleUserInfoResponse info = googleOAuth2Port.getUserInfo(command.googleAuthorization());
         if (accountStoragePort.existsByEmail(info.email())) {
             throw new CustomBusinessException(Business_SAVED_USER);
         }
-
+        
         Group group = groupStoragePort.findById(command.groupId());
-        Account account = accountStoragePort.register(Account.of(info, command));
+        Account account = accountStoragePort.save(Account.of(info, command));
+        groupStoragePort.save(GroupAccount.of(group, account));
         mailPort.send(MailRequest.ofGroupJoinRequest(account, group));
         return RegisterAccountServiceResponse.ofSuccess();
     }

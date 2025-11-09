@@ -31,7 +31,6 @@ class ApiInfoStorageAdapter implements ApiInfoStoragePort {
     public List<ApiInfo> findAll() {
         if (apiInfoCache.isEmpty()) {
             apiInfoCache = apiInfoRepository.findAll().stream()
-                .map(ApiInfoEntity::toDomain)
                 .sorted(Comparator.comparingInt((ApiInfo domain) -> {
                     return StringUtils.countOccurrencesOf(domain.uriPattern(), "{");
                 }))

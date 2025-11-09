@@ -30,7 +30,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
             throw new CustomBusinessException(Business_SAVED_GROUP);
         }
 
-        groupStoragePort.register(Group.of(command));
+        groupStoragePort.save(Group.of(command));
         List<Group> savedGroups = groupStoragePort.findAll();
 
         redisStoragePort.register(constant.redisKey().group(), toJsonString(savedGroups));

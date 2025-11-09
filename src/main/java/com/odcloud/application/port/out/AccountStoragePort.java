@@ -4,10 +4,8 @@ import com.odcloud.domain.model.Account;
 
 public interface AccountStoragePort {
 
-    Account register(Account account);
-
-    void update(Account account);
-
+    Account save(Account account);
+    
     boolean existsByEmail(String email);
 
     Account findByEmail(String email);

@@ -34,6 +34,15 @@ class ApiInfoEntity {
     @Column(name = "URI_PATTERN")
     private String uriPattern;
 
+    static ApiInfoEntity of(ApiInfo domain) {
+        return ApiInfoEntity.builder()
+            .id(domain.id())
+            .domain(domain.domain())
+            .httpMethod(domain.httpMethod())
+            .uriPattern(domain.uriPattern())
+            .build();
+    }
+
     ApiInfo toDomain() {
         return ApiInfo.builder()
             .id(id)

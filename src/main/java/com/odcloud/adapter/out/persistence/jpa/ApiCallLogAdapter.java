@@ -15,7 +15,6 @@ class ApiCallLogAdapter implements ApiCallLogStoragePort {
 
     @Override
     public ApiCallLog register(ApiCallLog apiCallLog) {
-        ApiCallLogEntity entity = repository.save(ApiCallLogEntity.of(apiCallLog));
-        return entity.toDomain();
+        return repository.save(apiCallLog);
     }
 }

@@ -34,20 +34,10 @@ class GroupEntity {
 
     static GroupEntity of(Group group) {
         return GroupEntity.builder()
-            .id(group.id())
-            .ownerEmail(group.ownerEmail())
-            .description(group.description())
-            .regDt(group.regDt())
-            .build();
-    }
-
-
-    Group toDomain() {
-        return Group.builder()
-            .id(id)
-            .ownerEmail(ownerEmail)
-            .description(description)
-            .regDt(regDt)
+            .id(group.getId())
+            .ownerEmail(group.getOwnerEmail())
+            .description(group.getDescription())
+            .regDt(group.getRegDt())
             .build();
     }
 }

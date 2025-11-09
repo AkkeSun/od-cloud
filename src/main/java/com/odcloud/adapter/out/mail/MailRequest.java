@@ -99,8 +99,8 @@ public record MailRequest(
                     + "    </div>\n"
                     + "  </body>\n"
                     + "</html>\n",
-                group.description(), requester.getName(), requester.getEmail()))
-            .toList(List.of(group.ownerEmail()))
+                group.getDescription(), requester.getName(), requester.getEmail()))
+            .toList(List.of(group.getOwnerEmail()))
             .fileList(List.of())
             .build();
     }

@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @PostConstruct // todo : for test
     public void init() {
-        groupStoragePort.register(Group.builder()
+        groupStoragePort.save(Group.builder()
             .id("TEST")
             .ownerEmail("akkessun@gmail.com")
             .description("테스트 그룹")
