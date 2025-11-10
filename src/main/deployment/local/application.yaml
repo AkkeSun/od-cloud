@@ -61,4 +61,7 @@ service-constant:
     token: token::%s-%s
     group: group
 
+  file-upload:
+    base-path: ${FILE_BASE_PATH:/tmp/od-cloud}
+
   aes-secret-key: ${AES_SECRET}
