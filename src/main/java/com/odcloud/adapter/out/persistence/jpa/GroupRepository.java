@@ -102,4 +102,29 @@ class GroupRepository {
             .from(groupEntity)
             .fetch();
     }
+
+    public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
+        List<GroupAccount> groupAccounts = queryFactory
+            .select(Projections.constructor(
+                GroupAccount.class,
+                groupAccountEntity.id,
+                groupAccountEntity.groupId,
+                groupAccountEntity.accountId,
+                accountEntity.name,
+                accountEntity.nickname,
+                accountEntity.email,
+                groupAccountEntity.status,
+                groupAccountEntity.updateDt,
+                groupAccountEntity.regDt
+            ))
+            .from(groupAccountEntity)
+            .innerJoin(accountEntity)
+            .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .where(groupAccountEntity.groupId.eq(groupId))
+            .orderBy(groupAccountEntity.id.asc())
+            .fetch();
+
+        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
+        return groupAccounts;
+    }
 }
