@@ -37,7 +37,7 @@ public class Folder {
     }
 
     public static Folder createSubFolder(Long parentId, String parentPath, String groupId,
-        String name, String owner) {
+        String name, String accessLevel, String owner) {
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String folderName = uuid + "_" + date;
@@ -48,7 +48,7 @@ public class Folder {
             .name(name)
             .owner(owner)
             .path(parentPath + "/" + folderName)
-            .accessLevel("PRIVATE")
+            .accessLevel(accessLevel)
             .regDt(LocalDateTime.now())
             .build();
     }

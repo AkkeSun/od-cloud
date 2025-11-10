@@ -26,6 +26,7 @@ class CreateFolderService implements CreateFolderUseCase {
             parentFolder.getPath(),
             command.groupId(),
             command.name(),
+            command.accessLevel(),
             command.owner()
         );
 

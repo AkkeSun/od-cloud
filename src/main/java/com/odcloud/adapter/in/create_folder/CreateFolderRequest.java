@@ -16,7 +16,10 @@ record CreateFolderRequest(
     String groupId,
 
     @NotBlank(message = "폴더명은 필수값 입니다")
-    String name
+    String name,
+
+    @NotBlank(message = "접근 레벨은 필수값 입니다")
+    String accessLevel
 ) {
 
     CreateFolderCommand toCommand(Account account) {
@@ -24,6 +27,7 @@ record CreateFolderRequest(
             .parentId(parentId)
             .groupId(groupId)
             .name(name)
+            .accessLevel(accessLevel)
             .owner(account.getEmail())
             .build();
     }

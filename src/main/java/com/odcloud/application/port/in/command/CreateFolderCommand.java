@@ -7,6 +7,7 @@ public record CreateFolderCommand(
     Long parentId,
     String groupId,
     String name,
+    String accessLevel,
     String owner
 ) {
 
