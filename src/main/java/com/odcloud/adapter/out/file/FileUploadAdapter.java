@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -35,6 +36,27 @@ class FileUploadAdapter implements FileUploadPort {
             log.info("[createFolder] 폴더 생성 완료: {}", fullPath);
         } catch (IOException e) {
             log.error("[createFolder] 폴더 생성 실패: {}, error: {}", folderPath, e.getMessage());
+            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+        }
+    }
+
+    @Override
+    public void uploadFile(MultipartFile file, String fileLoc) {
+        try {
+            String basePath = profileConstant.fileUpload().basePath();
+            Path fullPath = Paths.get(basePath, fileLoc);
+
+            // 부모 디렉토리가 없으면 생성
+            Path parentDir = fullPath.getParent();
+            if (parentDir != null && !Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
+
+            // 파일 저장
+            file.transferTo(fullPath.toFile());
+            log.info("[uploadFile] 파일 업로드 완료: {}", fullPath);
+        } catch (IOException e) {
+            log.error("[uploadFile] 파일 업로드 실패: {}, error: {}", fileLoc, e.getMessage());
             throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
         }
     }
