@@ -15,11 +15,26 @@ public class GroupAccount {
     private Long id;
     private String groupId;
     private Long accountId;
+    private String groupName;
     private String name;
     private String nickName;
     private String email;
     private String status;
     private LocalDateTime updateDt;
+
+    public GroupAccount(Long id, String groupId, Long accountId, String name, String nickName,
+        String email, String status, LocalDateTime updateDt, LocalDateTime regDt) {
+        this.id = id;
+        this.groupId = groupId;
+        this.accountId = accountId;
+        this.name = name;
+        this.nickName = nickName;
+        this.email = email;
+        this.status = status;
+        this.updateDt = updateDt;
+        this.regDt = regDt;
+    }
+
     private LocalDateTime regDt;
 
     public static GroupAccount of(Group group, Account account) {
@@ -33,5 +48,14 @@ public class GroupAccount {
 
     public void updateName(String name) {
         this.name = name;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
+        this.updateDt = LocalDateTime.now();
+    }
+
+    public boolean isApproved() {
+        return status.equals("APPROVED");
     }
 }

@@ -1,5 +1,6 @@
 package com.odcloud.application.port.out;
 
+import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface GroupStoragePort {
     List<GroupAccount> findGroupAccountsByGroupId(String groupId);
 
     Group findById(String id);
+
+    GroupAccount findGroupAccountByGroupIdAndAccountId(UpdateGroupAccountStatusCommand command);
 }

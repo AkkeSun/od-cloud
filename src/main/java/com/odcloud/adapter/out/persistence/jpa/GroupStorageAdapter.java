@@ -1,7 +1,9 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_GROUP;
+import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT;
 
+import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
@@ -45,5 +47,14 @@ class GroupStorageAdapter implements GroupStoragePort {
     public Group findById(String id) {
         return queryDsl.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP));
+    }
+
+    @Override
+    public GroupAccount findGroupAccountByGroupIdAndAccountId(
+        UpdateGroupAccountStatusCommand command
+    ) {
+        return queryDsl.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+            command.accountId()).orElseThrow(
+            () -> new CustomBusinessException(Business_DoesNotExists_GROUP_ACCOUNT));
     }
 }
