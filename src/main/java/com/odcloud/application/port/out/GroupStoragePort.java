@@ -14,5 +14,7 @@ public interface GroupStoragePort {
 
     List<Group> findAll();
 
+    List<GroupAccount> findGroupAccountsByGroupId(String groupId);
+
     Group findById(String id);
 }

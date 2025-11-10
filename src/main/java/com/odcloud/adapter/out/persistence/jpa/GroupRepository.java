@@ -10,22 +10,23 @@ import com.odcloud.infrastructure.util.AesUtil;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class GroupRepository {
 
     private final AesUtil aesUtil;
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
 
-    public void save(Group group) {
+    @Transactional
+    void save(Group group) {
         if (group.getId() == null) {
             entityManager.persist(GroupEntity.of(group));
         } else {
@@ -33,7 +34,8 @@ class GroupRepository {
         }
     }
 
-    public void saveGroupMember(GroupAccount groupAccount) {
+    @Transactional
+    void saveGroupMember(GroupAccount groupAccount) {
         if (groupAccount.getId() == null) {
             entityManager.persist(GroupAccountEntity.of(groupAccount));
         } else {
@@ -41,14 +43,14 @@ class GroupRepository {
         }
     }
 
-    public boolean existsById(String id) {
+    boolean existsById(String id) {
         return queryFactory.selectOne()
             .from(groupEntity)
             .where(groupEntity.id.eq(id))
             .fetchOne() != null;
     }
 
-    public Optional<Group> findById(String id) {
+    Optional<Group> findById(String id) {
         Group group = queryFactory
             .select(Projections.constructor(
                 Group.class,
@@ -90,7 +92,7 @@ class GroupRepository {
         return Optional.of(group);
     }
 
-    public List<Group> findAll() {
+    List<Group> findAll() {
         return queryFactory
             .select(Projections.constructor(
                 Group.class,
@@ -101,5 +103,30 @@ class GroupRepository {
             ))
             .from(groupEntity)
             .fetch();
+    }
+
+    List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
+        List<GroupAccount> groupAccounts = queryFactory
+            .select(Projections.constructor(
+                GroupAccount.class,
+                groupAccountEntity.id,
+                groupAccountEntity.groupId,
+                groupAccountEntity.accountId,
+                accountEntity.name,
+                accountEntity.nickname,
+                accountEntity.email,
+                groupAccountEntity.status,
+                groupAccountEntity.updateDt,
+                groupAccountEntity.regDt
+            ))
+            .from(groupAccountEntity)
+            .innerJoin(accountEntity)
+            .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .where(groupAccountEntity.groupId.eq(groupId))
+            .orderBy(groupAccountEntity.id.asc())
+            .fetch();
+
+        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
+        return groupAccounts;
     }
 }
