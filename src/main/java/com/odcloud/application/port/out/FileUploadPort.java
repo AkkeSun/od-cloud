@@ -7,4 +7,6 @@ public interface FileUploadPort {
     void createFolder(String folderPath);
 
     void uploadFile(MultipartFile file, String fileLoc);
+
+    byte[] readFile(String fileLoc);
 }

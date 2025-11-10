@@ -60,4 +60,24 @@ class FileUploadAdapter implements FileUploadPort {
             throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
         }
     }
+
+    @Override
+    public byte[] readFile(String fileLoc) {
+        try {
+            String basePath = profileConstant.fileUpload().basePath();
+            Path fullPath = Paths.get(basePath, fileLoc);
+
+            if (!Files.exists(fullPath)) {
+                log.error("[readFile] 파일이 존재하지 않습니다: {}", fullPath);
+                throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+            }
+
+            byte[] fileData = Files.readAllBytes(fullPath);
+            log.info("[readFile] 파일 읽기 완료: {}", fullPath);
+            return fileData;
+        } catch (IOException e) {
+            log.error("[readFile] 파일 읽기 실패: {}, error: {}", fileLoc, e.getMessage());
+            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+        }
+    }
 }
