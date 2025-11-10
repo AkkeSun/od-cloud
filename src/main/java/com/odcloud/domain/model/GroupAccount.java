@@ -34,4 +34,9 @@ public class GroupAccount {
     public void updateName(String name) {
         this.name = name;
     }
+
+    public void updateStatus(String status) {
+        this.status = status;
+        this.updateDt = LocalDateTime.now();
+    }
 }
