@@ -1,7 +1,6 @@
 package com.odcloud.application.service.find_group_account_list;
 
 import com.odcloud.application.port.in.FindGroupAccountListUseCase;
-import com.odcloud.application.port.in.query.FindGroupAccountListQuery;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.GroupAccount;
 import java.util.List;
@@ -17,10 +16,8 @@ class FindGroupAccountListService implements FindGroupAccountListUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public FindGroupAccountListServiceResponse findGroupAccountList(
-        FindGroupAccountListQuery query) {
-        List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByGroupId(
-            query.groupId());
+    public FindGroupAccountListServiceResponse findGroupAccountList(String groupId) {
+        List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByGroupId(groupId);
         return FindGroupAccountListServiceResponse.of(groupAccounts);
     }
 }
