@@ -1,7 +1,6 @@
 package com.odcloud.adapter.in.find_group_account_list;
 
 import com.odcloud.application.service.find_group_account_list.FindGroupAccountListServiceResponse;
-import com.odcloud.infrastructure.util.ToStringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -29,11 +28,6 @@ record FindGroupAccountListResponse(
         return FindGroupAccountListResponse.builder()
             .groupAccounts(groupAccountInfos)
             .build();
-    }
-
-    @Override
-    public String toString() {
-        return ToStringUtil.toString(this);
     }
 
     @Builder
