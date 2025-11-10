@@ -15,4 +15,9 @@ class FolderStorageAdapter implements FolderStoragePort {
     public void save(Folder folder) {
         folderRepository.save(folder);
     }
+
+    @Override
+    public Folder findById(Long id) {
+        return folderRepository.findById(id);
+    }
 }
