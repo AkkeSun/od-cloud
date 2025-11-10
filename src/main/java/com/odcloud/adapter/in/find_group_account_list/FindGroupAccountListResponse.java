@@ -1,17 +1,17 @@
-package com.odcloud.adapter.in.get_group_account_list;
+package com.odcloud.adapter.in.find_group_account_list;
 
-import com.odcloud.application.service.get_group_account_list.GetGroupAccountListServiceResponse;
+import com.odcloud.application.service.find_group_account_list.FindGroupAccountListServiceResponse;
 import com.odcloud.infrastructure.util.ToStringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record GetGroupAccountListResponse(
+public record FindGroupAccountListResponse(
     List<GroupAccountInfo> groupAccounts
 ) {
 
-    public static GetGroupAccountListResponse of(GetGroupAccountListServiceResponse response) {
+    public static FindGroupAccountListResponse of(FindGroupAccountListServiceResponse response) {
         List<GroupAccountInfo> groupAccountInfos = response.groupAccounts().stream()
             .map(ga -> GroupAccountInfo.builder()
                 .id(ga.getId())
@@ -26,7 +26,7 @@ public record GetGroupAccountListResponse(
                 .build())
             .toList();
 
-        return GetGroupAccountListResponse.builder()
+        return FindGroupAccountListResponse.builder()
             .groupAccounts(groupAccountInfos)
             .build();
     }

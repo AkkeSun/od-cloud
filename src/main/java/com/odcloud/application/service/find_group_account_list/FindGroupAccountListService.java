@@ -1,7 +1,7 @@
-package com.odcloud.application.service.get_group_account_list;
+package com.odcloud.application.service.find_group_account_list;
 
-import com.odcloud.application.port.in.GetGroupAccountListUseCase;
-import com.odcloud.application.port.in.query.GetGroupAccountListQuery;
+import com.odcloud.application.port.in.FindGroupAccountListUseCase;
+import com.odcloud.application.port.in.query.FindGroupAccountListQuery;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.GroupAccount;
 import java.util.List;
@@ -11,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-class GetGroupAccountListService implements GetGroupAccountListUseCase {
+class FindGroupAccountListService implements FindGroupAccountListUseCase {
 
     private final GroupStoragePort groupStoragePort;
 
     @Override
     @Transactional(readOnly = true)
-    public GetGroupAccountListServiceResponse getGroupAccountList(
-        GetGroupAccountListQuery query) {
+    public FindGroupAccountListServiceResponse findGroupAccountList(
+        FindGroupAccountListQuery query) {
         List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByGroupId(
             query.groupId());
-        return GetGroupAccountListServiceResponse.of(groupAccounts);
+        return FindGroupAccountListServiceResponse.of(groupAccounts);
     }
 }
