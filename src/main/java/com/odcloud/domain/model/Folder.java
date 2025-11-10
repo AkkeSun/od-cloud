@@ -28,8 +28,8 @@ public class Folder {
             .groupId(groupId)
             .name(folderName)
             .owner(owner)
-            .path("/" + folderName)
-            .accessLevel("PRIVATE")
+            .path("/" + groupId)
+            .accessLevel("PUBLIC")
             .regDt(LocalDateTime.now())
             .build();
     }
