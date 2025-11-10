@@ -6,13 +6,13 @@ import lombok.Builder;
 
 @Builder
 public record UpdateGroupAccountStatusResponse(
-    String message
+    Boolean status
 ) {
 
     public static UpdateGroupAccountStatusResponse of(
         UpdateGroupAccountStatusServiceResponse response) {
         return UpdateGroupAccountStatusResponse.builder()
-            .message(response.message())
+            .status(response.status())
             .build();
     }
 

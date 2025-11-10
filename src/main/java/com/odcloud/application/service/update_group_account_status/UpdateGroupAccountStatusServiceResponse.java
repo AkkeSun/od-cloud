@@ -5,12 +5,12 @@ import lombok.Builder;
 
 @Builder
 public record UpdateGroupAccountStatusServiceResponse(
-    String message
+    Boolean status
 ) {
 
     public static UpdateGroupAccountStatusServiceResponse ofSuccess() {
         return UpdateGroupAccountStatusServiceResponse.builder()
-            .message("상태 변경이 완료되었습니다.")
+            .status(true)
             .build();
     }
 
