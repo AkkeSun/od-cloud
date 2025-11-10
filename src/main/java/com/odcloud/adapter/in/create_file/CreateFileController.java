@@ -3,7 +3,9 @@ package com.odcloud.adapter.in.create_file;
 import com.odcloud.application.port.in.CreateFileUseCase;
 import com.odcloud.application.port.in.command.CreateFileCommand;
 import com.odcloud.infrastructure.api.ApiResponse;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +23,11 @@ class CreateFileController {
     @PostMapping("/files")
     ApiResponse<CreateFileResponse> createFile(
         @RequestParam @NotNull(message = "폴더 ID는 필수값 입니다") Long folderId,
-        @RequestParam @NotNull(message = "파일은 필수값 입니다") MultipartFile file) {
+        @RequestParam @NotEmpty(message = "파일은 필수값 입니다") List<MultipartFile> files) {
 
         CreateFileCommand command = CreateFileCommand.builder()
             .folderId(folderId)
-            .file(file)
+            .files(files)
             .build();
 
         return ApiResponse.ofSuccess(CreateFileResponse.of(createFileUseCase.createFile(command)));

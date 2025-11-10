@@ -31,29 +31,32 @@ class CreateFileService implements CreateFileUseCase {
         // 폴더 조회
         Folder folder = folderStoragePort.findById(command.folderId());
 
-        // 원본 파일명 및 확장자 추출
-        MultipartFile multipartFile = command.file();
-        String originalFileName = multipartFile.getOriginalFilename();
-        String extension = getFileExtension(originalFileName);
+        // 여러 파일 처리
+        for (MultipartFile multipartFile : command.files()) {
+            // 원본 파일명 및 확장자 추출
+            String originalFileName = multipartFile.getOriginalFilename();
+            String extension = getFileExtension(originalFileName);
 
-        // 서버 파일명 생성 (UUID + 날짜 + 확장자)
-        String uuid = UUID.randomUUID().toString().substring(0, 8);
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String serverFileName = uuid + "_" + date + extension;
+            // 서버 파일명 생성 (UUID + 날짜 + 확장자)
+            String uuid = UUID.randomUUID().toString().substring(0, 8);
+            String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String serverFileName = uuid + "_" + date + extension;
 
-        // 파일 경로 생성
-        String fileLoc = folder.getPath() + "/" + serverFileName;
+            // 파일 경로 생성
+            String fileLoc = folder.getPath() + "/" + serverFileName;
 
-        // File 도메인 모델 생성
-        File file = File.create(command.folderId(), originalFileName, fileLoc);
+            // File 도메인 모델 생성
+            File file = File.create(command.folderId(), originalFileName, fileLoc);
 
-        // DB 저장
-        fileStoragePort.save(file);
+            // DB 저장
+            fileStoragePort.save(file);
 
-        // 파일 업로드
-        fileUploadPort.uploadFile(multipartFile, fileLoc);
+            // 파일 업로드
+            fileUploadPort.uploadFile(multipartFile, fileLoc);
 
-        log.info("[createFile] 파일 생성 완료 - 원본: {}, 저장경로: {}", originalFileName, fileLoc);
+            log.info("[createFile] 파일 생성 완료 - 원본: {}, 저장경로: {}", originalFileName, fileLoc);
+        }
+
         return CreateFileServiceResponse.ofSuccess();
     }
 
