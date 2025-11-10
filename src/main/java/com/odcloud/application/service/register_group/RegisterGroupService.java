@@ -5,8 +5,10 @@ import static com.odcloud.infrastructure.util.JsonUtil.toJsonString;
 
 import com.odcloud.application.port.in.RegisterGroupUseCase;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.port.out.FolderStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.application.port.out.RedisStoragePort;
+import com.odcloud.domain.model.Folder;
 import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -22,6 +24,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
     private final ProfileConstant constant;
     private final GroupStoragePort groupStoragePort;
     private final RedisStoragePort redisStoragePort;
+    private final FolderStoragePort folderStoragePort;
 
     @Override
     @Transactional
@@ -34,6 +37,10 @@ class RegisterGroupService implements RegisterGroupUseCase {
         List<Group> savedGroups = groupStoragePort.findAll();
 
         redisStoragePort.register(constant.redisKey().group(), toJsonString(savedGroups));
+
+        folderStoragePort.save(
+            Folder.ofRootFolder(command.id(), command.description(), command.ownerEmail()));
+
         return RegisterGroupServiceResponse.ofSuccess();
     }
 }
