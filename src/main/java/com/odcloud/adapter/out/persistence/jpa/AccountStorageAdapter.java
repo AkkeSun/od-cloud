@@ -31,10 +31,4 @@ class AccountStorageAdapter implements AccountStoragePort {
         return repository.findByEmail(email).orElseThrow(
             () -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
     }
-
-    @Override
-    public Account findById(Long id) {
-        return repository.findById(id).orElseThrow(
-            () -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
-    }
 }

@@ -1,23 +1,30 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QAccountEntity.accountEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QGroupAccountEntity.groupAccountEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QGroupEntity.groupEntity;
 
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.util.AesUtil;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AccountRepository {
 
     private final AesUtil aesUtil;
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
 
+    @Transactional
     public Account save(Account account) {
         AccountEntity entity = toEntity(account);
         if (entity.getId() == null) {
@@ -38,19 +45,31 @@ class AccountRepository {
     }
 
     public Optional<Account> findByEmail(String email) {
-        AccountEntity result = queryFactory
+        AccountEntity entity = queryFactory
             .selectFrom(accountEntity)
             .where(accountEntity.email.eq(email))
             .fetchOne();
-        return result == null ? Optional.empty() : Optional.of(toDomain(result));
-    }
 
-    public Optional<Account> findById(Long id) {
-        AccountEntity result = queryFactory
-            .selectFrom(accountEntity)
-            .where(accountEntity.id.eq(id))
-            .fetchOne();
-        return result == null ? Optional.empty() : Optional.of(toDomain(result));
+        if (entity == null) {
+            return Optional.empty();
+        }
+
+        Account account = toDomain(entity);
+        account.updateGroups(queryFactory.select(Projections.constructor(
+                Group.class,
+                groupEntity.id,
+                groupEntity.ownerEmail,
+                groupEntity.description,
+                groupEntity.regDt))
+            .from(groupEntity)
+            .innerJoin(groupAccountEntity)
+            .on(groupEntity.id.eq(groupAccountEntity.groupId))
+            .innerJoin(accountEntity)
+            .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .where(accountEntity.email.eq(email))
+            .fetch());
+        
+        return Optional.of(account);
     }
 
     private AccountEntity toEntity(Account account) {

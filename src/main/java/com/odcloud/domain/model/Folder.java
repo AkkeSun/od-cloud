@@ -1,7 +1,10 @@
 package com.odcloud.domain.model;
 
+import com.odcloud.application.port.in.command.RegisterFolderCommand;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +34,23 @@ public class Folder {
             .owner(command.ownerEmail())
             .path("/" + command.id())
             .accessLevel("PUBLIC")
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
+
+    public static Folder createSubFolder(RegisterFolderCommand command, String parentPath) {
+        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String folderName = uuid + "_" + date;
+
+        return Folder.builder()
+            .parentId(command.parentId())
+            .groupId(command.groupId())
+            .name(command.name())
+            .owner(command.owner())
+            .path(parentPath + "/" + folderName)
+            .accessLevel(command.accessLevel())
             .regDt(LocalDateTime.now())
             .build();
     }

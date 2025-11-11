@@ -5,4 +5,6 @@ import com.odcloud.domain.model.Folder;
 public interface FolderStoragePort {
 
     void save(Folder folder);
+
+    Folder findById(Long id);
 }

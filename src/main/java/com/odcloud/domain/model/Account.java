@@ -30,7 +30,7 @@ public class Account {
         List<String> groupIds = (List<String>) claims.get("groups");
         return Account.builder()
             .email(claims.getSubject())
-            .id((Long) claims.get("id"))
+            .id(((Number) claims.get("id")).longValue())
             .groups(groupIds.stream().map(Group::of).collect(Collectors.toList()))
             .build();
     }
@@ -45,10 +45,14 @@ public class Account {
             .regDt(LocalDateTime.now())
             .build();
     }
-    
+
     public List<String> getGroupIds() {
         return groups.stream()
             .map(Group::getId)
             .collect(Collectors.toList());
+    }
+
+    public void updateGroups(List<Group> groups) {
+        this.groups = groups;
     }
 }
