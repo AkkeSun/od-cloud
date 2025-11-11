@@ -24,4 +24,9 @@ class FolderStorageAdapter implements FolderStoragePort {
         return folderRepository.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_FOLDER));
     }
+
+    @Override
+    public boolean existsSameFolderName(Long parentId, String name) {
+        return folderRepository.existsSameFolderName(parentId, name);
+    }
 }

@@ -32,6 +32,7 @@ public enum ErrorCode {
     Business_DoesNotExists_GROUP_ACCOUNT(4010, "등록되지 않은 그룹 사용자 입니다"),
     Business_FILE_UPLOAD_ERROR(4011, "파일 업로드중 오류가 발생했습니다"),
     Business_DoesNotExists_FOLDER(4012, "조회된 폴더가 없습니다"),
+    Business_SAVED_FOLDER_NAME(4013, "이미 사용중인 폴더명 입니다"),
 
     ;
 
