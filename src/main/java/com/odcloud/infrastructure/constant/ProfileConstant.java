@@ -11,6 +11,7 @@ public record ProfileConstant(
     Jwt jwt,
     GoogleOAuth2 googleOAuth2,
     RedisKey redisKey,
+    FileUpload fileUpload,
     @NotBlank
     String aesSecretKey
 ) {
@@ -45,9 +46,14 @@ public record ProfileConstant(
 
     public record RedisKey(
         @NotBlank
-        String token,
+        String token
+    ) {
+
+    }
+
+    public record FileUpload(
         @NotBlank
-        String group
+        String basePath
     ) {
 
     }

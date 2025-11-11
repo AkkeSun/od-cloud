@@ -30,6 +30,7 @@ public enum ErrorCode {
     Business_GOOGLE_USER_INFO_ERROR(4008, "구글 사용자 정보 조회중 오류가 발생했습니다"),
     Business_DoesNotExists_GROUP(4009, "등록되지 않은 그룹 입니다"),
     Business_DoesNotExists_GROUP_ACCOUNT(4010, "등록되지 않은 그룹 사용자 입니다"),
+    Business_FILE_UPLOAD_ERROR(4011, "파일 업로드중 오류가 발생했습니다"),
 
     ;
 

@@ -61,4 +61,6 @@ service-constant:
     token: token::%s-%s
     group: group
 
+  file-upload:
+    base-path: /Users/od/IdeaProjects/od-cloud
   aes-secret-key: ${AES_SECRET}
