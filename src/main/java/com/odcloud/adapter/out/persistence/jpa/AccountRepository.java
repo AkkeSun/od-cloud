@@ -66,9 +66,10 @@ class AccountRepository {
             .on(groupEntity.id.eq(groupAccountEntity.groupId))
             .innerJoin(accountEntity)
             .on(groupAccountEntity.accountId.eq(accountEntity.id))
-            .where(accountEntity.email.eq(email))
+            .where(accountEntity.email.eq(email)
+                .and(groupAccountEntity.status.eq("ACTIVE")))
             .fetch());
-        
+
         return Optional.of(account);
     }
 
