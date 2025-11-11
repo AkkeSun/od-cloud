@@ -16,57 +16,40 @@ public class FakeAccountStoragePort implements AccountStoragePort {
     public boolean shouldThrowException = false;
 
     @Override
-    public void register(Account account) {
+    public Account save(Account account) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
 
         Account savedAccount = Account.builder()
-            .id(++id)
-            .username(account.getUsername())
-            .password(account.getPassword())
-            .name(account.getName())
+            .id(account.getId() == null ? ++id : account.getId())
             .email(account.getEmail())
-            .role(account.getRole())
-            .twoFactorSecret(account.getTwoFactorSecret())
-            .isAdminApproved(account.getIsAdminApproved())
+            .nickname(account.getNickname())
+            .name(account.getName())
+            .picture(account.getPicture())
+            .groups(account.getGroups())
+            .updateDt(account.getUpdateDt())
             .regDt(account.getRegDt())
             .build();
 
+        database.removeIf(a -> a.getId().equals(savedAccount.getId()));
         database.add(savedAccount);
-        log.info("FakeAccountStoragePort registered: username={}", account.getUsername());
+        log.info("FakeAccountStoragePort saved: email={}", account.getEmail());
+        return savedAccount;
     }
 
     @Override
-    public void update(Account account) {
-        database = database.stream()
-            .filter(a -> !a.getId().equals(account.getId()))
-            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        database.add(account);
-        log.info("FakeAccountStoragePort updated: id={}", account.getId());
-    }
-
-    @Override
-    public boolean existsByUsername(String username) {
+    public boolean existsByEmail(String email) {
         boolean exists = database.stream()
-            .anyMatch(account -> account.getUsername().equals(username));
-        log.info("FakeAccountStoragePort existsByUsername: username={}, exists={}", username, exists);
+            .anyMatch(account -> account.getEmail().equals(email));
+        log.info("FakeAccountStoragePort existsByEmail: email={}, exists={}", email, exists);
         return exists;
     }
 
     @Override
-    public Account findByUsername(String username) {
+    public Account findByEmail(String email) {
         return database.stream()
-            .filter(account -> account.getUsername().equals(username))
-            .findFirst()
-            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_NOT_FOUND_ACCOUNT));
-    }
-
-    @Override
-    public Account findByUsernameAndPassword(String username, String password) {
-        return database.stream()
-            .filter(account -> account.getUsername().equals(username))
-            .filter(account -> account.getPassword().equals(password))
+            .filter(account -> account.getEmail().equals(email))
             .findFirst()
             .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_NOT_FOUND_ACCOUNT));
     }

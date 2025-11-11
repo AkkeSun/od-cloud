@@ -18,22 +18,27 @@ public abstract class IntegrationTestSupport {
             "test-secret-key-for-jwt-must-be-long-enough-for-hmac-sha256"
         );
 
-        ProfileConstant.Slack slack = new ProfileConstant.Slack(
-            "http://localhost:8080",
-            "test-token-12345"
-        );
-
         ProfileConstant.GoogleOAuth2 googleOAuth2 = new ProfileConstant.GoogleOAuth2(
             "test-client-id",
             "test-client-secret",
-            "http://localhost:8080/callback"
+            "http://localhost:8080/callback",
+            "https://oauth2.googleapis.com/token",
+            "https://www.googleapis.com/oauth2/v2/userinfo"
+        );
+
+        ProfileConstant.RedisKey redisKey = new ProfileConstant.RedisKey(
+            "test-redis-key"
+        );
+
+        ProfileConstant.FileUpload fileUpload = new ProfileConstant.FileUpload(
+            "/tmp/test-uploads"
         );
 
         return new ProfileConstant(
             jwt,
-            slack,
             googleOAuth2,
-            "test-redis-key",
+            redisKey,
+            fileUpload,
             "test-aes-secret-key"
         );
     }
