@@ -3,6 +3,7 @@ package com.odcloud.adapter.out.file;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_UPLOAD_ERROR;
 
 import com.odcloud.application.port.out.FileUploadPort;
+import com.odcloud.domain.model.File;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.io.IOException;
@@ -34,6 +35,18 @@ class FileUploadAdapter implements FileUploadPort {
             Files.createDirectories(fullPath);
         } catch (IOException e) {
             log.error("[createFolder] 폴더 생성 실패: {}, error: {}", folderPath, e.getMessage());
+            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+        }
+    }
+
+    @Override
+    public void uploadFile(File file) {
+        try {
+            String basePath = profileConstant.fileUpload().basePath();
+            Path fullPath = Paths.get(basePath, file.getFileLoc());
+            file.getMultipartFile().transferTo(fullPath.toFile());
+        } catch (IOException e) {
+            log.error("[uploadFile] 파일 업로드 실패: {}, error: {}", file.getFileLoc(), e.getMessage());
             throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
         }
     }
