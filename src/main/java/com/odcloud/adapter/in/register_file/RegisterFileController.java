@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 class RegisterFileController {
 
-    private final RegisterFileUseCase createFileUseCase;
+    private final RegisterFileUseCase useCase;
 
     @PostMapping("/files")
-    ApiResponse<RegisterFileResponse> createFile(@Valid RegisterFileRequest request) {
-        RegisterFileServiceResponse response = createFileUseCase.createFile(request.toCommand());
+    ApiResponse<RegisterFileResponse> register(@Valid RegisterFileRequest request) {
+        RegisterFileServiceResponse response = useCase.register(request.toCommand());
         return ApiResponse.ok(RegisterFileResponse.of(response));
     }
 }
