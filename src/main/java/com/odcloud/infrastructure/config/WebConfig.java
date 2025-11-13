@@ -1,10 +1,7 @@
 package com.odcloud.infrastructure.config;
 
 import com.odcloud.application.port.out.GroupStoragePort;
-import com.odcloud.domain.model.Group;
 import com.odcloud.resolver.LoginAccountResolver;
-import jakarta.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -21,15 +18,5 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginAccountResolver);
-    }
-
-    @PostConstruct // todo : for test
-    public void init() {
-        groupStoragePort.save(Group.builder()
-            .id("TEST")
-            .ownerEmail("akkessun@gmail.com")
-            .description("테스트 그룹")
-            .regDt(LocalDateTime.now())
-            .build());
     }
 }
