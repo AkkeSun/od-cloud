@@ -2,23 +2,21 @@ package com.odcloud.adapter.in.download_file;
 
 import com.odcloud.application.port.in.DownloadFileUseCase;
 import com.odcloud.application.port.in.command.DownloadFileCommand;
+import com.odcloud.application.port.in.command.DownloadFilesCommand;
 import com.odcloud.application.port.in.command.DownloadFolderCommand;
 import com.odcloud.application.service.download_file.DownloadFileServiceResponse;
-import jakarta.validation.Valid;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Validated
 @RestController
 @RequiredArgsConstructor
 class DownloadFileController {
@@ -42,9 +40,13 @@ class DownloadFileController {
     /**
      * 복수 파일 다운로드 (압축)
      */
-    @PostMapping("/files/download")
-    ResponseEntity<byte[]> downloadFiles(@Valid @RequestBody DownloadFilesRequest request) {
-        DownloadFileServiceResponse response = useCase.downloadFiles(request.toCommand());
+    @GetMapping("/files/download")
+    ResponseEntity<byte[]> downloadFiles(@RequestParam List<Long> fileIds) {
+        DownloadFilesCommand command = DownloadFilesCommand.builder()
+            .fileIds(fileIds)
+            .build();
+
+        DownloadFileServiceResponse response = useCase.downloadFiles(command);
 
         return createDownloadResponse(response);
     }

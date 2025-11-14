@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,12 +14,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odcloud.application.port.in.DownloadFileUseCase;
 import com.odcloud.application.service.download_file.DownloadFileServiceResponse;
 import com.odcloud.infrastructure.exception.ExceptionAdvice;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -104,10 +101,6 @@ class DownloadFileControllerTest {
         @DisplayName("[success] 여러 파일을 ZIP으로 압축하여 다운로드한다")
         void success() throws Exception {
             // given
-            DownloadFilesRequest request = DownloadFilesRequest.builder()
-                .fileIds(List.of(1L, 2L))
-                .build();
-
             byte[] zipContent = "ZIP content".getBytes();
             DownloadFileServiceResponse serviceResponse = DownloadFileServiceResponse.of(
                 "files.zip",
@@ -118,9 +111,8 @@ class DownloadFileControllerTest {
             given(useCase.downloadFiles(any())).willReturn(serviceResponse);
 
             // when & then
-            mockMvc.perform(post("/files/download")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
+            mockMvc.perform(get("/files/download")
+                    .param("fileIds", "1", "2"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition",
                     "attachment; filename=\"files.zip\""))
@@ -129,18 +121,26 @@ class DownloadFileControllerTest {
         }
 
         @Test
-        @DisplayName("[exception] 파일 ID 목록이 비어있으면 400 에러가 발생한다")
-        void exception_emptyFileIds() throws Exception {
+        @DisplayName("[success] 단일 파일도 쿼리 파라미터로 다운로드할 수 있다")
+        void success_singleFile() throws Exception {
             // given
-            DownloadFilesRequest request = DownloadFilesRequest.builder()
-                .fileIds(List.of())
-                .build();
+            byte[] zipContent = "ZIP content".getBytes();
+            DownloadFileServiceResponse serviceResponse = DownloadFileServiceResponse.of(
+                "files.zip",
+                zipContent,
+                "application/zip"
+            );
+
+            given(useCase.downloadFiles(any())).willReturn(serviceResponse);
 
             // when & then
-            mockMvc.perform(post("/files/download")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+            mockMvc.perform(get("/files/download")
+                    .param("fileIds", "1"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition",
+                    "attachment; filename=\"files.zip\""))
+                .andExpect(header().string("Content-Type", "application/zip"))
+                .andExpect(content().bytes(zipContent));
         }
     }
 
