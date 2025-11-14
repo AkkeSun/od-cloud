@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.odcloud.application.port.out.ApiCallLogStoragePort;
 import com.odcloud.application.port.out.ApiInfoStoragePort;
+import com.odcloud.application.port.out.RedisStoragePort;
 import com.odcloud.domain.model.ApiCallLog;
 import com.odcloud.domain.model.ApiInfo;
 import com.odcloud.infrastructure.util.JwtUtil;
@@ -19,7 +20,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,6 +45,9 @@ class ApiCallLogFilterTest {
 
     @Mock
     private ApiCallLogStoragePort apiCallLogStoragePort;
+
+    @Mock
+    private RedisStoragePort redisStoragePort;
 
     @Mock
     private FilterChain filterChain;
@@ -81,7 +87,9 @@ class ApiCallLogFilterTest {
                 .httpMethod("GET")
                 .build();
 
-            given(apiInfoStoragePort.findByApiCallLog(any(ApiCallLog.class))).willReturn(mockApiInfo);
+            // Redis 캐시 미스 시나리오
+            given(redisStoragePort.findDataList(any(), any())).willReturn(Collections.emptyList());
+            given(apiInfoStoragePort.findAll()).willReturn(List.of(mockApiInfo));
 
             // when
             apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
@@ -112,7 +120,9 @@ class ApiCallLogFilterTest {
             ObjectNode accountInfo = objectMapper.createObjectNode();
             given(jwtUtil.getAccountInfo(any())).willReturn(accountInfo);
 
-            given(apiInfoStoragePort.findByApiCallLog(any(ApiCallLog.class))).willReturn(null);
+            // Redis 캐시 미스 및 DB에도 없는 경우
+            given(redisStoragePort.findDataList(any(), any())).willReturn(Collections.emptyList());
+            given(apiInfoStoragePort.findAll()).willReturn(Collections.emptyList());
 
             String responseBodyJson = "{\"httpStatus\":\"OK\"}";
 
@@ -185,7 +195,9 @@ class ApiCallLogFilterTest {
                 .httpMethod("POST")
                 .build();
 
-            given(apiInfoStoragePort.findByApiCallLog(any(ApiCallLog.class))).willReturn(mockApiInfo);
+            // Redis 캐시 미스 시나리오
+            given(redisStoragePort.findDataList(any(), any())).willReturn(Collections.emptyList());
+            given(apiInfoStoragePort.findAll()).willReturn(List.of(mockApiInfo));
 
             // when
             apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
@@ -224,7 +236,9 @@ class ApiCallLogFilterTest {
                 .httpMethod("POST")
                 .build();
 
-            given(apiInfoStoragePort.findByApiCallLog(any(ApiCallLog.class))).willReturn(mockApiInfo);
+            // Redis 캐시 미스 시나리오
+            given(redisStoragePort.findDataList(any(), any())).willReturn(Collections.emptyList());
+            given(apiInfoStoragePort.findAll()).willReturn(List.of(mockApiInfo));
 
             // when
             apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
@@ -263,7 +277,9 @@ class ApiCallLogFilterTest {
                 .httpMethod("GET")
                 .build();
 
-            given(apiInfoStoragePort.findByApiCallLog(any(ApiCallLog.class))).willReturn(mockApiInfo);
+            // Redis 캐시 미스 시나리오
+            given(redisStoragePort.findDataList(any(), any())).willReturn(Collections.emptyList());
+            given(apiInfoStoragePort.findAll()).willReturn(List.of(mockApiInfo));
 
             // when
             apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
