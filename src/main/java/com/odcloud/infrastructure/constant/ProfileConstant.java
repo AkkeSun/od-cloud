@@ -2,9 +2,11 @@ package com.odcloud.infrastructure.constant;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+@Builder
 @Validated
 @ConfigurationProperties("service-constant")
 public record ProfileConstant(
@@ -16,6 +18,7 @@ public record ProfileConstant(
     String aesSecretKey
 ) {
 
+    @Builder
     public record Jwt(
         @NotNull
         Long tempTokenTtl,
@@ -29,6 +32,7 @@ public record ProfileConstant(
 
     }
 
+    @Builder
     public record GoogleOAuth2(
         @NotBlank
         String clientId,
@@ -44,6 +48,7 @@ public record ProfileConstant(
 
     }
 
+    @Builder
     public record RedisKey(
         @NotBlank
         String token
@@ -51,6 +56,7 @@ public record ProfileConstant(
 
     }
 
+    @Builder
     public record FileUpload(
         @NotBlank
         String basePath

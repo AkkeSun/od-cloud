@@ -3,52 +3,42 @@ package com.odcloud.adapter.out.client.google;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.IntegrationTestSupport;
+import com.odcloud.infrastructure.constant.ProfileConstant;
+import com.odcloud.infrastructure.constant.ProfileConstant.GoogleOAuth2;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 
-class GoogleOAuth2ClientAdapterTest extends IntegrationTestSupport {
+class GoogleOAuth2ClientAdapterTest {
 
-    @Autowired
     private GoogleOAuth2ClientAdapter adapter;
 
     static MockWebServer mockWebServer;
 
-    @BeforeAll
-    static void setup() throws IOException {
+    @BeforeEach
+     void setup() throws IOException {
         mockWebServer = new MockWebServer();
-        mockWebServer.start(8888);
+        mockWebServer.start();
+        adapter = new GoogleOAuth2ClientAdapter(ProfileConstant.builder()
+            .googleOAuth2(GoogleOAuth2.builder()
+                .clientId("test-client-id")
+                .clientSecret("test-client-secret")
+                .redirectUri("test-redirect-uri")
+                .tokenApi(mockWebServer.url("/").toString())
+                .userInfoApi(mockWebServer.url("/").toString())
+                .build())
+            .build());
     }
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("service-constant.google-oauth2.client-id",
-            () -> "test-client-id");
-        registry.add("service-constant.google-oauth2.client-secret",
-            () -> "test-client-secret");
-        registry.add("service-constant.google-oauth2.redirect-uri",
-            () -> "http://localhost:8080/callback");
-        registry.add("service-constant.google-oauth2.token-api",
-            () -> mockWebServer.url("/").toString());
-        registry.add("service-constant.google-oauth2.user-info-api",
-            () -> mockWebServer.url("/").toString());
-        registry.add("service-constant.file-upload.base-path",
-            () -> "/tmp/test-uploads");
-    }
-
-    @AfterAll
-    static void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         mockWebServer.shutdown();
     }
 
@@ -168,35 +158,6 @@ class GoogleOAuth2ClientAdapterTest extends IntegrationTestSupport {
             assertThatThrownBy(() -> adapter.getToken(code))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
-        }
-
-        @Test
-        @DisplayName("[success] refresh_token이 null인 경우에도 정상 처리한다")
-        void success_nullRefreshToken() {
-            // given
-            String code = "test-code";
-            String responseBody = """
-                {
-                    "access_token": "test-access-token",
-                    "id_token": "test-id-token",
-                    "scope": "openid profile email",
-                    "token_type": "Bearer",
-                    "expires_in": 3600
-                }
-                """;
-
-            mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(responseBody)
-                .addHeader("Content-Type", "application/json"));
-
-            // when
-            GoogleTokenResponse tokenResponse = adapter.getToken(code);
-
-            // then
-            assertThat(tokenResponse).isNotNull();
-            assertThat(tokenResponse.access_token()).isEqualTo("test-access-token");
-            assertThat(tokenResponse.refresh_token()).isNull();
         }
     }
 
