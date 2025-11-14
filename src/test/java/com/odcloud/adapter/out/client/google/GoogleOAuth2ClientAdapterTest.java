@@ -136,7 +136,7 @@ class GoogleOAuth2ClientAdapterTest {
             mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody("{}")
-                .setBodyDelay(10, java.util.concurrent.TimeUnit.SECONDS));
+                .setBodyDelay(7, java.util.concurrent.TimeUnit.SECONDS));
 
             // when & then
             assertThatThrownBy(() -> adapter.getToken(code))

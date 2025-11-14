@@ -73,8 +73,8 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .name("홍길동")
                     .nickName("gildong")
                     .email("hong@example.com")
-                    .status("APPROVED")
-                    .updateDt(now)
+                    .status("ACTIVE")
+                    .modDt(now)
                     .regDt(now.minusDays(5))
                     .build(),
                 GroupAccount.builder()
@@ -85,7 +85,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .nickName("chulsoo")
                     .email("kim@example.com")
                     .status("PENDING")
-                    .updateDt(now.minusDays(1))
+                    .modDt(now.minusDays(1))
                     .regDt(now.minusDays(2))
                     .build()
             );
@@ -118,7 +118,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.groupAccounts[].email").type(JsonFieldType.STRING)
                     .description("사용자 이메일"),
                 fieldWithPath("data.groupAccounts[].status").type(JsonFieldType.STRING)
-                    .description("계정 상태 (APPROVED, PENDING 등)"),
+                    .description("계정 상태 (ACTIVE /  PENDING / BLOCK)"),
                 fieldWithPath("data.groupAccounts[].updateDt").type(JsonFieldType.STRING)
                     .description("수정 일시"),
                 fieldWithPath("data.groupAccounts[].regDt").type(JsonFieldType.STRING)

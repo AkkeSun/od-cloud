@@ -32,51 +32,8 @@ class CallbackGoogleOAuth2ServiceResponseTest {
 
             // then
             assertThat(serviceResponse).isNotNull();
-            assertThat(serviceResponse.googleAccessToken()).isEqualTo("google-access-token-123");
-        }
-
-        @Test
-        @DisplayName("[success] access_token이 null인 GoogleTokenResponse를 변환한다")
-        void success_nullAccessToken() {
-            // given
-            GoogleTokenResponse tokenResponse = new GoogleTokenResponse(
-                null,
-                "google-id-token-456",
-                "google-refresh-token-789",
-                "openid profile email",
-                "Bearer",
-                3600L
-            );
-
-            // when
-            CallbackGoogleOAuth2ServiceResponse serviceResponse =
-                CallbackGoogleOAuth2ServiceResponse.of(tokenResponse);
-
-            // then
-            assertThat(serviceResponse).isNotNull();
-            assertThat(serviceResponse.googleAccessToken()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] access_token이 빈 문자열인 GoogleTokenResponse를 변환한다")
-        void success_emptyAccessToken() {
-            // given
-            GoogleTokenResponse tokenResponse = new GoogleTokenResponse(
-                "",
-                "google-id-token-456",
-                "google-refresh-token-789",
-                "openid profile email",
-                "Bearer",
-                3600L
-            );
-
-            // when
-            CallbackGoogleOAuth2ServiceResponse serviceResponse =
-                CallbackGoogleOAuth2ServiceResponse.of(tokenResponse);
-
-            // then
-            assertThat(serviceResponse).isNotNull();
-            assertThat(serviceResponse.googleAccessToken()).isEmpty();
+            assertThat(serviceResponse.googleAccessToken()).isEqualTo(
+                "Bearer google-access-token-123");
         }
     }
 

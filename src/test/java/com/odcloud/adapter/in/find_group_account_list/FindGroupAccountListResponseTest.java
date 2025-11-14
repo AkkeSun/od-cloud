@@ -30,7 +30,7 @@ class FindGroupAccountListResponseTest {
                     .nickName("gildong")
                     .email("hong@example.com")
                     .status("APPROVED")
-                    .updateDt(now)
+                    .modDt(now)
                     .regDt(now.minusDays(5))
                     .build()
             );
@@ -88,8 +88,8 @@ class FindGroupAccountListResponseTest {
                     .name("홍길동")
                     .nickName("gildong")
                     .email("hong@example.com")
-                    .status("APPROVED")
-                    .updateDt(now)
+                    .status("ACTIVE")
+                    .modDt(now)
                     .regDt(now.minusDays(5))
                     .build(),
                 GroupAccount.builder()
@@ -100,7 +100,7 @@ class FindGroupAccountListResponseTest {
                     .nickName("chulsoo")
                     .email("kim@example.com")
                     .status("PENDING")
-                    .updateDt(now.minusDays(1))
+                    .modDt(now.minusDays(1))
                     .regDt(now.minusDays(2))
                     .build()
             );
@@ -120,7 +120,7 @@ class FindGroupAccountListResponseTest {
                 .get(0);
             assertThat(firstAccount.id()).isEqualTo(1L);
             assertThat(firstAccount.name()).isEqualTo("홍길동");
-            assertThat(firstAccount.status()).isEqualTo("APPROVED");
+            assertThat(firstAccount.status()).isEqualTo("ACTIVE");
 
             FindGroupAccountListResponse.GroupAccountInfo secondAccount = response.groupAccounts()
                 .get(1);
@@ -142,8 +142,8 @@ class FindGroupAccountListResponseTest {
                     .name(null)
                     .nickName(null)
                     .email(null)
-                    .status("APPROVED")
-                    .updateDt(now)
+                    .status("ACTIVE")
+                    .modDt(now)
                     .regDt(now)
                     .build()
             );

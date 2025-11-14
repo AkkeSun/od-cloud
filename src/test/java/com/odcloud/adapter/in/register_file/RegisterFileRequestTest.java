@@ -16,16 +16,16 @@ class RegisterFileRequestTest {
         @DisplayName("[success] 입력객체를 command 로 잘 변환한다")
         void success() {
             // given
+            Long folderId = 1L;
             RegisterFileRequest request = RegisterFileRequest.builder()
-                .folderId(10L)
                 .files(new ArrayList<>())
                 .build();
 
             // when
-            RegisterFileCommand command = request.toCommand();
+            RegisterFileCommand command = request.toCommand(folderId);
 
             // then
-            assert command.folderId().equals(request.getFolderId());
+            assert command.folderId().equals(folderId);
         }
     }
 }

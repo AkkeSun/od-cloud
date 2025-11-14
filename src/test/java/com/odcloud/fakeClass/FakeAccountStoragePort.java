@@ -28,7 +28,7 @@ public class FakeAccountStoragePort implements AccountStoragePort {
             .name(account.getName())
             .picture(account.getPicture())
             .groups(account.getGroups())
-            .updateDt(account.getUpdateDt())
+            .modDt(account.getModDt())
             .regDt(account.getRegDt())
             .build();
 

@@ -93,20 +93,7 @@ class RegisterFileControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 폴더 아이디가 null 인 경우 400 코드와 에러 메시지를 응답한다")
-        void error_folderIdIsNull() throws Exception {
-            String authorization = "Bearer test";
-
-            MockMultipartFile file = new MockMultipartFile(
-                "files", "test.txt", "text/plain", "test file content".getBytes()
-            );
-
-            performErrorDocument(null, status().isBadRequest(), "폴더 아이디 미입력", authorization,
-                new MockMultipartFile[]{file});
-        }
-
-        @Test
-        @DisplayName("[error] 조회된 상위 폴더가 없는 경우 500 코드와 에러 메시지를 응답한다.")
+        @DisplayName("[error] 조회된 폴더가 없는 경우 500 코드와 에러 메시지를 응답한다.")
         void error_folderDoesNotExist() throws Exception {
             Long folderId = 999L;
             String authorization = "Bearer test";
@@ -119,7 +106,7 @@ class RegisterFileControllerDocsTest extends RestDocsSupport {
                     com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_FOLDER
                 ));
 
-            performErrorDocument(folderId, status().isInternalServerError(), "조회된 상위 폴더 없음",
+            performErrorDocument(folderId, status().isInternalServerError(), "조회된 폴더 없음",
                 authorization, new MockMultipartFile[]{file});
         }
 
@@ -152,9 +139,8 @@ class RegisterFileControllerDocsTest extends RestDocsSupport {
         FieldDescriptor... responseFields
     ) throws Exception {
         mockMvc.perform(
-                RestDocumentationRequestBuilders.multipart("/files")
+                RestDocumentationRequestBuilders.multipart("/folders/{folderId}/files", folderId)
                     .file(files[0])
-                    .param("folderId", folderId == null ? "" : folderId.toString())
                     .header("Authorization", authorization))
             .andDo(print())
             .andExpect(status)
@@ -168,7 +154,6 @@ class RegisterFileControllerDocsTest extends RestDocsSupport {
                             + "RestDocs API 문서 작성 모듈 특성상 Multipart 입력 파라미터 정보 기록에 한계가 있어 아래 목록을 참고하시어 요청 바랍니다. <br><br>"
                             + "[입력받는 멀티파트 파라미터 목록]<br>"
                             + "- files : 업로드 파일 목록 <br>"
-                            + "- folderId : 폴더 아이디 <br><br>"
                             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. <br>"
                             + "(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)")
                         .requestHeaders(headerWithName("Authorization").description("인증 토큰"))

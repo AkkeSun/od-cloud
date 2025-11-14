@@ -58,8 +58,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("홍길동")
                 .nickname("gildong")
                 .picture("https://example.com/hong.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now.minusDays(10))
                 .build();
 
@@ -68,8 +67,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("김철수")
                 .nickname("cheolsu")
                 .picture("https://example.com/kim.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now.minusDays(5))
                 .build();
 
@@ -81,7 +79,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(groupId)
                 .accountId(account1.getId())
                 .status("APPROVED")
-                .updateDt(now)
+                .regDt(now)
                 .regDt(now.minusDays(10))
                 .build();
 
@@ -89,7 +87,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(groupId)
                 .accountId(account2.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .regDt(now)
                 .regDt(now.minusDays(5))
                 .build();
 
@@ -182,8 +180,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("사용자1")
                 .nickname("user1")
                 .picture("https://example.com/user1.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -192,8 +189,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("사용자2")
                 .nickname("user2")
                 .picture("https://example.com/user2.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -202,8 +198,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("사용자3")
                 .nickname("user3")
                 .picture("https://example.com/user3.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -215,8 +210,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupAccountEntity ga1 = GroupAccountEntity.builder()
                 .groupId(targetGroupId)
                 .accountId(account1.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -224,15 +219,15 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(targetGroupId)
                 .accountId(account2.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
             GroupAccountEntity ga3 = GroupAccountEntity.builder()
                 .groupId(otherGroupId)
                 .accountId(account3.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -271,11 +266,10 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정 생성
             AccountEntity approvedUser = AccountEntity.builder()
                 .email("approved@example.com")
-                .name("승인된 사용자")
-                .nickname("approved")
+                .name("활성 사용자")
+                .nickname("active")
                 .picture("https://example.com/approved.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -284,18 +278,16 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("대기 중인 사용자")
                 .nickname("pending")
                 .picture("https://example.com/pending.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
             AccountEntity rejectedUser = AccountEntity.builder()
                 .email("rejected@example.com")
-                .name("거절된 사용자")
-                .nickname("rejected")
+                .name("차단된 사용자")
+                .nickname("block")
                 .picture("https://example.com/rejected.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -307,8 +299,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(approvedUser.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build());
 
@@ -316,15 +308,15 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(groupId)
                 .accountId(pendingUser.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build());
 
             entityManager.persist(GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(rejectedUser.getId())
-                .status("REJECTED")
-                .updateDt(now)
+                .status("BLOCK")
+                .modDt(now)
                 .regDt(now)
                 .build());
 
@@ -335,7 +327,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(3);
             assertThat(result)
                 .extracting(GroupAccount::getStatus)
-                .containsExactlyInAnyOrder("APPROVED", "PENDING", "REJECTED");
+                .containsExactlyInAnyOrder("ACTIVE", "PENDING", "BLOCK");
         }
 
         @Test
@@ -360,8 +352,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                     .name("사용자" + i)
                     .nickname("user" + i)
                     .picture("https://example.com/user" + i + ".jpg")
-                    .isAdminApproved(true)
-                    .updateDt(now)
+                    .modDt(now)
                     .regDt(now)
                     .build();
                 entityManager.persist(account);
@@ -369,8 +360,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 GroupAccountEntity groupAccount = GroupAccountEntity.builder()
                     .groupId(groupId)
                     .accountId(account.getId())
-                    .status("APPROVED")
-                    .updateDt(now)
+                    .status("ACTIVE")
+                    .modDt(now)
                     .regDt(now.minusDays(i))
                     .build();
                 entityManager.persist(groupAccount);
@@ -408,8 +399,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("홍길동")  // 암호화될 이름
                 .nickname("gildong")
                 .picture("https://example.com/gildong.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -417,8 +407,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupAccountEntity groupAccount = GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(account.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(groupAccount);
@@ -545,8 +535,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -556,7 +545,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("test-group")
                 .accountId(account.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
 
@@ -597,8 +586,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -607,7 +595,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("test-group")
                 .accountId(account.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(existingGroupAccount);
@@ -618,8 +606,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .id(existingGroupAccount.getId())
                 .groupId("test-group")
                 .accountId(account.getId())
-                .status("APPROVED")
-                .updateDt(now.plusHours(1))
+                .status("ACTIVE")
+                .modDt(now.plusHours(1))
                 .regDt(now)
                 .build();
 
@@ -632,7 +620,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupAccountEntity savedEntity = entityManager.find(GroupAccountEntity.class,
                 existingGroupAccount.getId());
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getStatus()).isEqualTo("APPROVED");
+            assertThat(savedEntity.getStatus()).isEqualTo("ACTIVE");
         }
     }
 
@@ -773,8 +761,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("멤버")
                 .nickname("member")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -783,7 +770,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("test-group")
                 .accountId(account.getId())
                 .status("APPROVED")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(groupAccount);
@@ -828,8 +815,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("멤버1")
                 .nickname("member1")
                 .picture("https://example.com/pic1.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account1);
@@ -839,8 +825,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("멤버2")
                 .nickname("member2")
                 .picture("https://example.com/pic2.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account2);
@@ -848,8 +833,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(account1.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build());
 
@@ -857,7 +842,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(groupId)
                 .accountId(account2.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build());
 
@@ -934,8 +919,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("홍길동")  // 암호화될 이름
                 .nickname("gildong")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -943,8 +927,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(account.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build());
 
@@ -985,8 +969,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -994,8 +977,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupAccountEntity groupAccount = GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(account.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(groupAccount);
@@ -1021,7 +1004,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getName()).isEqualTo("테스트 사용자");
             assertThat(result.getNickName()).isEqualTo("tester");
             assertThat(result.getEmail()).isEqualTo("test@example.com");
-            assertThat(result.getStatus()).isEqualTo("APPROVED");
+            assertThat(result.getStatus()).isEqualTo("ACTIVE");
         }
 
         @Test
@@ -1044,8 +1027,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -1054,7 +1036,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(groupId)
                 .accountId(account.getId())
                 .status("PENDING")
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(groupAccount);
@@ -1089,8 +1071,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -1160,8 +1141,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -1205,8 +1185,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
                 .name("홍길동")  // 암호화될 이름
                 .nickname("gildong")
                 .picture("https://example.com/pic.jpg")
-                .isAdminApproved(true)
-                .updateDt(now)
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(account);
@@ -1214,8 +1193,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupAccountEntity groupAccount = GroupAccountEntity.builder()
                 .groupId(groupId)
                 .accountId(account.getId())
-                .status("APPROVED")
-                .updateDt(now)
+                .status("ACTIVE")
+                .modDt(now)
                 .regDt(now)
                 .build();
             entityManager.persist(groupAccount);
