@@ -295,5 +295,105 @@ class ApiCallLogFilterTest {
             // then
             verify(apiCallLogStoragePort, times(1)).register(any(ApiCallLog.class));
         }
+
+        @Test
+        @DisplayName("[success] 캐시 히트 후 매칭되는 ApiInfo를 찾아서 로깅한다")
+        void success_cacheHitWithMatch() throws ServletException, IOException {
+            // given
+            HttpServletRequest originalRequest = org.mockito.Mockito.mock(HttpServletRequest.class);
+            HttpServletResponse originalResponse = org.mockito.Mockito.mock(HttpServletResponse.class);
+
+            given(originalRequest.getRequestURI()).willReturn("/api/cached");
+            given(originalRequest.getMethod()).willReturn("GET");
+            given(originalRequest.getParameterMap()).willReturn(new HashMap<>());
+
+            ObjectNode accountInfo = objectMapper.createObjectNode();
+            accountInfo.put("email", "test@example.com");
+            given(jwtUtil.getAccountInfo(any())).willReturn(accountInfo);
+
+            String responseBodyJson = "{\"httpStatus\":\"OK\",\"data\":{\"errorCode\":\"\"}}";
+
+            ApiInfo mockApiInfo = ApiInfo.builder()
+                .id(5L)
+                .uri("/api/cached")
+                .httpMethod("GET")
+                .build();
+
+            // Redis 캐시 히트 시나리오 - 캐시에 이미 데이터가 있고 매칭됨
+            given(redisStoragePort.findDataList(any(), any())).willReturn(List.of(mockApiInfo));
+
+            // when
+            apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
+                @Override
+                public void doFilter(jakarta.servlet.ServletRequest request,
+                    jakarta.servlet.ServletResponse response) throws IOException, ServletException {
+                    ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper) response;
+                    wrapper.getOutputStream().write(responseBodyJson.getBytes(StandardCharsets.UTF_8));
+                    wrapper.copyBodyToResponse();
+                }
+            });
+
+            // then
+            verify(apiCallLogStoragePort, times(1)).register(any(ApiCallLog.class));
+            // DB 조회가 일어나지 않음
+            verify(apiInfoStoragePort, never()).findAll();
+        }
+
+        @Test
+        @DisplayName("[success] 캐시 히트 후 매칭 실패하면 DB 재조회하여 캐시 갱신 후 로깅한다")
+        void success_cacheHitButNoMatchThenRefresh() throws ServletException, IOException {
+            // given
+            HttpServletRequest originalRequest = org.mockito.Mockito.mock(HttpServletRequest.class);
+            HttpServletResponse originalResponse = org.mockito.Mockito.mock(HttpServletResponse.class);
+
+            given(originalRequest.getRequestURI()).willReturn("/api/new");
+            given(originalRequest.getMethod()).willReturn("POST");
+            given(originalRequest.getParameterMap()).willReturn(new HashMap<>());
+
+            ObjectNode accountInfo = objectMapper.createObjectNode();
+            accountInfo.put("email", "test@example.com");
+            given(jwtUtil.getAccountInfo(any())).willReturn(accountInfo);
+
+            String responseBodyJson = "{\"httpStatus\":\"CREATED\",\"data\":{\"errorCode\":\"\"}}";
+
+            // 캐시에는 다른 API만 있음
+            ApiInfo oldApiInfo = ApiInfo.builder()
+                .id(6L)
+                .uri("/api/old")
+                .httpMethod("GET")
+                .build();
+
+            // DB에는 새로운 API가 추가됨
+            ApiInfo newApiInfo = ApiInfo.builder()
+                .id(7L)
+                .uri("/api/new")
+                .httpMethod("POST")
+                .build();
+
+            // Redis 캐시 히트 (첫 번째 조회) - 매칭 실패할 데이터
+            given(redisStoragePort.findDataList(any(), any()))
+                .willReturn(List.of(oldApiInfo));
+
+            // DB 재조회 (매칭 실패 후) - 새로운 API 포함
+            given(apiInfoStoragePort.findAll()).willReturn(List.of(oldApiInfo, newApiInfo));
+
+            // when
+            apiCallLogFilter.doFilterInternal(originalRequest, originalResponse, new FilterChain() {
+                @Override
+                public void doFilter(jakarta.servlet.ServletRequest request,
+                    jakarta.servlet.ServletResponse response) throws IOException, ServletException {
+                    ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper) response;
+                    wrapper.getOutputStream().write(responseBodyJson.getBytes(StandardCharsets.UTF_8));
+                    wrapper.copyBodyToResponse();
+                }
+            });
+
+            // then
+            verify(apiCallLogStoragePort, times(1)).register(any(ApiCallLog.class));
+            // 캐시 매칭 실패 후 DB 재조회 발생
+            verify(apiInfoStoragePort, times(1)).findAll();
+            // 캐시 갱신 발생
+            verify(redisStoragePort, times(1)).register(any(), any());
+        }
     }
 }
