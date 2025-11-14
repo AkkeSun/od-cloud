@@ -1,0 +1,1162 @@
+openapi: 3.0.1
+info:
+  title: Cloud API
+  description: OD Cloud API 입니다.
+  version: 0.0.1
+servers:
+- url: https://cloud.odlab.kr
+tags: []
+paths:
+  /accounts:
+    post:
+      tags:
+      - Account
+      summary: 계정 등록 API
+      description: 구글 인증 토큰과 사용자 정보로 계정을 등록합니다.
+      operationId: "[계정 등록 API] "
+      parameters:
+      - name: googleAuthorization
+        in: header
+        description: 구글 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer google-token-123
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 계정 등록 API"
+            examples:
+              '[계정 등록 API] success':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : "group-abc123"
+                  }
+              '[계정 등록 API] 이름 미입력':
+                value: |-
+                  {
+                    "name" : null,
+                    "groupId" : "group-abc123"
+                  }
+              '[계정 등록 API] 구글 사용자 정보 조회 오류':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : "group-abc123"
+                  }
+              '[계정 등록 API] 등록되지 않은 그룹명 입력':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : "non-existent-group"
+                  }
+              '[계정 등록 API] 이미 등록된 사용자 정보 입력':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : "group-abc123"
+                  }
+              '[계정 등록 API] 유효하지 않은 구글 토큰 입력':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : "group-abc123"
+                  }
+              '[계정 등록 API] 그룹 아이디 미입력':
+                value: |-
+                  {
+                    "name" : "홍길동",
+                    "groupId" : null
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[계정 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[계정 등록 API] 이름 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "이름은 필수값 입니다"
+                      }
+                    }
+                '[계정 등록 API] 그룹 아이디 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "그룹 아이디는 필수값 입니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[계정 등록 API] 구글 사용자 정보 조회 오류':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4008,
+                        "errorMessage" : "구글 사용자 정보 조회중 오류가 발생했습니다"
+                      }
+                    }
+                '[계정 등록 API] 등록되지 않은 그룹명 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4009,
+                        "errorMessage" : "등록되지 않은 그룹 입니다"
+                      }
+                    }
+                '[계정 등록 API] 이미 등록된 사용자 정보 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4002,
+                        "errorMessage" : "등록된 사용자 정보 입니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[계정 등록 API] 유효하지 않은 구글 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2003,
+                        "errorMessage" : "유효한 구글 토큰이 아닙니다"
+                      }
+                    }
+  /auth:
+    put:
+      tags:
+      - Auth
+      summary: 토큰 재발급 API
+      description: 리프레시 토큰으로 새로운 액세스 토큰과 리프레시 토큰을 재발급합니다.
+      operationId: "[토큰 재발급 API] "
+      parameters:
+      - name: refreshToken
+        in: header
+        description: 리프레시 토큰
+        required: true
+        schema:
+          type: string
+        example: mismatched-refresh-token
+      responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[토큰 재발급 API] Redis 토큰 불일치':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2002,
+                        "errorMessage" : "유효한 리프레시 토큰이 아닙니다"
+                      }
+                    }
+                '[토큰 재발급 API] 유효하지 않은 리프레시 토큰':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2002,
+                        "errorMessage" : "유효한 리프레시 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[토큰 재발급 API] 계정 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4003,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[토큰 재발급 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "accessToken" : "new-access-token-abc123",
+                        "refreshToken" : "new-refresh-token-xyz789"
+                      }
+                    }
+    post:
+      tags:
+      - Auth
+      summary: 토큰 발급 API
+      description: 구글 인증 토큰으로 액세스 토큰과 리프레시 토큰을 발급합니다.
+      operationId: "[토큰 발급 API] "
+      parameters:
+      - name: googleAuthorization
+        in: header
+        description: 구글 인증 토큰 (필수)
+        required: true
+        schema:
+          type: string
+        example: Bearer google-token-123
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[토큰 발급 API] 구글 사용자 정보 조회 오류':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4008,
+                        "errorMessage" : "구글 사용자 정보 조회중 오류가 발생했습니다"
+                      }
+                    }
+                '[토큰 발급 API] 계정 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4003,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+                '[토큰 발급 API] 승인된 그룹 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4004,
+                        "errorMessage" : "승인된 그룹이 없는 사용자 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[토큰 발급 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "accessToken" : "access-token-abc123",
+                        "refreshToken" : "refresh-token-xyz789"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[토큰 발급 API] 유효하지 않은 구글 토큰':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2003,
+                        "errorMessage" : "유효한 구글 토큰이 아닙니다"
+                      }
+                    }
+  /auth/google:
+    get:
+      tags:
+      - Auth
+      summary: 구글 OAuth2 콜백 API
+      description: 구글 OAuth2 콜백을 처리하는 API 입니다.
+      operationId: "[구글 OAuth2 콜백 API] "
+      parameters:
+      - name: code
+        in: query
+        description: 구글 OAuth2 인증 코드 (필수)
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구글 OAuth2 콜백 API] 구글 인증코드 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "구글 인증코드는 필수값 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[구글 OAuth2 콜백 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "googleAccessToken" : "google-access-token-123"
+                      }
+                    }
+  /files:
+    post:
+      tags:
+      - File
+      summary: 파일 등록 API
+      description: "파일을 등록하는 API 입니다. <br>RestDocs API 문서 작성 모듈 특성상 Multipart 입력 파\
+        라미터 정보 기록에 한계가 있어 아래 목록을 참고하시어 요청 바랍니다. <br><br>[입력받는 멀티파트 파라미터 목록]<br>- files\
+        \ : 업로드 파일 목록 <br>- folderId : 폴더 아이디 <br><br>테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을\
+        \ 입력해야 정상 테스트가 가능합니다. <br>(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)"
+      operationId: "[파일 등록 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: error token
+      responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[파일 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[파일 등록 API] 폴더 아이디 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "폴더 ID는 필수값 입니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[파일 등록 API] 조회된 상위 폴더 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4012,
+                        "errorMessage" : "조회된 폴더가 없습니다"
+                      }
+                    }
+                '[파일 등록 API] 파일 업로드 에러':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4011,
+                        "errorMessage" : "파일 업로드중 오류가 발생했습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[파일 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+  /folders:
+    post:
+      tags:
+      - File
+      summary: 폴더 생성 API
+      description: 폴더를 생성하는 API 입니다.
+      operationId: "[폴더 등록 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 폴더 등록 API"
+            examples:
+              '[폴더 등록 API] 접근 범위 미입력':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : null
+                  }
+              '[폴더 등록 API] 유효하지 않은 접근 범위 입력':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : "INVALID"
+                  }
+              '[폴더 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] 중복된 폴더명':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : "중복 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] 부모 폴더 아이디 미입력':
+                value: |-
+                  {
+                    "parentId" : null,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] success':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] 그룹 아이디 미입력':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : null,
+                    "name" : "새 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] 부모 폴더 없음':
+                value: |-
+                  {
+                    "parentId" : 999,
+                    "groupId" : "group-123",
+                    "name" : "새 폴더",
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 등록 API] 이름 미입력':
+                value: |-
+                  {
+                    "parentId" : 1,
+                    "groupId" : "group-123",
+                    "name" : null,
+                    "accessLevel" : "PUBLIC"
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 등록 API] 접근 범위 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "접근 범위는 필수값 입니다"
+                      }
+                    }
+                '[폴더 등록 API] 유효하지 않은 접근 범위 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "유효하지 않은 접근 범위 입니다"
+                      }
+                    }
+                '[폴더 등록 API] 부모 폴더 아이디 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "상위 폴더 ID는 필수값 입니다"
+                      }
+                    }
+                '[폴더 등록 API] 그룹 아이디 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "그룹 ID는 필수값 입니다"
+                      }
+                    }
+                '[폴더 등록 API] 이름 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "폴더명은 필수값 입니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 등록 API] 중복된 폴더명':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4013,
+                        "errorMessage" : "이미 사용중인 폴더명 입니다"
+                      }
+                    }
+                '[폴더 등록 API] 부모 폴더 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4012,
+                        "errorMessage" : "조회된 폴더가 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[폴더 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+  /groups:
+    post:
+      tags:
+      - Account
+      summary: 그룹 등록 API
+      description: 새로운 그룹을 생성하는 API 입니다
+      operationId: "[그룹 등록 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 그룹 등록 API"
+            examples:
+              '[그룹 등록 API] 그룹 아이디 미입력':
+                value: |-
+                  {
+                    "id" : null,
+                    "description" : "테스트 그룹"
+                  }
+              '[그룹 등록 API] success':
+                value: |-
+                  {
+                    "id" : "group-123",
+                    "description" : "테스트 그룹"
+                  }
+              '[그룹 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "id" : "group-123",
+                    "description" : "테스트 그룹"
+                  }
+              '[그룹 등록 API] 그룹 설명 미입력':
+                value: |-
+                  {
+                    "id" : "group-123",
+                    "description" : null
+                  }
+              '[그룹 등록 API] 이미 등록된 그룹 정보 입력':
+                value: |-
+                  {
+                    "id" : "existing-group-123",
+                    "description" : "테스트 그룹"
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 등록 API] 그룹 아이디 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "그룹 아이디는 필수값 입니다"
+                      }
+                    }
+                '[그룹 등록 API] 그룹 설명 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "그룹 설명은 필수값 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 등록 API] 이미 등록된 그룹 정보 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4007,
+                        "errorMessage" : "등록된 그룹 정보 입니다"
+                      }
+                    }
+  /groups/{groupId}/accounts:
+    get:
+      tags:
+      - Account
+      summary: 그룹 계정 목록 조회 API
+      description: 특정 그룹에 속한 계정 목록을 조회합니다.
+      operationId: "[그룹 계정 목록 조회 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 계정 목록 조회 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groupAccounts" : [ {
+                          "id" : 1,
+                          "groupId" : "group-123",
+                          "accountId" : 100,
+                          "name" : "홍길동",
+                          "nickName" : "gildong",
+                          "email" : "hong@example.com",
+                          "status" : "APPROVED",
+                          "updateDt" : "2025-11-14T10:00:00",
+                          "regDt" : "2025-11-09T10:00:00"
+                        }, {
+                          "id" : 2,
+                          "groupId" : "group-123",
+                          "accountId" : 200,
+                          "name" : "김철수",
+                          "nickName" : "chulsoo",
+                          "email" : "kim@example.com",
+                          "status" : "PENDING",
+                          "updateDt" : "2025-11-13T10:00:00",
+                          "regDt" : "2025-11-12T10:00:00"
+                        } ]
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 목록 조회 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+  /groups/{groupId}/accounts/{accountId}/status:
+    patch:
+      tags:
+      - Account
+      summary: 그룹 계정 상태 변경 API
+      description: "그룹 내 계정의 상태를 변경합니다. (PENDING, APPROVED, BLOCK)"
+      operationId: "[그룹 계정 상태 변경 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        in: path
+        description: 계정 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 그룹 계정 상태 변경 API"
+            examples:
+              '[그룹 계정 상태 변경 API] 유효하지 않은 상태값 입력':
+                value: |-
+                  {
+                    "status" : "INVALID"
+                  }
+              '[그룹 계정 상태 변경 API] success':
+                value: |-
+                  {
+                    "status" : "APPROVED"
+                  }
+              '[그룹 계정 상태 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "status" : "APPROVED"
+                  }
+              '[그룹 계정 상태 변경 API] 상태값 미입력':
+                value: |-
+                  {
+                    "status" : null
+                  }
+              '[그룹 계정 상태 변경 API] 등록되지 않은 그룹 사용자':
+                value: |-
+                  {
+                    "status" : "APPROVED"
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 상태 변경 API] 유효하지 않은 상태값 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "유효하지 않은 상태값 입니다"
+                      }
+                    }
+                '[그룹 계정 상태 변경 API] 상태값 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "상태는 필수값 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 계정 상태 변경 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 상태 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 상태 변경 API] 등록되지 않은 그룹 사용자':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4010,
+                        "errorMessage" : "등록되지 않은 그룹 사용자 입니다"
+                      }
+                    }
+components:
+  schemas:
+    '[response] success':
+      title: "[response] success"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - result
+          type: object
+          properties:
+            result:
+              type: boolean
+              description: 등록 성공 여부
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[request] 폴더 등록 API':
+      title: "[request] 폴더 등록 API"
+      required:
+      - accessLevel
+      - groupId
+      - name
+      - parentId
+      type: object
+      properties:
+        accessLevel:
+          description: "접근 권한 (필수, PRIVATE/PUBLIC 중 하나)"
+          oneOf:
+          - type: string
+          - null
+        groupId:
+          description: 그룹 ID
+          oneOf:
+          - type: string
+          - null
+        name:
+          description: 폴더명
+          oneOf:
+          - null
+          - type: string
+        parentId:
+          description: 부모 폴더 ID
+          oneOf:
+          - type: number
+          - null
+    '[request] 계정 등록 API':
+      title: "[request] 계정 등록 API"
+      required:
+      - groupId
+      - name
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID
+          oneOf:
+          - null
+          - type: string
+        name:
+          description: 사용자 이름
+          oneOf:
+          - type: string
+          - null
+    '[response] error':
+      title: "[response] error"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - errorCode
+          - errorMessage
+          type: object
+          properties:
+            errorMessage:
+              type: string
+              description: 오류 메시지
+            errorCode:
+              type: number
+              description: 오류 코드
+          description: 오류 데이터
+        httpStatus:
+          type: number
+          description: HTTP 상태코드
+        message:
+          type: string
+          description: 응답 메시지
+    '[request] 그룹 등록 API':
+      title: "[request] 그룹 등록 API"
+      required:
+      - description
+      - id
+      type: object
+      properties:
+        description:
+          description: 그룹 설명
+          oneOf:
+          - type: string
+          - null
+        id:
+          description: 그룹 ID
+          oneOf:
+          - type: string
+          - null
+    '[request] 그룹 계정 상태 변경 API':
+      title: "[request] 그룹 계정 상태 변경 API"
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          description: 계정 상태 (PENDING / APPROVED / BLOCK)
+          oneOf:
+          - type: string
+          - null
+
+  securitySchemes:
+    APIKey:
+      type: apiKey
+      name: Authorization
+      in: header
+security:
+  - APIKey: []

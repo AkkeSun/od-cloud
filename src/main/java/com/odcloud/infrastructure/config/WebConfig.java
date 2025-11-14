@@ -1,6 +1,5 @@
 package com.odcloud.infrastructure.config;
 
-import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.resolver.LoginAccountResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final GroupStoragePort groupStoragePort;
     private final LoginAccountResolver loginAccountResolver;
 
     @Override

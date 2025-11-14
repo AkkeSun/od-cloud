@@ -93,7 +93,7 @@ class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 resource(ResourceSnippetParameters.builder()
-                    .tag("OAuth2")
+                    .tag("Auth")
                     .summary("구글 OAuth2 콜백 API")
                     .description("구글 OAuth2 콜백을 처리하는 API 입니다.")
                     .queryParameters(
