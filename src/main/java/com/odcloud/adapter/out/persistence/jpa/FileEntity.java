@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_FILE")
+@Table(name = "FILE")
 class FileEntity {
 
     @Id

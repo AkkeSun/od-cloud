@@ -82,7 +82,7 @@ public class JwtUtilImpl implements JwtUtil {
         ObjectNode userInfo = new ObjectMapper().createObjectNode();
         try {
             Claims claims = getClaims(token);
-            userInfo.put("username", claims.getSubject());
+            userInfo.put("email", claims.getSubject());
             return userInfo;
         } catch (Exception e) {
             return new ObjectMapper().createObjectNode();

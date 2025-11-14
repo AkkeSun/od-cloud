@@ -81,7 +81,7 @@ class AccountRepository {
             .name(aesUtil.encryptText(account.getName()))
             .picture(account.getPicture())
             .regDt(account.getRegDt())
-            .updateDt(account.getUpdateDt())
+            .modDt(account.getModDt())
             .build();
     }
 
@@ -93,7 +93,7 @@ class AccountRepository {
             .name(aesUtil.decryptText(entity.getName()))
             .picture(entity.getPicture())
             .regDt(entity.getRegDt())
-            .updateDt(entity.getUpdateDt())
+            .modDt(entity.getModDt())
             .build();
     }
 }

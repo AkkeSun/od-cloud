@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_GROUP_ACCOUNT")
+@Table(name = "GROUP_ACCOUNT")
 class GroupAccountEntity {
 
     @Id
@@ -35,8 +35,8 @@ class GroupAccountEntity {
     @Column(name = "STATUS")
     private String status;
 
-    @Column(name = "UPDATE_DT")
-    private LocalDateTime updateDt;
+    @Column(name = "MOD_DT")
+    private LocalDateTime modDt;
 
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
@@ -47,7 +47,7 @@ class GroupAccountEntity {
             .groupId(groupAccount.getGroupId())
             .accountId(groupAccount.getAccountId())
             .status(groupAccount.getStatus())
-            .updateDt(groupAccount.getUpdateDt())
+            .modDt(groupAccount.getModDt())
             .regDt(groupAccount.getRegDt())
             .build();
     }

@@ -58,7 +58,7 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
                 .responseBody(truncateTextLimit(responseBody))
                 .httpStatus(extractJsonField(responseBody, "httpStatus"))
                 .errorCode(errorCode)
-                .regDateTime(LocalDateTime.now())
+                .regDt(LocalDateTime.now())
                 .build();
 
             ApiInfo apiInfo = apiInfoStoragePort.findByApiCallLog(apiCallLog);

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_FOLDER")
+@Table(name = "FOLDER")
 class FolderEntity {
 
     @Id

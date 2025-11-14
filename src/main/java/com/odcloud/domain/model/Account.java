@@ -23,7 +23,7 @@ public class Account {
     private String name;
     private String picture;
     private List<Group> groups;
-    private LocalDateTime updateDt;
+    private LocalDateTime modDt;
     private LocalDateTime regDt;
 
     public static Account of(Claims claims) {

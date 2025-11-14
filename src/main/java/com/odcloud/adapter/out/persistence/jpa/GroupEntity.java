@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_GROUP")
+@Table(name = "`GROUP`")
 class GroupEntity {
 
     @Id

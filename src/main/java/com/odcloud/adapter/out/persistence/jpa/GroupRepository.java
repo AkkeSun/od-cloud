@@ -77,7 +77,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.updateDt,
+                groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
             .from(groupAccountEntity)
@@ -116,7 +116,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.updateDt,
+                groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
             .from(groupAccountEntity)
@@ -142,7 +142,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.updateDt,
+                groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
             .from(groupAccountEntity)

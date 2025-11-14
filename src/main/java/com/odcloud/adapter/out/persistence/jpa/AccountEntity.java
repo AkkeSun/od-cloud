@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_ACCOUNT")
+@Table(name = "ACCOUNT")
 class AccountEntity {
 
     @Id
@@ -37,11 +37,8 @@ class AccountEntity {
     @Column(name = "PICTURE")
     private String picture;
 
-    @Column(name = "IS_ADMIN_APPROVED")
-    private Boolean isAdminApproved;
-
-    @Column(name = "UPDATE_DT")
-    private LocalDateTime updateDt;
+    @Column(name = "MOD_DT")
+    private LocalDateTime modDt;
 
     @Column(name = "REG_DT")
     private LocalDateTime regDt;

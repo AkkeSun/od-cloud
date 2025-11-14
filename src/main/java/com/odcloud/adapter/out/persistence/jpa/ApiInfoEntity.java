@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "TBL_API_INFO")
+@Table(name = "API_INFO")
 class ApiInfoEntity {
 
     @Id

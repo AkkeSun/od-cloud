@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TBL_API_CALL_LOG")
+@Table(name = "API_CALL_LOG")
 class ApiCallLogEntity {
 
     @Id
@@ -29,8 +29,8 @@ class ApiCallLogEntity {
     @Column(name = "API_ID")
     private Long apiId;
 
-    @Column(name = "USERNAME")
-    private String username;
+    @Column(name = "EMAIL")
+    private String email;
 
     @Column(name = "REQUEST_PATH_PARAM")
     private String requestPathParam;
@@ -47,21 +47,21 @@ class ApiCallLogEntity {
     @Column(name = "ERROR_CODE")
     private String errorCode;
 
-    @Column(name = "REG_DATE_TIME")
-    private LocalDateTime regDateTime;
+    @Column(name = "REG_DT")
+    private LocalDateTime regDt;
 
 
     static ApiCallLogEntity of(ApiCallLog domain) {
         return ApiCallLogEntity.builder()
-            .username(domain.getAccountInfo().has("username") ?
-                domain.getAccountInfo().get("username").asText() : "")
+            .email(domain.getAccountInfo().has("email") ?
+                domain.getAccountInfo().get("email").asText() : "")
             .apiId(domain.getApiId())
             .requestPathParam(domain.getRequestPathParam())
             .requestParam(domain.getRequestParam())
             .requestBody(domain.getRequestBody())
             .httpStatus(domain.getHttpStatus())
             .errorCode(domain.getErrorCode())
-            .regDateTime(domain.getRegDateTime())
+            .regDt(domain.getRegDt())
             .build();
     }
 
@@ -72,7 +72,7 @@ class ApiCallLogEntity {
             .requestBody(requestBody)
             .httpStatus(httpStatus)
             .errorCode(errorCode)
-            .regDateTime(regDateTime)
+            .regDt(regDt)
             .build();
     }
 }

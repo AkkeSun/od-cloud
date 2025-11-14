@@ -20,7 +20,7 @@ record FindGroupAccountListResponse(
                 .nickName(ga.getNickName())
                 .email(ga.getEmail())
                 .status(ga.getStatus())
-                .updateDt(ga.getUpdateDt())
+                .updateDt(ga.getModDt())
                 .regDt(ga.getRegDt())
                 .build())
             .toList();

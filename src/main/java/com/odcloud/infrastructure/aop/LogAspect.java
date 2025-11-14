@@ -46,7 +46,7 @@ public class LogAspect {
             .httpMethod(request.getMethod())
             .requestParam(toJsonParams(request))
             .requestBody(truncateTextLimit(getRequestBody(joinPoint)))
-            .regDateTime(LocalDateTime.now())
+            .regDt(LocalDateTime.now())
             .build();
 
         log.info(apiCallLog.getRequestLog());

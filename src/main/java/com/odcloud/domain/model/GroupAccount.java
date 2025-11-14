@@ -20,10 +20,11 @@ public class GroupAccount {
     private String nickName;
     private String email;
     private String status;
-    private LocalDateTime updateDt;
+    private LocalDateTime modDt;
+    private LocalDateTime regDt;
 
     public GroupAccount(Long id, String groupId, Long accountId, String name, String nickName,
-        String email, String status, LocalDateTime updateDt, LocalDateTime regDt) {
+        String email, String status, LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;
         this.accountId = accountId;
@@ -31,11 +32,10 @@ public class GroupAccount {
         this.nickName = nickName;
         this.email = email;
         this.status = status;
-        this.updateDt = updateDt;
+        this.modDt = modDt;
         this.regDt = regDt;
     }
 
-    private LocalDateTime regDt;
 
     public static GroupAccount of(Group group, Account account) {
         return GroupAccount.builder()
@@ -46,13 +46,23 @@ public class GroupAccount {
             .build();
     }
 
+    public static GroupAccount ofGroupOwner(Group group, Account account) {
+        return GroupAccount.builder()
+            .groupId(group.getId())
+            .accountId(account.getId())
+            .status("ACTIVE")
+            .modDt(LocalDateTime.now())
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
     public void updateName(String name) {
         this.name = name;
     }
 
     public void updateStatus(String status) {
         this.status = status;
-        this.updateDt = LocalDateTime.now();
+        this.modDt = LocalDateTime.now();
     }
 
     public boolean isApproved() {

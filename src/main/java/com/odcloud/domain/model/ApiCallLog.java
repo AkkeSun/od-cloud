@@ -24,7 +24,7 @@ public class ApiCallLog {
     private String responseBody;
     private String httpStatus;
     private String errorCode;
-    private LocalDateTime regDateTime;
+    private LocalDateTime regDt;
 
     public void updateResponseBody(String responseBody) {
         this.responseBody = responseBody;
