@@ -137,6 +137,25 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             performErrorDocument("Bearer test", groupId, accountId, request,
                 status().isInternalServerError(), "등록되지 않은 그룹 사용자");
         }
+
+        @Test
+        @DisplayName("[error] 그룹 소유자의 요청이 아닌경우 500 에러를 반환한다")
+        void error2() throws Exception {
+            // given
+            String groupId = "group-abc123";
+            Long accountId = 999L;
+            UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
+                .status("APPROVED")
+                .build();
+
+            given(useCase.updateStatus(any()))
+                .willThrow(new com.odcloud.infrastructure.exception.CustomBusinessException(
+                    ErrorCode.Business_INVALID_GROUP_OWNER));
+
+            // when & then
+            performErrorDocument("Bearer test", groupId, accountId, request,
+                status().isInternalServerError(), "그룹 소유자의 요청이 아님");
+        }
     }
 
     private void performDocument(

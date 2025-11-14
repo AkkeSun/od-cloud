@@ -1,8 +1,11 @@
 package com.odcloud.adapter.in.update_group_account_status;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.domain.model.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,14 +26,17 @@ class UpdateGroupAccountStatusRequestTest {
 
             String groupId = "group-abc123";
             Long accountId = 1L;
+            Account account = mock(Account.class);
+            given(account.getEmail()).willReturn("owner@example.com");
 
             // when
-            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId);
+            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId, account);
 
             // then
             assertThat(command).isNotNull();
             assertThat(command.groupId()).isEqualTo(groupId);
             assertThat(command.accountId()).isEqualTo(accountId);
+            assertThat(command.groupOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(command.status()).isEqualTo("APPROVED");
         }
 
@@ -44,14 +50,17 @@ class UpdateGroupAccountStatusRequestTest {
 
             String groupId = null;
             Long accountId = null;
+            Account account = mock(Account.class);
+            given(account.getEmail()).willReturn(null);
 
             // when
-            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId);
+            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId, account);
 
             // then
             assertThat(command).isNotNull();
             assertThat(command.groupId()).isNull();
             assertThat(command.accountId()).isNull();
+            assertThat(command.groupOwnerEmail()).isNull();
             assertThat(command.status()).isNull();
         }
 
@@ -65,14 +74,17 @@ class UpdateGroupAccountStatusRequestTest {
 
             String groupId = "";
             Long accountId = 1L;
+            Account account = mock(Account.class);
+            given(account.getEmail()).willReturn("");
 
             // when
-            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId);
+            UpdateGroupAccountStatusCommand command = request.toCommand(groupId, accountId, account);
 
             // then
             assertThat(command).isNotNull();
             assertThat(command.groupId()).isEmpty();
             assertThat(command.accountId()).isEqualTo(1L);
+            assertThat(command.groupOwnerEmail()).isEmpty();
             assertThat(command.status()).isEmpty();
         }
     }
