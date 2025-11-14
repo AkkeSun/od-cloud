@@ -7,6 +7,6 @@ public record CallbackGoogleOAuth2ServiceResponse(
 ) {
 
     public static CallbackGoogleOAuth2ServiceResponse of(GoogleTokenResponse tokenResponse) {
-        return new CallbackGoogleOAuth2ServiceResponse(tokenResponse.access_token());
+        return new CallbackGoogleOAuth2ServiceResponse("Bearer " + tokenResponse.access_token());
     }
 }
