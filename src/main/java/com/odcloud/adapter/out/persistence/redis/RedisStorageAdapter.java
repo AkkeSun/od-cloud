@@ -51,4 +51,9 @@ class RedisStorageAdapter implements RedisStoragePort {
         }
         return parseJsonList(redisData, clazz);
     }
+
+    @Override
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
 }

@@ -1,6 +1,10 @@
 package com.odcloud.fakeClass;
 
+import static com.odcloud.infrastructure.util.JsonUtil.parseJson;
+import static com.odcloud.infrastructure.util.JsonUtil.parseJsonList;
+
 import com.odcloud.application.port.out.RedisStoragePort;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +45,36 @@ public class FakeRedisStoragePort implements RedisStoragePort {
             return clazz.cast(data);
         }
 
-        return null;
+        try {
+            return parseJson(data, clazz);
+        } catch (Exception e) {
+            log.error("Failed to parse JSON for key: {}", key, e);
+            return null;
+        }
     }
 
     @Override
     public <T> List<T> findDataList(String key, Class<T> clazz) {
-        return List.of();
+        String data = database.get(key);
+        if (data == null) {
+            return Collections.emptyList();
+        }
+
+        try {
+            return parseJsonList(data, clazz);
+        } catch (Exception e) {
+            log.error("Failed to parse JSON list for key: {}", key, e);
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public void delete(String key) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Redis delete failure");
+        }
+        database.remove(key);
+        log.info("FakeRedisStoragePort delete: key={}", key);
     }
 
     public void reset() {

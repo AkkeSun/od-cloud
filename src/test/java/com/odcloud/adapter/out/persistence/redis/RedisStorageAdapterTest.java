@@ -37,6 +37,8 @@ class RedisStorageAdapterTest extends IntegrationTestSupport {
         redisTemplate.delete("key-1");
         redisTemplate.delete("key-2");
         redisTemplate.delete("key-3");
+        redisTemplate.delete("delete-key");
+        redisTemplate.delete("non-existent-key");
     }
 
     @Nested
@@ -400,6 +402,88 @@ class RedisStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(100);
             assertThat(result.get(0).email).isEqualTo("user0@example.com");
             assertThat(result.get(99).email).isEqualTo("user99@example.com");
+        }
+    }
+
+    @Nested
+    @DisplayName("[delete] Redis 키를 삭제하는 메소드")
+    class Describe_delete {
+
+        @Test
+        @DisplayName("[success] 존재하는 키를 삭제한다")
+        void success() {
+            // given
+            String key = "delete-key";
+            redisTemplate.opsForValue().set(key, "test-value");
+            assertThat(redisTemplate.hasKey(key)).isTrue();
+
+            // when
+            adapter.delete(key);
+
+            // then
+            assertThat(redisTemplate.hasKey(key)).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] 존재하지 않는 키를 삭제해도 예외가 발생하지 않는다")
+        void success_nonExistentKey() {
+            // given
+            String key = "non-existent-key";
+            assertThat(redisTemplate.hasKey(key)).isFalse();
+
+            // when & then
+            adapter.delete(key);
+            assertThat(redisTemplate.hasKey(key)).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] 여러 키를 순차적으로 삭제한다")
+        void success_multipleKeys() {
+            // given
+            redisTemplate.opsForValue().set("key-1", "value-1");
+            redisTemplate.opsForValue().set("key-2", "value-2");
+            redisTemplate.opsForValue().set("key-3", "value-3");
+
+            // when
+            adapter.delete("key-1");
+            adapter.delete("key-2");
+            adapter.delete("key-3");
+
+            // then
+            assertThat(redisTemplate.hasKey("key-1")).isFalse();
+            assertThat(redisTemplate.hasKey("key-2")).isFalse();
+            assertThat(redisTemplate.hasKey("key-3")).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] TTL이 설정된 키도 삭제한다")
+        void success_withTtl() {
+            // given
+            String key = "delete-key";
+            adapter.register(key, "test-value", 60000);
+            assertThat(redisTemplate.hasKey(key)).isTrue();
+
+            // when
+            adapter.delete(key);
+
+            // then
+            assertThat(redisTemplate.hasKey(key)).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] 삭제 후 같은 키로 다시 데이터를 저장할 수 있다")
+        void success_reRegisterAfterDelete() {
+            // given
+            String key = "delete-key";
+            redisTemplate.opsForValue().set(key, "old-value");
+
+            // when
+            adapter.delete(key);
+            adapter.register(key, "new-value");
+
+            // then
+            String result = redisTemplate.opsForValue().get(key);
+            assertThat(result).isEqualTo("new-value");
         }
     }
 
