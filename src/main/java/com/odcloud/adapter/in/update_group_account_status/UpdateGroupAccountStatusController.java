@@ -2,8 +2,10 @@ package com.odcloud.adapter.in.update_group_account_status;
 
 import com.odcloud.application.port.in.UpdateGroupAccountStatusUseCase;
 import com.odcloud.application.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
+import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.response.ApiResponse;
 import com.odcloud.infrastructure.validation.groups.ValidationSequence;
+import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,10 +23,11 @@ class UpdateGroupAccountStatusController {
     ApiResponse<UpdateGroupAccountStatusResponse> updateStatus(
         @PathVariable String groupId,
         @PathVariable Long accountId,
+        @LoginAccount Account account,
         @RequestBody @Validated(ValidationSequence.class) UpdateGroupAccountStatusRequest request
     ) {
         UpdateGroupAccountStatusServiceResponse serviceResponse = useCase.updateStatus(
-            request.toCommand(groupId, accountId));
+            request.toCommand(groupId, accountId, account));
         return ApiResponse.ok(UpdateGroupAccountStatusResponse.of(serviceResponse));
     }
 }

@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.update_group_account_status;
 
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.ToStringUtil;
 import com.odcloud.infrastructure.validation.Contains;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
@@ -20,10 +21,11 @@ record UpdateGroupAccountStatusRequest(
     String status
 ) {
 
-    UpdateGroupAccountStatusCommand toCommand(String groupId, Long accountId) {
+    UpdateGroupAccountStatusCommand toCommand(String groupId, Long accountId, Account account) {
         return UpdateGroupAccountStatusCommand.builder()
             .groupId(groupId)
             .accountId(accountId)
+            .groupOwnerEmail(account.getEmail())
             .status(status)
             .build();
     }

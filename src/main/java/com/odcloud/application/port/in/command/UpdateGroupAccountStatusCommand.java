@@ -6,6 +6,7 @@ import lombok.Builder;
 public record UpdateGroupAccountStatusCommand(
     String groupId,
     Long accountId,
+    String groupOwnerEmail,
     String status
 ) {
 
