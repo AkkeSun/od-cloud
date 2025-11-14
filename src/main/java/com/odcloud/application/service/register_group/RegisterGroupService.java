@@ -4,11 +4,14 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROU
 
 import com.odcloud.application.port.in.RegisterGroupUseCase;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.port.out.AccountStoragePort;
 import com.odcloud.application.port.out.FileUploadPort;
 import com.odcloud.application.port.out.FolderStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
+import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Folder;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
     private final FileUploadPort fileUploadPort;
     private final GroupStoragePort groupStoragePort;
     private final FolderStoragePort folderStoragePort;
+    private final AccountStoragePort accountStoragePort;
 
     @Override
     @Transactional
@@ -29,7 +33,11 @@ class RegisterGroupService implements RegisterGroupUseCase {
             throw new CustomBusinessException(Business_SAVED_GROUP);
         }
 
-        groupStoragePort.save(Group.of(command));
+        Group group = Group.of(command);
+        groupStoragePort.save(group);
+
+        Account account = accountStoragePort.findByEmail(command.ownerEmail());
+        groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
 
         Folder folder = Folder.ofRootFolder(command);
         folderStoragePort.save(folder);
