@@ -85,7 +85,7 @@ swaggerSources {
     }
 }
 
-// ./gradlew :product:openapi3 :product:copyOasToSwagger
+// ./gradlew openapi3 copyOasToSwagger
 openapi3 {
     servers = [
             { url = "https://cloud.odlab.kr" }
@@ -95,17 +95,18 @@ openapi3 {
     version = "0.0.1"
     format = "yaml"
     outputDirectory = "src/main/resources/static/docs"
+    outputFileNamePrefix = 'od-cloud-api'
 }
 
 tasks.register('copyOasToSwagger', DefaultTask) {
     doLast {
-        def openapi3File = file("src/main/resources/static/docs/product-api.yaml")
-        def securitySchemesContent = "  securitySchemes:\n" +                                                        \
-                                                                                            "    APIKey:\n" +                                                        \
-                                                                                            "      type: apiKey\n" +                                                        \
-                                                                                            "      name: Authorization\n" +                                                        \
-                                                                                            "      in: header\n" +                                                       \
-                                                                                            "security:\n" +
+        def openapi3File = file("src/main/resources/static/docs/od-cloud-api.yaml")
+        def securitySchemesContent = "  securitySchemes:\n" +                                                             \
+                                                                                                 "    APIKey:\n" +                                                             \
+                                                                                                 "      type: apiKey\n" +                                                             \
+                                                                                                 "      name: Authorization\n" +                                                             \
+                                                                                                 "      in: header\n" +                                                            \
+                                                                                                 "security:\n" +
                 "  - APIKey: []"
 
         if (openapi3File.exists()) {
@@ -120,7 +121,7 @@ tasks.register('copyOasToSwagger', DefaultTask) {
 }
 
 bootJar {
-    archiveFileName = "product.jar"
+    archiveFileName = "od-cloud.jar"
 }
 
 jar {

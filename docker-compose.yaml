@@ -1,0 +1,14 @@
+version: "3.8"
+
+# for test purposes
+services:
+  swagger:
+    container_name: od-cloud-swagger
+    image: swaggerapi/swagger-ui
+    environment:
+      - URLS_PRIMARY_NAME=chameleon
+      - "URLS=[ 
+                { url: 'http://localhost:8080/docs/od-cloud-api.yaml', name: 'od-cloud' }
+            ]"
+    ports:
+      - "8090:8080"
