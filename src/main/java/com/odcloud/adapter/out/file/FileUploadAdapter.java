@@ -44,6 +44,11 @@ class FileUploadAdapter implements FileUploadPort {
         try {
             String basePath = profileConstant.fileUpload().basePath();
             Path fullPath = Paths.get(basePath, file.getFileLoc());
+            Path parentDir = fullPath.getParent();
+            if (parentDir != null && !Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
+
             file.getMultipartFile().transferTo(fullPath.toFile());
         } catch (IOException e) {
             log.error("[uploadFile] 파일 업로드 실패: {}, error: {}", file.getFileLoc(), e.getMessage());
