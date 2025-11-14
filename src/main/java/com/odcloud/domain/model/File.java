@@ -22,6 +22,18 @@ public class File {
     private MultipartFile multipartFile;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
+
+    // Constructor for query projection (without MultipartFile)
+    public File(Long id, Long folderId, String fileName, String fileLoc,
+        LocalDateTime modDt, LocalDateTime regDt) {
+        this.id = id;
+        this.folderId = folderId;
+        this.fileName = fileName;
+        this.fileLoc = fileLoc;
+        this.multipartFile = null;
+        this.modDt = modDt;
+        this.regDt = regDt;
+    }
     
     public static File create(Folder folder, MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();

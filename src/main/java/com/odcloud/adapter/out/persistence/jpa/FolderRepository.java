@@ -53,4 +53,22 @@ class FolderRepository {
             .where(folderEntity.parentId.eq(parentId).and(folderEntity.name.eq(name)))
             .fetchOne() != null;
     }
+
+    List<Folder> findByParentId(Long parentId) {
+        return queryFactory
+            .select(Projections.constructor(Folder.class,
+                folderEntity.id,
+                folderEntity.parentId,
+                folderEntity.groupId,
+                folderEntity.name,
+                folderEntity.owner,
+                folderEntity.path,
+                folderEntity.accessLevel,
+                folderEntity.modDt,
+                folderEntity.regDt
+            ))
+            .from(folderEntity)
+            .where(folderEntity.parentId.eq(parentId))
+            .fetch();
+    }
 }

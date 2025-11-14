@@ -51,6 +51,34 @@ public class FakeFolderStoragePort implements FolderStoragePort {
             .anyMatch(folder -> folder.getParentId().equals(parentId) && folder.getName().equals(name));
     }
 
+    @Override
+    public List<Folder> findByParentId(Long parentId) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Storage failure");
+        }
+        return database.stream()
+            .filter(folder -> folder.getParentId() != null && folder.getParentId().equals(parentId))
+            .toList();
+    }
+
+    @Override
+    public List<Folder> findAllSubFolders(Long folderId) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Storage failure");
+        }
+        List<Folder> result = new ArrayList<>();
+        collectSubFoldersRecursively(folderId, result);
+        return result;
+    }
+
+    private void collectSubFoldersRecursively(Long parentId, List<Folder> result) {
+        List<Folder> children = findByParentId(parentId);
+        result.addAll(children);
+        for (Folder child : children) {
+            collectSubFoldersRecursively(child.getId(), result);
+        }
+    }
+
     public void reset() {
         database.clear();
         id = 0L;
