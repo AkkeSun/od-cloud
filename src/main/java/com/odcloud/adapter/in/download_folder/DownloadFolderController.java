@@ -1,7 +1,7 @@
-package com.odcloud.adapter.in.download_file;
+package com.odcloud.adapter.in.download_folder;
 
 import com.odcloud.application.port.in.DownloadFileUseCase;
-import com.odcloud.application.port.in.command.DownloadFileCommand;
+import com.odcloud.application.port.in.command.DownloadFolderCommand;
 import com.odcloud.application.service.download_file.DownloadFileServiceResponse;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-class DownloadFileController {
+class DownloadFolderController {
 
     private final DownloadFileUseCase useCase;
 
     /**
-     * 단건 파일 다운로드
+     * 폴더 다운로드 (압축)
      */
-    @GetMapping("/files/{fileId}/download")
-    ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId) {
-        DownloadFileCommand command = DownloadFileCommand.builder()
-            .fileId(fileId)
+    @GetMapping("/folders/{folderId}/download")
+    ResponseEntity<byte[]> downloadFolder(@PathVariable Long folderId) {
+        DownloadFolderCommand command = DownloadFolderCommand.builder()
+            .folderId(folderId)
             .build();
 
-        DownloadFileServiceResponse response = useCase.downloadFile(command);
+        DownloadFileServiceResponse response = useCase.downloadFolder(command);
 
         return createDownloadResponse(response);
     }

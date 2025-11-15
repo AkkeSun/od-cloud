@@ -1,4 +1,4 @@
-package com.odcloud.adapter.in.download_file;
+package com.odcloud.adapter.in.download_folder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -22,7 +22,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-class DownloadFileControllerTest {
+class DownloadFolderControllerTest {
 
     private MockMvc mockMvc;
     private DownloadFileUseCase useCase;
@@ -35,61 +35,59 @@ class DownloadFileControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(new DownloadFileController(useCase))
+        mockMvc = MockMvcBuilders.standaloneSetup(new DownloadFolderController(useCase))
             .setControllerAdvice(new ExceptionAdvice())
             .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
             .build();
     }
 
     @Nested
-    @DisplayName("[downloadFile] 단건 파일 다운로드")
-    class Describe_downloadFile {
+    @DisplayName("[downloadFolder] 폴더 다운로드")
+    class Describe_downloadFolder {
 
         @Test
-        @DisplayName("[success] 파일을 다운로드한다")
+        @DisplayName("[success] 폴더 내 모든 파일을 ZIP으로 압축하여 다운로드한다")
         void success() throws Exception {
             // given
-            Long fileId = 1L;
-            byte[] fileContent = "test file content".getBytes();
+            Long folderId = 1L;
+            byte[] zipContent = "ZIP folder content".getBytes();
             DownloadFileServiceResponse serviceResponse = DownloadFileServiceResponse.of(
-                "test.txt",
-                fileContent,
-                "text/plain"
+                "MyFolder.zip",
+                zipContent,
+                "application/zip"
             );
 
-            given(useCase.downloadFile(any())).willReturn(serviceResponse);
+            given(useCase.downloadFolder(any())).willReturn(serviceResponse);
 
             // when & then
-            mockMvc.perform(get("/files/{fileId}/download", fileId))
+            mockMvc.perform(get("/folders/{folderId}/download", folderId))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition",
-                    "attachment; filename=\"test.txt\""))
-                .andExpect(header().string("Content-Type", "text/plain"))
-                .andExpect(header().longValue("Content-Length", fileContent.length))
-                .andExpect(content().bytes(fileContent));
+                    "attachment; filename=\"MyFolder.zip\""))
+                .andExpect(header().string("Content-Type", "application/zip"))
+                .andExpect(content().bytes(zipContent));
         }
 
         @Test
-        @DisplayName("[success] PDF 파일을 다운로드한다")
-        void success_pdfFile() throws Exception {
+        @DisplayName("[success] 한글 이름의 폴더도 다운로드할 수 있다")
+        void success_koreanFolderName() throws Exception {
             // given
-            Long fileId = 2L;
-            byte[] pdfContent = "PDF content".getBytes();
+            Long folderId = 2L;
+            byte[] zipContent = "ZIP content".getBytes();
             DownloadFileServiceResponse serviceResponse = DownloadFileServiceResponse.of(
-                "document.pdf",
-                pdfContent,
-                "application/pdf"
+                "내폴더.zip",
+                zipContent,
+                "application/zip"
             );
 
-            given(useCase.downloadFile(any())).willReturn(serviceResponse);
+            given(useCase.downloadFolder(any())).willReturn(serviceResponse);
 
             // when & then
-            mockMvc.perform(get("/files/{fileId}/download", fileId))
+            mockMvc.perform(get("/folders/{folderId}/download", folderId))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Content-Disposition",
-                    "attachment; filename=\"document.pdf\""))
-                .andExpect(header().string("Content-Type", "application/pdf"))
-                .andExpect(content().bytes(pdfContent));
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Type", "application/zip"))
+                .andExpect(content().bytes(zipContent));
         }
     }
 }
