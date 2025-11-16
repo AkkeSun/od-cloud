@@ -65,7 +65,7 @@ public class GroupAccount {
         this.modDt = LocalDateTime.now();
     }
 
-    public boolean isApproved() {
-        return status.equals("APPROVED");
+    public boolean isActive() {
+        return status.equals("ACTIVE");
     }
 }

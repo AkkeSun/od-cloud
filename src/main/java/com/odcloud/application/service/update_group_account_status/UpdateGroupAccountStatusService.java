@@ -1,11 +1,10 @@
 package com.odcloud.application.service.update_group_account_status;
 
-import static com.odcloud.adapter.out.mail.MailRequest.ofGroupAccountStatusApproved;
+import static com.odcloud.adapter.out.mail.MailRequest.ofGroupAccountStatusActive;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
 import com.odcloud.application.port.in.UpdateGroupAccountStatusUseCase;
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
-import com.odcloud.application.port.out.AccountStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.application.port.out.MailPort;
 import com.odcloud.domain.model.Group;
@@ -21,7 +20,6 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
 
     private final MailPort mailPort;
     private final GroupStoragePort groupStoragePort;
-    private final AccountStoragePort accountStoragePort;
 
     @Override
     @Transactional
@@ -37,8 +35,8 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
         groupAccount.updateStatus(command.status());
         groupStoragePort.save(groupAccount);
 
-        if (groupAccount.isApproved()) {
-            mailPort.send(ofGroupAccountStatusApproved(groupAccount));
+        if (groupAccount.isActive()) {
+            mailPort.send(ofGroupAccountStatusActive(groupAccount));
         }
         return UpdateGroupAccountStatusServiceResponse.ofSuccess();
     }

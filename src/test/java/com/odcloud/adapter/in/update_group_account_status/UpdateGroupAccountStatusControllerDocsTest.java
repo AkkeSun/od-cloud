@@ -62,13 +62,13 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[success] 유효한 상태값(APPROVED)으로 변경한다")
+        @DisplayName("[success] 유효한 상태값(ACTIVE)으로 변경한다")
         void success() throws Exception {
             // given
             String groupId = "group-abc123";
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
-                .status("APPROVED")
+                .status("ACTIVE")
                 .build();
 
             UpdateGroupAccountStatusServiceResponse serviceResponse =
@@ -145,7 +145,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             String groupId = "group-abc123";
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
-                .status("APPROVED")
+                .status("ACTIVE")
                 .build();
 
             given(useCase.updateStatus(any()))
@@ -184,7 +184,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                 resource(ResourceSnippetParameters.builder()
                     .tag("Account")
                     .summary("그룹 계정 상태 변경 API")
-                    .description("그룹 내 계정의 상태를 변경합니다. (PENDING, APPROVED, BLOCK)")
+                    .description("그룹 내 계정의 상태를 변경합니다. (PENDING, ACTIVE, BLOCK)")
                     .pathParameters(
                         parameterWithName("groupId")
                             .description("그룹 ID"),
@@ -194,7 +194,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                     .requestFields(
                         fieldWithPath("status").type(statusType)
                             .description(
-                                "계정 상태 (PENDING / APPROVED / BLOCK)")
+                                "계정 상태 (PENDING / ACTIVE / BLOCK)")
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(responseFields)

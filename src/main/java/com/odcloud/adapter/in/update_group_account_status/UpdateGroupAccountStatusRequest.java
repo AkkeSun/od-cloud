@@ -13,7 +13,7 @@ import lombok.Builder;
 record UpdateGroupAccountStatusRequest(
 
     @Contains(
-        values = {"PENDING", "APPROVED", "BLOCK"},
+        values = {"PENDING", "ACTIVE", "BLOCK"},
         message = "유효하지 않은 상태값 입니다",
         groups = CustomGroups.class
     )
