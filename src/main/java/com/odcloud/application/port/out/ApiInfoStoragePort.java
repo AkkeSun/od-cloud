@@ -9,7 +9,4 @@ public interface ApiInfoStoragePort {
     List<ApiInfo> findAll();
 
     ApiInfo findByApiCallLog(ApiCallLog apiCallLog);
-
-    void deleteApiInfoCache();
-
 }
