@@ -4,10 +4,12 @@ import static com.odcloud.infrastructure.util.JsonUtil.extractJsonField;
 import static com.odcloud.infrastructure.util.JsonUtil.maskPassword;
 import static com.odcloud.infrastructure.util.JsonUtil.toJsonBody;
 import static com.odcloud.infrastructure.util.JsonUtil.toJsonParams;
+import static com.odcloud.infrastructure.util.JsonUtil.toJsonString;
 import static com.odcloud.infrastructure.util.TextUtil.truncateTextLimit;
 
 import com.odcloud.application.port.out.ApiCallLogStoragePort;
 import com.odcloud.application.port.out.ApiInfoStoragePort;
+import com.odcloud.application.port.out.RedisStoragePort;
 import com.odcloud.domain.model.ApiCallLog;
 import com.odcloud.domain.model.ApiInfo;
 import com.odcloud.infrastructure.util.JwtUtil;
@@ -18,9 +20,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -30,9 +35,13 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 @RequiredArgsConstructor
 public class ApiCallLogFilter extends OncePerRequestFilter {
 
+    private static final String API_INFO_CACHE_KEY = "api:info:all";
+
     private final JwtUtil jwtUtil;
     private final ApiInfoStoragePort apiInfoStoragePort;
     private final ApiCallLogStoragePort apiCallLogStoragePort;
+    private final RedisStoragePort redisStoragePort;
+    private final AntPathMatcher matcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -61,7 +70,7 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
                 .regDt(LocalDateTime.now())
                 .build();
 
-            ApiInfo apiInfo = apiInfoStoragePort.findByApiCallLog(apiCallLog);
+            ApiInfo apiInfo = findApiInfoWithCache(apiCallLog);
             if (apiInfo != null) {
                 apiCallLog.updateApiId(apiInfo.id());
                 apiCallLog.updateRequestPathParam(apiInfo);
@@ -77,5 +86,34 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
         }
 
         wrappedResponse.copyBodyToResponse();
+    }
+
+    private ApiInfo findApiInfoWithCache(ApiCallLog apiCallLog) {
+        List<ApiInfo> cachedApiInfos = redisStoragePort.findDataList(API_INFO_CACHE_KEY,
+            ApiInfo.class);
+
+        if (cachedApiInfos.isEmpty()) {
+            return refreshCacheAndFind(apiCallLog);
+        }
+
+        ApiInfo matchedInfo = findMatchingApiInfo(cachedApiInfos, apiCallLog);
+        if (matchedInfo != null) {
+            return matchedInfo;
+        }
+        return refreshCacheAndFind(apiCallLog);
+    }
+
+    private ApiInfo refreshCacheAndFind(ApiCallLog apiCallLog) {
+        List<ApiInfo> apiInfos = apiInfoStoragePort.findAll();
+        redisStoragePort.register(API_INFO_CACHE_KEY, toJsonString(apiInfos));
+        return findMatchingApiInfo(apiInfos, apiCallLog);
+    }
+
+    private ApiInfo findMatchingApiInfo(List<ApiInfo> apiInfos, ApiCallLog apiCallLog) {
+        return apiInfos.stream()
+            .filter(api -> Objects.equals(api.httpMethod(), apiCallLog.getHttpMethod()))
+            .filter(api -> matcher.match(api.uriPattern(), apiCallLog.getUri()))
+            .findFirst()
+            .orElse(null);
     }
 }
