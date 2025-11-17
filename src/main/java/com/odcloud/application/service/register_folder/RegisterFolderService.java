@@ -5,7 +5,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FOLD
 
 import com.odcloud.application.port.in.RegisterFolderUseCase;
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
-import com.odcloud.application.port.out.FileUploadPort;
+import com.odcloud.application.port.out.FilePort;
 import com.odcloud.application.port.out.FolderStoragePort;
 import com.odcloud.domain.model.Folder;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 class RegisterFolderService implements RegisterFolderUseCase {
 
     private final FolderStoragePort folderStoragePort;
-    private final FileUploadPort fileUploadPort;
+    private final FilePort fileUploadPort;
 
     @Override
     @Transactional

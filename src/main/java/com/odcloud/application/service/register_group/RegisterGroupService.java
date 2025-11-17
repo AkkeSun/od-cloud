@@ -5,7 +5,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROU
 import com.odcloud.application.port.in.RegisterGroupUseCase;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
 import com.odcloud.application.port.out.AccountStoragePort;
-import com.odcloud.application.port.out.FileUploadPort;
+import com.odcloud.application.port.out.FilePort;
 import com.odcloud.application.port.out.FolderStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class RegisterGroupService implements RegisterGroupUseCase {
 
-    private final FileUploadPort fileUploadPort;
+    private final FilePort fileUploadPort;
     private final GroupStoragePort groupStoragePort;
     private final FolderStoragePort folderStoragePort;
     private final AccountStoragePort accountStoragePort;
