@@ -51,7 +51,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             // given
             String groupId = "group-abc123";
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
-                .status("APPROVED")
+                .status("ACTIVE")
                 .build();
             given(useCase.updateStatus(any())).willThrow(
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
@@ -126,7 +126,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             String groupId = "group-abc123";
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
-                .status("APPROVED")
+                .status("ACTIVE")
                 .build();
 
             given(useCase.updateStatus(any()))

@@ -1,13 +1,14 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.FileUploadPort;
+import com.odcloud.adapter.out.file.FileResponse;
+import com.odcloud.application.port.out.FilePort;
 import com.odcloud.domain.model.File;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FakeFileUploadPort implements FileUploadPort {
+public class FakeFileUploadPort implements FilePort {
 
     public List<String> createdFolders = new ArrayList<>();
     public List<File> uploadedFiles = new ArrayList<>();
@@ -29,6 +30,16 @@ public class FakeFileUploadPort implements FileUploadPort {
         }
         uploadedFiles.add(file);
         log.info("FakeFileUploadPort uploadFile: fileName={}", file.getFileName());
+    }
+
+    @Override
+    public FileResponse readFile(File fileInfo) {
+        return null;
+    }
+
+    @Override
+    public FileResponse readFiles(List<File> files) {
+        return null;
     }
 
     public void reset() {

@@ -1,0 +1,96 @@
+package com.odcloud.fakeClass;
+
+import com.odcloud.adapter.out.file.FileResponse;
+import com.odcloud.application.port.out.FilePort;
+import com.odcloud.domain.model.File;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+@Slf4j
+public class FakeFilePort implements FilePort {
+
+    public boolean shouldThrowException = false;
+    public int createFolderCallCount = 0;
+    public int uploadFileCallCount = 0;
+    public int readFileCallCount = 0;
+    public int readFilesCallCount = 0;
+
+    @Override
+    public void createFolder(String folderPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        createFolderCallCount++;
+        log.info("FakeFilePort created folder: {}", folderPath);
+    }
+
+    @Override
+    public void uploadFile(File file) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        uploadFileCallCount++;
+        log.info("FakeFilePort uploaded file: {}", file.getFileName());
+    }
+
+    @Override
+    public FileResponse readFile(File fileInfo) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        readFileCallCount++;
+
+        // Create mock file content
+        byte[] content = ("Mock content for " + fileInfo.getFileName()).getBytes();
+        Resource resource = new ByteArrayResource(content);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment()
+            .filename(fileInfo.getFileName(), StandardCharsets.UTF_8)
+            .build());
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentLength(content.length);
+
+        return FileResponse.builder()
+            .resource(resource)
+            .headers(headers)
+            .build();
+    }
+
+    @Override
+    public FileResponse readFiles(List<File> files) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        readFilesCallCount++;
+
+        // Create mock ZIP content
+        byte[] zipContent = "Mock ZIP content".getBytes();
+        Resource resource = new ByteArrayResource(zipContent);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDisposition(ContentDisposition.attachment()
+            .filename("files.zip", StandardCharsets.UTF_8)
+            .build());
+
+        return FileResponse.builder()
+            .resource(resource)
+            .headers(headers)
+            .build();
+    }
+
+    public void reset() {
+        shouldThrowException = false;
+        createFolderCallCount = 0;
+        uploadFileCallCount = 0;
+        readFileCallCount = 0;
+        readFilesCallCount = 0;
+    }
+}
