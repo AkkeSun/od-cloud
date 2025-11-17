@@ -10,6 +10,8 @@ public interface FilePort {
 
     void uploadFile(File file);
 
+    void deleteFiles(List<String> filePaths);
+
     FileResponse readFile(File fileInfo);
 
     FileResponse readFiles(List<File> files);

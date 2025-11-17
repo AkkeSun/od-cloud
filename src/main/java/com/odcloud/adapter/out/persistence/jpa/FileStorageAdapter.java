@@ -30,4 +30,9 @@ class FileStorageAdapter implements FileStoragePort {
     public List<File> findByIds(List<Long> ids) {
         return fileRepository.findByIds(ids);
     }
+
+    @Override
+    public boolean existsByFolderIdAndName(Long folderId, String name) {
+        return fileRepository.existsByFolderIdAndName(folderId, name);
+    }
 }

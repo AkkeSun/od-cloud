@@ -10,4 +10,6 @@ public interface FileStoragePort {
     File findById(Long id);
 
     List<File> findByIds(List<Long> ids);
+
+    boolean existsByFolderIdAndName(Long folderId, String name);
 }

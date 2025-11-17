@@ -59,18 +59,12 @@ class FileRepository {
             .fetch();
     }
 
-    public List<File> findByFolderId(Long folderId) {
+    public boolean existsByFolderIdAndName(Long folderId, String name) {
         return queryFactory
-            .select(Projections.constructor(File.class,
-                fileEntity.id,
-                fileEntity.folderId,
-                fileEntity.fileName,
-                fileEntity.fileLoc,
-                fileEntity.modDt,
-                fileEntity.regDt
-            ))
+            .selectOne()
             .from(fileEntity)
-            .where(fileEntity.folderId.eq(folderId))
-            .fetch();
+            .where(fileEntity.folderId.eq(folderId)
+                .and(fileEntity.fileName.eq(name)))
+            .fetchOne() != null;
     }
 }

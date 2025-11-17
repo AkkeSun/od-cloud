@@ -36,6 +36,7 @@ public enum ErrorCode {
     Business_INVALID_GROUP_OWNER(4014, "그룹 소유자만 처리할 수 있습니다"),
     Business_DoesNotExists_FILE(4015, "조회된 파일이 없습니다"),
     Business_FILE_DOWNLOAD_ERROR(4016, "파일 다운로드중 오류가 발생했습니다"),
+    Business_SAVED_FILE_NAME(4017, "이미 사용중인 파일명 입니다"),
 
     ;
 

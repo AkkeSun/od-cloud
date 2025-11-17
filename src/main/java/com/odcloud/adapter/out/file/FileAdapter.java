@@ -75,6 +75,16 @@ class FileAdapter implements FilePort {
     }
 
     @Override
+    public void deleteFiles(List<String> filePaths) {
+        for (String filePath : filePaths) {
+            java.io.File file = new java.io.File(basePath + filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
+    @Override
     public FileResponse readFile(File fileInfo) {
         try {
             java.io.File file = new java.io.File(basePath + fileInfo.getFileLoc());
