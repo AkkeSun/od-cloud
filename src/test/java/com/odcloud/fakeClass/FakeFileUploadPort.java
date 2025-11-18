@@ -32,12 +32,34 @@ public class FakeFileUploadPort implements FilePort {
         log.info("FakeFileUploadPort uploadFile: fileName={}", file.getFileName());
     }
 
+    public List<String> deletedFiles = new ArrayList<>();
+
     @Override
     public void deleteFiles(List<String> filePaths) {
         if (shouldThrowException) {
             throw new RuntimeException("File deletion failure");
         }
+        deletedFiles.addAll(filePaths);
         log.info("FakeFileUploadPort deleteFiles: filePaths={}", filePaths);
+    }
+
+    @Override
+    public void deleteFile(String filePath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File deletion failure");
+        }
+        deletedFiles.add(filePath);
+        log.info("FakeFileUploadPort deleteFile: filePath={}", filePath);
+    }
+
+    @Override
+    public String uploadProfilePicture(org.springframework.web.multipart.MultipartFile file) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Profile picture upload failure");
+        }
+        String filePath = "/picture/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        log.info("FakeFileUploadPort uploadProfilePicture: filePath={}", filePath);
+        return filePath;
     }
 
     @Override
@@ -53,6 +75,7 @@ public class FakeFileUploadPort implements FilePort {
     public void reset() {
         createdFolders.clear();
         uploadedFiles.clear();
+        deletedFiles.clear();
         shouldThrowException = false;
     }
 }

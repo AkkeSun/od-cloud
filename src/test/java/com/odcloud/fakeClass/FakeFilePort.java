@@ -53,6 +53,25 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
+    public void deleteFile(String filePath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        deletedFiles.add(filePath);
+        log.info("FakeFilePort deleted file: {}", filePath);
+    }
+
+    @Override
+    public String uploadProfilePicture(org.springframework.web.multipart.MultipartFile file) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        String filePath = "/picture/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        log.info("FakeFilePort uploaded profile picture: {}", filePath);
+        return filePath;
+    }
+
+    @Override
     public FileResponse readFile(File fileInfo) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
