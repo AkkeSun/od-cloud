@@ -39,8 +39,18 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public List<Group> findByAccountEmail(String email) {
+        return queryDsl.findByAccountEmail(email);
+    }
+
+    @Override
     public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         return queryDsl.findGroupAccountsByGroupId(groupId);
+    }
+
+    @Override
+    public List<GroupAccount> findGroupAccountsByAccountId(Long accountId) {
+        return queryDsl.findGroupAccountsByAccountId(accountId);
     }
 
     @Override

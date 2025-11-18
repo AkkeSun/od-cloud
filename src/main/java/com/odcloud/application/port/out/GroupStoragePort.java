@@ -15,7 +15,11 @@ public interface GroupStoragePort {
 
     List<Group> findAll();
 
+    List<Group> findByAccountEmail(String email);
+
     List<GroupAccount> findGroupAccountsByGroupId(String groupId);
+
+    List<GroupAccount> findGroupAccountsByAccountId(Long accountId);
 
     Group findById(String id);
 
