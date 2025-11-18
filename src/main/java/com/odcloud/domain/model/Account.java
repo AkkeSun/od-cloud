@@ -57,4 +57,17 @@ public class Account {
     public void updateGroups(List<Group> groups) {
         this.groups = groups;
     }
+    
+
+    public void updatePicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateModDt() {
+        this.modDt = LocalDateTime.now();
+    }
 }

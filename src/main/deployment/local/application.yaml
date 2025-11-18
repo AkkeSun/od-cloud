@@ -12,6 +12,11 @@ spring:
       hibernate:
         format_sql: true
 
+  servlet:
+    multipart:
+      max-request-size: 500MB
+      max-file-size: 500MB
+
   data:
     redis:
       host: ${REDIS_HOST}
@@ -63,4 +68,7 @@ service-constant:
 
   file-upload:
     base-path: /Users/od/IdeaProjects/od-cloud
+
+  web-server-host: http://localhost:8080
+
   aes-secret-key: ${AES_SECRET}

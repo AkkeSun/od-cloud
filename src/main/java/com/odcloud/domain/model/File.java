@@ -57,6 +57,21 @@ public class File {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
+    public static File ofProfilePicture(MultipartFile multipartFile) {
+        String extension = getFileExtension(multipartFile.getOriginalFilename());
+        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String serverFileName = uuid + "_" + date + extension;
+
+        return File.builder()
+            .folderId(null)
+            .fileName(null)
+            .fileLoc("/pictures/" + serverFileName)
+            .multipartFile(multipartFile)
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
     public String getRegDtString() {
         return DateUtil.formatDateTime(regDt);
     }

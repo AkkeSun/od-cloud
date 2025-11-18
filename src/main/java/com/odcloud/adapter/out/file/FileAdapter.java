@@ -28,6 +28,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -77,10 +78,38 @@ class FileAdapter implements FilePort {
     @Override
     public void deleteFiles(List<String> filePaths) {
         for (String filePath : filePaths) {
-            java.io.File file = new java.io.File(basePath + filePath);
-            if (file.exists()) {
-                file.delete();
+            deleteFile(filePath);
+        }
+    }
+
+    @Override
+    public void deleteFile(String filePath) {
+        java.io.File file = new java.io.File(basePath + filePath);
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (!deleted) {
+                log.warn("[deleteFile] 파일 삭제 실패: {}", filePath);
             }
+        }
+    }
+
+    @Override
+    public String uploadProfilePicture(MultipartFile multipartFile) {
+        try {
+            String fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
+            String filePath = "/picture/" + fileName;
+            Path fullPath = Paths.get(basePath, filePath);
+
+            Path parentDir = fullPath.getParent();
+            if (parentDir != null && !Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
+
+            multipartFile.transferTo(fullPath.toFile());
+            return filePath;
+        } catch (IOException e) {
+            log.error("[uploadProfilePicture] 프로필 사진 업로드 실패, error: {}", e.getMessage());
+            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
         }
     }
 

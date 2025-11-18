@@ -1,6 +1,9 @@
 package com.odcloud.infrastructure.util;
 
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 public class TextUtil {
 
@@ -29,5 +32,10 @@ public class TextUtil {
         }
 
         return sb.toString();
+    }
+
+    public static String getFileExtension(MultipartFile file) {
+        return StringUtils.getFilenameExtension(
+            URLDecoder.decode(file.getOriginalFilename(), StandardCharsets.UTF_8));
     }
 }

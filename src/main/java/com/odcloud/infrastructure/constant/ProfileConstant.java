@@ -15,6 +15,8 @@ public record ProfileConstant(
     RedisKey redisKey,
     FileUpload fileUpload,
     @NotBlank
+    String webServerHost,
+    @NotBlank
     String aesSecretKey
 ) {
 
@@ -78,6 +80,10 @@ public record ProfileConstant(
 
     public String getJwtSecretKey() {
         return jwt().secretKey;
+    }
+
+    public String getAccountProfileURI() {
+        return webServerHost + fileUpload().basePath;
     }
 
 }
