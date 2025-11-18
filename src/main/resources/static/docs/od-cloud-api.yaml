@@ -8,6 +8,109 @@ servers:
 tags: []
 paths:
   /accounts:
+    put:
+      tags:
+      - Account
+      summary: 사용자 정보 수정 API
+      description: "사용자의 프로필 정보를 수정하는 API 입니다.<br><br>[수정 가능한 필드]<br>- nickname: 닉\
+        네임<br>- picture: 프로필 사진 URL<br><br>[참고사항]<br>- 이메일은 수정할 수 없습니다.<br>- nickname과\
+        \ picture 중 하나 이상의 필드를 포함해야 합니다.<br>- 수정하지 않을 필드는 생략 가능합니다.<br><br>테스트시 우측\
+        \ 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다."
+      operationId: "[사용자 정보 수정 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 사용자 정보 수정 API"
+            examples:
+              '[사용자 정보 수정 API] 사용자 정보 수정 성공':
+                value: |-
+                  {
+                    "nickname" : "새로운닉네임",
+                    "picture" : "https://example.com/new-picture.jpg"
+                  }
+              '[사용자 정보 수정 API] 닉네임만 수정':
+                value: |-
+                  {
+                    "nickname" : "닉네임만변경"
+                  }
+              '[사용자 정보 수정 API] 프로필 사진만 수정':
+                value: |-
+                  {
+                    "picture" : "https://example.com/brand-new-picture.jpg"
+                  }
+              '[사용자 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "nickname" : "newNickname",
+                    "picture" : "https://example.com/new-picture.jpg"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[사용자 정보 수정 API] 사용자 정보 수정 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "새로운닉네임",
+                        "picture" : "https://example.com/new-picture.jpg"
+                      }
+                    }
+                '[사용자 정보 수정 API] 닉네임만 수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "닉네임만변경",
+                        "picture" : "https://example.com/old-picture.jpg"
+                      }
+                    }
+                '[사용자 정보 수정 API] 프로필 사진만 수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "기존닉네임",
+                        "picture" : "https://example.com/brand-new-picture.jpg"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[사용자 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
     post:
       tags:
       - Account
@@ -170,7 +273,7 @@ paths:
                     }
     patch:
       tags:
-        - Account
+      - Account
       summary: 계정 정보 수정 API
       description: "사용자의 닉네임과 프로필 사진을 수정합니다. <br>RestDocs API 문서 작성 모듈 특성상 Multipart\
         \ 입력 파라미터 정보 기록에 한계가 있어 아래 목록을 참고하시어 요청 바랍니다. <br><br>[입력받는 멀티파트 파라미터 목록]<br>-\
@@ -179,13 +282,13 @@ paths:
         \ 인증 토큰을 입력하여 테스트하지 않습니다)"
       operationId: "[계정 정보 수정 API] "
       parameters:
-        - name: Authorization
-          in: header
-          description: 인증 토큰
-          required: true
-          schema:
-            type: string
-          example: Bearer valid-token
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer valid-token
       responses:
         "500":
           description: "500"
@@ -1455,6 +1558,200 @@ paths:
                         "errorMessage" : "등록되지 않은 그룹 사용자 입니다"
                       }
                     }
+  /schedules:
+    post:
+      tags:
+      - Schedule
+      summary: 스케줄 등록 API
+      description: 새로운 스케줄을 등록하는 API 입니다
+      operationId: "[스케줄 등록 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 스케줄 등록 API"
+            examples:
+              '[스케줄 등록 API] 유효하지 않은 시작일시 형식':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : "2025/01/01 10:00:00",
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] success':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : null,
+                    "notificationDt" : "2025-01-01 09:50:00"
+                  }
+              '[스케줄 등록 API] 유효하지 않은 종료일시 형식':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : "invalid-date",
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] 종료일시 미입력':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : null,
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] 그룹 접근 권한 없음':
+                value: |-
+                  {
+                    "content" : "그룹 회의",
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : "other-group",
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] 스케줄 내용 미입력':
+                value: |-
+                  {
+                    "content" : null,
+                    "startDt" : "2025-01-01 10:00:00",
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+              '[스케줄 등록 API] 시작일시 미입력':
+                value: |-
+                  {
+                    "content" : "개인 회의",
+                    "startDt" : null,
+                    "endDt" : "2025-01-01 11:00:00",
+                    "groupId" : null,
+                    "notificationDt" : null
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[스케줄 등록 API] 유효하지 않은 시작일시 형식':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "유효하지 않은 사직알시 형식 입니다"
+                      }
+                    }
+                '[스케줄 등록 API] 유효하지 않은 종료일시 형식':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "유효하지 않은 종료일시 형식 입니다"
+                      }
+                    }
+                '[스케줄 등록 API] 종료일시 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "종료일시는 필수값입니다"
+                      }
+                    }
+                '[스케줄 등록 API] 스케줄 내용 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "내용은 필수값입니다"
+                      }
+                    }
+                '[스케줄 등록 API] 시작일시 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "시작일시는 필수값입니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[스케줄 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+                '[스케줄 등록 API] 그룹 접근 권한 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[스케줄 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
 components:
   schemas:
     '[response] success':
@@ -1567,6 +1864,53 @@ components:
           - null
         id:
           description: 그룹 ID
+          oneOf:
+          - type: string
+          - null
+    '[request] 사용자 정보 수정 API':
+      title: "[request] 사용자 정보 수정 API"
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: 수정할 닉네임 (선택)
+          nullable: true
+        picture:
+          type: string
+          description: 수정할 프로필 사진 URL (선택)
+          nullable: true
+    '[request] 스케줄 등록 API':
+      title: "[request] 스케줄 등록 API"
+      required:
+      - content
+      - endDt
+      - groupId
+      - notificationDt
+      - startDt
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID (선택)
+          oneOf:
+          - null
+          - type: string
+        notificationDt:
+          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
+          oneOf:
+          - null
+          - type: string
+        endDt:
+          description: 종료일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - type: string
+          - null
+        startDt:
+          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - null
+          - type: string
+        content:
+          description: 스케줄 내용
           oneOf:
           - type: string
           - null
