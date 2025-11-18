@@ -50,6 +50,31 @@ public class FakeFileStoragePort implements FileStoragePort {
         return result;
     }
 
+    @Override
+    public List<File> findAll(com.odcloud.application.port.in.command.FindFilesCommand command) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Storage failure");
+        }
+
+        // keyword 검색인 경우
+        if (command.keyword() != null && !command.keyword().isBlank()) {
+            return database.stream()
+                .filter(file -> file.getFileName().contains(command.keyword()))
+                .toList();
+        }
+
+        // folderId로 필터링
+        return database.stream()
+            .filter(file -> file.getFolderId().equals(command.folderId()))
+            .toList();
+    }
+
+    @Override
+    public boolean existsByFolderIdAndName(Long folderId, String name) {
+        return database.stream()
+            .anyMatch(file -> file.getFolderId().equals(folderId) && file.getFileName().equals(name));
+    }
+
     public void reset() {
         database.clear();
         shouldThrowException = false;

@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -54,5 +55,9 @@ public class File {
             return "";
         }
         return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    public String getRegDtString() {
+        return DateUtil.formatDateTime(regDt);
     }
 }

@@ -6,6 +6,7 @@ import com.odcloud.IntegrationTestSupport;
 import com.odcloud.domain.model.File;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -458,6 +459,519 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getFileName()).isEqualTo("테스트파일.txt");
+        }
+    }
+
+    @Nested
+    @DisplayName("[findAll] 파일 목록을 조회하는 메소드")
+    class Describe_findAll {
+
+        @Test
+        @DisplayName("[success] folderId로 파일 목록을 조회한다")
+        void success_findByFolderId() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 폴더 생성
+            FolderEntity folder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Test Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder);
+
+            // 파일 생성
+            FileEntity file1 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("test1.txt")
+                .fileLoc("/group1/test1.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file1);
+
+            FileEntity file2 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("test2.txt")
+                .fileLoc("/group1/test2.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file2);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(folder.getId())
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(File::getFileName)
+                .containsExactly("test1.txt", "test2.txt");
+        }
+
+        @Test
+        @DisplayName("[success] keyword로 파일을 검색한다")
+        void success_searchByKeyword() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 폴더 생성
+            FolderEntity folder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Test Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder);
+
+            // 파일 생성
+            FileEntity file1 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("report.pdf")
+                .fileLoc("/group1/report.pdf")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file1);
+
+            FileEntity file2 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("document.txt")
+                .fileLoc("/group1/document.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file2);
+
+            FileEntity file3 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("report2.pdf")
+                .fileLoc("/group1/report2.pdf")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .keyword("report")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(File::getFileName)
+                .contains("report.pdf", "report2.pdf");
+        }
+
+        @Test
+        @DisplayName("[success] PUBLIC 폴더의 파일만 조회한다")
+        void success_onlyPublicFolders() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("other@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // PRIVATE 폴더 생성 (다른 소유자)
+            FolderEntity privateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Private Folder")
+                .owner("other@example.com")
+                .path("/group1/private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFolder);
+
+            // PUBLIC 폴더에 파일 생성
+            FileEntity publicFile = FileEntity.builder()
+                .folderId(publicFolder.getId())
+                .fileName("public.txt")
+                .fileLoc("/group1/public/public.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFile);
+
+            // PRIVATE 폴더에 파일 생성
+            FileEntity privateFile = FileEntity.builder()
+                .folderId(privateFolder.getId())
+                .fileName("private.txt")
+                .fileLoc("/group1/private/private.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFile);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(publicFolder.getId())
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getFileName()).isEqualTo("public.txt");
+        }
+
+        @Test
+        @DisplayName("[success] 소유자는 자신의 PRIVATE 폴더 파일을 조회할 수 있다")
+        void success_ownerCanSeePrivateFiles() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("owner@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // PRIVATE 폴더 생성 (동일 소유자)
+            FolderEntity privateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Private Folder")
+                .owner("owner@example.com")
+                .path("/group1/private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFolder);
+
+            // PUBLIC 폴더에 파일 생성
+            FileEntity publicFile = FileEntity.builder()
+                .folderId(publicFolder.getId())
+                .fileName("public.txt")
+                .fileLoc("/group1/public/public.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFile);
+
+            // PRIVATE 폴더에 파일 생성
+            FileEntity privateFile = FileEntity.builder()
+                .folderId(privateFolder.getId())
+                .fileName("private.txt")
+                .fileLoc("/group1/private/private.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFile);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(privateFolder.getId())
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getFileName()).isEqualTo("private.txt");
+        }
+
+        @Test
+        @DisplayName("[success] 정렬 순서를 적용한다")
+        void success_withSorting() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 폴더 생성
+            FolderEntity folder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Test Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder);
+
+            // 파일 생성 (역순으로)
+            FileEntity file1 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("c.txt")
+                .fileLoc("/group1/c.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file1);
+
+            FileEntity file2 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("a.txt")
+                .fileLoc("/group1/a.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file2);
+
+            FileEntity file3 = FileEntity.builder()
+                .folderId(folder.getId())
+                .fileName("b.txt")
+                .fileLoc("/group1/b.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(file3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(folder.getId())
+                .sortType("NAME_DESC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(3);
+            assertThat(result).extracting(File::getFileName)
+                .containsExactly("c.txt", "b.txt", "a.txt");
+        }
+
+        @Test
+        @DisplayName("[success] keyword 검색 시 권한이 없는 폴더의 파일은 제외된다")
+        void success_keywordSearchExcludesUnauthorizedFolderFiles() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성 (group1)
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("owner@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // PRIVATE 폴더 생성 (다른 사용자 소유)
+            FolderEntity privateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Private Folder")
+                .owner("other@example.com")
+                .path("/group1/private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFolder);
+
+            // PUBLIC 폴더에 "test" 키워드 파일 생성
+            FileEntity publicTestFile = FileEntity.builder()
+                .folderId(publicFolder.getId())
+                .fileName("test-public.txt")
+                .fileLoc("/group1/public/test-public.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicTestFile);
+
+            // PRIVATE 폴더에 "test" 키워드 파일 생성 (권한 없는 폴더)
+            FileEntity privateTestFile = FileEntity.builder()
+                .folderId(privateFolder.getId())
+                .fileName("test-private.txt")
+                .fileLoc("/group1/private/test-private.txt")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateTestFile);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            // 권한 없는 사용자 (PRIVATE 폴더의 owner가 아님)
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .keyword("test")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            // PUBLIC 폴더의 파일만 조회되고, PRIVATE 폴더의 파일은 제외되어야 함
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getFileName()).isEqualTo("test-public.txt");
+        }
+
+        @Test
+        @DisplayName("[success] keyword 검색 시 자신의 PRIVATE 폴더 파일은 포함된다")
+        void success_keywordSearchIncludesOwnPrivateFolderFiles() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("owner@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // 자신의 PRIVATE 폴더 생성
+            FolderEntity myPrivateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("My Private Folder")
+                .owner("user@example.com")
+                .path("/group1/my-private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(myPrivateFolder);
+
+            // PUBLIC 폴더에 파일 생성
+            FileEntity publicFile = FileEntity.builder()
+                .folderId(publicFolder.getId())
+                .fileName("report-public.pdf")
+                .fileLoc("/group1/public/report-public.pdf")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFile);
+
+            // 자신의 PRIVATE 폴더에 파일 생성
+            FileEntity myPrivateFile = FileEntity.builder()
+                .folderId(myPrivateFolder.getId())
+                .fileName("report-private.pdf")
+                .fileLoc("/group1/my-private/report-private.pdf")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(myPrivateFile);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .keyword("report")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            // PUBLIC 폴더와 자신의 PRIVATE 폴더의 파일 모두 조회되어야 함
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(File::getFileName)
+                .containsExactlyInAnyOrder("report-public.pdf", "report-private.pdf");
         }
     }
 }

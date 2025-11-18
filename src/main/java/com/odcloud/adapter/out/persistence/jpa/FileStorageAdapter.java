@@ -2,6 +2,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_FILE;
 
+import com.odcloud.application.port.in.command.FindFilesCommand;
 import com.odcloud.application.port.out.FileStoragePort;
 import com.odcloud.domain.model.File;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -29,6 +30,11 @@ class FileStorageAdapter implements FileStoragePort {
     @Override
     public List<File> findByIds(List<Long> ids) {
         return fileRepository.findByIds(ids);
+    }
+
+    @Override
+    public List<File> findAll(FindFilesCommand command) {
+        return fileRepository.findAll(command);
     }
 
     @Override

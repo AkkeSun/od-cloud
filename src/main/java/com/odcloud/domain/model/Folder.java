@@ -2,6 +2,7 @@ package com.odcloud.domain.model;
 
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -53,5 +54,9 @@ public class Folder {
             .accessLevel(command.accessLevel())
             .regDt(LocalDateTime.now())
             .build();
+    }
+
+    public String getRegDtString() {
+        return DateUtil.formatDateTime(regDt);
     }
 }

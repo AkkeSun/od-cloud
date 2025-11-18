@@ -33,6 +33,14 @@ public class FakeFileUploadPort implements FilePort {
     }
 
     @Override
+    public void deleteFiles(List<String> filePaths) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File deletion failure");
+        }
+        log.info("FakeFileUploadPort deleteFiles: filePaths={}", filePaths);
+    }
+
+    @Override
     public FileResponse readFile(File fileInfo) {
         return null;
     }

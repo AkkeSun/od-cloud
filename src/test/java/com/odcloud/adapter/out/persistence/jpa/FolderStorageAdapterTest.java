@@ -6,6 +6,7 @@ import com.odcloud.IntegrationTestSupport;
 import com.odcloud.domain.model.Folder;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -674,6 +675,408 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(adapter.existsSameFolderName(parentFolder.getId(), "TestFolder")).isTrue();
             assertThat(adapter.existsSameFolderName(parentFolder.getId(), "testfolder")).isFalse();
             assertThat(adapter.existsSameFolderName(parentFolder.getId(), "TESTFOLDER")).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("[findAll] 폴더 목록을 조회하는 메소드")
+    class Describe_findAll {
+
+        @Test
+        @DisplayName("[success] parentId로 하위 폴더 목록을 조회한다")
+        void success_findByParentId() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 부모 폴더 생성
+            FolderEntity parentFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Parent Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(parentFolder);
+
+            // 하위 폴더 생성
+            FolderEntity child1 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("Child 1")
+                .owner("user@example.com")
+                .path("/group1/child1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(child1);
+
+            FolderEntity child2 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("Child 2")
+                .owner("user@example.com")
+                .path("/group1/child2")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(child2);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(parentFolder.getId())
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(Folder::getName)
+                .containsExactly("Child 1", "Child 2");
+        }
+
+        @Test
+        @DisplayName("[success] keyword로 폴더를 검색한다")
+        void success_searchByKeyword() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 폴더 생성
+            FolderEntity folder1 = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Project A")
+                .owner("user@example.com")
+                .path("/group1/projectA")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder1);
+
+            FolderEntity folder2 = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Documents")
+                .owner("user@example.com")
+                .path("/group1/documents")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder2);
+
+            FolderEntity folder3 = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Project B")
+                .owner("user@example.com")
+                .path("/group1/projectB")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .keyword("Project")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(Folder::getName)
+                .contains("Project A", "Project B");
+        }
+
+        @Test
+        @DisplayName("[success] groupId로 폴더를 필터링한다")
+        void success_filterByGroupId() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 부모 폴더 생성
+            FolderEntity parentFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Parent")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(parentFolder);
+
+            // group1 하위 폴더
+            FolderEntity child1 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("Child of Group1")
+                .owner("user@example.com")
+                .path("/group1/child1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(child1);
+
+            // group2 하위 폴더
+            FolderEntity child2 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group2")
+                .name("Child of Group2")
+                .owner("user@example.com")
+                .path("/group1/child2")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(child2);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1"), com.odcloud.domain.model.Group.of("group2")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(parentFolder.getId())
+                .groupId("group1")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getName()).isEqualTo("Child of Group1");
+            assertThat(result.get(0).getGroupId()).isEqualTo("group1");
+        }
+
+        @Test
+        @DisplayName("[success] PUBLIC 폴더만 조회한다")
+        void success_onlyPublicFolders() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("other@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // PRIVATE 폴더 생성 (다른 소유자)
+            FolderEntity privateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Private Folder")
+                .owner("other@example.com")
+                .path("/group1/private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFolder);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(null)
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getName()).isEqualTo("Public Folder");
+            assertThat(result.get(0).getAccessLevel()).isEqualTo("PUBLIC");
+        }
+
+        @Test
+        @DisplayName("[success] 소유자는 자신의 PRIVATE 폴더를 조회할 수 있다")
+        void success_ownerCanSeePrivateFolders() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // PUBLIC 폴더 생성
+            FolderEntity publicFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Public Folder")
+                .owner("owner@example.com")
+                .path("/group1/public")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(publicFolder);
+
+            // PRIVATE 폴더 생성 (동일 소유자)
+            FolderEntity privateFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Private Folder")
+                .owner("owner@example.com")
+                .path("/group1/private")
+                .accessLevel("PRIVATE")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(privateFolder);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(null)
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(Folder::getName)
+                .containsExactlyInAnyOrder("Public Folder", "Private Folder");
+        }
+
+        @Test
+        @DisplayName("[success] 정렬 순서를 적용한다")
+        void success_withSorting() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 부모 폴더 생성
+            FolderEntity parentFolder = FolderEntity.builder()
+                .parentId(null)
+                .groupId("group1")
+                .name("Parent")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(parentFolder);
+
+            // 폴더 생성 (역순으로)
+            FolderEntity folder1 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("C Folder")
+                .owner("user@example.com")
+                .path("/group1/c")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder1);
+
+            FolderEntity folder2 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("A Folder")
+                .owner("user@example.com")
+                .path("/group1/a")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder2);
+
+            FolderEntity folder3 = FolderEntity.builder()
+                .parentId(parentFolder.getId())
+                .groupId("group1")
+                .name("B Folder")
+                .owner("user@example.com")
+                .path("/group1/b")
+                .accessLevel("PUBLIC")
+                .regDt(now)
+                .modDt(now)
+                .build();
+            entityManager.persist(folder3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .build();
+
+            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+                .account(account)
+                .folderId(parentFolder.getId())
+                .sortType("NAME_DESC")
+                .build();
+
+            // when
+            var result = adapter.findAll(command);
+
+            // then
+            assertThat(result).hasSize(3);
+            assertThat(result).extracting(Folder::getName)
+                .containsExactly("C Folder", "B Folder", "A Folder");
         }
     }
 }

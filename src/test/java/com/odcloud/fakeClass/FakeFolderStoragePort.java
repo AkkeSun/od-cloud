@@ -1,5 +1,6 @@
 package com.odcloud.fakeClass;
 
+import com.odcloud.application.port.in.command.FindFilesCommand;
 import com.odcloud.application.port.out.FolderStoragePort;
 import com.odcloud.domain.model.Folder;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -45,6 +46,36 @@ public class FakeFolderStoragePort implements FolderStoragePort {
             .findFirst()
             .orElseThrow(
                 () -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_FOLDER));
+    }
+
+    @Override
+    public List<Folder> findAll(FindFilesCommand command) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Storage failure");
+        }
+
+        // keyword 검색인 경우
+        if (command.keyword() != null && !command.keyword().isBlank()) {
+            return database.stream()
+                .filter(folder -> folder.getName().contains(command.keyword()))
+                .toList();
+        }
+
+        // folderId와 groupId로 필터링
+        return database.stream()
+            .filter(folder -> {
+                if (command.folderId() == null) {
+                    return true;
+                }
+                return folder.getParentId() != null && folder.getParentId().equals(command.folderId());
+            })
+            .filter(folder -> {
+                if (command.groupId() == null || command.groupId().isBlank()) {
+                    return true;
+                }
+                return folder.getGroupId().equals(command.groupId());
+            })
+            .toList();
     }
 
     @Override

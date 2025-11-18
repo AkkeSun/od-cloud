@@ -16,7 +16,7 @@ record RegisterFolderRequest(
     Long parentId,
 
     @NotBlank(message = "그룹 ID는 필수값 입니다", groups = NotBlankGroups.class)
-    String groupId,
+    String groupId, // 위에서 받아오는걸로 수정
 
     @NotBlank(message = "폴더명은 필수값 입니다", groups = NotBlankGroups.class)
     String name,
@@ -35,6 +35,7 @@ record RegisterFolderRequest(
             .groupId(groupId)
             .name(name)
             .owner(account.getEmail())
+            .accessLevel(accessLevel)
             .build();
     }
 

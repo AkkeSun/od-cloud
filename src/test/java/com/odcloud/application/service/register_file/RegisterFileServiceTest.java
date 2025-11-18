@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.port.in.command.RegisterFileCommand;
 import com.odcloud.domain.model.Folder;
+import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
-import com.odcloud.fakeClass.FakeFileUploadPort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -19,18 +19,18 @@ import org.springframework.mock.web.MockMultipartFile;
 
 class RegisterFileServiceTest {
 
-    private FakeFileUploadPort fakeFileUploadPort;
+    private FakeFilePort fakeFilePort;
     private FakeFileStoragePort fakeFileStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
     private RegisterFileService registerFileService;
 
     @BeforeEach
     void setUp() {
-        fakeFileUploadPort = new FakeFileUploadPort();
+        fakeFilePort = new FakeFilePort();
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         registerFileService = new RegisterFileService(
-            fakeFileUploadPort,
+            fakeFilePort,
             fakeFileStoragePort,
             fakeFolderStoragePort
         );
@@ -72,7 +72,7 @@ class RegisterFileServiceTest {
             assertThat(fakeFileStoragePort.database).hasSize(1);
             assertThat(fakeFileStoragePort.database.get(0).getFileName()).isEqualTo("test.txt");
             assertThat(fakeFileStoragePort.database.get(0).getFolderId()).isEqualTo(1L);
-            assertThat(fakeFileUploadPort.uploadedFiles).hasSize(1);
+            assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(1);
         }
 
         @Test
@@ -122,7 +122,7 @@ class RegisterFileServiceTest {
             assertThat(fakeFileStoragePort.database.get(0).getFileName()).isEqualTo("test1.txt");
             assertThat(fakeFileStoragePort.database.get(1).getFileName()).isEqualTo("test2.pdf");
             assertThat(fakeFileStoragePort.database.get(2).getFileName()).isEqualTo("test3.jpg");
-            assertThat(fakeFileUploadPort.uploadedFiles).hasSize(3);
+            assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(3);
         }
 
         @Test
@@ -147,7 +147,118 @@ class RegisterFileServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_DoesNotExists_FOLDER);
 
             assertThat(fakeFileStoragePort.database).isEmpty();
-            assertThat(fakeFileUploadPort.uploadedFiles).isEmpty();
+            assertThat(fakeFilePort.uploadFileCallCount).isZero();
+        }
+
+        @Test
+        @DisplayName("[failure] 동일한 파일명이 이미 존재하면 예외가 발생한다")
+        void failure_duplicateFileName() {
+            // given
+            Folder folder = Folder.builder()
+                .id(1L)
+                .groupId("test-group")
+                .name("Test Folder")
+                .path("/test-group/folder1")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            // 기존 파일 추가
+            MockMultipartFile existingFile = new MockMultipartFile(
+                "file",
+                "duplicate.txt",
+                "text/plain",
+                "existing content".getBytes()
+            );
+            RegisterFileCommand existingCommand = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(existingFile))
+                .build();
+            registerFileService.register(existingCommand);
+
+            // 중복된 파일명으로 등록 시도
+            MockMultipartFile duplicateFile = new MockMultipartFile(
+                "file",
+                "duplicate.txt",
+                "text/plain",
+                "new content".getBytes()
+            );
+            RegisterFileCommand command = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(duplicateFile))
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> registerFileService.register(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_SAVED_FILE_NAME);
+
+            // 기존 파일만 존재해야 함
+            assertThat(fakeFileStoragePort.database).hasSize(1);
+            assertThat(fakeFileStoragePort.database.get(0).getFileName()).isEqualTo("duplicate.txt");
+        }
+
+        @Test
+        @DisplayName("[failure] 여러 파일 등록 중 중복 파일명이 있으면 이미 업로드된 파일들을 삭제하고 예외가 발생한다")
+        void failure_duplicateFileName_multipleFiles() {
+            // given
+            Folder folder = Folder.builder()
+                .id(1L)
+                .groupId("test-group")
+                .name("Test Folder")
+                .path("/test-group/folder1")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            // 기존 파일 추가
+            MockMultipartFile existingFile = new MockMultipartFile(
+                "file",
+                "existing.txt",
+                "text/plain",
+                "existing content".getBytes()
+            );
+            RegisterFileCommand existingCommand = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(existingFile))
+                .build();
+            registerFileService.register(existingCommand);
+
+            // 여러 파일 중 하나가 중복된 파일명
+            MockMultipartFile file1 = new MockMultipartFile(
+                "file1",
+                "new1.txt",
+                "text/plain",
+                "content1".getBytes()
+            );
+            MockMultipartFile file2 = new MockMultipartFile(
+                "file2",
+                "new2.txt",
+                "text/plain",
+                "content2".getBytes()
+            );
+            MockMultipartFile duplicateFile = new MockMultipartFile(
+                "file3",
+                "existing.txt",
+                "text/plain",
+                "duplicate content".getBytes()
+            );
+
+            RegisterFileCommand command = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(file1, file2, duplicateFile))
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> registerFileService.register(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_SAVED_FILE_NAME);
+
+            // 이미 업로드된 파일들이 삭제되었는지 확인
+            assertThat(fakeFilePort.deletedFiles).containsExactly("new1.txt", "new2.txt");
+            assertThat(fakeFilePort.deleteFilesCallCount).isEqualTo(1);
+
+            // Note: 실제 환경에서는 @Transactional로 인해 롤백되지만,
+            // Fake 구현에서는 트랜잭션이 없으므로 database에 파일이 저장된 상태로 남음
+            // 중요한 것은 물리적 파일이 삭제(deleteFiles 호출)되었다는 것
         }
     }
 }

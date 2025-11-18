@@ -4,6 +4,7 @@ import com.odcloud.adapter.out.file.FileResponse;
 import com.odcloud.application.port.out.FilePort;
 import com.odcloud.domain.model.File;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
@@ -18,8 +19,10 @@ public class FakeFilePort implements FilePort {
     public boolean shouldThrowException = false;
     public int createFolderCallCount = 0;
     public int uploadFileCallCount = 0;
+    public int deleteFilesCallCount = 0;
     public int readFileCallCount = 0;
     public int readFilesCallCount = 0;
+    public List<String> deletedFiles = new ArrayList<>();
 
     @Override
     public void createFolder(String folderPath) {
@@ -37,6 +40,16 @@ public class FakeFilePort implements FilePort {
         }
         uploadFileCallCount++;
         log.info("FakeFilePort uploaded file: {}", file.getFileName());
+    }
+
+    @Override
+    public void deleteFiles(List<String> filePaths) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        deleteFilesCallCount++;
+        deletedFiles.addAll(filePaths);
+        log.info("FakeFilePort deleted files: {}", filePaths);
     }
 
     @Override
@@ -90,7 +103,9 @@ public class FakeFilePort implements FilePort {
         shouldThrowException = false;
         createFolderCallCount = 0;
         uploadFileCallCount = 0;
+        deleteFilesCallCount = 0;
         readFileCallCount = 0;
         readFilesCallCount = 0;
+        deletedFiles.clear();
     }
 }
