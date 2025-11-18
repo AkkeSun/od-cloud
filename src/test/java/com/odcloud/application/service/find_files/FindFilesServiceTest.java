@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.File;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FileInfo;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -46,7 +46,7 @@ class FindFilesServiceTest {
                 .groups(List.of(Group.of("group1")))
                 .build();
 
-            Folder parentFolder = Folder.builder()
+            FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
                 .groupId("group1")
@@ -58,7 +58,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(parentFolder);
 
-            Folder childFolder = Folder.builder()
+            FolderInfo childFolder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
                 .groupId("group1")
@@ -70,7 +70,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(childFolder);
 
-            File file1 = File.builder()
+            FileInfo file1 = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("test1.txt")
@@ -79,7 +79,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFileStoragePort.database.add(file1);
 
-            File file2 = File.builder()
+            FileInfo file2 = FileInfo.builder()
                 .id(2L)
                 .folderId(1L)
                 .fileName("test2.txt")
@@ -117,7 +117,7 @@ class FindFilesServiceTest {
                 .groups(List.of(Group.of("group1")))
                 .build();
 
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
                 .groupId("group1")
@@ -129,7 +129,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
-            File file1 = File.builder()
+            FileInfo file1 = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("report.pdf")
@@ -138,7 +138,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFileStoragePort.database.add(file1);
 
-            File file2 = File.builder()
+            FileInfo file2 = FileInfo.builder()
                 .id(2L)
                 .folderId(1L)
                 .fileName("document.txt")
@@ -147,7 +147,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFileStoragePort.database.add(file2);
 
-            File file3 = File.builder()
+            FileInfo file3 = FileInfo.builder()
                 .id(3L)
                 .folderId(1L)
                 .fileName("report2.pdf")
@@ -182,7 +182,7 @@ class FindFilesServiceTest {
                 .groups(List.of(Group.of("group1"), Group.of("group2")))
                 .build();
 
-            Folder folder1 = Folder.builder()
+            FolderInfo folder1 = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
                 .groupId("group1")
@@ -194,7 +194,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(folder1);
 
-            Folder folder2 = Folder.builder()
+            FolderInfo folder2 = FolderInfo.builder()
                 .id(2L)
                 .parentId(0L)
                 .groupId("group2")
@@ -206,7 +206,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(folder2);
 
-            Folder childFolder1 = Folder.builder()
+            FolderInfo childFolder1 = FolderInfo.builder()
                 .id(3L)
                 .parentId(1L)
                 .groupId("group1")
@@ -218,7 +218,7 @@ class FindFilesServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(childFolder1);
 
-            Folder childFolder2 = Folder.builder()
+            FolderInfo childFolder2 = FolderInfo.builder()
                 .id(4L)
                 .parentId(1L)
                 .groupId("group2")
@@ -260,7 +260,7 @@ class FindFilesServiceTest {
                 .groups(List.of(Group.of("group1")))
                 .build();
 
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
                 .groupId("group1")

@@ -1,9 +1,9 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import static com.odcloud.adapter.out.persistence.jpa.QFileEntity.fileEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QFileInfoEntity.fileInfoEntity;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,64 +16,64 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-class FileRepository {
+class FileInfoRepository {
 
     private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
-    private final ConstructorExpression<File> constructor;
+    private final ConstructorExpression<FileInfo> constructor;
 
-    FileRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
+    FileInfoRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
         this.entityManager = entityManager;
         this.queryFactory = queryFactory;
-        this.constructor = Projections.constructor(File.class,
-            fileEntity.id,
-            fileEntity.folderId,
-            fileEntity.fileName,
-            fileEntity.fileLoc,
-            fileEntity.modDt,
-            fileEntity.regDt
+        this.constructor = Projections.constructor(FileInfo.class,
+            fileInfoEntity.id,
+            fileInfoEntity.folderId,
+            fileInfoEntity.fileName,
+            fileInfoEntity.fileLoc,
+            fileInfoEntity.modDt,
+            fileInfoEntity.regDt
         );
     }
 
     @Transactional
-    public void save(File file) {
+    public void save(FileInfo file) {
         if (file.getId() == null) {
-            entityManager.persist(FileEntity.of(file));
+            entityManager.persist(FileInfoEntity.of(file));
         } else {
-            entityManager.merge(FileEntity.of(file));
+            entityManager.merge(FileInfoEntity.of(file));
         }
     }
 
-    public Optional<File> findById(Long id) {
+    public Optional<FileInfo> findById(Long id) {
         return Optional.ofNullable(queryFactory
             .select(constructor)
-            .from(fileEntity)
-            .where(fileEntity.id.eq(id))
+            .from(fileInfoEntity)
+            .where(fileInfoEntity.id.eq(id))
             .fetchOne());
     }
 
-    public List<File> findByIds(List<Long> ids) {
+    public List<FileInfo> findByIds(List<Long> ids) {
         return queryFactory
             .select(constructor)
-            .from(fileEntity)
-            .where(fileEntity.id.in(ids))
+            .from(fileInfoEntity)
+            .where(fileInfoEntity.id.in(ids))
             .fetch();
     }
 
     public boolean existsByFolderIdAndName(Long folderId, String name) {
         return queryFactory
             .selectOne()
-            .from(fileEntity)
-            .where(fileEntity.folderId.eq(folderId)
-                .and(fileEntity.fileName.eq(name)))
+            .from(fileInfoEntity)
+            .where(fileInfoEntity.folderId.eq(folderId)
+                .and(fileInfoEntity.fileName.eq(name)))
             .fetchOne() != null;
     }
 
-    public List<File> findAll(FindFilesCommand command) {
+    public List<FileInfo> findAll(FindFilesCommand command) {
         String sql = """
             SELECT f.ID, f.FOLDER_ID, f.FILE_NAME, f.FILE_LOC, f.MOD_DT, f.REG_DT
-            FROM FILE f
-            INNER JOIN FOLDER fo ON f.FOLDER_ID = fo.ID
+            FROM FILE_INFO f
+            INNER JOIN FOLDER_INFO fo ON f.FOLDER_ID = fo.ID
             WHERE (
                  (fo.GROUP_ID IN (:groupIds) AND fo.ACCESS_LEVEL = 'PUBLIC')
                  OR (fo.OWNER = :email AND fo.ACCESS_LEVEL = 'PRIVATE')
@@ -96,7 +96,7 @@ class FileRepository {
             sql = String.format(sql, "AND f.FOLDER_ID = :folderId ");
         }
 
-        Query query = entityManager.createNativeQuery(sql.toString(), FileEntity.class);
+        Query query = entityManager.createNativeQuery(sql.toString(), FileInfoEntity.class);
         query.setParameter("groupIds", command.account().getGroupIds());
         query.setParameter("email", command.account().getEmail());
 
@@ -109,10 +109,10 @@ class FileRepository {
         }
 
         @SuppressWarnings("unchecked")
-        List<FileEntity> entities = query.getResultList();
+        List<FileInfoEntity> entities = query.getResultList();
 
         return entities.stream()
-            .map(entity -> File.builder()
+            .map(entity -> FileInfo.builder()
                 .id(entity.getId())
                 .folderId(entity.getFolderId())
                 .fileName(entity.getFileName())

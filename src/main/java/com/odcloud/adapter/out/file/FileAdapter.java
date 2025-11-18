@@ -4,7 +4,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_DOWNL
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_UPLOAD_ERROR;
 
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +28,6 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -60,7 +59,7 @@ class FileAdapter implements FilePort {
     }
 
     @Override
-    public void uploadFile(File file) {
+    public void uploadFile(FileInfo file) {
         try {
             Path fullPath = Paths.get(basePath, file.getFileLoc());
             Path parentDir = fullPath.getParent();
@@ -94,27 +93,7 @@ class FileAdapter implements FilePort {
     }
 
     @Override
-    public String uploadProfilePicture(MultipartFile multipartFile) {
-        try {
-            String fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
-            String filePath = "/picture/" + fileName;
-            Path fullPath = Paths.get(basePath, filePath);
-
-            Path parentDir = fullPath.getParent();
-            if (parentDir != null && !Files.exists(parentDir)) {
-                Files.createDirectories(parentDir);
-            }
-
-            multipartFile.transferTo(fullPath.toFile());
-            return filePath;
-        } catch (IOException e) {
-            log.error("[uploadProfilePicture] 프로필 사진 업로드 실패, error: {}", e.getMessage());
-            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-        }
-    }
-
-    @Override
-    public FileResponse readFile(File fileInfo) {
+    public FileResponse readFile(FileInfo fileInfo) {
         try {
             java.io.File file = new java.io.File(basePath + fileInfo.getFileLoc());
             FileSystemResource resource = new FileSystemResource(file);
@@ -141,11 +120,11 @@ class FileAdapter implements FilePort {
     }
 
     @Override
-    public FileResponse readFiles(List<File> files) {
+    public FileResponse readFiles(List<FileInfo> files) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ZipOutputStream zos = new ZipOutputStream(baos);
-            for (File file : files) {
+            for (FileInfo file : files) {
                 FileResponse fileResponse = readFile(file);
                 addFileToZip(zos, fileResponse, file.getFileName());
             }

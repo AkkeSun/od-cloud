@@ -3,7 +3,7 @@ package com.odcloud.application.service.download_files;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -36,7 +36,7 @@ class DownloadFilesServiceTest {
         @DisplayName("[success] 여러 파일을 ZIP으로 압축하여 다운로드한다")
         void success_multipleFiles() {
             // given
-            File file1 = File.builder()
+            FileInfo file1 = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("test1.txt")
@@ -44,7 +44,7 @@ class DownloadFilesServiceTest {
                 .regDt(LocalDateTime.now())
                 .build();
 
-            File file2 = File.builder()
+            FileInfo file2 = FileInfo.builder()
                 .id(2L)
                 .folderId(1L)
                 .fileName("test2.pdf")
@@ -52,7 +52,7 @@ class DownloadFilesServiceTest {
                 .regDt(LocalDateTime.now())
                 .build();
 
-            File file3 = File.builder()
+            FileInfo file3 = FileInfo.builder()
                 .id(3L)
                 .folderId(1L)
                 .fileName("test3.jpg")
@@ -96,7 +96,7 @@ class DownloadFilesServiceTest {
         @DisplayName("[failure] FilePort에서 오류 발생 시 예외가 전파된다")
         void failure_filePortError() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("test.txt")

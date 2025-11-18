@@ -3,8 +3,8 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_FOLDER;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.application.port.out.FolderStoragePort;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.application.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,23 +12,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class FolderStorageAdapter implements FolderStoragePort {
+class FolderInfoStorageAdapter implements FolderInfoStoragePort {
 
-    private final FolderRepository folderRepository;
+    private final FolderInfoRepository folderRepository;
 
     @Override
-    public void save(Folder folder) {
+    public void save(FolderInfo folder) {
         folderRepository.save(folder);
     }
 
     @Override
-    public Folder findById(Long id) {
+    public FolderInfo findById(Long id) {
         return folderRepository.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_FOLDER));
     }
 
     @Override
-    public List<Folder> findAll(FindFilesCommand command) {
+    public List<FolderInfo> findAll(FindFilesCommand command) {
         return folderRepository.findAll(command);
     }
 

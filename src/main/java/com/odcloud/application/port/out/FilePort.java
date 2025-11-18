@@ -1,23 +1,20 @@
 package com.odcloud.application.port.out;
 
 import com.odcloud.adapter.out.file.FileResponse;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface FilePort {
 
     void createFolder(String folderPath);
 
-    void uploadFile(File file);
+    void uploadFile(FileInfo file);
 
     void deleteFiles(List<String> filePaths);
 
     void deleteFile(String filePath);
 
-    String uploadProfilePicture(MultipartFile file);
+    FileResponse readFile(FileInfo fileInfo);
 
-    FileResponse readFile(File fileInfo);
-
-    FileResponse readFiles(List<File> files);
+    FileResponse readFiles(List<FileInfo> files);
 }

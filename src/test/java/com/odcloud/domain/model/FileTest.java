@@ -20,7 +20,7 @@ class FileTest {
         @DisplayName("[success] Folder와 MultipartFile로부터 File을 생성한다")
         void success() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123")
                 .build();
@@ -31,7 +31,7 @@ class FileTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -50,7 +50,7 @@ class FileTest {
         @DisplayName("[success] 확장자가 없는 파일로 File을 생성한다")
         void success_noExtension() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123")
                 .build();
@@ -59,7 +59,7 @@ class FileTest {
             when(multipartFile.getOriginalFilename()).thenReturn("testfile");
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -72,7 +72,7 @@ class FileTest {
         @DisplayName("[success] 여러 개의 점이 있는 파일명으로 File을 생성한다")
         void success_multipleExtensions() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123")
                 .build();
@@ -81,7 +81,7 @@ class FileTest {
             when(multipartFile.getOriginalFilename()).thenReturn("test.backup.tar.gz");
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -93,7 +93,7 @@ class FileTest {
         @DisplayName("[success] 다양한 확장자를 가진 파일로 File을 생성한다")
         void success_variousExtensions() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123")
                 .build();
@@ -102,7 +102,7 @@ class FileTest {
             when(multipartFile.getOriginalFilename()).thenReturn("image.png");
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -114,7 +114,7 @@ class FileTest {
         @DisplayName("[success] null 파일명을 가진 MultipartFile로 File을 생성한다")
         void success_nullFileName() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123")
                 .build();
@@ -123,7 +123,7 @@ class FileTest {
             when(multipartFile.getOriginalFilename()).thenReturn(null);
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -135,7 +135,7 @@ class FileTest {
         @DisplayName("[success] 경로에 슬래시가 있는 폴더로 File을 생성한다")
         void success_folderWithSlash() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .path("/group-123/subfolder")
                 .build();
@@ -144,7 +144,7 @@ class FileTest {
             when(multipartFile.getOriginalFilename()).thenReturn("test.txt");
 
             // when
-            File file = File.create(folder, multipartFile);
+            FileInfo file = FileInfo.create(folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -160,7 +160,7 @@ class FileTest {
         @DisplayName("[success] getId()로 id를 조회한다")
         void success_getId() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .id(1L)
                 .build();
 
@@ -175,7 +175,7 @@ class FileTest {
         @DisplayName("[success] getFolderId()로 folderId를 조회한다")
         void success_getFolderId() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .folderId(100L)
                 .build();
 
@@ -190,7 +190,7 @@ class FileTest {
         @DisplayName("[success] getFileName()으로 fileName을 조회한다")
         void success_getFileName() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .fileName("test.txt")
                 .build();
 
@@ -205,7 +205,7 @@ class FileTest {
         @DisplayName("[success] getFileLoc()로 fileLoc을 조회한다")
         void success_getFileLoc() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .fileLoc("/path/to/test.txt")
                 .build();
 
@@ -221,7 +221,7 @@ class FileTest {
         void success_getMultipartFile() {
             // given
             MultipartFile multipartFile = mock(MultipartFile.class);
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .multipartFile(multipartFile)
                 .build();
 
@@ -237,7 +237,7 @@ class FileTest {
         void success_getModDt() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .modDt(now)
                 .build();
 
@@ -253,7 +253,7 @@ class FileTest {
         void success_getRegDt() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .regDt(now)
                 .build();
 
@@ -273,7 +273,7 @@ class FileTest {
         @DisplayName("[success] NoArgsConstructor로 File을 생성한다")
         void success() {
             // when
-            File file = new File();
+            FileInfo file = new FileInfo();
 
             // then
             assertThat(file).isNotNull();
@@ -292,7 +292,7 @@ class FileTest {
             MultipartFile multipartFile = mock(MultipartFile.class);
 
             // when
-            File file = new File(
+            FileInfo file = new FileInfo(
                 1L,
                 100L,
                 "test.txt",

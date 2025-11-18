@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 class FileStorageAdapterTest extends IntegrationTestSupport {
 
     @Autowired
-    FileStorageAdapter adapter;
+    FileInfoStorageAdapter adapter;
 
     @Autowired
     EntityManager entityManager;
 
     @AfterEach
     void tearDown() {
-        entityManager.createQuery("DELETE FROM FileEntity").executeUpdate();
-        entityManager.createQuery("DELETE FROM FolderEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM FileInfoEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM FolderInfoEntity").executeUpdate();
         entityManager.flush();
         entityManager.clear();
     }
@@ -42,7 +42,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -55,7 +55,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
             entityManager.flush();
 
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("test.txt")
                 .fileLoc("/test-group/12345678_20231201.txt")
@@ -68,9 +68,9 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            FileEntity savedEntity = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+            FileInfoEntity savedEntity = entityManager
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getSingleResult();
 
@@ -87,7 +87,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -100,7 +100,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
 
             // 기존 파일 생성
-            FileEntity existingFile = FileEntity.builder()
+            FileInfoEntity existingFile = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("old.txt")
                 .fileLoc("/test-group/old_file.txt")
@@ -111,7 +111,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
             entityManager.clear();
 
-            File updatedFile = File.builder()
+            FileInfo updatedFile = FileInfo.builder()
                 .id(existingFile.getId())
                 .folderId(folder.getId())
                 .fileName("new.txt")
@@ -126,7 +126,8 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            FileEntity savedEntity = entityManager.find(FileEntity.class, existingFile.getId());
+            FileInfoEntity savedEntity = entityManager.find(FileInfoEntity.class,
+                existingFile.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getFileName()).isEqualTo("new.txt");
             assertThat(savedEntity.getFileLoc()).isEqualTo("/test-group/new_file.txt");
@@ -139,7 +140,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -152,21 +153,21 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
             entityManager.flush();
 
-            File file1 = File.builder()
+            FileInfo file1 = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("file1.txt")
                 .fileLoc("/test-group/file1.txt")
                 .regDt(now)
                 .build();
 
-            File file2 = File.builder()
+            FileInfo file2 = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("file2.txt")
                 .fileLoc("/test-group/file2.txt")
                 .regDt(now)
                 .build();
 
-            File file3 = File.builder()
+            FileInfo file3 = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("file3.txt")
                 .fileLoc("/test-group/file3.txt")
@@ -182,14 +183,14 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             var savedFiles = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getResultList();
 
             assertThat(savedFiles).hasSize(3);
             assertThat(savedFiles)
-                .extracting(FileEntity::getFileName)
+                .extracting(FileInfoEntity::getFileName)
                 .containsExactlyInAnyOrder("file1.txt", "file2.txt", "file3.txt");
         }
 
@@ -200,7 +201,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -213,21 +214,21 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
             entityManager.flush();
 
-            File txtFile = File.builder()
+            FileInfo txtFile = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("document.txt")
                 .fileLoc("/test-group/document.txt")
                 .regDt(now)
                 .build();
 
-            File pdfFile = File.builder()
+            FileInfo pdfFile = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("report.pdf")
                 .fileLoc("/test-group/report.pdf")
                 .regDt(now)
                 .build();
 
-            File imageFile = File.builder()
+            FileInfo imageFile = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("photo.jpg")
                 .fileLoc("/test-group/photo.jpg")
@@ -244,8 +245,8 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // then
             var savedFiles = entityManager
                 .createQuery(
-                    "SELECT f FROM FileEntity f WHERE f.folderId = :folderId ORDER BY f.fileName",
-                    FileEntity.class)
+                    "SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId ORDER BY f.fileName",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getResultList();
 
@@ -262,7 +263,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 1 생성
-            FolderEntity folder1 = FolderEntity.builder()
+            FolderInfoEntity folder1 = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group-1")
                 .name("폴더 1")
@@ -275,7 +276,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder1);
 
             // 폴더 2 생성
-            FolderEntity folder2 = FolderEntity.builder()
+            FolderInfoEntity folder2 = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group-2")
                 .name("폴더 2")
@@ -289,14 +290,14 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             entityManager.flush();
 
-            File fileInFolder1 = File.builder()
+            FileInfo fileInFolder1 = FileInfo.builder()
                 .folderId(folder1.getId())
                 .fileName("test.txt")
                 .fileLoc("/group-1/test.txt")
                 .regDt(now)
                 .build();
 
-            File fileInFolder2 = File.builder()
+            FileInfo fileInFolder2 = FileInfo.builder()
                 .folderId(folder2.getId())
                 .fileName("test.txt")
                 .fileLoc("/group-2/test.txt")
@@ -311,14 +312,14 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             var filesInFolder1 = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder1.getId())
                 .getResultList();
 
             var filesInFolder2 = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder2.getId())
                 .getResultList();
 
@@ -337,7 +338,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -350,7 +351,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
             entityManager.flush();
 
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("test.txt")
                 .fileLoc("/test-group/test.txt")
@@ -364,9 +365,9 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            FileEntity savedEntity = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+            FileInfoEntity savedEntity = entityManager
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getSingleResult();
 
@@ -381,7 +382,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -395,7 +396,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
 
             String longFilePath = "/test-group/very/long/nested/folder/path/12345678_20231201_very_long_filename.txt";
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("very_long_filename.txt")
                 .fileLoc(longFilePath)
@@ -408,9 +409,9 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            FileEntity savedEntity = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+            FileInfoEntity savedEntity = entityManager
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getSingleResult();
 
@@ -425,7 +426,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("test-group")
                 .name("테스트 폴더")
@@ -438,7 +439,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
             entityManager.flush();
 
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .folderId(folder.getId())
                 .fileName("테스트파일.txt")
                 .fileLoc("/test-group/12345678_20231201.txt")
@@ -451,9 +452,9 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            FileEntity savedEntity = entityManager
-                .createQuery("SELECT f FROM FileEntity f WHERE f.folderId = :folderId",
-                    FileEntity.class)
+            FileInfoEntity savedEntity = entityManager
+                .createQuery("SELECT f FROM FileInfoEntity f WHERE f.folderId = :folderId",
+                    FileInfoEntity.class)
                 .setParameter("folderId", folder.getId())
                 .getSingleResult();
 
@@ -473,7 +474,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Test Folder")
@@ -486,7 +487,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
 
             // 파일 생성
-            FileEntity file1 = FileEntity.builder()
+            FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("test1.txt")
                 .fileLoc("/group1/test1.txt")
@@ -495,7 +496,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .build();
             entityManager.persist(file1);
 
-            FileEntity file2 = FileEntity.builder()
+            FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("test2.txt")
                 .fileLoc("/group1/test2.txt")
@@ -524,7 +525,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).hasSize(2);
-            assertThat(result).extracting(File::getFileName)
+            assertThat(result).extracting(FileInfo::getFileName)
                 .containsExactly("test1.txt", "test2.txt");
         }
 
@@ -535,7 +536,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Test Folder")
@@ -548,7 +549,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
 
             // 파일 생성
-            FileEntity file1 = FileEntity.builder()
+            FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("report.pdf")
                 .fileLoc("/group1/report.pdf")
@@ -557,7 +558,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .build();
             entityManager.persist(file1);
 
-            FileEntity file2 = FileEntity.builder()
+            FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("document.txt")
                 .fileLoc("/group1/document.txt")
@@ -566,7 +567,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .build();
             entityManager.persist(file2);
 
-            FileEntity file3 = FileEntity.builder()
+            FileInfoEntity file3 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("report2.pdf")
                 .fileLoc("/group1/report2.pdf")
@@ -595,7 +596,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).hasSize(2);
-            assertThat(result).extracting(File::getFileName)
+            assertThat(result).extracting(FileInfo::getFileName)
                 .contains("report.pdf", "report2.pdf");
         }
 
@@ -606,7 +607,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // PUBLIC 폴더 생성
-            FolderEntity publicFolder = FolderEntity.builder()
+            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Public Folder")
@@ -619,7 +620,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFolder);
 
             // PRIVATE 폴더 생성 (다른 소유자)
-            FolderEntity privateFolder = FolderEntity.builder()
+            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Private Folder")
@@ -632,7 +633,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(privateFolder);
 
             // PUBLIC 폴더에 파일 생성
-            FileEntity publicFile = FileEntity.builder()
+            FileInfoEntity publicFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
                 .fileName("public.txt")
                 .fileLoc("/group1/public/public.txt")
@@ -642,7 +643,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFile);
 
             // PRIVATE 폴더에 파일 생성
-            FileEntity privateFile = FileEntity.builder()
+            FileInfoEntity privateFile = FileInfoEntity.builder()
                 .folderId(privateFolder.getId())
                 .fileName("private.txt")
                 .fileLoc("/group1/private/private.txt")
@@ -681,7 +682,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // PUBLIC 폴더 생성
-            FolderEntity publicFolder = FolderEntity.builder()
+            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Public Folder")
@@ -694,7 +695,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFolder);
 
             // PRIVATE 폴더 생성 (동일 소유자)
-            FolderEntity privateFolder = FolderEntity.builder()
+            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Private Folder")
@@ -707,7 +708,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(privateFolder);
 
             // PUBLIC 폴더에 파일 생성
-            FileEntity publicFile = FileEntity.builder()
+            FileInfoEntity publicFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
                 .fileName("public.txt")
                 .fileLoc("/group1/public/public.txt")
@@ -717,7 +718,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFile);
 
             // PRIVATE 폴더에 파일 생성
-            FileEntity privateFile = FileEntity.builder()
+            FileInfoEntity privateFile = FileInfoEntity.builder()
                 .folderId(privateFolder.getId())
                 .fileName("private.txt")
                 .fileLoc("/group1/private/private.txt")
@@ -756,7 +757,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // 폴더 생성
-            FolderEntity folder = FolderEntity.builder()
+            FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Test Folder")
@@ -769,7 +770,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(folder);
 
             // 파일 생성 (역순으로)
-            FileEntity file1 = FileEntity.builder()
+            FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("c.txt")
                 .fileLoc("/group1/c.txt")
@@ -778,7 +779,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .build();
             entityManager.persist(file1);
 
-            FileEntity file2 = FileEntity.builder()
+            FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("a.txt")
                 .fileLoc("/group1/a.txt")
@@ -787,7 +788,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .build();
             entityManager.persist(file2);
 
-            FileEntity file3 = FileEntity.builder()
+            FileInfoEntity file3 = FileInfoEntity.builder()
                 .folderId(folder.getId())
                 .fileName("b.txt")
                 .fileLoc("/group1/b.txt")
@@ -816,7 +817,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).hasSize(3);
-            assertThat(result).extracting(File::getFileName)
+            assertThat(result).extracting(FileInfo::getFileName)
                 .containsExactly("c.txt", "b.txt", "a.txt");
         }
 
@@ -827,7 +828,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // PUBLIC 폴더 생성 (group1)
-            FolderEntity publicFolder = FolderEntity.builder()
+            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Public Folder")
@@ -840,7 +841,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFolder);
 
             // PRIVATE 폴더 생성 (다른 사용자 소유)
-            FolderEntity privateFolder = FolderEntity.builder()
+            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Private Folder")
@@ -853,7 +854,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(privateFolder);
 
             // PUBLIC 폴더에 "test" 키워드 파일 생성
-            FileEntity publicTestFile = FileEntity.builder()
+            FileInfoEntity publicTestFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
                 .fileName("test-public.txt")
                 .fileLoc("/group1/public/test-public.txt")
@@ -863,7 +864,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicTestFile);
 
             // PRIVATE 폴더에 "test" 키워드 파일 생성 (권한 없는 폴더)
-            FileEntity privateTestFile = FileEntity.builder()
+            FileInfoEntity privateTestFile = FileInfoEntity.builder()
                 .folderId(privateFolder.getId())
                 .fileName("test-private.txt")
                 .fileLoc("/group1/private/test-private.txt")
@@ -904,7 +905,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
 
             // PUBLIC 폴더 생성
-            FolderEntity publicFolder = FolderEntity.builder()
+            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("Public Folder")
@@ -917,7 +918,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFolder);
 
             // 자신의 PRIVATE 폴더 생성
-            FolderEntity myPrivateFolder = FolderEntity.builder()
+            FolderInfoEntity myPrivateFolder = FolderInfoEntity.builder()
                 .parentId(null)
                 .groupId("group1")
                 .name("My Private Folder")
@@ -930,7 +931,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(myPrivateFolder);
 
             // PUBLIC 폴더에 파일 생성
-            FileEntity publicFile = FileEntity.builder()
+            FileInfoEntity publicFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
                 .fileName("report-public.pdf")
                 .fileLoc("/group1/public/report-public.pdf")
@@ -940,7 +941,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(publicFile);
 
             // 자신의 PRIVATE 폴더에 파일 생성
-            FileEntity myPrivateFile = FileEntity.builder()
+            FileInfoEntity myPrivateFile = FileInfoEntity.builder()
                 .folderId(myPrivateFolder.getId())
                 .fileName("report-private.pdf")
                 .fileLoc("/group1/my-private/report-private.pdf")
@@ -970,7 +971,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // then
             // PUBLIC 폴더와 자신의 PRIVATE 폴더의 파일 모두 조회되어야 함
             assertThat(result).hasSize(2);
-            assertThat(result).extracting(File::getFileName)
+            assertThat(result).extracting(FileInfo::getFileName)
                 .containsExactlyInAnyOrder("report-public.pdf", "report-private.pdf");
         }
     }

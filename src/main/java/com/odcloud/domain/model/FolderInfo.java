@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Folder {
+public class FolderInfo {
 
     private Long id;
     private Long parentId;
@@ -27,8 +27,8 @@ public class Folder {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public static Folder ofRootFolder(RegisterGroupCommand command) {
-        return Folder.builder()
+    public static FolderInfo ofRootFolder(RegisterGroupCommand command) {
+        return FolderInfo.builder()
             .parentId(null)
             .groupId(command.id())
             .name(command.description())
@@ -40,12 +40,12 @@ public class Folder {
     }
 
 
-    public static Folder createSubFolder(RegisterFolderCommand command, String parentPath) {
+    public static FolderInfo createSubFolder(RegisterFolderCommand command, String parentPath) {
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String folderName = uuid + "_" + date;
 
-        return Folder.builder()
+        return FolderInfo.builder()
             .parentId(command.parentId())
             .groupId(command.groupId())
             .name(command.name())

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.fakeClass.FakeFileUploadPort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -38,7 +38,7 @@ class RegisterFolderServiceTest {
         @DisplayName("[success] 정상적으로 폴더를 생성한다")
         void success() {
             // given
-            Folder parentFolder = Folder.builder()
+            FolderInfo parentFolder = FolderInfo.builder()
                 .groupId("test-group")
                 .name("Parent Folder")
                 .path("/test-group")
@@ -69,7 +69,7 @@ class RegisterFolderServiceTest {
         @DisplayName("[failure] 같은 이름의 폴더가 이미 존재하면 예외가 발생한다")
         void failure_duplicateFolderName() {
             // given
-            Folder parentFolder = Folder.builder()
+            FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
                 .name("Parent Folder")
@@ -77,7 +77,7 @@ class RegisterFolderServiceTest {
                 .build();
             fakeFolderStoragePort.database.add(parentFolder);
 
-            Folder existingFolder = Folder.builder()
+            FolderInfo existingFolder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
                 .groupId("test-group")

@@ -1,17 +1,17 @@
 package com.odcloud.adapter.out.file;
 
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 
 public record FileWithPath(
-    File file,
+    FileInfo file,
     String path
 ) {
 
-    public static FileWithPath ofRoot(File file) {
+    public static FileWithPath ofRoot(FileInfo file) {
         return new FileWithPath(file, "");
     }
 
-    public static FileWithPath of(File file, String folderName) {
+    public static FileWithPath of(FileInfo file, String folderName) {
         return new FileWithPath(file, folderName);
     }
 

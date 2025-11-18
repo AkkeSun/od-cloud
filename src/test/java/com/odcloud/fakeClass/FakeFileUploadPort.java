@@ -2,7 +2,7 @@ package com.odcloud.fakeClass;
 
 import com.odcloud.adapter.out.file.FileResponse;
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FakeFileUploadPort implements FilePort {
 
     public List<String> createdFolders = new ArrayList<>();
-    public List<File> uploadedFiles = new ArrayList<>();
+    public List<FileInfo> uploadedFiles = new ArrayList<>();
     public boolean shouldThrowException = false;
 
     @Override
@@ -24,7 +24,7 @@ public class FakeFileUploadPort implements FilePort {
     }
 
     @Override
-    public void uploadFile(File file) {
+    public void uploadFile(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("File upload failure");
         }
@@ -51,24 +51,14 @@ public class FakeFileUploadPort implements FilePort {
         deletedFiles.add(filePath);
         log.info("FakeFileUploadPort deleteFile: filePath={}", filePath);
     }
-
+    
     @Override
-    public String uploadProfilePicture(org.springframework.web.multipart.MultipartFile file) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Profile picture upload failure");
-        }
-        String filePath = "/picture/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        log.info("FakeFileUploadPort uploadProfilePicture: filePath={}", filePath);
-        return filePath;
-    }
-
-    @Override
-    public FileResponse readFile(File fileInfo) {
+    public FileResponse readFile(FileInfo fileInfo) {
         return null;
     }
 
     @Override
-    public FileResponse readFiles(List<File> files) {
+    public FileResponse readFiles(List<FileInfo> files) {
         return null;
     }
 

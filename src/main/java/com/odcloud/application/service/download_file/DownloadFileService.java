@@ -2,9 +2,9 @@ package com.odcloud.application.service.download_file;
 
 import com.odcloud.adapter.out.file.FileResponse;
 import com.odcloud.application.port.in.DownloadFileUseCase;
+import com.odcloud.application.port.out.FileInfoStoragePort;
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.application.port.out.FileStoragePort;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 class DownloadFileService implements DownloadFileUseCase {
 
     private final FilePort filePort;
-    private final FileStoragePort fileStoragePort;
+    private final FileInfoStoragePort fileStoragePort;
 
     @Override
     public DownloadFileServiceResponse downloadFile(Long fileId) {
-        File file = fileStoragePort.findById(fileId);
+        FileInfo file = fileStoragePort.findById(fileId);
         FileResponse fileResponse = filePort.readFile(file);
         return DownloadFileServiceResponse.of(fileResponse);
     }

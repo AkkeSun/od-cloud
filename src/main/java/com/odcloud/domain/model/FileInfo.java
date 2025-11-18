@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File {
+public class FileInfo {
 
     private Long id;
     private Long folderId;
@@ -24,7 +24,7 @@ public class File {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public File(Long id, Long folderId, String fileName, String fileLoc, LocalDateTime modDt,
+    public FileInfo(Long id, Long folderId, String fileName, String fileLoc, LocalDateTime modDt,
         LocalDateTime regDt) {
         this.id = id;
         this.folderId = folderId;
@@ -34,14 +34,14 @@ public class File {
         this.regDt = regDt;
     }
 
-    public static File create(Folder folder, MultipartFile multipartFile) {
+    public static FileInfo create(FolderInfo folder, MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         String extension = getFileExtension(originalFileName);
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String serverFileName = uuid + "_" + date + extension;
 
-        return File.builder()
+        return FileInfo.builder()
             .folderId(folder.getId())
             .fileName(originalFileName)
             .fileLoc(folder.getPath() + "/" + serverFileName)
@@ -57,13 +57,13 @@ public class File {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    public static File ofProfilePicture(MultipartFile multipartFile) {
+    public static FileInfo ofProfilePicture(MultipartFile multipartFile) {
         String extension = getFileExtension(multipartFile.getOriginalFilename());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String serverFileName = uuid + "_" + date + extension;
 
-        return File.builder()
+        return FileInfo.builder()
             .folderId(null)
             .fileName(null)
             .fileLoc("/pictures/" + serverFileName)

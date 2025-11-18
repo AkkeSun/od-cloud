@@ -2,8 +2,8 @@ package com.odcloud.application.service.find_files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.domain.model.File;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FileInfo;
+import com.odcloud.domain.model.FolderInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ class FindFilesServiceResponseTest {
             // given
             LocalDateTime now = LocalDateTime.now();
 
-            File file1 = File.builder()
+            FileInfo file1 = FileInfo.builder()
                 .id(1L)
                 .folderId(10L)
                 .fileName("test1.txt")
@@ -30,7 +30,7 @@ class FindFilesServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            File file2 = File.builder()
+            FileInfo file2 = FileInfo.builder()
                 .id(2L)
                 .folderId(10L)
                 .fileName("test2.txt")
@@ -38,7 +38,7 @@ class FindFilesServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            Folder folder1 = Folder.builder()
+            FolderInfo folder1 = FolderInfo.builder()
                 .id(11L)
                 .parentId(10L)
                 .groupId("group1")
@@ -49,7 +49,7 @@ class FindFilesServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            Folder folder2 = Folder.builder()
+            FolderInfo folder2 = FolderInfo.builder()
                 .id(12L)
                 .parentId(10L)
                 .groupId("group1")
@@ -60,8 +60,8 @@ class FindFilesServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            List<File> files = List.of(file1, file2);
-            List<Folder> folders = List.of(folder1, folder2);
+            List<FileInfo> files = List.of(file1, file2);
+            List<FolderInfo> folders = List.of(folder1, folder2);
             Long parentFolderId = 10L;
 
             // when
@@ -98,8 +98,8 @@ class FindFilesServiceResponseTest {
         @DisplayName("[success] 빈 리스트로 Response를 생성한다")
         void success_emptyLists() {
             // given
-            List<File> files = List.of();
-            List<Folder> folders = List.of();
+            List<FileInfo> files = List.of();
+            List<FolderInfo> folders = List.of();
             Long parentFolderId = 10L;
 
             // when
@@ -116,8 +116,8 @@ class FindFilesServiceResponseTest {
         @DisplayName("[success] parentFolderId가 null이어도 Response를 생성한다")
         void success_nullParentFolderId() {
             // given
-            List<File> files = List.of();
-            List<Folder> folders = List.of();
+            List<FileInfo> files = List.of();
+            List<FolderInfo> folders = List.of();
             Long parentFolderId = null;
 
             // when
@@ -140,7 +140,7 @@ class FindFilesServiceResponseTest {
         void success() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
                 .groupId("group1")
@@ -169,7 +169,7 @@ class FindFilesServiceResponseTest {
         void success_privateFolder() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
                 .groupId("group2")
@@ -202,7 +202,7 @@ class FindFilesServiceResponseTest {
         void success() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .id(1L)
                 .folderId(10L)
                 .fileName("test.txt")
@@ -228,7 +228,7 @@ class FindFilesServiceResponseTest {
             // given
             LocalDateTime now = LocalDateTime.now();
 
-            File pdfFile = File.builder()
+            FileInfo pdfFile = FileInfo.builder()
                 .id(1L)
                 .folderId(10L)
                 .fileName("document.pdf")
@@ -236,7 +236,7 @@ class FindFilesServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            File imageFile = File.builder()
+            FileInfo imageFile = FileInfo.builder()
                 .id(2L)
                 .folderId(10L)
                 .fileName("photo.jpg")

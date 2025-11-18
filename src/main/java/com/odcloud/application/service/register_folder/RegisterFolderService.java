@@ -6,8 +6,8 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FOLD
 import com.odcloud.application.port.in.RegisterFolderUseCase;
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.application.port.out.FolderStoragePort;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.application.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +17,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class RegisterFolderService implements RegisterFolderUseCase {
 
-    private final FolderStoragePort folderStoragePort;
+    private final FolderInfoStoragePort folderStoragePort;
     private final FilePort fileUploadPort;
 
     @Override
     @Transactional
     public RegisterFolderServiceResponse createFolder(RegisterFolderCommand command) {
-        Folder parentFolder = folderStoragePort.findById(command.parentId());
+        FolderInfo parentFolder = folderStoragePort.findById(command.parentId());
         if (folderStoragePort.existsSameFolderName(command.parentId(), command.name())) {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
 
-        Folder folder = Folder.createSubFolder(command, parentFolder.getPath());
+        FolderInfo folder = FolderInfo.createSubFolder(command, parentFolder.getPath());
         folderStoragePort.save(folder);
         fileUploadPort.createFolder(folder.getPath());
 

@@ -3,7 +3,7 @@ package com.odcloud.application.service.download_file;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -35,7 +35,7 @@ class DownloadFileServiceTest {
         @DisplayName("[success] 정상적으로 파일을 다운로드한다")
         void success() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("test.txt")
@@ -73,7 +73,7 @@ class DownloadFileServiceTest {
         @DisplayName("[failure] FilePort에서 오류 발생 시 예외가 전파된다")
         void failure_filePortError() {
             // given
-            File file = File.builder()
+            FileInfo file = FileInfo.builder()
                 .id(1L)
                 .folderId(1L)
                 .fileName("test.txt")

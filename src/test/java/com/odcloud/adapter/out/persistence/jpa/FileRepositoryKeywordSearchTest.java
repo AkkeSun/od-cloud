@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.odcloud.IntegrationTestSupport;
 import com.odcloud.application.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.Group;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -21,15 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
 
     @Autowired
-    private FileRepository fileRepository;
+    private FileInfoRepository fileRepository;
 
     @Autowired
     private EntityManager entityManager;
 
     @AfterEach
     void tearDown() {
-        entityManager.createQuery("DELETE FROM FileEntity").executeUpdate();
-        entityManager.createQuery("DELETE FROM FolderEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM FileInfoEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM FolderInfoEntity").executeUpdate();
         entityManager.flush();
     }
 
@@ -40,7 +40,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         LocalDateTime now = LocalDateTime.now();
 
         // 1. PUBLIC 폴더 (group1) 생성
-        FolderEntity publicFolder = FolderEntity.builder()
+        FolderInfoEntity publicFolder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group1")
             .name("Public Folder")
@@ -53,7 +53,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(publicFolder);
 
         // 2. 본인의 PRIVATE 폴더 생성
-        FolderEntity myPrivateFolder = FolderEntity.builder()
+        FolderInfoEntity myPrivateFolder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group1")
             .name("My Private Folder")
@@ -66,7 +66,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(myPrivateFolder);
 
         // 3. 다른 사람의 PRIVATE 폴더 생성
-        FolderEntity otherPrivateFolder = FolderEntity.builder()
+        FolderInfoEntity otherPrivateFolder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group1")
             .name("Other Private Folder")
@@ -79,7 +79,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(otherPrivateFolder);
 
         // 4. 권한 없는 그룹의 PUBLIC 폴더 생성
-        FolderEntity noAccessPublicFolder = FolderEntity.builder()
+        FolderInfoEntity noAccessPublicFolder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group2")
             .name("No Access Public Folder")
@@ -94,7 +94,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.flush();
 
         // PUBLIC 폴더에 파일 생성
-        FileEntity publicFile = FileEntity.builder()
+        FileInfoEntity publicFile = FileInfoEntity.builder()
             .folderId(publicFolder.getId())
             .fileName("test-public.txt")
             .fileLoc("/group1/public/test-public.txt")
@@ -104,7 +104,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(publicFile);
 
         // 본인의 PRIVATE 폴더에 파일 생성
-        FileEntity myPrivateFile = FileEntity.builder()
+        FileInfoEntity myPrivateFile = FileInfoEntity.builder()
             .folderId(myPrivateFolder.getId())
             .fileName("test-my-private.pdf")
             .fileLoc("/group1/my-private/test-my-private.pdf")
@@ -114,7 +114,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(myPrivateFile);
 
         // 다른 사람의 PRIVATE 폴더에 파일 생성 (검색 안되어야 함)
-        FileEntity otherPrivateFile = FileEntity.builder()
+        FileInfoEntity otherPrivateFile = FileInfoEntity.builder()
             .folderId(otherPrivateFolder.getId())
             .fileName("test-other-private.doc")
             .fileLoc("/group1/other-private/test-other-private.doc")
@@ -124,7 +124,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(otherPrivateFile);
 
         // 권한 없는 그룹의 PUBLIC 폴더에 파일 생성 (검색 안되어야 함)
-        FileEntity noAccessFile = FileEntity.builder()
+        FileInfoEntity noAccessFile = FileInfoEntity.builder()
             .folderId(noAccessPublicFolder.getId())
             .fileName("test-no-access.txt")
             .fileLoc("/group2/public/test-no-access.txt")
@@ -149,14 +149,14 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .sortType("NAME_ASC")
             .build();
 
-        List<File> result = fileRepository.findAll(command);
+        List<FileInfo> result = fileRepository.findAll(command);
 
         // then
         System.out.println("=== 검색 결과 ===");
         result.forEach(file -> System.out.println("Found: " + file.getFileName()));
 
         assertThat(result).hasSize(2);
-        assertThat(result).extracting(File::getFileName)
+        assertThat(result).extracting(FileInfo::getFileName)
             .containsExactlyInAnyOrder("test-public.txt", "test-my-private.pdf");
     }
 
@@ -166,7 +166,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.now();
 
-        FolderEntity folder = FolderEntity.builder()
+        FolderInfoEntity folder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group1")
             .name("Test Folder")
@@ -179,7 +179,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         entityManager.persist(folder);
         entityManager.flush();
 
-        FileEntity file = FileEntity.builder()
+        FileInfoEntity file = FileInfoEntity.builder()
             .folderId(folder.getId())
             .fileName("test.txt")
             .fileLoc("/group1/test/test.txt")
@@ -206,7 +206,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .sortType("NAME_ASC")
             .build();
 
-        List<File> result = fileRepository.findAll(command);
+        List<FileInfo> result = fileRepository.findAll(command);
 
         // then
         assertThat(result).hasSize(1);

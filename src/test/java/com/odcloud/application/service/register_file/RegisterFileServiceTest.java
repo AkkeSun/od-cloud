@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.port.in.command.RegisterFileCommand;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -44,7 +44,7 @@ class RegisterFileServiceTest {
         @DisplayName("[success] 정상적으로 파일을 등록한다")
         void success() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
                 .name("Test Folder")
@@ -79,7 +79,7 @@ class RegisterFileServiceTest {
         @DisplayName("[success] 여러 파일을 한번에 등록한다")
         void success_multipleFiles() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
                 .name("Test Folder")
@@ -154,7 +154,7 @@ class RegisterFileServiceTest {
         @DisplayName("[failure] 동일한 파일명이 이미 존재하면 예외가 발생한다")
         void failure_duplicateFileName() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
                 .name("Test Folder")
@@ -201,7 +201,7 @@ class RegisterFileServiceTest {
         @DisplayName("[failure] 여러 파일 등록 중 중복 파일명이 있으면 이미 업로드된 파일들을 삭제하고 예외가 발생한다")
         void failure_duplicateFileName_multipleFiles() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
                 .name("Test Folder")

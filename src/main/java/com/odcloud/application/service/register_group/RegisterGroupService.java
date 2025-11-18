@@ -6,10 +6,10 @@ import com.odcloud.application.port.in.RegisterGroupUseCase;
 import com.odcloud.application.port.in.command.RegisterGroupCommand;
 import com.odcloud.application.port.out.AccountStoragePort;
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.application.port.out.FolderStoragePort;
+import com.odcloud.application.port.out.FolderInfoStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -23,7 +23,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
 
     private final FilePort fileUploadPort;
     private final GroupStoragePort groupStoragePort;
-    private final FolderStoragePort folderStoragePort;
+    private final FolderInfoStoragePort folderStoragePort;
     private final AccountStoragePort accountStoragePort;
 
     @Override
@@ -39,7 +39,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
         Account account = accountStoragePort.findByEmail(command.ownerEmail());
         groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
 
-        Folder folder = Folder.ofRootFolder(command);
+        FolderInfo folder = FolderInfo.ofRootFolder(command);
         folderStoragePort.save(folder);
         fileUploadPort.createFolder(folder.getPath());
 

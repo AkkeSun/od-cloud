@@ -2,7 +2,7 @@ package com.odcloud.fakeClass;
 
 import com.odcloud.adapter.out.file.FileResponse;
 import com.odcloud.application.port.out.FilePort;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
-    public void uploadFile(File file) {
+    public void uploadFile(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }
@@ -62,17 +62,7 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
-    public String uploadProfilePicture(org.springframework.web.multipart.MultipartFile file) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        String filePath = "/picture/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        log.info("FakeFilePort uploaded profile picture: {}", filePath);
-        return filePath;
-    }
-
-    @Override
-    public FileResponse readFile(File fileInfo) {
+    public FileResponse readFile(FileInfo fileInfo) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }
@@ -96,7 +86,7 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
-    public FileResponse readFiles(List<File> files) {
+    public FileResponse readFiles(List<FileInfo> files) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }

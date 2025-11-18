@@ -28,7 +28,7 @@ class FolderTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            Folder folder = Folder.ofRootFolder(command);
+            FolderInfo folder = FolderInfo.ofRootFolder(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -55,7 +55,7 @@ class FolderTest {
             );
 
             // when
-            Folder folder = Folder.ofRootFolder(command);
+            FolderInfo folder = FolderInfo.ofRootFolder(command);
 
             // then
             assertThat(folder).isNotNull();
@@ -78,7 +78,7 @@ class FolderTest {
             );
 
             // when
-            Folder folder = Folder.ofRootFolder(command);
+            FolderInfo folder = FolderInfo.ofRootFolder(command);
 
             // then
             assertThat(folder).isNotNull();
@@ -109,7 +109,7 @@ class FolderTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            Folder folder = Folder.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -140,7 +140,7 @@ class FolderTest {
             String parentPath = "/test";
 
             // when
-            Folder folder = Folder.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
 
             // then
             assertThat(folder).isNotNull();
@@ -162,7 +162,7 @@ class FolderTest {
             String parentPath = "/group-123/folder1/folder2";
 
             // when
-            Folder folder = Folder.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
 
             // then
             assertThat(folder).isNotNull();
@@ -183,7 +183,7 @@ class FolderTest {
             String parentPath = "/group-123";
 
             // when
-            Folder folder = Folder.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
 
             // then
             assertThat(folder).isNotNull();
@@ -207,8 +207,8 @@ class FolderTest {
             );
 
             // when
-            Folder publicFolder = Folder.createSubFolder(publicCommand, "/group-123");
-            Folder privateFolder = Folder.createSubFolder(privateCommand, "/group-123");
+            FolderInfo publicFolder = FolderInfo.createSubFolder(publicCommand, "/group-123");
+            FolderInfo privateFolder = FolderInfo.createSubFolder(privateCommand, "/group-123");
 
             // then
             assertThat(publicFolder.getAccessLevel()).isEqualTo("PUBLIC");
@@ -224,7 +224,7 @@ class FolderTest {
         @DisplayName("[success] getId()로 id를 조회한다")
         void success_getId() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .build();
 
@@ -239,7 +239,7 @@ class FolderTest {
         @DisplayName("[success] getParentId()로 parentId를 조회한다")
         void success_getParentId() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .parentId(100L)
                 .build();
 
@@ -254,7 +254,7 @@ class FolderTest {
         @DisplayName("[success] getGroupId()로 groupId를 조회한다")
         void success_getGroupId() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .groupId("group-123")
                 .build();
 
@@ -269,7 +269,7 @@ class FolderTest {
         @DisplayName("[success] getName()으로 name을 조회한다")
         void success_getName() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .name("테스트 폴더")
                 .build();
 
@@ -284,7 +284,7 @@ class FolderTest {
         @DisplayName("[success] getOwner()로 owner를 조회한다")
         void success_getOwner() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .owner("owner@example.com")
                 .build();
 
@@ -299,7 +299,7 @@ class FolderTest {
         @DisplayName("[success] getPath()로 path를 조회한다")
         void success_getPath() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .path("/group-123")
                 .build();
 
@@ -314,7 +314,7 @@ class FolderTest {
         @DisplayName("[success] getAccessLevel()로 accessLevel을 조회한다")
         void success_getAccessLevel() {
             // given
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .accessLevel("PUBLIC")
                 .build();
 
@@ -330,7 +330,7 @@ class FolderTest {
         void success_getModDt() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .modDt(now)
                 .build();
 
@@ -346,7 +346,7 @@ class FolderTest {
         void success_getRegDt() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            Folder folder = Folder.builder()
+            FolderInfo folder = FolderInfo.builder()
                 .regDt(now)
                 .build();
 
@@ -366,7 +366,7 @@ class FolderTest {
         @DisplayName("[success] NoArgsConstructor로 Folder를 생성한다")
         void success() {
             // when
-            Folder folder = new Folder();
+            FolderInfo folder = new FolderInfo();
 
             // then
             assertThat(folder).isNotNull();
@@ -384,7 +384,7 @@ class FolderTest {
             LocalDateTime now = LocalDateTime.now();
 
             // when
-            Folder folder = new Folder(
+            FolderInfo folder = new FolderInfo(
                 1L,
                 null,
                 "group-123",

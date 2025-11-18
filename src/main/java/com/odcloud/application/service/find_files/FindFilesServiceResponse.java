@@ -1,7 +1,7 @@
 package com.odcloud.application.service.find_files;
 
-import com.odcloud.domain.model.File;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FileInfo;
+import com.odcloud.domain.model.FolderInfo;
 import java.util.List;
 import lombok.Builder;
 
@@ -13,8 +13,8 @@ public record FindFilesServiceResponse(
 ) {
 
     public static FindFilesServiceResponse of(
-        List<File> files,
-        List<Folder> folders,
+        List<FileInfo> files,
+        List<FolderInfo> folders,
         Long parentFolderId
     ) {
         return FindFilesServiceResponse.builder()
@@ -37,7 +37,7 @@ public record FindFilesServiceResponse(
         String regDt
     ) {
 
-        public static FolderResponseItem of(Folder folder) {
+        public static FolderResponseItem of(FolderInfo folder) {
             return FolderResponseItem.builder()
                 .id(folder.getId())
                 .name(folder.getName())
@@ -56,7 +56,7 @@ public record FindFilesServiceResponse(
         String regDt
     ) {
 
-        public static FileResponseItem of(File file) {
+        public static FileResponseItem of(FileInfo file) {
             return FileResponseItem.builder()
                 .id(file.getId())
                 .name(file.getFileName())

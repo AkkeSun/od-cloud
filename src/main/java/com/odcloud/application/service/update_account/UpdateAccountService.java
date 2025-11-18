@@ -5,7 +5,7 @@ import com.odcloud.application.port.in.command.UpdateAccountCommand;
 import com.odcloud.application.port.out.AccountStoragePort;
 import com.odcloud.application.port.out.FilePort;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ class UpdateAccountService implements UpdateAccountUseCase {
     public UpdateAccountServiceResponse update(UpdateAccountCommand command) {
         Account account = accountStoragePort.findByEmail(command.account().getEmail());
         if (command.pictureFile() != null) {
-            File file = File.ofProfilePicture(command.pictureFile());
+            FileInfo file = FileInfo.ofProfilePicture(command.pictureFile());
             filePort.uploadFile(file);
 
             if (account.getPicture().startsWith(constant.getAccountProfileURI() )) {

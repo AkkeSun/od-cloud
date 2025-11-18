@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.FileStoragePort;
-import com.odcloud.domain.model.File;
+import com.odcloud.application.port.out.FileInfoStoragePort;
+import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.ArrayList;
@@ -9,13 +9,13 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FakeFileStoragePort implements FileStoragePort {
+public class FakeFileStoragePort implements FileInfoStoragePort {
 
-    public List<File> database = new ArrayList<>();
+    public List<FileInfo> database = new ArrayList<>();
     public boolean shouldThrowException = false;
 
     @Override
-    public void save(File file) {
+    public void save(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
@@ -24,7 +24,7 @@ public class FakeFileStoragePort implements FileStoragePort {
     }
 
     @Override
-    public File findById(Long id) {
+    public FileInfo findById(Long id) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
@@ -35,11 +35,11 @@ public class FakeFileStoragePort implements FileStoragePort {
     }
 
     @Override
-    public List<File> findByIds(List<Long> ids) {
+    public List<FileInfo> findByIds(List<Long> ids) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
-        List<File> result = database.stream()
+        List<FileInfo> result = database.stream()
             .filter(file -> ids.contains(file.getId()))
             .toList();
 
@@ -51,7 +51,8 @@ public class FakeFileStoragePort implements FileStoragePort {
     }
 
     @Override
-    public List<File> findAll(com.odcloud.application.port.in.command.FindFilesCommand command) {
+    public List<FileInfo> findAll(
+        com.odcloud.application.port.in.command.FindFilesCommand command) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }

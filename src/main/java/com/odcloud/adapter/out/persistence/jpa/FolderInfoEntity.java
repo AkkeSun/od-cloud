@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FolderInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FOLDER")
-class FolderEntity {
+@Table(name = "FOLDER_INFO")
+class FolderInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +50,8 @@ class FolderEntity {
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
 
-    static FolderEntity of(Folder folder) {
-        return FolderEntity.builder()
+    static FolderInfoEntity of(FolderInfo folder) {
+        return FolderInfoEntity.builder()
             .id(folder.getId())
             .parentId(folder.getParentId())
             .groupId(folder.getGroupId())

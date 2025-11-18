@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.FileInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FILE",
+@Table(name = "FILE_INFO",
     indexes = {
         @Index(name = "idx_file_name_fulltext", columnList = "FILE_NAME")
     }
 )
-class FileEntity {
+class FileInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,8 +46,8 @@ class FileEntity {
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
 
-    static FileEntity of(File file) {
-        return FileEntity.builder()
+    static FileInfoEntity of(FileInfo file) {
+        return FileInfoEntity.builder()
             .id(file.getId())
             .folderId(file.getFolderId())
             .fileName(file.getFileName())

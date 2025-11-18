@@ -1,8 +1,8 @@
 package com.odcloud.fakeClass;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.application.port.out.FolderStoragePort;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.application.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.ArrayList;
@@ -11,19 +11,19 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FakeFolderStoragePort implements FolderStoragePort {
+public class FakeFolderStoragePort implements FolderInfoStoragePort {
 
-    public List<Folder> database = new ArrayList<>();
+    public List<FolderInfo> database = new ArrayList<>();
     public Long id = 0L;
     public boolean shouldThrowException = false;
 
     @Override
-    public void save(Folder folder) {
+    public void save(FolderInfo folder) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
 
-        Folder savedFolder = Folder.builder()
+        FolderInfo savedFolder = FolderInfo.builder()
             .id(folder.getId() == null ? id++ : folder.getId())
             .groupId(folder.getGroupId())
             .name(folder.getName())
@@ -40,7 +40,7 @@ public class FakeFolderStoragePort implements FolderStoragePort {
     }
 
     @Override
-    public Folder findById(Long id) {
+    public FolderInfo findById(Long id) {
         return database.stream()
             .filter(folder -> folder.getId().equals(id))
             .findFirst()
@@ -49,7 +49,7 @@ public class FakeFolderStoragePort implements FolderStoragePort {
     }
 
     @Override
-    public List<Folder> findAll(FindFilesCommand command) {
+    public List<FolderInfo> findAll(FindFilesCommand command) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }

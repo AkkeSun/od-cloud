@@ -1,9 +1,9 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import static com.odcloud.adapter.out.persistence.jpa.QFolderEntity.folderEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QFolderInfoEntity.folderInfoEntity;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.FolderInfo;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,49 +16,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-class FolderRepository {
+class FolderInfoRepository {
 
     private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
-    private final ConstructorExpression<Folder> constructor;
+    private final ConstructorExpression<FolderInfo> constructor;
 
-    FolderRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
+    FolderInfoRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
         this.entityManager = entityManager;
         this.queryFactory = queryFactory;
-        this.constructor = Projections.constructor(Folder.class,
-            folderEntity.id,
-            folderEntity.parentId,
-            folderEntity.groupId,
-            folderEntity.name,
-            folderEntity.owner,
-            folderEntity.path,
-            folderEntity.accessLevel,
-            folderEntity.modDt,
-            folderEntity.regDt
+        this.constructor = Projections.constructor(FolderInfo.class,
+            folderInfoEntity.id,
+            folderInfoEntity.parentId,
+            folderInfoEntity.groupId,
+            folderInfoEntity.name,
+            folderInfoEntity.owner,
+            folderInfoEntity.path,
+            folderInfoEntity.accessLevel,
+            folderInfoEntity.modDt,
+            folderInfoEntity.regDt
         );
     }
 
     @Transactional
-    void save(Folder folder) {
+    void save(FolderInfo folder) {
         if (folder.getId() == null) {
-            entityManager.persist(FolderEntity.of(folder));
+            entityManager.persist(FolderInfoEntity.of(folder));
         } else {
-            entityManager.merge(FolderEntity.of(folder));
+            entityManager.merge(FolderInfoEntity.of(folder));
         }
     }
 
-    Optional<Folder> findById(Long id) {
+    Optional<FolderInfo> findById(Long id) {
         return Optional.ofNullable(queryFactory
             .select(constructor)
-            .from(folderEntity)
-            .where(folderEntity.id.eq(id))
+            .from(folderInfoEntity)
+            .where(folderInfoEntity.id.eq(id))
             .fetchOne());
     }
 
-    public List<Folder> findAll(FindFilesCommand command) {
+    public List<FolderInfo> findAll(FindFilesCommand command) {
         String sql = """
             SELECT ID, PARENT_ID, GROUP_ID, NAME, PATH, OWNER, ACCESS_LEVEL, REG_DT, MOD_DT
-            FROM FOLDER
+            FROM FOLDER_INFO
             WHERE (
                  (GROUP_ID IN (:groupIds) AND ACCESS_LEVEL = 'PUBLIC')
                  OR (OWNER = :email AND ACCESS_LEVEL = 'PRIVATE')
@@ -81,7 +81,7 @@ class FolderRepository {
             sql = String.format(sql, "AND PARENT_ID = :folderId ");
         }
 
-        Query query = entityManager.createNativeQuery(sql.toString(), FolderEntity.class);
+        Query query = entityManager.createNativeQuery(sql.toString(), FolderInfoEntity.class);
         query.setParameter("groupIds", command.account().getGroupIds());
         query.setParameter("email", command.account().getEmail());
 
@@ -94,10 +94,10 @@ class FolderRepository {
         }
 
         @SuppressWarnings("unchecked")
-        List<FolderEntity> entities = query.getResultList();
+        List<FolderInfoEntity> entities = query.getResultList();
 
         return entities.stream()
-            .map(entity -> Folder.builder()
+            .map(entity -> FolderInfo.builder()
                 .id(entity.getId())
                 .parentId(entity.getParentId())
                 .groupId(entity.getGroupId())
@@ -133,8 +133,8 @@ class FolderRepository {
 
     boolean existsSameFolderName(Long parentId, String name) {
         return queryFactory.selectOne()
-            .from(folderEntity)
-            .where(folderEntity.parentId.eq(parentId).and(folderEntity.name.eq(name)))
+            .from(folderInfoEntity)
+            .where(folderInfoEntity.parentId.eq(parentId).and(folderInfoEntity.name.eq(name)))
             .fetchOne() != null;
     }
 }
