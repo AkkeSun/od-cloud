@@ -1,0 +1,315 @@
+package com.odcloud.application.service.find_files;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.odcloud.application.port.in.command.FindFilesCommand;
+import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.File;
+import com.odcloud.domain.model.Folder;
+import com.odcloud.domain.model.Group;
+import com.odcloud.fakeClass.FakeFileStoragePort;
+import com.odcloud.fakeClass.FakeFolderStoragePort;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+class FindFilesServiceTest {
+
+    private FakeFileStoragePort fakeFileStoragePort;
+    private FakeFolderStoragePort fakeFolderStoragePort;
+    private FindFilesService findFilesService;
+
+    @BeforeEach
+    void setUp() {
+        fakeFileStoragePort = new FakeFileStoragePort();
+        fakeFolderStoragePort = new FakeFolderStoragePort();
+        findFilesService = new FindFilesService(
+            fakeFileStoragePort,
+            fakeFolderStoragePort
+        );
+    }
+
+    @Nested
+    @DisplayName("[findAll] 파일 및 폴더 목록 조회")
+    class Describe_findAll {
+
+        @Test
+        @DisplayName("[success] folderId로 파일과 폴더 목록을 조회한다")
+        void success_findByFolderId() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(Group.of("group1")))
+                .build();
+
+            Folder parentFolder = Folder.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId("group1")
+                .name("Parent Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(parentFolder);
+
+            Folder childFolder = Folder.builder()
+                .id(2L)
+                .parentId(1L)
+                .groupId("group1")
+                .name("Child Folder")
+                .owner("user@example.com")
+                .path("/group1/child")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(childFolder);
+
+            File file1 = File.builder()
+                .id(1L)
+                .folderId(1L)
+                .fileName("test1.txt")
+                .fileLoc("/group1/test1.txt")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFileStoragePort.database.add(file1);
+
+            File file2 = File.builder()
+                .id(2L)
+                .folderId(1L)
+                .fileName("test2.txt")
+                .fileLoc("/group1/test2.txt")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFileStoragePort.database.add(file2);
+
+            FindFilesCommand command = FindFilesCommand.builder()
+                .account(account)
+                .folderId(1L)
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            FindFilesServiceResponse response = findFilesService.findAll(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.parentFolderId()).isEqualTo(1L);
+            assertThat(response.folders()).hasSize(1);
+            assertThat(response.folders().get(0).name()).isEqualTo("Child Folder");
+            assertThat(response.files()).hasSize(2);
+            assertThat(response.files()).extracting("name")
+                .containsExactly("test1.txt", "test2.txt");
+        }
+
+        @Test
+        @DisplayName("[success] keyword로 파일을 검색한다")
+        void success_searchByKeyword() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(Group.of("group1")))
+                .build();
+
+            Folder folder = Folder.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId("group1")
+                .name("Test Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            File file1 = File.builder()
+                .id(1L)
+                .folderId(1L)
+                .fileName("report.pdf")
+                .fileLoc("/group1/report.pdf")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFileStoragePort.database.add(file1);
+
+            File file2 = File.builder()
+                .id(2L)
+                .folderId(1L)
+                .fileName("document.txt")
+                .fileLoc("/group1/document.txt")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFileStoragePort.database.add(file2);
+
+            File file3 = File.builder()
+                .id(3L)
+                .folderId(1L)
+                .fileName("report2.pdf")
+                .fileLoc("/group1/report2.pdf")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFileStoragePort.database.add(file3);
+
+            FindFilesCommand command = FindFilesCommand.builder()
+                .account(account)
+                .keyword("report")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            FindFilesServiceResponse response = findFilesService.findAll(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.files()).hasSize(2);
+            assertThat(response.files()).extracting("name")
+                .containsExactly("report.pdf", "report2.pdf");
+        }
+
+        @Test
+        @DisplayName("[success] groupId로 폴더를 필터링한다")
+        void success_filterByGroupId() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(Group.of("group1"), Group.of("group2")))
+                .build();
+
+            Folder folder1 = Folder.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId("group1")
+                .name("Group1 Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(folder1);
+
+            Folder folder2 = Folder.builder()
+                .id(2L)
+                .parentId(0L)
+                .groupId("group2")
+                .name("Group2 Folder")
+                .owner("user@example.com")
+                .path("/group2")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(folder2);
+
+            Folder childFolder1 = Folder.builder()
+                .id(3L)
+                .parentId(1L)
+                .groupId("group1")
+                .name("Child of Group1")
+                .owner("user@example.com")
+                .path("/group1/child")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(childFolder1);
+
+            Folder childFolder2 = Folder.builder()
+                .id(4L)
+                .parentId(1L)
+                .groupId("group2")
+                .name("Child of Group2")
+                .owner("user@example.com")
+                .path("/group1/child2")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(childFolder2);
+
+            FindFilesCommand command = FindFilesCommand.builder()
+                .account(account)
+                .folderId(1L)
+                .groupId("group1")
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            FindFilesServiceResponse response = findFilesService.findAll(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.folders()).hasSize(1);
+            assertThat(response.folders().get(0).name()).isEqualTo("Child of Group1");
+            assertThat(response.folders().get(0).groupId()).isEqualTo("group1");
+        }
+
+        // Note: 권한 체크 로직(PUBLIC/PRIVATE)은 Repository 계층에서 처리되므로
+        // 통합 테스트(FileStorageAdapterTest, FolderStorageAdapterTest)에서 테스트합니다.
+
+        @Test
+        @DisplayName("[success] 정렬 타입이 null이면 기본 정렬을 적용한다")
+        void success_defaultSorting() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(Group.of("group1")))
+                .build();
+
+            Folder folder = Folder.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId("group1")
+                .name("Test Folder")
+                .owner("user@example.com")
+                .path("/group1")
+                .accessLevel("PUBLIC")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            FindFilesCommand command = FindFilesCommand.builder()
+                .account(account)
+                .folderId(0L)
+                .sortType(null)
+                .build();
+
+            // when
+            FindFilesServiceResponse response = findFilesService.findAll(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.folders()).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("[success] 빈 결과를 반환한다")
+        void success_emptyResult() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(Group.of("group1")))
+                .build();
+
+            FindFilesCommand command = FindFilesCommand.builder()
+                .account(account)
+                .folderId(999L)
+                .sortType("NAME_ASC")
+                .build();
+
+            // when
+            FindFilesServiceResponse response = findFilesService.findAll(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.folders()).isEmpty();
+            assertThat(response.files()).isEmpty();
+            assertThat(response.parentFolderId()).isEqualTo(999L);
+        }
+    }
+}

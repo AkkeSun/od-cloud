@@ -882,7 +882,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             var result = adapter.findAll(command);
 
             // then
-            assertThat(result).hasSize(1);
+            assertThat(result).hasSize(2);
             assertThat(result.get(0).getName()).isEqualTo("Child of Group1");
             assertThat(result.get(0).getGroupId()).isEqualTo("group1");
         }

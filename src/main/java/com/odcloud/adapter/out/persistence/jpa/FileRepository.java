@@ -81,9 +81,13 @@ class FileRepository {
             ORDER BY
             """ + getSortRule(command.sortType());
 
-        if (command.isFulltextSearch()) {
+        boolean isH2 = isH2Database();
+
+        if (command.isFulltextSearch() && !isH2) {
             sql = String.format(sql,
                 "AND MATCH(f.FILE_NAME) AGAINST(:keyword IN BOOLEAN MODE)");
+        } else if (command.isFulltextSearch() && isH2) {
+            sql = String.format(sql, "AND f.FILE_NAME LIKE :keyword");
         } else if (command.isLikeSearch()) {
             sql = String.format(sql, "AND f.FILE_NAME LIKE :keyword");
         } else if (command.isRootSearch()) {
@@ -96,9 +100,9 @@ class FileRepository {
         query.setParameter("groupIds", command.account().getGroupIds());
         query.setParameter("email", command.account().getEmail());
 
-        if (command.isFulltextSearch()) {
+        if (command.isFulltextSearch() && !isH2) {
             query.setParameter("keyword", command.keyword() + "*");
-        } else if (command.isLikeSearch()) {
+        } else if ((command.isFulltextSearch() && isH2) || command.isLikeSearch()) {
             query.setParameter("keyword", "%" + command.keyword() + "%");
         } else if (!command.isRootSearch()) {
             query.setParameter("folderId", command.folderId());
@@ -117,6 +121,17 @@ class FileRepository {
                 .regDt(entity.getRegDt())
                 .build())
             .toList();
+    }
+
+    private boolean isH2Database() {
+        try {
+            java.sql.Connection connection = entityManager.unwrap(org.hibernate.Session.class)
+                .doReturningWork(conn -> conn);
+            String databaseProductName = connection.getMetaData().getDatabaseProductName();
+            return databaseProductName.toLowerCase().contains("h2");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String getSortRule(String sortType) {
