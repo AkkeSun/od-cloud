@@ -21,4 +21,16 @@ class ScheduleRepository {
             entityManager.merge(ScheduleEntity.of(schedule));
         }
     }
+
+    public ScheduleEntity findById(Long scheduleId) {
+        return entityManager.find(ScheduleEntity.class, scheduleId);
+    }
+
+    @Transactional
+    public void delete(Schedule schedule) {
+        ScheduleEntity entity = findById(schedule.getId());
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
+    }
 }

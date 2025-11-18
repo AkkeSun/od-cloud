@@ -36,4 +36,8 @@ public class Schedule {
             .regDt(LocalDateTime.now())
             .build();
     }
+
+    public boolean isGroupSchedule() {
+        return groupId != null;
+    }
 }

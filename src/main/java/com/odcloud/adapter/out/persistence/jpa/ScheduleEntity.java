@@ -67,4 +67,19 @@ class ScheduleEntity {
             .regDt(schedule.getRegDt())
             .build();
     }
+
+    Schedule toDomain() {
+        return Schedule.builder()
+            .id(id)
+            .writerEmail(writerEmail)
+            .groupId(groupId)
+            .content(content)
+            .notificationDt(notificationDt)
+            .notificationYn(notificationYn)
+            .startDt(startDt)
+            .endDt(endDt)
+            .modDt(modDt)
+            .regDt(regDt)
+            .build();
+    }
 }

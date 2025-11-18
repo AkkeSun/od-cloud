@@ -37,6 +37,7 @@ public enum ErrorCode {
     Business_DoesNotExists_FILE(4015, "조회된 파일이 없습니다"),
     Business_FILE_DOWNLOAD_ERROR(4016, "파일 다운로드중 오류가 발생했습니다"),
     Business_SAVED_FILE_NAME(4017, "이미 사용중인 파일명 입니다"),
+    Business_NOT_FOUND_SCHEDULE(4018, "조회된 스케줄이 없습니다"),
 
     ;
 
