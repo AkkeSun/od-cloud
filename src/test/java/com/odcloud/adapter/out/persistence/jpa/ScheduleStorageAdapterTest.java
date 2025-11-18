@@ -1,0 +1,299 @@
+package com.odcloud.adapter.out.persistence.jpa;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.odcloud.IntegrationTestSupport;
+import com.odcloud.domain.model.Schedule;
+import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+class ScheduleStorageAdapterTest extends IntegrationTestSupport {
+
+    @Autowired
+    ScheduleStorageAdapter adapter;
+
+    @Autowired
+    EntityManager entityManager;
+
+    @AfterEach
+    void tearDown() {
+        entityManager.createQuery("DELETE FROM ScheduleEntity").executeUpdate();
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    @Nested
+    @DisplayName("[save] 스케줄을 저장하는 메소드")
+    class Describe_save {
+
+        @Test
+        @DisplayName("[success] 신규 개인 스케줄을 저장한다")
+        void success_newPersonalSchedule() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+            LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
+
+            Schedule schedule = Schedule.builder()
+                .writerEmail("user@example.com")
+                .content("개인 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationDt(notificationDt)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .setParameter("email", "user@example.com")
+                .getSingleResult();
+
+            assertThat(savedEntity).isNotNull();
+            assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
+            assertThat(savedEntity.getContent()).isEqualTo("개인 회의");
+            assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
+            assertThat(savedEntity.getEndDt()).isEqualTo(endDt);
+            assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
+            assertThat(savedEntity.getGroupId()).isNull();
+        }
+
+        @Test
+        @DisplayName("[success] 신규 그룹 스케줄을 저장한다")
+        void success_newGroupSchedule() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 15, 0);
+
+            Schedule schedule = Schedule.builder()
+                .writerEmail("user@example.com")
+                .content("그룹 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .groupId("group-123")
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.groupId = :groupId", ScheduleEntity.class)
+                .setParameter("groupId", "group-123")
+                .getSingleResult();
+
+            assertThat(savedEntity).isNotNull();
+            assertThat(savedEntity.getGroupId()).isEqualTo("group-123");
+            assertThat(savedEntity.getContent()).isEqualTo("그룹 회의");
+            assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
+        }
+
+        @Test
+        @DisplayName("[success] 알림 시간 없이 스케줄을 저장한다")
+        void success_withoutNotification() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            Schedule schedule = Schedule.builder()
+                .writerEmail("user@example.com")
+                .content("회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationDt(null)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .setParameter("email", "user@example.com")
+                .getSingleResult();
+
+            assertThat(savedEntity).isNotNull();
+            assertThat(savedEntity.getNotificationDt()).isNull();
+        }
+
+        @Test
+        @DisplayName("[success] 기존 스케줄을 업데이트한다")
+        void success_updateSchedule() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            ScheduleEntity existingSchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("기존 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .regDt(now)
+                .build();
+            entityManager.persist(existingSchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            LocalDateTime newStartDt = LocalDateTime.of(2025, 1, 1, 14, 0);
+            LocalDateTime newEndDt = LocalDateTime.of(2025, 1, 1, 15, 0);
+            LocalDateTime modDt = LocalDateTime.now();
+
+            Schedule updatedSchedule = Schedule.builder()
+                .id(existingSchedule.getId())
+                .writerEmail("user@example.com")
+                .content("수정된 회의")
+                .startDt(newStartDt)
+                .endDt(newEndDt)
+                .modDt(modDt)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(updatedSchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager.find(ScheduleEntity.class, existingSchedule.getId());
+            assertThat(savedEntity).isNotNull();
+            assertThat(savedEntity.getContent()).isEqualTo("수정된 회의");
+            assertThat(savedEntity.getStartDt()).isEqualTo(newStartDt);
+            assertThat(savedEntity.getEndDt()).isEqualTo(newEndDt);
+        }
+
+        @Test
+        @DisplayName("[success] 여러 스케줄을 저장한다")
+        void success_multipleSchedules() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt1 = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt1 = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            Schedule schedule1 = Schedule.builder()
+                .writerEmail("user1@example.com")
+                .content("회의 1")
+                .startDt(startDt1)
+                .endDt(endDt1)
+                .regDt(now)
+                .build();
+
+            LocalDateTime startDt2 = LocalDateTime.of(2025, 1, 1, 14, 0);
+            LocalDateTime endDt2 = LocalDateTime.of(2025, 1, 1, 15, 0);
+
+            Schedule schedule2 = Schedule.builder()
+                .writerEmail("user2@example.com")
+                .content("회의 2")
+                .startDt(startDt2)
+                .endDt(endDt2)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule1);
+            adapter.save(schedule2);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            long count = entityManager
+                .createQuery("SELECT COUNT(s) FROM ScheduleEntity s", Long.class)
+                .getSingleResult();
+
+            assertThat(count).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("[success] 모든 필드가 채워진 스케줄을 저장한다")
+        void success_allFields() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+            LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
+            LocalDateTime modDt = LocalDateTime.now();
+
+            Schedule schedule = Schedule.builder()
+                .writerEmail("user@example.com")
+                .content("전체 필드 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationDt(notificationDt)
+                .groupId("group-123")
+                .modDt(modDt)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .setParameter("email", "user@example.com")
+                .getSingleResult();
+
+            assertThat(savedEntity).isNotNull();
+            assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
+            assertThat(savedEntity.getContent()).isEqualTo("전체 필드 회의");
+            assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
+            assertThat(savedEntity.getEndDt()).isEqualTo(endDt);
+            assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
+            assertThat(savedEntity.getGroupId()).isEqualTo("group-123");
+        }
+
+        @Test
+        @DisplayName("[success] ID가 자동으로 생성된다")
+        void success_autoGeneratedId() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            Schedule schedule = Schedule.builder()
+                .writerEmail("user@example.com")
+                .content("회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .regDt(now)
+                .build();
+
+            // when
+            adapter.save(schedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity savedEntity = entityManager
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .setParameter("email", "user@example.com")
+                .getSingleResult();
+
+            assertThat(savedEntity.getId()).isNotNull();
+            assertThat(savedEntity.getId()).isGreaterThan(0);
+        }
+    }
+}
