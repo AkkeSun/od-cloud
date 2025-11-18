@@ -49,9 +49,29 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
+    public List<Group> findByAccountEmail(String email) {
+        List<String> groupIds = groupAccountDatabase.stream()
+            .filter(ga -> ga.getEmail().equals(email) && "APPROVED".equals(ga.getStatus()))
+            .map(GroupAccount::getGroupId)
+            .distinct()
+            .toList();
+
+        return groupDatabase.stream()
+            .filter(group -> groupIds.contains(group.getId()))
+            .toList();
+    }
+
+    @Override
     public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         return groupAccountDatabase.stream()
             .filter(ga -> ga.getGroupId().equals(groupId))
+            .toList();
+    }
+
+    @Override
+    public List<GroupAccount> findGroupAccountsByAccountId(Long accountId) {
+        return groupAccountDatabase.stream()
+            .filter(ga -> ga.getAccountId().equals(accountId))
             .toList();
     }
 

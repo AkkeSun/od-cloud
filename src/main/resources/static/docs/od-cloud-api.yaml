@@ -463,55 +463,6 @@ paths:
                         } ]
                       }
                     }
-                '[파일 및 폴더 목록 조회 API] groupId로 필터링 성공':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "parentFolderId" : 0,
-                        "folders" : [ {
-                          "id" : 1,
-                          "name" : "Group1 Folder",
-                          "groupId" : "group1",
-                          "accessLevel" : "PUBLIC",
-                          "regDt" : "2024-01-01 12:00:00"
-                        } ],
-                        "files" : [ ]
-                      }
-                    }
-                '[파일 및 폴더 목록 조회 API] 빈 결과 조회 성공':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "parentFolderId" : 999,
-                        "folders" : [ ],
-                        "files" : [ ]
-                      }
-                    }
-                '[파일 및 폴더 목록 조회 API] keyword로 검색 성공':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "parentFolderId" : null,
-                        "folders" : [ ],
-                        "files" : [ {
-                          "id" : 1,
-                          "name" : "report1.pdf",
-                          "fileLoc" : "/group1/report1.pdf",
-                          "regDt" : "2024-01-01 12:00:00"
-                        }, {
-                          "id" : 2,
-                          "name" : "report2.pdf",
-                          "fileLoc" : "/group1/report2.pdf",
-                          "regDt" : "2024-01-02 12:00:00"
-                        } ]
-                      }
-                    }
         "401":
           description: "401"
           content:
@@ -544,16 +495,6 @@ paths:
                       "data" : {
                         "errorCode" : 1099,
                         "errorMessage" : "유효하지 않은 정렬 타입 입니다"
-                      }
-                    }
-                '[파일 및 폴더 목록 조회 API] folderId와 keyword 둘 다 누락':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "folderId 또는 keyword 중 하나는 필수입니다"
                       }
                     }
   /files/download:
@@ -988,6 +929,84 @@ paths:
                       }
                     }
   /groups:
+    get:
+      tags:
+      - Account
+      - Group
+      summary: 그룹 목록 조회 API
+      description: "사용자가 속한 모든 그룹 목록을 조회하는 API 입니다.<br><br>- 각 그룹에 대한 사용자의 가입 상태(status)를\
+        \ 함께 제공합니다.<br>- ACTIVE: 승인된 멤버<br>- PENDING: 가입 대기 중<br>- null: 미가입 <br><br>테\
+        스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다."
+      operationId: "[그룹 목록 조회 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: error token
+      responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 목록 조회 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success-empty-groups"
+              examples:
+                '[그룹 목록 조회 API] 그룹이 없는 경우':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groups" : [ ]
+                      }
+                    }
+                '[그룹 목록 조회 API] 그룹 목록 조회 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groups" : [ {
+                          "id" : "group-1",
+                          "ownerEmail" : "owner1@example.com",
+                          "description" : "Development Team",
+                          "regDt" : "2024-01-01T12:00:00",
+                          "status" : "ACTIVE"
+                        }, {
+                          "id" : "group-2",
+                          "ownerEmail" : "owner2@example.com",
+                          "description" : "Marketing Team",
+                          "regDt" : "2024-01-02T12:00:00",
+                          "status" : "PENDING"
+                        }, {
+                          "id" : "group-3",
+                          "ownerEmail" : "owner3@example.com",
+                          "description" : "Sales Team",
+                          "regDt" : "2024-01-03T12:00:00",
+                          "status" : "ACTIVE"
+                        } ]
+                      }
+                    }
     post:
       tags:
       - Account
@@ -1367,8 +1386,8 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[response] success-by-folderId':
-      title: "[response] success-by-folderId"
+    '[response] success-empty-groups':
+      title: "[response] success-empty-groups"
       required:
       - data
       - httpStatus
@@ -1377,66 +1396,36 @@ components:
       properties:
         data:
           required:
-          - files
-          - folders
-          - parentFolderId
+          - groups
           type: object
           properties:
-            folders:
+            groups:
               type: array
-              description: 폴더 목록
+              description: 그룹 목록
               items:
                 required:
-                - accessLevel
-                - groupId
+                - description
                 - id
-                - name
+                - ownerEmail
                 - regDt
+                - status
                 type: object
                 properties:
                   regDt:
                     type: string
                     description: 등록일시
-                  accessLevel:
+                  description:
                     type: string
-                    description: 접근 권한 (PUBLIC/PRIVATE)
-                  groupId:
+                    description: 그룹 설명
+                  id:
                     type: string
                     description: 그룹 ID
-                  name:
+                  status:
                     type: string
-                    description: 폴더 이름
-                  id:
-                    type: number
-                    description: 폴더 ID
-            parentFolderId:
-              description: 부모 폴더 ID (검색 시 null)
-              oneOf:
-              - null
-              - type: number
-            files:
-              type: array
-              description: 파일 목록
-              items:
-                required:
-                - fileLoc
-                - id
-                - name
-                - regDt
-                type: object
-                properties:
-                  regDt:
+                    description: "사용자의 그룹 가입 상태 (ACTIVE, PENDING 등)"
+                  ownerEmail:
                     type: string
-                    description: 등록일시
-                  name:
-                    type: string
-                    description: 파일 이름
-                  id:
-                    type: number
-                    description: 파일 ID
-                  fileLoc:
-                    type: string
-                    description: 파일 경로
+                    description: 그룹 소유자 이메일
           description: 응답 데이터
         httpStatus:
           type: number
@@ -1545,6 +1534,81 @@ components:
           oneOf:
           - type: string
           - null
+    '[response] success-by-folderId':
+      title: "[response] success-by-folderId"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - files
+          - folders
+          - parentFolderId
+          type: object
+          properties:
+            folders:
+              type: array
+              description: 폴더 목록
+              items:
+                required:
+                - accessLevel
+                - groupId
+                - id
+                - name
+                - regDt
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  accessLevel:
+                    type: string
+                    description: 접근 권한 (PUBLIC/PRIVATE)
+                  groupId:
+                    type: string
+                    description: 그룹 ID
+                  name:
+                    type: string
+                    description: 폴더 이름
+                  id:
+                    type: number
+                    description: 폴더 ID
+            parentFolderId:
+              type: number
+              description: 부모 폴더 ID
+            files:
+              type: array
+              description: 파일 목록
+              items:
+                required:
+                - fileLoc
+                - id
+                - name
+                - regDt
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  name:
+                    type: string
+                    description: 파일 이름
+                  id:
+                    type: number
+                    description: 파일 ID
+                  fileLoc:
+                    type: string
+                    description: 파일 경로
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
 
   securitySchemes:
     APIKey:
