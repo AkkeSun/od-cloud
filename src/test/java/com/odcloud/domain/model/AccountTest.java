@@ -28,6 +28,8 @@ class AccountTest {
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1L);
             when(claims.get("groups")).thenReturn(Arrays.asList("group-1", "group-2"));
+            when(claims.get("nickname")).thenReturn("nickname");
+            when(claims.get("picture")).thenReturn("picture");
 
             // when
             Account account = Account.of(claims);
@@ -49,6 +51,8 @@ class AccountTest {
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1);
             when(claims.get("groups")).thenReturn(Arrays.asList("group-1"));
+            when(claims.get("nickname")).thenReturn("nickname");
+            when(claims.get("picture")).thenReturn("picture");
 
             // when
             Account account = Account.of(claims);
@@ -66,7 +70,9 @@ class AccountTest {
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1L);
             when(claims.get("groups")).thenReturn(List.of());
-
+            when(claims.get("nickname")).thenReturn("nickname");
+            when(claims.get("picture")).thenReturn("picture");
+            
             // when
             Account account = Account.of(claims);
 

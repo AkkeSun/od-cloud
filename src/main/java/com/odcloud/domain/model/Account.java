@@ -31,6 +31,8 @@ public class Account {
         return Account.builder()
             .email(claims.getSubject())
             .id(((Number) claims.get("id")).longValue())
+            .nickname(claims.get("nickname").toString())
+            .picture(claims.get("picture").toString())
             .groups(groupIds.stream().map(Group::of).collect(Collectors.toList()))
             .build();
     }
