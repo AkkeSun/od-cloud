@@ -296,4 +296,181 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity.getId()).isGreaterThan(0);
         }
     }
+
+    @Nested
+    @DisplayName("[findById] 스케줄 ID로 스케줄을 조회하는 메소드")
+    class Describe_findById {
+
+        @Test
+        @DisplayName("[success] 스케줄 ID로 스케줄을 조회한다")
+        void success() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+            LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
+
+            ScheduleEntity entity = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("개인 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationDt(notificationDt)
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            // when
+            Schedule result = adapter.findById(entity.getId());
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getId()).isEqualTo(entity.getId());
+            assertThat(result.getWriterEmail()).isEqualTo("user@example.com");
+            assertThat(result.getContent()).isEqualTo("개인 회의");
+            assertThat(result.getStartDt()).isEqualTo(startDt);
+            assertThat(result.getEndDt()).isEqualTo(endDt);
+            assertThat(result.getNotificationDt()).isEqualTo(notificationDt);
+            assertThat(result.getNotificationYn()).isEqualTo("N");
+        }
+
+        @Test
+        @DisplayName("[success] 그룹 스케줄을 조회한다")
+        void success_groupSchedule() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 15, 0);
+
+            ScheduleEntity entity = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .groupId("group-123")
+                .content("그룹 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            // when
+            Schedule result = adapter.findById(entity.getId());
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getGroupId()).isEqualTo("group-123");
+            assertThat(result.getContent()).isEqualTo("그룹 회의");
+        }
+
+        @Test
+        @DisplayName("[error] 존재하지 않는 스케줄 ID로 조회 시 예외를 발생시킨다")
+        void error_notFound() {
+            // when & then
+            org.junit.jupiter.api.Assertions.assertThrows(
+                com.odcloud.infrastructure.exception.CustomBusinessException.class,
+                () -> adapter.findById(999L)
+            );
+        }
+    }
+
+    @Nested
+    @Transactional
+    @DisplayName("[delete] 스케줄을 삭제하는 메소드")
+    class Describe_delete {
+
+        @Test
+        @DisplayName("[success] 스케줄을 삭제한다")
+        void success() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            ScheduleEntity entity = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("개인 회의")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            Long scheduleId = entity.getId();
+            entityManager.clear();
+
+            // when
+            adapter.delete(entity.toDomain());
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity deletedEntity = entityManager.find(ScheduleEntity.class, scheduleId);
+            assertThat(deletedEntity).isNull();
+        }
+
+        @Test
+        @DisplayName("[success] 여러 스케줄 중 특정 스케줄만 삭제한다")
+        void success_deleteSpecific() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
+            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
+
+            ScheduleEntity entity1 = ScheduleEntity.builder()
+                .writerEmail("user1@example.com")
+                .content("회의 1")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            ScheduleEntity entity2 = ScheduleEntity.builder()
+                .writerEmail("user2@example.com")
+                .content("회의 2")
+                .startDt(startDt)
+                .endDt(endDt)
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            entityManager.persist(entity1);
+            entityManager.persist(entity2);
+            entityManager.flush();
+            Long scheduleId1 = entity1.getId();
+            Long scheduleId2 = entity2.getId();
+            entityManager.clear();
+
+            // when
+            adapter.delete(entity1.toDomain());
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            ScheduleEntity deletedEntity = entityManager.find(ScheduleEntity.class, scheduleId1);
+            ScheduleEntity remainingEntity = entityManager.find(ScheduleEntity.class, scheduleId2);
+
+            assertThat(deletedEntity).isNull();
+            assertThat(remainingEntity).isNotNull();
+            assertThat(remainingEntity.getContent()).isEqualTo("회의 2");
+        }
+
+        @Test
+        @DisplayName("[success] 존재하지 않는 스케줄 삭제 시 예외가 발생하지 않는다")
+        void success_deleteNonExistent() {
+            // when & then
+            org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+                () -> {
+                    adapter.delete(ScheduleEntity.builder().id(999L).build().toDomain());
+                    entityManager.flush();
+                }
+            );
+        }
+    }
 }
