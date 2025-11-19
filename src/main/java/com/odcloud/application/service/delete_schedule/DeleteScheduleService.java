@@ -22,8 +22,11 @@ class DeleteScheduleService implements DeleteScheduleUseCase {
     public DeleteScheduleServiceResponse delete(Long scheduleId, Account account) {
         Schedule schedule = scheduleStoragePort.findById(scheduleId);
 
-        if (schedule.isGroupSchedule() && !account.getGroupIds().contains(schedule.getGroupId())) {
-            throw new CustomAuthorizationException(ACCESS_DENIED);
+        if (schedule.isGroupSchedule()) {
+            if (!account.getGroupIds().contains(schedule.getGroupId())) {
+                throw new CustomAuthorizationException(ACCESS_DENIED);
+            }
+
         } else if (!schedule.getWriterEmail().equals(account.getEmail())) {
             throw new CustomAuthorizationException(ACCESS_DENIED);
         }

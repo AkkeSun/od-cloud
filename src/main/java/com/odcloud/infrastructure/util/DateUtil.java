@@ -1,5 +1,6 @@
 package com.odcloud.infrastructure.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -9,7 +10,7 @@ public class DateUtil {
     private static final DateTimeFormatter formatter = DateTimeFormatter
         .ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter
-        .ofPattern("yyyyMMdd");
+        .ofPattern("yyyy-MM-dd");
 
     public static String formatDateTime(LocalDateTime dateTime) {
         return formatDateTime(dateTime, "yyyy-MM-dd HH:mm:ss");
@@ -22,5 +23,9 @@ public class DateUtil {
 
     public static LocalDateTime parse(String dateTimeString) {
         return LocalDateTime.parse(dateTimeString, formatter);
+    }
+
+    public static LocalDate parseDate(String dateString) {
+        return LocalDate.parse(dateString, dateFormatter);
     }
 }

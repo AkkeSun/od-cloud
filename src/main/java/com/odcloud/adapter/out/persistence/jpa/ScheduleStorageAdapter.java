@@ -2,9 +2,11 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_SCHEDULE;
 
+import com.odcloud.application.port.in.command.FindSchedulesCommand;
 import com.odcloud.application.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,5 +33,13 @@ class ScheduleStorageAdapter implements ScheduleStoragePort {
     @Override
     public void delete(Schedule schedule) {
         repository.delete(schedule);
+    }
+
+    @Override
+    public List<Schedule> findSchedules(FindSchedulesCommand command) {
+        return repository.findSchedules(command)
+            .stream()
+            .map(ScheduleEntity::toDomain)
+            .toList();
     }
 }
