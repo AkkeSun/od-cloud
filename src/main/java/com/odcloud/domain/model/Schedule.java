@@ -1,6 +1,7 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.application.port.in.command.RegisterScheduleCommand;
+import com.odcloud.application.port.in.command.UpdateScheduleCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,5 +40,13 @@ public class Schedule {
 
     public boolean isGroupSchedule() {
         return groupId != null;
+    }
+
+    public void update(UpdateScheduleCommand command) {
+        this.content = command.content();
+        this.startDt = command.startDt();
+        this.endDt = command.endDt();
+        this.notificationDt = command.notificationDt();
+        this.modDt = LocalDateTime.now();
     }
 }
