@@ -76,6 +76,15 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
             .anyMatch(file -> file.getFolderId().equals(folderId) && file.getFileName().equals(name));
     }
 
+    @Override
+    public void delete(FileInfo file) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Storage failure");
+        }
+        database.remove(file);
+        log.info("FakeFileStoragePort deleted file: id={}, name={}", file.getId(), file.getFileName());
+    }
+
     public void reset() {
         database.clear();
         shouldThrowException = false;

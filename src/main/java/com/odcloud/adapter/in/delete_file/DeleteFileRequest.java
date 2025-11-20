@@ -1,0 +1,21 @@
+package com.odcloud.adapter.in.delete_file;
+
+import com.odcloud.application.port.in.command.DeleteFileCommand;
+import com.odcloud.domain.model.Account;
+import jakarta.validation.constraints.NotEmpty;
+import java.util.List;
+import lombok.Builder;
+
+@Builder
+record DeleteFileRequest(
+    @NotEmpty(message = "파일 ID 목록은 필수입니다")
+    List<Long> fileIds
+) {
+
+    DeleteFileCommand toCommand(Account account) {
+        return DeleteFileCommand.builder()
+            .account(account)
+            .fileIds(fileIds)
+            .build();
+    }
+}

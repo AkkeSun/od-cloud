@@ -145,4 +145,12 @@ class FileInfoRepository {
             default -> " f.FILE_NAME ASC";
         };
     }
+
+    @Transactional
+    public void delete(FileInfo file) {
+        FileInfoEntity entity = entityManager.find(FileInfoEntity.class, file.getId());
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
+    }
 }

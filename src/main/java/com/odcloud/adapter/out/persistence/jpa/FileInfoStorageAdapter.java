@@ -41,4 +41,9 @@ class FileInfoStorageAdapter implements FileInfoStoragePort {
     public boolean existsByFolderIdAndName(Long folderId, String name) {
         return fileRepository.existsByFolderIdAndName(folderId, name);
     }
+
+    @Override
+    public void delete(FileInfo file) {
+        fileRepository.delete(file);
+    }
 }
