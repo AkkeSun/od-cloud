@@ -3,7 +3,6 @@ package com.odcloud.adapter.in.find_groups;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.port.in.command.FindGroupsCommand;
-import com.odcloud.domain.model.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,54 +14,52 @@ class FindGroupsRequestTest {
     class Describe_toCommand {
 
         @Test
-        @DisplayName("[success] Account를 포함한 Command를 생성한다")
+        @DisplayName("[success] keyword를 포함한 Command를 생성한다")
         void success() {
             // given
-            Account account = Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .nickname("User")
-                .name("사용자")
-                .build();
-
             FindGroupsRequest request = new FindGroupsRequest();
+            request.setKeyword("test");
 
             // when
-            FindGroupsCommand command = request.toCommand(account);
+            FindGroupsCommand command = request.toCommand();
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.account()).isEqualTo(account);
-            assertThat(command.account().getId()).isEqualTo(1L);
-            assertThat(command.account().getEmail()).isEqualTo("user@example.com");
+            assertThat(command.keyword()).isEqualTo("test");
         }
 
         @Test
-        @DisplayName("[success] 다양한 Account로 Command를 생성한다")
-        void success_variousAccounts() {
+        @DisplayName("[success] 'all' keyword로 Command를 생성한다")
+        void success_allKeyword() {
             // given
             FindGroupsRequest request = new FindGroupsRequest();
-
-            Account account1 = Account.builder()
-                .id(1L)
-                .email("user1@example.com")
-                .build();
-
-            Account account2 = Account.builder()
-                .id(999L)
-                .email("admin@example.com")
-                .build();
+            request.setKeyword("all");
 
             // when
-            FindGroupsCommand command1 = request.toCommand(account1);
-            FindGroupsCommand command2 = request.toCommand(account2);
+            FindGroupsCommand command = request.toCommand();
 
             // then
-            assertThat(command1.account()).isEqualTo(account1);
-            assertThat(command1.account().getId()).isEqualTo(1L);
+            assertThat(command).isNotNull();
+            assertThat(command.keyword()).isEqualTo("all");
+        }
 
-            assertThat(command2.account()).isEqualTo(account2);
-            assertThat(command2.account().getId()).isEqualTo(999L);
+        @Test
+        @DisplayName("[success] 다양한 keyword로 Command를 생성한다")
+        void success_variousKeywords() {
+            // given
+            FindGroupsRequest request1 = new FindGroupsRequest();
+            request1.setKeyword("개발팀");
+
+            FindGroupsRequest request2 = new FindGroupsRequest();
+            request2.setKeyword("마케팅");
+
+            // when
+            FindGroupsCommand command1 = request1.toCommand();
+            FindGroupsCommand command2 = request2.toCommand();
+
+            // then
+            assertThat(command1.keyword()).isEqualTo("개발팀");
+            assertThat(command2.keyword()).isEqualTo("마케팅");
         }
     }
 }

@@ -22,8 +22,7 @@ record FindGroupsResponse(
         String id,
         String ownerEmail,
         String description,
-        String regDt,
-        String status
+        String regDt
     ) {
         public static GroupResponse of(FindGroupsServiceResponse.GroupResponseItem item) {
             return GroupResponse.builder()
@@ -31,7 +30,6 @@ record FindGroupsResponse(
                 .ownerEmail(item.ownerEmail())
                 .description(item.description())
                 .regDt(item.regDt())
-                .status(item.status())
                 .build();
         }
     }

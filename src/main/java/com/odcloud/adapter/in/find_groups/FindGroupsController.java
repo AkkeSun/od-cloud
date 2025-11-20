@@ -2,9 +2,7 @@ package com.odcloud.adapter.in.find_groups;
 
 import com.odcloud.application.port.in.FindGroupsUseCase;
 import com.odcloud.application.service.find_groups.FindGroupsServiceResponse;
-import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -21,10 +19,9 @@ class FindGroupsController {
 
     @GetMapping("/groups")
     ApiResponse<FindGroupsResponse> findAll(
-        @Valid @ModelAttribute FindGroupsRequest request,
-        @LoginAccount Account account
+        @Valid @ModelAttribute FindGroupsRequest request
     ) {
-        FindGroupsServiceResponse serviceResponse = useCase.findAll(request.toCommand(account));
+        FindGroupsServiceResponse serviceResponse = useCase.findAll(request.toCommand());
         return ApiResponse.ok(FindGroupsResponse.of(serviceResponse));
     }
 }

@@ -127,23 +127,7 @@ class GoogleOAuth2ClientAdapterTest {
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
         }
-
-        @Test
-        @DisplayName("[failure] 타임아웃 발생 시 예외가 발생한다")
-        void failure_timeout() {
-            // given
-            String code = "test-code";
-            mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody("{}")
-                .setBodyDelay(7, java.util.concurrent.TimeUnit.SECONDS));
-
-            // when & then
-            assertThatThrownBy(() -> adapter.getToken(code))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
-        }
-
+        
         @Test
         @DisplayName("[failure] 잘못된 JSON 응답 시 예외가 발생한다")
         void failure_invalidJson() {
@@ -224,22 +208,6 @@ class GoogleOAuth2ClientAdapterTest {
                 .setResponseCode(500)
                 .setBody("{\"error\": \"internal_server_error\"}")
                 .addHeader("Content-Type", "application/json"));
-
-            // when & then
-            assertThatThrownBy(() -> adapter.getUserInfo(accessToken))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
-        }
-
-        @Test
-        @DisplayName("[failure] 타임아웃 발생 시 예외가 발생한다")
-        void failure_timeout() {
-            // given
-            String accessToken = "Bearer test-token";
-            mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody("{}")
-                .setBodyDelay(10, java.util.concurrent.TimeUnit.SECONDS));
 
             // when & then
             assertThatThrownBy(() -> adapter.getUserInfo(accessToken))

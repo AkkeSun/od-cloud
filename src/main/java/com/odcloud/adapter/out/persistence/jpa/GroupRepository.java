@@ -105,7 +105,7 @@ class GroupRepository {
             .fetch();
     }
 
-    List<Group> findByAccountEmail(String email) {
+    List<Group> findByKeyword(String keyword) {
         return queryFactory
             .select(Projections.constructor(
                 Group.class,
@@ -115,13 +115,7 @@ class GroupRepository {
                 groupEntity.regDt
             ))
             .from(groupEntity)
-            .innerJoin(groupAccountEntity)
-            .on(groupAccountEntity.groupId.eq(groupEntity.id))
-            .innerJoin(accountEntity)
-            .on(groupAccountEntity.accountId.eq(accountEntity.id))
-            .where(accountEntity.email.eq(email)
-                .and(groupAccountEntity.status.eq("APPROVED")))
-            .distinct()
+            .where(groupEntity.description.like("%" + keyword + "%"))
             .fetch();
     }
 
@@ -144,30 +138,6 @@ class GroupRepository {
             .on(groupAccountEntity.accountId.eq(accountEntity.id))
             .where(groupAccountEntity.groupId.eq(groupId))
             .orderBy(groupAccountEntity.id.asc())
-            .fetch();
-
-        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
-        return groupAccounts;
-    }
-
-    List<GroupAccount> findGroupAccountsByAccountId(Long accountId) {
-        List<GroupAccount> groupAccounts = queryFactory
-            .select(Projections.constructor(
-                GroupAccount.class,
-                groupAccountEntity.id,
-                groupAccountEntity.groupId,
-                groupAccountEntity.accountId,
-                accountEntity.name,
-                accountEntity.nickname,
-                accountEntity.email,
-                groupAccountEntity.status,
-                groupAccountEntity.modDt,
-                groupAccountEntity.regDt
-            ))
-            .from(groupAccountEntity)
-            .innerJoin(accountEntity)
-            .on(groupAccountEntity.accountId.eq(accountEntity.id))
-            .where(groupAccountEntity.accountId.eq(accountId))
             .fetch();
 
         groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
