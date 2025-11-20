@@ -158,7 +158,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
-                        .tag("Group")
+                        .tag("Account")
                         .summary("그룹 목록 조회 API")
                         .description("그룹 목록을 조회하는 API 입니다.<br><br>"
                             + "- keyword='all': 모든 그룹 조회<br>"
