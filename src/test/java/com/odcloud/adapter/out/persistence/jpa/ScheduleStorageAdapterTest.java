@@ -3,9 +3,15 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
+import com.odcloud.application.port.in.command.FindSchedulesCommand;
+import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -471,6 +477,355 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                     entityManager.flush();
                 }
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("[findSchedules] 조건에 맞는 스케줄을 조회하는 메소드")
+    class Describe_findSchedules {
+
+        @Test
+        @DisplayName("[success] 월별 개인 일정을 조회한다 (filterType=PRIVATE)")
+        void success_findMonthlyPrivateSchedules() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 2025년 1월 개인 일정
+            ScheduleEntity schedule1 = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 1일 개인 회의")
+                .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            ScheduleEntity schedule2 = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 15일 개인 회의")
+                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
+                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 그룹 일정 (조회되지 않아야 함)
+            ScheduleEntity groupSchedule = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-1")
+                .content("그룹 회의")
+                .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 2월 일정 (조회되지 않아야 함)
+            ScheduleEntity februarySchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("2월 1일 개인 회의")
+                .startDt(LocalDateTime.of(2025, 2, 1, 10, 0))
+                .endDt(LocalDateTime.of(2025, 2, 1, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            entityManager.persist(schedule1);
+            entityManager.persist(schedule2);
+            entityManager.persist(groupSchedule);
+            entityManager.persist(februarySchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList())
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType("PRIVATE")
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result.get(0).getContent()).isEqualTo("1월 1일 개인 회의");
+            assertThat(result.get(1).getContent()).isEqualTo("1월 15일 개인 회의");
+        }
+
+        @Test
+        @DisplayName("[success] 특정 그룹 일정만 조회한다 (filterType=그룹명)")
+        void success_findSpecificGroupSchedules() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            ScheduleEntity groupSchedule1 = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-1")
+                .content("그룹1 회의 1")
+                .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            ScheduleEntity groupSchedule2 = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-1")
+                .content("그룹1 회의 2")
+                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
+                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 다른 그룹 일정 (조회되지 않아야 함)
+            ScheduleEntity otherGroupSchedule = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-2")
+                .content("그룹2 회의")
+                .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            entityManager.persist(groupSchedule1);
+            entityManager.persist(groupSchedule2);
+            entityManager.persist(otherGroupSchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList())
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType("group-1")
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).hasSize(2);
+            assertThat(result.get(0).getGroupId()).isEqualTo("group-1");
+            assertThat(result.get(1).getGroupId()).isEqualTo("group-1");
+        }
+
+        @Test
+        @DisplayName("[success] 전체 일정을 조회한다 (filterType=null)")
+        void success_findAllSchedules() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 개인 일정
+            ScheduleEntity personalSchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("개인 회의")
+                .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 속한 그룹의 일정
+            ScheduleEntity groupSchedule = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-1")
+                .content("그룹 회의")
+                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
+                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 속하지 않은 그룹의 일정 (조회되지 않아야 함)
+            ScheduleEntity otherGroupSchedule = ScheduleEntity.builder()
+                .writerEmail("owner@example.com")
+                .groupId("group-999")
+                .content("다른 그룹 회의")
+                .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            entityManager.persist(personalSchedule);
+            entityManager.persist(groupSchedule);
+            entityManager.persist(otherGroupSchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList(Group.of("group-1")))
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType(null)  // 전체 조회
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("[success] 종료일이 조회 범위와 겹치는 일정도 조회한다")
+        void success_findSchedulesOverlappingEndDate() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            // 12월 25일 ~ 1월 5일 휴가 (시작일이 조회 범위 밖)
+            ScheduleEntity crossYearSchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("연말연시 휴가")
+                .startDt(LocalDateTime.of(2024, 12, 25, 0, 0))
+                .endDt(LocalDateTime.of(2025, 1, 5, 23, 59))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 1월 28일 ~ 2월 3일 출장 (종료일이 조회 범위 밖)
+            ScheduleEntity crossMonthSchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("출장")
+                .startDt(LocalDateTime.of(2025, 1, 28, 9, 0))
+                .endDt(LocalDateTime.of(2025, 2, 3, 18, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 1월 내 일정
+            ScheduleEntity withinMonthSchedule = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 15일 회의")
+                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
+                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            entityManager.persist(crossYearSchedule);
+            entityManager.persist(crossMonthSchedule);
+            entityManager.persist(withinMonthSchedule);
+            entityManager.flush();
+            entityManager.clear();
+
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList())
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType("PRIVATE")
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).hasSize(3);
+            assertThat(result.get(0).getContent()).isEqualTo("연말연시 휴가");
+            assertThat(result.get(1).getContent()).isEqualTo("1월 15일 회의");
+            assertThat(result.get(2).getContent()).isEqualTo("출장");
+        }
+
+        @Test
+        @DisplayName("[success] 조건에 맞는 일정이 없으면 빈 목록을 반환한다")
+        void success_returnEmptyList() {
+            // given
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList())
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType("PRIVATE")
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] 시작일 순으로 정렬하여 반환한다")
+        void success_orderedByStartDate() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            ScheduleEntity schedule3 = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 20일")
+                .startDt(LocalDateTime.of(2025, 1, 20, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 20, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            ScheduleEntity schedule1 = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 5일")
+                .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
+                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            ScheduleEntity schedule2 = ScheduleEntity.builder()
+                .writerEmail("user@example.com")
+                .content("1월 15일")
+                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
+                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
+                .notificationYn("N")
+                .regDt(now)
+                .build();
+
+            // 순서대로 저장하지 않음
+            entityManager.persist(schedule3);
+            entityManager.persist(schedule1);
+            entityManager.persist(schedule2);
+            entityManager.flush();
+            entityManager.clear();
+
+            Account account = Account.builder()
+                .email("user@example.com")
+                .groups(Arrays.asList())
+                .build();
+
+            FindSchedulesCommand command = FindSchedulesCommand.builder()
+                .account(account)
+                .baseDate(LocalDate.of(2025, 1, 15))
+                .filterType("PRIVATE")
+                .build();
+
+            // when
+            List<Schedule> result = adapter.findSchedules(command);
+
+            // then
+            assertThat(result).hasSize(3);
+            assertThat(result.get(0).getContent()).isEqualTo("1월 5일");
+            assertThat(result.get(1).getContent()).isEqualTo("1월 15일");
+            assertThat(result.get(2).getContent()).isEqualTo("1월 20일");
         }
     }
 }

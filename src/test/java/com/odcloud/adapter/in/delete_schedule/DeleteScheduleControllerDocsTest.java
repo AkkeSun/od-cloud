@@ -107,7 +107,7 @@ class DeleteScheduleControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomAuthorizationException(ErrorCode.ACCESS_DENIED));
 
             // when & then
-            performErrorDocument(scheduleId, "Bearer test", status().isInternalServerError(),
+            performErrorDocument(scheduleId, "Bearer test", status().isForbidden(),
                 "스케줄 삭제 권한 없음");
         }
     }

@@ -8,6 +8,7 @@ import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.fakeClass.FakeScheduleStoragePort;
+import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
@@ -141,7 +142,7 @@ class DeleteScheduleServiceTest {
 
             // when & then
             assertThatThrownBy(() -> deleteScheduleService.delete(scheduleId, other))
-                .isInstanceOf(CustomBusinessException.class)
+                .isInstanceOf(CustomAuthorizationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
 
             assertThat(fakeScheduleStoragePort.database).hasSize(1);
@@ -188,7 +189,7 @@ class DeleteScheduleServiceTest {
 
             // when & then
             assertThatThrownBy(() -> deleteScheduleService.delete(scheduleId, nonMember))
-                .isInstanceOf(CustomBusinessException.class)
+                .isInstanceOf(CustomAuthorizationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
 
             assertThat(fakeScheduleStoragePort.database).hasSize(1);
