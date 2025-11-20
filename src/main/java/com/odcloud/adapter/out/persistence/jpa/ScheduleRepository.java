@@ -36,10 +36,7 @@ class ScheduleRepository {
 
     @Transactional
     public void delete(Schedule schedule) {
-        ScheduleEntity entity = findById(schedule.getId());
-        if (entity != null) {
-            entityManager.remove(entity);
-        }
+        entityManager.remove(ScheduleEntity.of(schedule));
     }
 
     public List<ScheduleEntity> findSchedules(FindSchedulesCommand command) {

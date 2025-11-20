@@ -156,9 +156,6 @@ class FileInfoRepository {
 
     @Transactional
     public void delete(FileInfo file) {
-        FileInfoEntity entity = entityManager.find(FileInfoEntity.class, file.getId());
-        if (entity != null) {
-            entityManager.remove(entity);
-        }
+        entityManager.remove(FileInfoEntity.of(file));
     }
 }
