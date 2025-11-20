@@ -93,6 +93,33 @@ class FileAdapter implements FilePort {
     }
 
     @Override
+    public void deleteFolder(String folderPath) {
+        try {
+            Path fullPath = Paths.get(basePath, folderPath);
+            if (Files.exists(fullPath)) {
+                deleteDirectoryRecursively(fullPath);
+            }
+        } catch (IOException e) {
+            log.error("[deleteFolder] 폴더 삭제 실패: {}, error: {}", folderPath, e.getMessage());
+        }
+    }
+
+    private void deleteDirectoryRecursively(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (var stream = Files.list(path)) {
+                stream.forEach(child -> {
+                    try {
+                        deleteDirectoryRecursively(child);
+                    } catch (IOException e) {
+                        log.error("[deleteDirectoryRecursively] 하위 항목 삭제 실패: {}", child, e);
+                    }
+                });
+            }
+        }
+        Files.deleteIfExists(path);
+    }
+
+    @Override
     public FileResponse readFile(FileInfo fileInfo) {
         try {
             java.io.File file = new java.io.File(basePath + fileInfo.getFileLoc());

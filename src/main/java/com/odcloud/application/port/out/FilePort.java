@@ -14,6 +14,8 @@ public interface FilePort {
 
     void deleteFile(String filePath);
 
+    void deleteFolder(String folderPath);
+
     FileResponse readFile(FileInfo fileInfo);
 
     FileResponse readFiles(List<FileInfo> files);

@@ -51,7 +51,15 @@ public class FakeFileUploadPort implements FilePort {
         deletedFiles.add(filePath);
         log.info("FakeFileUploadPort deleteFile: filePath={}", filePath);
     }
-    
+
+    @Override
+    public void deleteFolder(String folderPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("Folder deletion failure");
+        }
+        log.info("FakeFileUploadPort deleteFolder: folderPath={}", folderPath);
+    }
+
     @Override
     public FileResponse readFile(FileInfo fileInfo) {
         return null;

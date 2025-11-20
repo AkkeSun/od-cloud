@@ -16,5 +16,7 @@ public interface FileInfoStoragePort {
 
     boolean existsByFolderIdAndName(Long folderId, String name);
 
+    List<FileInfo> findByFolderId(Long folderId);
+
     void delete(FileInfo file);
 }

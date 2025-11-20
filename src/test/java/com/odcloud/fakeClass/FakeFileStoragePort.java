@@ -77,6 +77,13 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
     }
 
     @Override
+    public List<FileInfo> findByFolderId(Long folderId) {
+        return database.stream()
+            .filter(file -> file.getFolderId().equals(folderId))
+            .toList();
+    }
+
+    @Override
     public void delete(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");

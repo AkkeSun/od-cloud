@@ -137,4 +137,20 @@ class FolderInfoRepository {
             .where(folderInfoEntity.parentId.eq(parentId).and(folderInfoEntity.name.eq(name)))
             .fetchOne() != null;
     }
+
+    List<FolderInfo> findByParentId(Long parentId) {
+        return queryFactory
+            .select(constructor)
+            .from(folderInfoEntity)
+            .where(folderInfoEntity.parentId.eq(parentId))
+            .fetch();
+    }
+
+    @Transactional
+    void delete(FolderInfo folder) {
+        FolderInfoEntity entity = entityManager.find(FolderInfoEntity.class, folder.getId());
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
+    }
 }

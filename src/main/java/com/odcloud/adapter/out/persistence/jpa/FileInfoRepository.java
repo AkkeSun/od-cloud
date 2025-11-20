@@ -69,6 +69,14 @@ class FileInfoRepository {
             .fetchOne() != null;
     }
 
+    public List<FileInfo> findByFolderId(Long folderId) {
+        return queryFactory
+            .select(constructor)
+            .from(fileInfoEntity)
+            .where(fileInfoEntity.folderId.eq(folderId))
+            .fetch();
+    }
+
     public List<FileInfo> findAll(FindFilesCommand command) {
         String sql = """
             SELECT f.ID, f.FOLDER_ID, f.FILE_NAME, f.FILE_LOC, f.MOD_DT, f.REG_DT

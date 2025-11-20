@@ -13,4 +13,8 @@ public interface FolderInfoStoragePort {
     List<FolderInfo> findAll(FindFilesCommand command);
 
     boolean existsSameFolderName(Long parentId, String name);
+
+    List<FolderInfo> findByParentId(Long parentId);
+
+    void delete(FolderInfo folder);
 }

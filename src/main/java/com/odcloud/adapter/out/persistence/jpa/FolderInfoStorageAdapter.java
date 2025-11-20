@@ -36,4 +36,14 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
     public boolean existsSameFolderName(Long parentId, String name) {
         return folderRepository.existsSameFolderName(parentId, name);
     }
+
+    @Override
+    public List<FolderInfo> findByParentId(Long parentId) {
+        return folderRepository.findByParentId(parentId);
+    }
+
+    @Override
+    public void delete(FolderInfo folder) {
+        folderRepository.delete(folder);
+    }
 }
