@@ -19,4 +19,6 @@ public interface FilePort {
     FileResponse readFile(FileInfo fileInfo);
 
     FileResponse readFiles(List<FileInfo> files);
+
+    void moveFile(String oldPath, String newPath);
 }
