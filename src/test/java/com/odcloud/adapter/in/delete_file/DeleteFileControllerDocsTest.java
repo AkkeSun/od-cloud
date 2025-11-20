@@ -189,9 +189,9 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .type(JsonFieldType.BOOLEAN).description("전체 삭제 성공 여부 (일부 실패 시 false)"),
                 fieldWithPath("data.logs")
                     .type(JsonFieldType.ARRAY).description("파일별 삭제 결과 로그"),
-                fieldWithPath("data.logs[*].fileId")
+                fieldWithPath("data.logs[].fileId")
                     .type(JsonFieldType.NUMBER).description("파일 ID"),
-                fieldWithPath("data.logs[*].errorMessage")
+                fieldWithPath("data.logs[].errorMessage")
                     .optional().description("에러 메시지 (성공 시 null, 실패 시 메시지)")
             );
         }
