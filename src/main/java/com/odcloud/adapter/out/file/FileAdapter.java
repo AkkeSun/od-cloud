@@ -218,10 +218,32 @@ class FileAdapter implements FilePort {
             }
 
             Files.move(sourcePath, targetPath);
-            log.info("[moveFolder] 폴더 이동 완료: {} -> {}", sourcePath, targetPath);
         } catch (IOException e) {
             log.error("[moveFolder] 폴더 이동 실패: {} -> {}, error: {}", oldPath, newPath,
                 e.getMessage());
+            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+        }
+    }
+
+    @Override
+    public void moveFile(String oldPath, String newPath) {
+        try {
+            Path oldFullPath = Paths.get(basePath, oldPath);
+            Path newFullPath = Paths.get(basePath, newPath);
+
+            if (!Files.exists(oldFullPath)) {
+                log.error("[moveFile] 이동할 파일이 존재하지 않습니다: {}", oldPath);
+                throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
+            }
+
+            Path newParentDir = newFullPath.getParent();
+            if (newParentDir != null && !Files.exists(newParentDir)) {
+                Files.createDirectories(newParentDir);
+            }
+
+            Files.move(oldFullPath, newFullPath);
+        } catch (IOException e) {
+            log.error("[moveFile] 파일 이동 실패: {} -> {}, error: {}", oldPath, newPath, e.getMessage());
             throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
         }
     }

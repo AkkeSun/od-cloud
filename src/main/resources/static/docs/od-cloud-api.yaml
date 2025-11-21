@@ -931,6 +931,183 @@ paths:
               examples:
                 '[여러 파일 다운로드 API] success':
                   value: Mock ZIP content
+  /files/{fileId}:
+    patch:
+      tags:
+      - File
+      summary: 파일 정보 수정 API
+      description: "파일명 또는 폴더를 변경하는 API 입니다. <br>파일명과 폴더 아이디는 모두 옵션입니다. <br>- 파일명만\
+        \ 입력: 파일명만 변경 <br>- 폴더 아이디만 입력: 파일을 다른 폴더로 이동 <br>- 둘 다 입력: 파일명 변경 후 다른 폴더\
+        로 이동 <br>폴더 이동 시 해당 폴더에 대한 접근 권한을 확인합니다. <br>동일한 이름의 파일이 이미 존재하는 경우 오류가 발생\
+        합니다."
+      operationId: "[파일 정보 수정 API] "
+      parameters:
+      - name: fileId
+        in: path
+        description: 파일 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 파일 정보 수정 API"
+            examples:
+              '[파일 정보 수정 API] 파일명과 폴더 동시 변경':
+                value: |-
+                  {
+                    "fileName" : "new-name.txt",
+                    "folderId" : 2
+                  }
+              '[파일 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "fileName" : "new-name.txt",
+                    "folderId" : null
+                  }
+              '[파일 정보 수정 API] 접근 권한 없음':
+                value: |-
+                  {
+                    "fileName" : null,
+                    "folderId" : 2
+                  }
+              '[파일 정보 수정 API] 중복된 파일명':
+                value: |-
+                  {
+                    "fileName" : "duplicate.txt",
+                    "folderId" : null
+                  }
+              '[파일 정보 수정 API] 폴더만 변경':
+                value: |-
+                  {
+                    "fileName" : null,
+                    "folderId" : 2
+                  }
+              '[파일 정보 수정 API] 대상 폴더 없음':
+                value: |-
+                  {
+                    "fileName" : null,
+                    "folderId" : 999
+                  }
+              '[파일 정보 수정 API] 파일 없음':
+                value: |-
+                  {
+                    "fileName" : "new-name.txt",
+                    "folderId" : null
+                  }
+              '[파일 정보 수정 API] 파일명만 수정':
+                value: |-
+                  {
+                    "fileName" : "new-name.txt",
+                    "folderId" : null
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[파일 정보 수정 API] 파일명과 폴더 동시 변경':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[파일 정보 수정 API] 폴더만 변경':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[파일 정보 수정 API] 파일명만 수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[파일 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[파일 정보 수정 API] 접근 권한 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4019,
+                        "errorMessage" : "접근 권한이 없습니다"
+                      }
+                    }
+                '[파일 정보 수정 API] 중복된 파일명':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4017,
+                        "errorMessage" : "이미 사용중인 파일명 입니다"
+                      }
+                    }
+                '[파일 정보 수정 API] 대상 폴더 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4012,
+                        "errorMessage" : "조회된 폴더가 없습니다"
+                      }
+                    }
+                '[파일 정보 수정 API] 파일 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4015,
+                        "errorMessage" : "조회된 파일이 없습니다"
+                      }
+                    }
   /files/{fileId}/download:
     get:
       tags:
@@ -2141,7 +2318,7 @@ paths:
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
                           "endDt" : "2025-01-05T11:00:00",
-                          "notificationDt" : "2025-11-21T09:20:55.348282"
+                          "notificationDt" : "2025-11-21T09:33:55.362822"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
@@ -2149,7 +2326,7 @@ paths:
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
                           "endDt" : "2025-01-15T15:00:00",
-                          "notificationDt" : "2025-11-21T09:20:55.348299"
+                          "notificationDt" : "2025-11-21T09:33:55.362838"
                         } ]
                       }
                     }
@@ -2931,6 +3108,18 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 파일 정보 수정 API':
+      title: "[request] 파일 정보 수정 API"
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: 변경할 파일명 (옵션)
+          nullable: true
+        folderId:
+          type: number
+          description: 이동할 폴더 ID (옵션)
+          nullable: true
     '[request] 폴더 정보 수정 API':
       title: "[request] 폴더 정보 수정 API"
       required:

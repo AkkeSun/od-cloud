@@ -23,7 +23,9 @@ public class FakeFilePort implements FilePort {
     public int readFileCallCount = 0;
     public int readFilesCallCount = 0;
     public int moveFolderCallCount = 0;
+    public int moveFileCallCount = 0;
     public List<String> deletedFiles = new ArrayList<>();
+    public List<String> movedFiles = new ArrayList<>();
     public String lastMovedOldPath;
     public String lastMovedNewPath;
 
@@ -130,6 +132,15 @@ public class FakeFilePort implements FilePort {
         log.info("FakeFilePort deleted folder: {}", folderPath);
     }
 
+    @Override
+    public void moveFile(String oldPath, String newPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        moveFileCallCount++;
+        movedFiles.add(oldPath + " -> " + newPath);
+        log.info("FakeFilePort moved file: {} -> {}", oldPath, newPath);
+    }
 
     public void reset() {
         shouldThrowException = false;
@@ -139,7 +150,9 @@ public class FakeFilePort implements FilePort {
         readFileCallCount = 0;
         readFilesCallCount = 0;
         moveFolderCallCount = 0;
+        moveFileCallCount = 0;
         deletedFiles.clear();
+        movedFiles.clear();
         lastMovedOldPath = null;
         lastMovedNewPath = null;
     }

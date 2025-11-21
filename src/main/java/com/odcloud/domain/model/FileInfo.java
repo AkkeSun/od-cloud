@@ -75,4 +75,16 @@ public class FileInfo {
     public String getRegDtString() {
         return DateUtil.formatDateTime(regDt);
     }
+
+
+    public void updateFileName(String newFileName) {
+        this.fileName = newFileName;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void updateFolder(Long newFolderId, String newFileLoc) {
+        this.folderId = newFolderId;
+        this.fileLoc = newFileLoc;
+        this.modDt = LocalDateTime.now();
+    }
 }

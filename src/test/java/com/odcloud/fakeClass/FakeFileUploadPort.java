@@ -75,6 +75,14 @@ public class FakeFileUploadPort implements FilePort {
 
     }
 
+    @Override
+    public void moveFile(String oldPath, String newPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File move failure");
+        }
+        log.info("FakeFileUploadPort moveFile: {} -> {}", oldPath, newPath);
+    }
+    
     public void reset() {
         createdFolders.clear();
         uploadedFiles.clear();

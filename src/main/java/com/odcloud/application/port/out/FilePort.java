@@ -21,4 +21,6 @@ public interface FilePort {
     void moveFolder(String oldPath, String newPath);
 
     void deleteFolder(String path);
+
+    void moveFile(String oldPath, String newPath);
 }
