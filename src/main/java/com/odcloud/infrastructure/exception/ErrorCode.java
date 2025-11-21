@@ -39,6 +39,8 @@ public enum ErrorCode {
     Business_SAVED_FILE_NAME(4017, "이미 사용중인 파일명 입니다"),
     Business_NOT_FOUND_SCHEDULE(4018, "조회된 스케줄이 없습니다"),
     Business_FORBIDDEN_ACCESS(4019, "접근 권한이 없습니다"),
+    Business_NOT_FOUND_QUESTION(4020, "조회된 문의가 없습니다"),
+    Business_ALREADY_EXISTS_ANSWER(4021, "이미 답변이 등록된 문의입니다"),
 
     ;
 
