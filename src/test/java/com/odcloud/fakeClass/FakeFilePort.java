@@ -22,7 +22,10 @@ public class FakeFilePort implements FilePort {
     public int deleteFilesCallCount = 0;
     public int readFileCallCount = 0;
     public int readFilesCallCount = 0;
+    public int moveFolderCallCount = 0;
     public List<String> deletedFiles = new ArrayList<>();
+    public String lastMovedOldPath;
+    public String lastMovedNewPath;
 
     @Override
     public void createFolder(String folderPath) {
@@ -59,14 +62,6 @@ public class FakeFilePort implements FilePort {
         }
         deletedFiles.add(filePath);
         log.info("FakeFilePort deleted file: {}", filePath);
-    }
-
-    @Override
-    public void deleteFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        log.info("FakeFilePort deleted folder: {}", folderPath);
     }
 
     @Override
@@ -116,6 +111,26 @@ public class FakeFilePort implements FilePort {
             .build();
     }
 
+    @Override
+    public void moveFolder(String oldPath, String newPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        moveFolderCallCount++;
+        lastMovedOldPath = oldPath;
+        lastMovedNewPath = newPath;
+        log.info("FakeFilePort moved folder: {} -> {}", oldPath, newPath);
+    }
+
+    @Override
+    public void deleteFolder(String folderPath) {
+        if (shouldThrowException) {
+            throw new RuntimeException("File operation failure");
+        }
+        log.info("FakeFilePort deleted folder: {}", folderPath);
+    }
+
+
     public void reset() {
         shouldThrowException = false;
         createFolderCallCount = 0;
@@ -123,6 +138,9 @@ public class FakeFilePort implements FilePort {
         deleteFilesCallCount = 0;
         readFileCallCount = 0;
         readFilesCallCount = 0;
+        moveFolderCallCount = 0;
         deletedFiles.clear();
+        lastMovedOldPath = null;
+        lastMovedNewPath = null;
     }
 }

@@ -70,6 +70,11 @@ public class FakeFileUploadPort implements FilePort {
         return null;
     }
 
+    @Override
+    public void moveFolder(String oldPath, String newPath) {
+
+    }
+
     public void reset() {
         createdFolders.clear();
         uploadedFiles.clear();

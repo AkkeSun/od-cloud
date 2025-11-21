@@ -8,6 +8,109 @@ servers:
 tags: []
 paths:
   /accounts:
+    put:
+      tags:
+      - Account
+      summary: 사용자 정보 수정 API
+      description: "사용자의 프로필 정보를 수정하는 API 입니다.<br><br>[수정 가능한 필드]<br>- nickname: 닉\
+        네임<br>- picture: 프로필 사진 URL<br><br>[참고사항]<br>- 이메일은 수정할 수 없습니다.<br>- nickname과\
+        \ picture 중 하나 이상의 필드를 포함해야 합니다.<br>- 수정하지 않을 필드는 생략 가능합니다.<br><br>테스트시 우측\
+        \ 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다."
+      operationId: "[사용자 정보 수정 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 사용자 정보 수정 API"
+            examples:
+              '[사용자 정보 수정 API] 사용자 정보 수정 성공':
+                value: |-
+                  {
+                    "nickname" : "새로운닉네임",
+                    "picture" : "https://example.com/new-picture.jpg"
+                  }
+              '[사용자 정보 수정 API] 닉네임만 수정':
+                value: |-
+                  {
+                    "nickname" : "닉네임만변경"
+                  }
+              '[사용자 정보 수정 API] 프로필 사진만 수정':
+                value: |-
+                  {
+                    "picture" : "https://example.com/brand-new-picture.jpg"
+                  }
+              '[사용자 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "nickname" : "newNickname",
+                    "picture" : "https://example.com/new-picture.jpg"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[사용자 정보 수정 API] 사용자 정보 수정 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "새로운닉네임",
+                        "picture" : "https://example.com/new-picture.jpg"
+                      }
+                    }
+                '[사용자 정보 수정 API] 닉네임만 수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "닉네임만변경",
+                        "picture" : "https://example.com/old-picture.jpg"
+                      }
+                    }
+                '[사용자 정보 수정 API] 프로필 사진만 수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "email" : "user@example.com",
+                        "nickname" : "기존닉네임",
+                        "picture" : "https://example.com/brand-new-picture.jpg"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[사용자 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
     post:
       tags:
       - Account
@@ -1098,6 +1201,252 @@ paths:
                         "result" : true
                       }
                     }
+  /folders/{fileId}:
+    patch:
+      tags:
+      - Folder
+      summary: 폴더 정보 수정 API
+      description: "폴더의 이름, 상위 폴더, 접근 권한을 수정하는 API 입니다"
+      operationId: "[폴더 정보 수정 API] "
+      parameters:
+      - name: fileId
+        in: path
+        description: 수정할 폴더 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 폴더 정보 수정 API"
+            examples:
+              '[폴더 정보 수정 API] 유효하지 않은 접근 권한 값':
+                value: |-
+                  {
+                    "name" : null,
+                    "parentId" : null,
+                    "accessLevel" : "INVALID"
+                  }
+              '[폴더 정보 수정 API] success_상위폴더_변경':
+                value: |-
+                  {
+                    "name" : null,
+                    "parentId" : 2,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] success':
+                value: |-
+                  {
+                    "name" : "수정된 폴더명",
+                    "parentId" : 2,
+                    "accessLevel" : "PUBLIC"
+                  }
+              '[폴더 정보 수정 API] 폴더 소유자 아님':
+                value: |-
+                  {
+                    "name" : "수정된 폴더명",
+                    "parentId" : null,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] success_폴더명만_수정':
+                value: |-
+                  {
+                    "name" : "수정된 폴더명",
+                    "parentId" : null,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] success_접근권한만_수정':
+                value: |-
+                  {
+                    "name" : null,
+                    "parentId" : null,
+                    "accessLevel" : "PRIVATE"
+                  }
+              '[폴더 정보 수정 API] 존재하지 않는 폴더':
+                value: |-
+                  {
+                    "name" : "수정된 폴더명",
+                    "parentId" : null,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] 다른 그룹의 폴더로 이동 시도':
+                value: |-
+                  {
+                    "name" : null,
+                    "parentId" : 99,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] 폴더명 중복':
+                value: |-
+                  {
+                    "name" : "기존 폴더명",
+                    "parentId" : null,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "name" : "수정된 폴더명",
+                    "parentId" : null,
+                    "accessLevel" : null
+                  }
+              '[폴더 정보 수정 API] 존재하지 않는 상위 폴더':
+                value: |-
+                  {
+                    "name" : null,
+                    "parentId" : 999,
+                    "accessLevel" : null
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 정보 수정 API] 유효하지 않은 접근 권한 값':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "입력값이 동일하지 않습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[폴더 정보 수정 API] success_상위폴더_변경':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[폴더 정보 수정 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[폴더 정보 수정 API] success_폴더명만_수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[폴더 정보 수정 API] success_접근권한만_수정':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "403":
+          description: "403"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 정보 수정 API] 폴더 소유자 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 403,
+                      "message" : "FORBIDDEN",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 정보 수정 API] 존재하지 않는 폴더':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4012,
+                        "errorMessage" : "조회된 폴더가 없습니다"
+                      }
+                    }
+                '[폴더 정보 수정 API] 다른 그룹의 폴더로 이동 시도':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4019,
+                        "errorMessage" : "접근 권한이 없습니다"
+                      }
+                    }
+                '[폴더 정보 수정 API] 폴더명 중복':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4013,
+                        "errorMessage" : "이미 사용중인 폴더명 입니다"
+                      }
+                    }
+                '[폴더 정보 수정 API] 존재하지 않는 상위 폴더':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4012,
+                        "errorMessage" : "조회된 폴더가 없습니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[폴더 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
   /folders/{folderId}:
     delete:
       tags:
@@ -1277,9 +1626,10 @@ paths:
       tags:
       - Account
       summary: 그룹 목록 조회 API
-      description: "그룹 목록을 조회하는 API 입니다.<br><br>- keyword='all': 모든 그룹 조회<br>- keyword≠\
-        'all': 그룹 Description LIKE 검색<br><br>인증 토큰 없이 사용 가능합니다."
-      operationId: "[그룹 목록 조회 API] 그룹 목록 조회 성공 ("
+      description: "사용자가 속한 모든 그룹 목록을 조회하는 API 입니다.<br><br>- 각 그룹에 대한 사용자의 가입 상태(status)를\
+        \ 함께 제공합니다.<br>- ACTIVE: 승인된 멤버<br>- PENDING: 가입 대기 중<br>- null: 미가입 <br><br>테\
+        스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다."
+      operationId: "[그룹 목록 조회 API] "
       parameters:
       - name: keyword
         in: query
@@ -1287,7 +1637,31 @@ paths:
         required: true
         schema:
           type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: error token
       responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 목록 조회 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
         "200":
           description: "200"
           content:
@@ -1316,6 +1690,33 @@ paths:
                           "ownerEmail" : "owner3@example.com",
                           "description" : "Sales Team",
                           "regDt" : "2024-01-03T12:00:00"
+                        } ]
+                      }
+                    }
+                '[그룹 목록 조회 API] 그룹 목록 조회 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groups" : [ {
+                          "id" : "group-1",
+                          "ownerEmail" : "owner1@example.com",
+                          "description" : "Development Team",
+                          "regDt" : "2024-01-01T12:00:00",
+                          "status" : "ACTIVE"
+                        }, {
+                          "id" : "group-2",
+                          "ownerEmail" : "owner2@example.com",
+                          "description" : "Marketing Team",
+                          "regDt" : "2024-01-02T12:00:00",
+                          "status" : "PENDING"
+                        }, {
+                          "id" : "group-3",
+                          "ownerEmail" : "owner3@example.com",
+                          "description" : "Sales Team",
+                          "regDt" : "2024-01-03T12:00:00",
+                          "status" : "ACTIVE"
                         } ]
                       }
                     }
@@ -1740,7 +2141,7 @@ paths:
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
                           "endDt" : "2025-01-05T11:00:00",
-                          "notificationDt" : "2025-11-20T16:54:37.979931"
+                          "notificationDt" : "2025-11-21T09:20:55.348282"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
@@ -1748,7 +2149,7 @@ paths:
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
                           "endDt" : "2025-01-15T15:00:00",
-                          "notificationDt" : "2025-11-20T16:54:37.979953"
+                          "notificationDt" : "2025-11-21T09:20:55.348299"
                         } ]
                       }
                     }
@@ -2328,33 +2729,6 @@ paths:
                     }
 components:
   schemas:
-    '[response] error':
-      title: "[response] error"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - errorCode
-          - errorMessage
-          type: object
-          properties:
-            errorMessage:
-              type: string
-              description: 오류 메시지
-            errorCode:
-              type: number
-              description: 오류 코드
-          description: 오류 데이터
-        httpStatus:
-          type: number
-          description: HTTP 상태코드
-        message:
-          type: string
-          description: 응답 메시지
     '[response] success':
       title: "[response] success"
       required:
@@ -2370,50 +2744,7 @@ components:
           properties:
             result:
               type: boolean
-              description: 등록 성공 여부
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
-    '[response] success_all':
-      title: "[response] success_all"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - groups
-          type: object
-          properties:
-            groups:
-              type: array
-              description: 그룹 목록
-              items:
-                required:
-                - description
-                - id
-                - ownerEmail
-                - regDt
-                type: object
-                properties:
-                  regDt:
-                    type: string
-                    description: 등록일시
-                  description:
-                    type: string
-                    description: 그룹 설명
-                  id:
-                    type: string
-                    description: 그룹 ID
-                  ownerEmail:
-                    type: string
-                    description: 그룹 소유자 이메일
+              description: 상태 변경 성공 여부
           description: 응답 데이터
         httpStatus:
           type: number
@@ -2484,52 +2815,18 @@ components:
           oneOf:
           - type: string
           - null
-    '[request] 스케줄 등록 API':
-      title: "[request] 스케줄 등록 API"
-      required:
-      - content
-      - endDt
-      - groupId
-      - notificationDt
-      - startDt
+    '[request] 사용자 정보 수정 API':
+      title: "[request] 사용자 정보 수정 API"
       type: object
       properties:
-        groupId:
-          description: 그룹 ID (선택)
-          oneOf:
-          - null
-          - type: string
-        notificationDt:
-          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
-          oneOf:
-          - null
-          - type: string
-        endDt:
-          description: 종료일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - type: string
-          - null
-        startDt:
-          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - null
-          - type: string
-        content:
-          description: 스케줄 내용
-          oneOf:
-          - type: string
-          - null
-    '[request] 그룹 계정 상태 변경 API':
-      title: "[request] 그룹 계정 상태 변경 API"
-      required:
-      - status
-      type: object
-      properties:
-        status:
-          description: 계정 상태 (PENDING / ACTIVE / BLOCK)
-          oneOf:
-          - type: string
-          - null
+        nickname:
+          type: string
+          description: 수정할 닉네임 (선택)
+          nullable: true
+        picture:
+          type: string
+          description: 수정할 프로필 사진 URL (선택)
+          nullable: true
     '[request] 스케줄 수정 API':
       title: "[request] 스케줄 수정 API"
       required:
@@ -2634,6 +2931,29 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 폴더 정보 수정 API':
+      title: "[request] 폴더 정보 수정 API"
+      required:
+      - accessLevel
+      - name
+      - parentId
+      type: object
+      properties:
+        accessLevel:
+          description: "접근 권한 (선택, PRIVATE 또는 PUBLIC)"
+          oneOf:
+          - null
+          - type: string
+        name:
+          description: 폴더명 (선택)
+          oneOf:
+          - null
+          - type: string
+        parentId:
+          description: 상위 폴더 ID (선택)
+          oneOf:
+          - type: number
+          - null
     '[request] 파일 삭제 API':
       title: "[request] 파일 삭제 API"
       required:
@@ -2649,6 +2969,126 @@ components:
             - type: boolean
             - type: string
             - type: number
+    '[response] error':
+      title: "[response] error"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - errorCode
+          - errorMessage
+          type: object
+          properties:
+            errorMessage:
+              type: string
+              description: 에러 메시지
+            errorCode:
+              type: number
+              description: 에러 코드
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[response] success_all':
+      title: "[response] success_all"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - groups
+          type: object
+          properties:
+            groups:
+              type: array
+              description: 그룹 목록
+              items:
+                required:
+                - description
+                - id
+                - ownerEmail
+                - regDt
+                - status
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  description:
+                    type: string
+                    description: 그룹 설명
+                  id:
+                    type: string
+                    description: 그룹 ID
+                  ownerEmail:
+                    type: string
+                    description: 그룹 소유자 이메일
+                  status:
+                    type: string
+                    description: "사용자의 그룹 가입 상태 (ACTIVE, PENDING 등)"
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[request] 스케줄 등록 API':
+      title: "[request] 스케줄 등록 API"
+      required:
+      - content
+      - endDt
+      - groupId
+      - notificationDt
+      - startDt
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID (선택)
+          oneOf:
+          - null
+          - type: string
+        notificationDt:
+          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
+          oneOf:
+          - null
+          - type: string
+        endDt:
+          description: 종료일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - type: string
+          - null
+        startDt:
+          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - null
+          - type: string
+        content:
+          description: 스케줄 내용
+          oneOf:
+          - type: string
+          - null
+    '[request] 그룹 계정 상태 변경 API':
+      title: "[request] 그룹 계정 상태 변경 API"
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          description: 계정 상태 (PENDING / ACTIVE / BLOCK)
+          oneOf:
+          - type: string
+          - null
 
   securitySchemes:
     APIKey:

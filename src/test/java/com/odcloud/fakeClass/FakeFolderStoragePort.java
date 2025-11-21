@@ -27,7 +27,9 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
             .id(folder.getId() == null ? id++ : folder.getId())
             .groupId(folder.getGroupId())
             .name(folder.getName())
+            .owner(folder.getOwner())
             .path(folder.getPath())
+            .accessLevel(folder.getAccessLevel())
             .parentId(folder.getParentId() == null ? 0 : folder.getParentId())
             .regDt(folder.getRegDt())
             .modDt(folder.getModDt())
@@ -96,10 +98,7 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
 
     @Override
     public void delete(FolderInfo folder) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Storage failure");
-        }
-        database.remove(folder);
+        database.removeIf(f -> f.getId().equals(folder.getId()));
         log.info("FakeFolderStoragePort deleted folder: id={}, name={}", folder.getId(), folder.getName());
     }
 

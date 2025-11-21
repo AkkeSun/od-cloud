@@ -59,4 +59,29 @@ public class FolderInfo {
     public String getRegDtString() {
         return DateUtil.formatDateTime(regDt);
     }
+
+    public void update(String name, String accessLevel) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (accessLevel != null) {
+            this.accessLevel = accessLevel;
+        }
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void updateWithNewPath(String name, String accessLevel, String newPath) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (accessLevel != null) {
+            this.accessLevel = accessLevel;
+        }
+        this.path = newPath;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void updateParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 }
