@@ -2270,6 +2270,189 @@ paths:
                         "errorMessage" : "등록되지 않은 그룹 사용자 입니다"
                       }
                     }
+  /questions:
+    get:
+      tags:
+      - Question
+      summary: 문의 게시글 목록을 페이징하여 조회합니다
+      description: 문의 게시글 목록을 페이징하여 조회합니다
+      operationId: 문의 게시글 목록 조회 API
+      parameters:
+      - name: page
+        in: query
+        description: "페이지 번호 (기본값: 0)"
+        required: false
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: "페이지 크기 (기본값: 10)"
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindQuestionsResponse'
+              examples:
+                문의 게시글 목록 조회 API:
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "pageNumber" : 0,
+                        "pageSize" : 10,
+                        "totalElements" : 1,
+                        "totalPages" : 1,
+                        "questions" : [ {
+                          "id" : 1,
+                          "writerNickname" : "테스터",
+                          "title" : "API 사용 문의",
+                          "answered" : false,
+                          "regDt" : "2025-01-20T10:00:00"
+                        } ]
+                      }
+                    }
+    post:
+      tags:
+      - Question
+      summary: 문의 게시글을 등록합니다
+      description: 문의 게시글을 등록합니다
+      operationId: 문의 게시글 등록 API
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterQuestionRequest'
+            examples:
+              문의 게시글 등록 API:
+                value: |-
+                  {
+                    "title" : "API 사용 문의",
+                    "content" : "API 사용 방법을 알고 싶습니다."
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterQuestionResponse'
+              examples:
+                문의 게시글 등록 API:
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+  /questions/{questionId}:
+    get:
+      tags:
+      - Question
+      summary: 문의 게시글의 상세 정보를 조회합니다. 답변이 있는 경우 함께 조회됩니다.
+      description: 문의 게시글의 상세 정보를 조회합니다. 답변이 있는 경우 함께 조회됩니다.
+      operationId: 문의 게시글 상세 조회 API
+      parameters:
+      - name: questionId
+        in: path
+        description: 문의 게시글 ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindQuestionResponse'
+              examples:
+                문의 게시글 상세 조회 API:
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "question" : {
+                          "id" : 1,
+                          "writerNickname" : "테스터",
+                          "title" : "API 사용 문의",
+                          "content" : "API 사용 방법을 알고 싶습니다.",
+                          "answered" : true,
+                          "regDt" : "2025-01-20T10:00:00"
+                        },
+                        "answer" : {
+                          "id" : 1,
+                          "writerNickname" : "관리자",
+                          "content" : "API 사용 방법은 다음과 같습니다...",
+                          "regDt" : "2025-01-20T15:30:00"
+                        }
+                      }
+                    }
+  /questions/{questionId}/answers:
+    post:
+      tags:
+      - Question
+      summary: 문의 게시글 답변을 등록합니다. 답변 등록 시 문의자에게 푸시 알림이 전송됩니다.
+      description: 문의 게시글 답변을 등록합니다. 답변 등록 시 문의자에게 푸시 알림이 전송됩니다.
+      operationId: 문의 게시글 답변 등록 API
+      parameters:
+      - name: questionId
+        in: path
+        description: 문의 게시글 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAnswerRequest'
+            examples:
+              문의 게시글 답변 등록 API:
+                value: |-
+                  {
+                    "content" : "API 사용 방법은 다음과 같습니다..."
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterAnswerResponse'
+              examples:
+                문의 게시글 답변 등록 API:
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
   /schedules:
     get:
       tags:
@@ -2318,7 +2501,7 @@ paths:
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
                           "endDt" : "2025-01-05T11:00:00",
-                          "notificationDt" : "2025-11-21T09:33:55.362822"
+                          "notificationDt" : "2025-11-22T22:37:58.379254"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
@@ -2326,7 +2509,7 @@ paths:
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
                           "endDt" : "2025-01-15T15:00:00",
-                          "notificationDt" : "2025-11-21T09:33:55.362838"
+                          "notificationDt" : "2025-11-22T22:37:58.379272"
                         } ]
                       }
                     }
@@ -3033,6 +3216,29 @@ components:
           oneOf:
           - type: string
           - null
+    '[request] 폴더 정보 수정 API':
+      title: "[request] 폴더 정보 수정 API"
+      required:
+      - accessLevel
+      - name
+      - parentId
+      type: object
+      properties:
+        accessLevel:
+          description: "접근 권한 (선택, PRIVATE 또는 PUBLIC)"
+          oneOf:
+          - null
+          - type: string
+        name:
+          description: 폴더명 (선택)
+          oneOf:
+          - null
+          - type: string
+        parentId:
+          description: 상위 폴더 ID (선택)
+          oneOf:
+          - type: number
+          - null
     '[response] success-by-folderId':
       title: "[response] success-by-folderId"
       required:
@@ -3120,29 +3326,6 @@ components:
           type: number
           description: 이동할 폴더 ID (옵션)
           nullable: true
-    '[request] 폴더 정보 수정 API':
-      title: "[request] 폴더 정보 수정 API"
-      required:
-      - accessLevel
-      - name
-      - parentId
-      type: object
-      properties:
-        accessLevel:
-          description: "접근 권한 (선택, PRIVATE 또는 PUBLIC)"
-          oneOf:
-          - null
-          - type: string
-        name:
-          description: 폴더명 (선택)
-          oneOf:
-          - null
-          - type: string
-        parentId:
-          description: 상위 폴더 ID (선택)
-          oneOf:
-          - type: number
-          - null
     '[request] 파일 삭제 API':
       title: "[request] 파일 삭제 API"
       required:
@@ -3232,6 +3415,122 @@ components:
         message:
           type: string
           description: 상태 메시지
+    RegisterQuestionRequest:
+      title: RegisterQuestionRequest
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: 문의 제목
+        content:
+          type: string
+          description: 문의 내용
+    RegisterAnswerRequest:
+      title: RegisterAnswerRequest
+      required:
+      - content
+      type: object
+      properties:
+        content:
+          type: string
+          description: 답변 내용
+    RegisterAnswerResponse:
+      title: RegisterAnswerResponse
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - result
+          type: object
+          properties:
+            result:
+              type: boolean
+              description: 등록 성공 여부
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    FindQuestionResponse:
+      title: FindQuestionResponse
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - answer
+          - question
+          type: object
+          properties:
+            answer:
+              required:
+              - content
+              - id
+              - regDt
+              - writerNickname
+              type: object
+              properties:
+                regDt:
+                  type: string
+                  description: 답변 등록일시
+                writerNickname:
+                  type: string
+                  description: 답변 작성자 닉네임
+                id:
+                  type: number
+                  description: 답변 ID
+                content:
+                  type: string
+                  description: 답변 내용
+              description: 답변 정보 (답변이 없는 경우 null)
+            question:
+              required:
+              - answered
+              - content
+              - id
+              - regDt
+              - title
+              - writerNickname
+              type: object
+              properties:
+                regDt:
+                  type: string
+                  description: 등록일시
+                writerNickname:
+                  type: string
+                  description: 작성자 닉네임
+                answered:
+                  type: boolean
+                  description: 답변 완료 여부
+                id:
+                  type: number
+                  description: 문의 ID
+                title:
+                  type: string
+                  description: 제목
+                content:
+                  type: string
+                  description: 내용
+              description: 문의 정보
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     '[request] 스케줄 등록 API':
       title: "[request] 스케줄 등록 API"
       required:
@@ -3267,6 +3566,29 @@ components:
           oneOf:
           - type: string
           - null
+    RegisterQuestionResponse:
+      title: RegisterQuestionResponse
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - result
+          type: object
+          properties:
+            result:
+              type: boolean
+              description: 등록 성공 여부
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     '[request] 그룹 계정 상태 변경 API':
       title: "[request] 그룹 계정 상태 변경 API"
       required:
@@ -3278,6 +3600,69 @@ components:
           oneOf:
           - type: string
           - null
+    FindQuestionsResponse:
+      title: FindQuestionsResponse
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - pageNumber
+          - pageSize
+          - questions
+          - totalElements
+          - totalPages
+          type: object
+          properties:
+            pageNumber:
+              type: number
+              description: 현재 페이지 번호
+            questions:
+              type: array
+              description: 문의 게시글 목록
+              items:
+                required:
+                - answered
+                - id
+                - regDt
+                - title
+                - writerNickname
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  writerNickname:
+                    type: string
+                    description: 작성자 닉네임
+                  answered:
+                    type: boolean
+                    description: 답변 완료 여부
+                  id:
+                    type: number
+                    description: 문의 ID
+                  title:
+                    type: string
+                    description: 제목
+            totalPages:
+              type: number
+              description: 전체 페이지 수
+            pageSize:
+              type: number
+              description: 페이지 크기
+            totalElements:
+              type: number
+              description: 전체 데이터 개수
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
 
   securitySchemes:
     APIKey:
