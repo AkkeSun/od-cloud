@@ -3,6 +3,7 @@ package com.odcloud.adapter.in.update_schedule;
 import com.odcloud.application.port.in.command.UpdateScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
+import com.odcloud.infrastructure.util.ToStringUtil;
 import com.odcloud.infrastructure.validation.DateTimePattern;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
@@ -36,5 +37,10 @@ record UpdateScheduleRequest(
             .endDt(DateUtil.parse(endDt))
             .notificationDt(notificationDt == null ? null : DateUtil.parse(notificationDt))
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringUtil.toString(this);
     }
 }

@@ -2,6 +2,7 @@ package com.odcloud.adapter.in.update_folder;
 
 import com.odcloud.application.port.in.command.UpdateFolderCommand;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.util.ToStringUtil;
 import com.odcloud.infrastructure.validation.Contains;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import lombok.Builder;
@@ -25,5 +26,10 @@ record UpdateFolderRequest(
             .parentId(parentId)
             .accessLevel(accessLevel)
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringUtil.toString(this);
     }
 }

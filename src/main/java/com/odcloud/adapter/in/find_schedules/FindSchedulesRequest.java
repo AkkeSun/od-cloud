@@ -3,11 +3,9 @@ package com.odcloud.adapter.in.find_schedules;
 import com.odcloud.application.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
-import com.odcloud.infrastructure.validation.Contains;
+import com.odcloud.infrastructure.util.ToStringUtil;
 import com.odcloud.infrastructure.validation.DatePattern;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
-import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +29,10 @@ class FindSchedulesRequest{
             .baseDate(baseDate == null? LocalDate.now() : DateUtil.parseDate(baseDate))
             .filterType(filterType)
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringUtil.toString(this);
     }
 }

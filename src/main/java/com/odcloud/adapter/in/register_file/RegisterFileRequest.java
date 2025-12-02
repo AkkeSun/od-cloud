@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.register_file;
 
 import com.odcloud.application.port.in.command.RegisterFileCommand;
+import com.odcloud.infrastructure.util.ToStringUtil;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,10 @@ class RegisterFileRequest {
             .folderId(folderId)
             .files(files)
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringUtil.toString(this);
     }
 }
