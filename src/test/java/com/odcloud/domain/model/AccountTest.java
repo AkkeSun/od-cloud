@@ -98,7 +98,8 @@ class AccountTest {
             RegisterAccountCommand command = new RegisterAccountCommand(
                 "Bearer google-token",
                 "홍길동",
-                "group-123"
+                "group-123",
+                null
             );
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);

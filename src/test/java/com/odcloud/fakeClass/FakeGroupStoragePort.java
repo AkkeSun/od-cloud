@@ -18,12 +18,13 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     public boolean shouldThrowException = false;
 
     @Override
-    public void save(Group group) {
+    public Group save(Group group) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
         groupDatabase.add(group);
         log.info("FakeGroupStoragePort saved group: id={}", group.getId());
+        return group;
     }
 
     @Override

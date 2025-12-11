@@ -20,6 +20,7 @@ record RegisterAccountRequest(
             .googleAuthorization(googleAuthorization)
             .name(name)
             .groupId(groupId)
+            .newGroupName(newGroupName)
             .build();
     }
 
