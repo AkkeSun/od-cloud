@@ -37,7 +37,7 @@ public class GroupAccount {
     }
 
 
-    public static GroupAccount of(Group group, Account account) {
+    public static GroupAccount ofPending(Group group, Account account) {
         return GroupAccount.builder()
             .groupId(group.getId())
             .accountId(account.getId())

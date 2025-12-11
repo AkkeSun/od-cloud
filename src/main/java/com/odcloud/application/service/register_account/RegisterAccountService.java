@@ -38,18 +38,19 @@ class RegisterAccountService implements RegisterAccountUseCase {
         }
 
         Account account = accountStoragePort.save(Account.of(info, command));
-        Group group;
         if (StringUtils.hasText(command.newGroupName())) {
             if (groupStoragePort.existsByName(command.newGroupName())) {
                 throw new CustomBusinessException(Business_SAVED_GROUP);
             }
-            group = groupStoragePort.save(Group.of(command.newGroupName(), info.email()));
+            Group group = groupStoragePort.save(Group.of(command.newGroupName(), info.email()));
+            groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
+
         } else {
-            group = groupStoragePort.findById(command.groupId());
+            Group group = groupStoragePort.findById(command.groupId());
+            groupStoragePort.save(GroupAccount.ofPending(group, account));
+            mailPort.send(MailRequest.ofGroupJoinRequest(account, group));
         }
 
-        groupStoragePort.save(GroupAccount.of(group, account));
-        mailPort.send(MailRequest.ofGroupJoinRequest(account, group));
         return RegisterAccountServiceResponse.ofSuccess();
     }
 }
