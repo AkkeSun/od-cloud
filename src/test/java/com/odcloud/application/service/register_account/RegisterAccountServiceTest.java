@@ -51,7 +51,7 @@ class RegisterAccountServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -184,7 +184,7 @@ class RegisterAccountServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("Custom Group")
+                .name("Custom Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 

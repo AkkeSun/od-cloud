@@ -49,8 +49,7 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
         void error() throws Exception {
             // given
             RegisterGroupRequest request = RegisterGroupRequest.builder()
-                .id("group-123")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
             String authorization = "error token";
             given(useCase.register(any())).willThrow(
@@ -66,8 +65,7 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
         void success() throws Exception {
             // given
             RegisterGroupRequest request = RegisterGroupRequest.builder()
-                .id("group-123")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
 
             RegisterGroupServiceResponse serviceResponse =
@@ -89,36 +87,23 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 그룹 아이디를 입력하지 않은 경우 400 에러를 반환한다")
-        void error_idIsBlank() throws Exception {
-            // given
-            RegisterGroupRequest request = RegisterGroupRequest.builder()
-                .description("테스트 그룹")
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(), "그룹 아이디 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] 그룹 설명이 빈 문자열인 경우 400 에러를 반환한다")
+        @DisplayName("[error] 그룹 이름이 빈 문자열인 경우 400 에러를 반환한다")
         void error_descriptionIsBlank() throws Exception {
             // given
             RegisterGroupRequest request = RegisterGroupRequest.builder()
-                .id("group-123")
+                .name(null)
                 .build();
 
             // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(), "그룹 설명 미입력");
+            performErrorDocument(request, "Bearer test", status().isBadRequest(), "그룹명 미입력");
         }
 
         @Test
-        @DisplayName("[error] 이미 등록된 그룹 ID인 경우 500 에러를 반환한다")
+        @DisplayName("[error] 이미 등록된 그룹 이름인 경우 500 에러를 반환한다")
         void error_savedGroup() throws Exception {
             // given
             RegisterGroupRequest request = RegisterGroupRequest.builder()
-                .id("existing-group-123")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
 
             given(useCase.register(any()))
@@ -140,9 +125,7 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
         FieldDescriptor... responseFields
     ) throws Exception {
 
-        JsonFieldType idType = request.id() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
-        JsonFieldType descriptionType = request.description() == null ?
+        JsonFieldType descriptionType = request.name() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
 
         mockMvc.perform(post("/groups")
@@ -159,10 +142,8 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
                     .summary("그룹 등록 API")
                     .description("새로운 그룹을 생성하는 API 입니다")
                     .requestFields(
-                        fieldWithPath("id").type(idType)
-                            .description("그룹 ID"),
-                        fieldWithPath("description").type(descriptionType)
-                            .description("그룹 설명")
+                        fieldWithPath("name").type(descriptionType)
+                            .description("그룹명")
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(responseFields)

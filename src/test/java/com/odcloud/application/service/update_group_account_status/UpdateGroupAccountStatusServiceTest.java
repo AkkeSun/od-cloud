@@ -46,7 +46,7 @@ class UpdateGroupAccountStatusServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail(ownerEmail)
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -88,7 +88,7 @@ class UpdateGroupAccountStatusServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail(ownerEmail)
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -132,7 +132,7 @@ class UpdateGroupAccountStatusServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail(ownerEmail)
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -173,7 +173,7 @@ class UpdateGroupAccountStatusServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail(ownerEmail)
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -204,7 +204,7 @@ class UpdateGroupAccountStatusServiceTest {
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail(ownerEmail)
-                .description("Test Group")
+                .name("Test Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 

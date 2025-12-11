@@ -36,10 +36,10 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public boolean existsById(String id) {
+    public boolean existsByName(String name) {
         boolean exists = groupDatabase.stream()
-            .anyMatch(group -> group.getId().equals(id));
-        log.info("FakeGroupStoragePort existsById: id={}, exists={}", id, exists);
+            .anyMatch(group -> group.getName().equals(name));
+        log.info("FakeGroupStoragePort existsByName: name={}, exists={}", name, exists);
         return exists;
     }
 
@@ -51,7 +51,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     @Override
     public List<Group> findByKeyword(String keyword) {
         return groupDatabase.stream()
-            .filter(group -> group.getDescription().contains(keyword))
+            .filter(group -> group.getName().contains(keyword))
             .toList();
     }
     @Override

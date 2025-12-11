@@ -20,25 +20,22 @@ class FolderTest {
         void success() {
             // given
             RegisterGroupCommand command = new RegisterGroupCommand(
-                "group-123",
-                "owner@example.com",
-                "테스트 그룹"
+                "테스트 그룹",
+                "owner@example.com"
             );
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            FolderInfo folder = FolderInfo.ofRootFolder(command);
+            FolderInfo folder = FolderInfo.ofRootFolder(Group.of(command));
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
             assertThat(folder).isNotNull();
             assertThat(folder.getParentId()).isNull();
-            assertThat(folder.getGroupId()).isEqualTo("group-123");
             assertThat(folder.getName()).isEqualTo("테스트 그룹");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
-            assertThat(folder.getPath()).isEqualTo("/group-123");
             assertThat(folder.getAccessLevel()).isEqualTo("PUBLIC");
             assertThat(folder.getRegDt()).isAfter(before);
             assertThat(folder.getRegDt()).isBefore(after);
@@ -50,42 +47,18 @@ class FolderTest {
             // given
             RegisterGroupCommand command = new RegisterGroupCommand(
                 null,
-                null,
                 null
             );
 
             // when
-            FolderInfo folder = FolderInfo.ofRootFolder(command);
+            FolderInfo folder = FolderInfo.ofRootFolder(Group.of(command));
 
             // then
             assertThat(folder).isNotNull();
             assertThat(folder.getParentId()).isNull();
-            assertThat(folder.getGroupId()).isNull();
             assertThat(folder.getName()).isNull();
             assertThat(folder.getOwner()).isNull();
-            assertThat(folder.getPath()).isEqualTo("/null");
             assertThat(folder.getAccessLevel()).isEqualTo("PUBLIC");
-        }
-
-        @Test
-        @DisplayName("[success] 빈 문자열을 포함한 RegisterGroupCommand로부터 루트 폴더를 생성한다")
-        void success_emptyStrings() {
-            // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                "",
-                "",
-                ""
-            );
-
-            // when
-            FolderInfo folder = FolderInfo.ofRootFolder(command);
-
-            // then
-            assertThat(folder).isNotNull();
-            assertThat(folder.getGroupId()).isEmpty();
-            assertThat(folder.getName()).isEmpty();
-            assertThat(folder.getOwner()).isEmpty();
-            assertThat(folder.getPath()).isEqualTo("/");
         }
     }
 

@@ -47,7 +47,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -123,7 +123,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("빈 그룹")
+                .name("빈 그룹")
                 .regDt(LocalDateTime.now())
                 .build();
             entityManager.persist(group);
@@ -160,14 +160,14 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group1 = GroupEntity.builder()
                 .id(targetGroupId)
                 .ownerEmail("owner1@example.com")
-                .description("그룹 1")
+                .name("그룹 1")
                 .regDt(now)
                 .build();
 
             GroupEntity group2 = GroupEntity.builder()
                 .id(otherGroupId)
                 .ownerEmail("owner2@example.com")
-                .description("그룹 2")
+                .name("그룹 2")
                 .regDt(now)
                 .build();
 
@@ -258,7 +258,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -340,7 +340,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -388,7 +388,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -435,7 +435,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
                 .id("new-group-id")
                 .ownerEmail("owner@example.com")
-                .description("새로운 그룹")
+                .name("새로운 그룹")
                 .regDt(now)
                 .build();
 
@@ -449,7 +449,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getId()).isEqualTo("new-group-id");
             assertThat(savedEntity.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(savedEntity.getDescription()).isEqualTo("새로운 그룹");
+            assertThat(savedEntity.getName()).isEqualTo("새로운 그룹");
         }
 
         @Test
@@ -460,7 +460,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity existingGroup = GroupEntity.builder()
                 .id("existing-group")
                 .ownerEmail("old@example.com")
-                .description("기존 설명")
+                .name("기존 설명")
                 .regDt(now)
                 .build();
             entityManager.persist(existingGroup);
@@ -470,7 +470,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Group updatedGroup = com.odcloud.domain.model.Group.builder()
                 .id("existing-group")
                 .ownerEmail("new@example.com")
-                .description("새로운 설명")
+                .name("새로운 설명")
                 .regDt(now)
                 .build();
 
@@ -483,7 +483,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity savedEntity = entityManager.find(GroupEntity.class, "existing-group");
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getOwnerEmail()).isEqualTo("new@example.com");
-            assertThat(savedEntity.getDescription()).isEqualTo("새로운 설명");
+            assertThat(savedEntity.getName()).isEqualTo("새로운 설명");
         }
 
         @Test
@@ -494,7 +494,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
                 .id("null-desc-group")
                 .ownerEmail("owner@example.com")
-                .description(null)
+                .name(null)
                 .regDt(now)
                 .build();
 
@@ -506,7 +506,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // then
             GroupEntity savedEntity = entityManager.find(GroupEntity.class, "null-desc-group");
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getDescription()).isNull();
+            assertThat(savedEntity.getName()).isNull();
         }
     }
 
@@ -524,7 +524,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id("test-group")
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -576,7 +576,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id("test-group")
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -625,8 +625,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
     }
 
     @Nested
-    @DisplayName("[existsById] ID로 그룹 존재 여부를 확인하는 메소드")
-    class Describe_existsById {
+    @DisplayName("[existsByName] 이름으로 그룹 존재 여부를 확인하는 메소드")
+    class Describe_existsByName {
 
         @Test
         @DisplayName("[success] 존재하는 그룹 ID인 경우 true를 반환한다")
@@ -636,7 +636,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id("existing-group")
                 .ownerEmail("owner@example.com")
-                .description("존재하는 그룹")
+                .name("존재하는 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -644,7 +644,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // when
-            boolean result = adapter.existsById("existing-group");
+            boolean result = adapter.existsByName("존재하는 그룹");
 
             // then
             assertThat(result).isTrue();
@@ -654,38 +654,10 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 존재하지 않는 그룹 ID인 경우 false를 반환한다")
         void success_notExists() {
             // when
-            boolean result = adapter.existsById("non-existent-group");
+            boolean result = adapter.existsByName("non-existent-group");
 
             // then
             assertThat(result).isFalse();
-        }
-
-        @Test
-        @DisplayName("[success] 여러 그룹 중 특정 ID만 확인한다")
-        void success_multipleGroups() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-            entityManager.persist(GroupEntity.builder()
-                .id("group-1")
-                .ownerEmail("owner1@example.com")
-                .description("그룹 1")
-                .regDt(now)
-                .build());
-
-            entityManager.persist(GroupEntity.builder()
-                .id("group-2")
-                .ownerEmail("owner2@example.com")
-                .description("그룹 2")
-                .regDt(now)
-                .build());
-
-            entityManager.flush();
-            entityManager.clear();
-
-            // when & then
-            assertThat(adapter.existsById("group-1")).isTrue();
-            assertThat(adapter.existsById("group-2")).isTrue();
-            assertThat(adapter.existsById("group-3")).isFalse();
         }
     }
 
@@ -701,21 +673,21 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(GroupEntity.builder()
                 .id("group-1")
                 .ownerEmail("owner1@example.com")
-                .description("그룹 1")
+                .name("그룹 1")
                 .regDt(now.minusDays(2))
                 .build());
 
             entityManager.persist(GroupEntity.builder()
                 .id("group-2")
                 .ownerEmail("owner2@example.com")
-                .description("그룹 2")
+                .name("그룹 2")
                 .regDt(now.minusDays(1))
                 .build());
 
             entityManager.persist(GroupEntity.builder()
                 .id("group-3")
                 .ownerEmail("owner3@example.com")
-                .description("그룹 3")
+                .name("그룹 3")
                 .regDt(now)
                 .build());
 
@@ -750,7 +722,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id("test-group")
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -785,7 +757,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(1);
             assertThat(result.get(0).getId()).isEqualTo("test-group");
             assertThat(result.get(0).getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(result.get(0).getDescription()).isEqualTo("테스트 그룹");
+            assertThat(result.get(0).getName()).isEqualTo("테스트 그룹");
             // findAll은 멤버 정보를 포함하지 않음
             assertThat(result.get(0).getGroupMembers()).isNull();
         }
@@ -805,7 +777,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -856,7 +828,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(groupId);
             assertThat(result.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(result.getDescription()).isEqualTo("테스트 그룹");
+            assertThat(result.getName()).isEqualTo("테스트 그룹");
             assertThat(result.getGroupMembers()).hasSize(2);
             assertThat(result.getGroupMembers())
                 .extracting(com.odcloud.domain.model.GroupAccount::getName)
@@ -873,7 +845,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("빈 그룹")
+                .name("빈 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -909,7 +881,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -959,7 +931,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -1017,7 +989,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("그룹 설명")
+                .name("그룹 설명")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -1101,7 +1073,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -1131,7 +1103,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);
@@ -1175,7 +1147,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group = GroupEntity.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .regDt(now)
                 .build();
             entityManager.persist(group);

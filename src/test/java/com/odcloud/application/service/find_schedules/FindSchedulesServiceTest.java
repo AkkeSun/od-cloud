@@ -3,7 +3,6 @@ package com.odcloud.application.service.find_schedules;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.port.in.command.FindSchedulesCommand;
-import com.odcloud.domain.dto.ScheduleDto;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;

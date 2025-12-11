@@ -324,14 +324,14 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity group1 = GroupEntity.builder()
                 .id("group-1")
                 .ownerEmail("owner@example.com")
-                .description("그룹 1")
+                .name("그룹 1")
                 .regDt(now)
                 .build();
 
             GroupEntity group2 = GroupEntity.builder()
                 .id("group-2")
                 .ownerEmail("owner@example.com")
-                .description("그룹 2")
+                .name("그룹 2")
                 .regDt(now)
                 .build();
 
@@ -393,14 +393,14 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             GroupEntity activeGroup = GroupEntity.builder()
                 .id("active-group")
                 .ownerEmail("owner@example.com")
-                .description("활성 그룹")
+                .name("활성 그룹")
                 .regDt(now)
                 .build();
 
             GroupEntity pendingGroup = GroupEntity.builder()
                 .id("pending-group")
                 .ownerEmail("owner@example.com")
-                .description("대기 그룹")
+                .name("대기 그룹")
                 .regDt(now)
                 .build();
 

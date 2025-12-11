@@ -58,37 +58,30 @@ class RegisterGroupServiceTest {
             fakeAccountStoragePort.database.add(owner);
 
             RegisterGroupCommand command = RegisterGroupCommand.builder()
-                .id("test-group")
                 .ownerEmail("owner@example.com")
-                .description("Test Group Description")
+                .name("Test Group Description")
                 .build();
 
             // when
-            RegisterGroupServiceResponse response = registerGroupService.register(command);
+            registerGroupService.register(command);
 
             // then
             assertThat(fakeGroupStoragePort.groupDatabase).hasSize(1);
-            assertThat(fakeGroupStoragePort.groupDatabase.get(0).getId()).isEqualTo("test-group");
             assertThat(fakeGroupStoragePort.groupDatabase.get(0).getOwnerEmail()).isEqualTo(
                 "owner@example.com");
-            assertThat(fakeGroupStoragePort.groupDatabase.get(0).getDescription()).isEqualTo(
+            assertThat(fakeGroupStoragePort.groupDatabase.get(0).getName()).isEqualTo(
                 "Test Group Description");
             assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
-            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getGroupId()).isEqualTo(
-                "test-group");
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getAccountId()).isEqualTo(
                 1L);
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "ACTIVE");
             assertThat(fakeFolderStoragePort.database).hasSize(1);
-            assertThat(fakeFolderStoragePort.database.get(0).getGroupId()).isEqualTo("test-group");
-            assertThat(fakeFolderStoragePort.database.get(0).getPath()).isEqualTo("/test-group");
             assertThat(fakeFileUploadPort.createdFolders).hasSize(1);
-            assertThat(fakeFileUploadPort.createdFolders.get(0)).isEqualTo("/test-group");
         }
 
         @Test
-        @DisplayName("[failure] 이미 존재하는 그룹 ID로 등록 시도하면 예외가 발생한다")
+        @DisplayName("[failure] 이미 존재하는 그룹명으로 등록 시도하면 예외가 발생한다")
         void failure_existingGroupId() {
             // given
             Account owner = Account.builder()
@@ -102,14 +95,13 @@ class RegisterGroupServiceTest {
             Group existingGroup = Group.builder()
                 .id("existing-group")
                 .ownerEmail("owner@example.com")
-                .description("Existing Group")
+                .name("Existing Group")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(existingGroup);
 
             RegisterGroupCommand command = RegisterGroupCommand.builder()
-                .id("existing-group")
                 .ownerEmail("owner@example.com")
-                .description("New Group")
+                .name("Existing Group")
                 .build();
 
             // when & then

@@ -49,7 +49,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 FindGroupsServiceResponse.GroupResponseItem.builder()
                     .id("group-1")
                     .ownerEmail("owner1@example.com")
-                    .description("Development Team")
+                    .name("Development Team")
                     .regDt("2024-01-01T12:00:00")
                     .build();
 
@@ -57,7 +57,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 FindGroupsServiceResponse.GroupResponseItem.builder()
                     .id("group-2")
                     .ownerEmail("owner2@example.com")
-                    .description("Marketing Team")
+                    .name("Marketing Team")
                     .regDt("2024-01-02T12:00:00")
                     .build();
 
@@ -65,7 +65,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 FindGroupsServiceResponse.GroupResponseItem.builder()
                     .id("group-3")
                     .ownerEmail("owner3@example.com")
-                    .description("Sales Team")
+                    .name("Sales Team")
                     .regDt("2024-01-03T12:00:00")
                     .build();
 
@@ -90,8 +90,8 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                     .type(JsonFieldType.STRING).description("그룹 ID"),
                 fieldWithPath("data.groups[].ownerEmail")
                     .type(JsonFieldType.STRING).description("그룹 소유자 이메일"),
-                fieldWithPath("data.groups[].description")
-                    .type(JsonFieldType.STRING).description("그룹 설명"),
+                fieldWithPath("data.groups[].name")
+                    .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.groups[].regDt")
                     .type(JsonFieldType.STRING).description("등록일시")
             );
@@ -105,7 +105,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 FindGroupsServiceResponse.GroupResponseItem.builder()
                     .id("group-1")
                     .ownerEmail("owner1@example.com")
-                    .description("개발팀")
+                    .name("개발팀")
                     .regDt("2024-01-01T12:00:00")
                     .build();
 
@@ -113,7 +113,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 FindGroupsServiceResponse.GroupResponseItem.builder()
                     .id("group-3")
                     .ownerEmail("owner3@example.com")
-                    .description("개발 지원팀")
+                    .name("개발 지원팀")
                     .regDt("2024-01-03T12:00:00")
                     .build();
 
@@ -138,8 +138,8 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                     .type(JsonFieldType.STRING).description("그룹 ID"),
                 fieldWithPath("data.groups[].ownerEmail")
                     .type(JsonFieldType.STRING).description("그룹 소유자 이메일"),
-                fieldWithPath("data.groups[].description")
-                    .type(JsonFieldType.STRING).description("그룹 설명"),
+                fieldWithPath("data.groups[].name")
+                    .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.groups[].regDt")
                     .type(JsonFieldType.STRING).description("등록일시")
             );

@@ -21,9 +21,8 @@ class GroupTest {
         void success() {
             // given
             RegisterGroupCommand command = new RegisterGroupCommand(
-                "group-123",
-                "owner@example.com",
-                "테스트 그룹"
+                "테스트 그룹",
+                "owner@example.com"
             );
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
@@ -35,9 +34,8 @@ class GroupTest {
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
             assertThat(group).isNotNull();
-            assertThat(group.getId()).isEqualTo("group-123");
             assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(group.getDescription()).isEqualTo("테스트 그룹");
+            assertThat(group.getName()).isEqualTo("테스트 그룹");
             assertThat(group.getRegDt()).isAfter(before);
             assertThat(group.getRegDt()).isBefore(after);
         }
@@ -48,7 +46,6 @@ class GroupTest {
             // given
             RegisterGroupCommand command = new RegisterGroupCommand(
                 null,
-                null,
                 null
             );
 
@@ -57,9 +54,8 @@ class GroupTest {
 
             // then
             assertThat(group).isNotNull();
-            assertThat(group.getId()).isNull();
             assertThat(group.getOwnerEmail()).isNull();
-            assertThat(group.getDescription()).isNull();
+            assertThat(group.getName()).isNull();
         }
 
         @Test
@@ -67,7 +63,6 @@ class GroupTest {
         void success_emptyStrings() {
             // given
             RegisterGroupCommand command = new RegisterGroupCommand(
-                "",
                 "",
                 ""
             );
@@ -77,9 +72,8 @@ class GroupTest {
 
             // then
             assertThat(group).isNotNull();
-            assertThat(group.getId()).isEmpty();
             assertThat(group.getOwnerEmail()).isEmpty();
-            assertThat(group.getDescription()).isEmpty();
+            assertThat(group.getName()).isEmpty();
         }
     }
 
@@ -98,9 +92,8 @@ class GroupTest {
 
             // then
             assertThat(group).isNotNull();
-            assertThat(group.getId()).isEqualTo("group-123");
             assertThat(group.getOwnerEmail()).isNull();
-            assertThat(group.getDescription()).isNull();
+            assertThat(group.getName()).isNull();
             assertThat(group.getGroupMembers()).isNull();
             assertThat(group.getRegDt()).isNull();
         }
@@ -226,11 +219,11 @@ class GroupTest {
         void success_getDescription() {
             // given
             Group group = Group.builder()
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
 
             // when
-            String description = group.getDescription();
+            String description = group.getName();
 
             // then
             assertThat(description).isEqualTo("테스트 그룹");
@@ -288,38 +281,6 @@ class GroupTest {
     }
 
     @Nested
-    @DisplayName("[allArgsConstructor] AllArgsConstructor 테스트")
-    class Describe_allArgsConstructor {
-
-        @Test
-        @DisplayName("[success] AllArgsConstructor로 Group을 생성한다")
-        void success() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-            List<GroupAccount> groupMembers = Arrays.asList(
-                GroupAccount.builder().id(1L).build()
-            );
-
-            // when
-            Group group = new Group(
-                "group-123",
-                "owner@example.com",
-                "테스트 그룹",
-                groupMembers,
-                now
-            );
-
-            // then
-            assertThat(group).isNotNull();
-            assertThat(group.getId()).isEqualTo("group-123");
-            assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(group.getDescription()).isEqualTo("테스트 그룹");
-            assertThat(group.getGroupMembers()).hasSize(1);
-            assertThat(group.getRegDt()).isEqualTo(now);
-        }
-    }
-
-    @Nested
     @DisplayName("[customConstructor] Custom Constructor 테스트")
     class Describe_customConstructor {
 
@@ -341,7 +302,7 @@ class GroupTest {
             assertThat(group).isNotNull();
             assertThat(group.getId()).isEqualTo("group-123");
             assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(group.getDescription()).isEqualTo("테스트 그룹");
+            assertThat(group.getName()).isEqualTo("테스트 그룹");
             assertThat(group.getRegDt()).isEqualTo(now);
             assertThat(group.getGroupMembers()).isNull();
         }
@@ -356,7 +317,7 @@ class GroupTest {
             assertThat(group).isNotNull();
             assertThat(group.getId()).isNull();
             assertThat(group.getOwnerEmail()).isNull();
-            assertThat(group.getDescription()).isNull();
+            assertThat(group.getName()).isNull();
             assertThat(group.getRegDt()).isNull();
         }
     }

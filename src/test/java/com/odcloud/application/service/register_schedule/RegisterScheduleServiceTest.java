@@ -109,7 +109,7 @@ class RegisterScheduleServiceTest {
             Group group = Group.builder()
                 .id("group-123")
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
 
             Account account = Account.builder()
@@ -149,7 +149,7 @@ class RegisterScheduleServiceTest {
             Group group = Group.builder()
                 .id("group-123")
                 .ownerEmail("owner@example.com")
-                .description("테스트 그룹")
+                .name("테스트 그룹")
                 .build();
 
             Account account = Account.builder()
