@@ -52,6 +52,13 @@ public class Group {
             .build();
     }
 
+    public static Group ofIdAndName(String id, String name) {
+        return Group.builder()
+            .id(id)
+            .name(name)
+            .build();
+    }
+
     public void updateGroupMembers(List<GroupAccount> groupMembers) {
         this.groupMembers = groupMembers;
     }

@@ -27,7 +27,10 @@ class AccountTest {
             Claims claims = mock(Claims.class);
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1L);
-            when(claims.get("groups")).thenReturn(Arrays.asList("group-1", "group-2"));
+            when(claims.get("groups")).thenReturn(Arrays.asList(
+                java.util.Map.of("id", "group-1", "name", "그룹1"),
+                java.util.Map.of("id", "group-2", "name", "그룹2")
+            ));
             when(claims.get("nickname")).thenReturn("nickname");
             when(claims.get("picture")).thenReturn("picture");
 
@@ -40,7 +43,9 @@ class AccountTest {
             assertThat(account.getId()).isEqualTo(1L);
             assertThat(account.getGroups()).hasSize(2);
             assertThat(account.getGroups().get(0).getId()).isEqualTo("group-1");
+            assertThat(account.getGroups().get(0).getName()).isEqualTo("그룹1");
             assertThat(account.getGroups().get(1).getId()).isEqualTo("group-2");
+            assertThat(account.getGroups().get(1).getName()).isEqualTo("그룹2");
         }
 
         @Test
@@ -50,7 +55,9 @@ class AccountTest {
             Claims claims = mock(Claims.class);
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1);
-            when(claims.get("groups")).thenReturn(Arrays.asList("group-1"));
+            when(claims.get("groups")).thenReturn(Arrays.asList(
+                java.util.Map.of("id", "group-1", "name", "그룹1")
+            ));
             when(claims.get("nickname")).thenReturn("nickname");
             when(claims.get("picture")).thenReturn("picture");
 
