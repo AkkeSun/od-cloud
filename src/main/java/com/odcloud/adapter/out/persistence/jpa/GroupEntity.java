@@ -23,11 +23,11 @@ class GroupEntity {
     @Column(name = "ID")
     private String id;
 
+    @Column(name = "NAME")
+    private String name;
+
     @Column(name = "OWNER_EMAIL")
     private String ownerEmail;
-
-    @Column(name = "DESCRIPTION")
-    private String description;
 
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
@@ -36,7 +36,7 @@ class GroupEntity {
         return GroupEntity.builder()
             .id(group.getId())
             .ownerEmail(group.getOwnerEmail())
-            .description(group.getDescription())
+            .name(group.getName())
             .regDt(group.getRegDt())
             .build();
     }
