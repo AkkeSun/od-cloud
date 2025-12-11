@@ -8,18 +8,14 @@ import lombok.Builder;
 
 @Builder
 record RegisterGroupRequest(
-    @NotBlank(message = "그룹 아이디는 필수값 입니다")
-    String id,
-
-    @NotBlank(message = "그룹 설명은 필수값 입니다")
-    String description
+    @NotBlank(message = "그룹 이름은 필수값 입니다")
+    String name
 ) {
 
     RegisterGroupCommand toCommand(Account account) {
         return RegisterGroupCommand.builder()
-            .id(id)
             .ownerEmail(account.getEmail())
-            .description(description)
+            .name(name)
             .build();
     }
 
