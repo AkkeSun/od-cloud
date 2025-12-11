@@ -29,7 +29,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
     @Override
     @Transactional
     public RegisterGroupServiceResponse register(RegisterGroupCommand command) {
-        if (groupStoragePort.existsById(command.id())) {
+        if (groupStoragePort.existsByName(command.name())) {
             throw new CustomBusinessException(Business_SAVED_GROUP);
         }
 
@@ -39,7 +39,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
         Account account = accountStoragePort.findByEmail(command.ownerEmail());
         groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
 
-        FolderInfo folder = FolderInfo.ofRootFolder(command);
+        FolderInfo folder = FolderInfo.ofRootFolder(group);
         folderStoragePort.save(folder);
         fileUploadPort.createFolder(folder.getPath());
 

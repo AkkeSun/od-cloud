@@ -59,7 +59,7 @@ class AccountRepository {
                 Group.class,
                 groupEntity.id,
                 groupEntity.ownerEmail,
-                groupEntity.description,
+                groupEntity.name,
                 groupEntity.regDt))
             .from(groupEntity)
             .innerJoin(groupAccountEntity)

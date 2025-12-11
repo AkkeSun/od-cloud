@@ -54,7 +54,7 @@ public record MailRequest(
                     + "    </div>\n"
                     + "  </body>\n"
                     + "</html>\n",
-                group.getDescription(), requester.getName(), requester.getEmail()))
+                group.getName(), requester.getName(), requester.getEmail()))
             .toList(List.of(group.getOwnerEmail()))
             .fileList(List.of())
             .build();

@@ -1,7 +1,6 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
-import com.odcloud.application.port.in.command.RegisterGroupCommand;
 import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,13 +26,13 @@ public class FolderInfo {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public static FolderInfo ofRootFolder(RegisterGroupCommand command) {
+    public static FolderInfo ofRootFolder(Group group) {
         return FolderInfo.builder()
             .parentId(null)
-            .groupId(command.id())
-            .name(command.description())
-            .owner(command.ownerEmail())
-            .path("/" + command.id())
+            .groupId(group.getId())
+            .name(group.getName())
+            .owner(group.getOwnerEmail())
+            .path("/" + group.getId())
             .accessLevel("PUBLIC")
             .regDt(LocalDateTime.now())
             .build();

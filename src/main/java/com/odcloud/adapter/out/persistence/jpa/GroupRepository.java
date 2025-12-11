@@ -43,10 +43,10 @@ class GroupRepository {
         }
     }
 
-    boolean existsById(String id) {
+    boolean existsByName(String name) {
         return queryFactory.selectOne()
             .from(groupEntity)
-            .where(groupEntity.id.eq(id))
+            .where(groupEntity.name.eq(name))
             .fetchOne() != null;
     }
 
@@ -56,7 +56,7 @@ class GroupRepository {
                 Group.class,
                 groupEntity.id,
                 groupEntity.ownerEmail,
-                groupEntity.description,
+                groupEntity.name,
                 groupEntity.regDt
             ))
             .from(groupEntity)
@@ -98,7 +98,7 @@ class GroupRepository {
                 Group.class,
                 groupEntity.id,
                 groupEntity.ownerEmail,
-                groupEntity.description,
+                groupEntity.name,
                 groupEntity.regDt
             ))
             .from(groupEntity)
@@ -111,11 +111,11 @@ class GroupRepository {
                 Group.class,
                 groupEntity.id,
                 groupEntity.ownerEmail,
-                groupEntity.description,
+                groupEntity.name,
                 groupEntity.regDt
             ))
             .from(groupEntity)
-            .where(groupEntity.description.like("%" + keyword + "%"))
+            .where(groupEntity.name.like("%" + keyword + "%"))
             .fetch();
     }
 
@@ -151,7 +151,7 @@ class GroupRepository {
                 groupAccountEntity.id,
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
-                groupEntity.description,
+                groupEntity.name,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,

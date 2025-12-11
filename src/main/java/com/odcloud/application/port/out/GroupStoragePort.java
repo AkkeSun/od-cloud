@@ -11,7 +11,7 @@ public interface GroupStoragePort {
 
     void save(GroupAccount groupAccount);
 
-    boolean existsById(String id);
+    boolean existsByName(String name);
 
     List<Group> findAll();
 

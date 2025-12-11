@@ -29,8 +29,8 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return queryDsl.existsById(id);
+    public boolean existsByName(String name) {
+        return queryDsl.existsByName(name);
     }
 
     @Override

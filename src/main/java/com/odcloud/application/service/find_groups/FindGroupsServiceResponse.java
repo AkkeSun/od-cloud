@@ -2,7 +2,6 @@ package com.odcloud.application.service.find_groups;
 
 import com.odcloud.domain.model.Group;
 import java.util.List;
-import java.util.Map;
 import lombok.Builder;
 
 @Builder
@@ -21,16 +20,16 @@ public record FindGroupsServiceResponse(
     @Builder
     public record GroupResponseItem(
         String id,
+        String name,
         String ownerEmail,
-        String description,
         String regDt
     ) {
 
         public static GroupResponseItem of(Group group) {
             return GroupResponseItem.builder()
                 .id(group.getId())
+                .name(group.getName())
                 .ownerEmail(group.getOwnerEmail())
-                .description(group.getDescription())
                 .regDt(group.getRegDt() != null ? group.getRegDt().toString() : null)
                 .build();
         }

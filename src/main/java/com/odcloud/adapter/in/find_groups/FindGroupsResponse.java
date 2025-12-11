@@ -20,15 +20,15 @@ record FindGroupsResponse(
     @Builder
     record GroupResponse(
         String id,
+        String name,
         String ownerEmail,
-        String description,
         String regDt
     ) {
         public static GroupResponse of(FindGroupsServiceResponse.GroupResponseItem item) {
             return GroupResponse.builder()
                 .id(item.id())
+                .name(item.name())
                 .ownerEmail(item.ownerEmail())
-                .description(item.description())
                 .regDt(item.regDt())
                 .build();
         }
