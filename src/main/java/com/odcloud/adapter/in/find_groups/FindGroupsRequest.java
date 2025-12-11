@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.find_groups;
 
 import com.odcloud.application.port.in.command.FindGroupsCommand;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +21,6 @@ public class FindGroupsRequest {
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

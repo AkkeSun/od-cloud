@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.delete_file;
 
 import com.odcloud.application.port.in.command.DeleteFileCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.Builder;
@@ -22,6 +22,6 @@ record DeleteFileRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

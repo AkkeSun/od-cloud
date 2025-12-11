@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.update_account;
 
 import com.odcloud.application.port.in.command.UpdateAccountCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.FileType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +31,6 @@ class UpdateAccountRequest {
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

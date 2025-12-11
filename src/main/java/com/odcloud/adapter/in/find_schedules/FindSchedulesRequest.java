@@ -3,7 +3,7 @@ package com.odcloud.adapter.in.find_schedules;
 import com.odcloud.application.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.DatePattern;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import java.time.LocalDate;
@@ -33,6 +33,6 @@ class FindSchedulesRequest{
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

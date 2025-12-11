@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.find_files;
 
 import com.odcloud.application.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.Contains;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +38,6 @@ public class FindFilesRequest {
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.register_folder;
 
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.Contains;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
@@ -41,6 +41,6 @@ record RegisterFolderRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

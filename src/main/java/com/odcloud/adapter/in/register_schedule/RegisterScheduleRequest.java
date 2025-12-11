@@ -3,7 +3,7 @@ package com.odcloud.adapter.in.register_schedule;
 import com.odcloud.application.port.in.command.RegisterScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.DateTimePattern;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
@@ -43,6 +43,6 @@ record RegisterScheduleRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

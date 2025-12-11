@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.register_question;
 
 import com.odcloud.application.port.in.command.RegisterQuestionCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -26,6 +26,6 @@ record RegisterQuestionRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.download_files;
 
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,6 @@ public class DownloadFilesRequest {
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

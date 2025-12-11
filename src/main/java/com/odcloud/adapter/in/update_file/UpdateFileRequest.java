@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.update_file;
 
 import com.odcloud.application.port.in.command.UpdateFileCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import lombok.Builder;
 
 @Builder
@@ -24,6 +24,6 @@ record UpdateFileRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

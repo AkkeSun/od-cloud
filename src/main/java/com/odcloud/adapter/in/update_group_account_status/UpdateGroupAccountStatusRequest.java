@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.update_group_account_status;
 
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Account;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.Contains;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
@@ -32,6 +32,6 @@ record UpdateGroupAccountStatusRequest(
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }

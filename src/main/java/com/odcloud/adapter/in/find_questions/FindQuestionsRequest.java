@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.find_questions;
 
 import com.odcloud.application.port.in.command.FindQuestionsCommand;
-import com.odcloud.infrastructure.util.ToStringUtil;
+import com.odcloud.infrastructure.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +26,6 @@ class FindQuestionsRequest {
 
     @Override
     public String toString() {
-        return ToStringUtil.toString(this);
+        return StringUtil.toString(this);
     }
 }
