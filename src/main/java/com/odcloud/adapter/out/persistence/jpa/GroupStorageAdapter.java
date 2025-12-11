@@ -19,8 +19,8 @@ class GroupStorageAdapter implements GroupStoragePort {
     private final GroupRepository queryDsl;
 
     @Override
-    public void save(Group group) {
-        queryDsl.save(group);
+    public Group save(Group group) {
+        return queryDsl.save(group);
     }
 
     @Override

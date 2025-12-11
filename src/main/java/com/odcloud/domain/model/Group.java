@@ -37,6 +37,15 @@ public class Group {
             .build();
     }
 
+    public static Group of(String name, String ownerEmail) {
+        return Group.builder()
+            .id(StringUtil.generateRandomString(6))
+            .name(name)
+            .ownerEmail(ownerEmail)
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
     public static Group of(String id) {
         return Group.builder()
             .id(id)

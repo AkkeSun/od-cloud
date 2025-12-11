@@ -26,12 +26,14 @@ class GroupRepository {
     private final EntityManager entityManager;
 
     @Transactional
-    void save(Group group) {
+    Group save(Group group) {
+        GroupEntity entity = GroupEntity.of(group);
         if (group.getId() == null) {
-            entityManager.persist(GroupEntity.of(group));
+            entityManager.persist(entity);
         } else {
-            entityManager.merge(GroupEntity.of(group));
+            entityManager.merge(entity);
         }
+        return entity.toDomain();
     }
 
     @Transactional

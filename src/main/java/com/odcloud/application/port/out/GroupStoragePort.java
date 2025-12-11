@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GroupStoragePort {
 
-    void save(Group group);
+    Group save(Group group);
 
     void save(GroupAccount groupAccount);
 

@@ -40,4 +40,13 @@ class GroupEntity {
             .regDt(group.getRegDt())
             .build();
     }
+
+    public Group toDomain() {
+        return Group.builder()
+            .id(id)
+            .ownerEmail(ownerEmail)
+            .name(name)
+            .regDt(regDt)
+            .build();
+    }
 }
