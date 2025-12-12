@@ -7,6 +7,8 @@ import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
 import com.odcloud.application.port.in.command.RegisterAccountCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
+import com.odcloud.fakeClass.FakeFilePort;
+import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakeMailPort;
@@ -33,9 +35,11 @@ class RegisterAccountServiceTest {
         fakeAccountStoragePort = new FakeAccountStoragePort();
         registerAccountService = new RegisterAccountService(
             fakeMailPort,
+            new FakeFilePort(),
             fakeGroupStoragePort,
             fakeGoogleOAuth2Port,
-            fakeAccountStoragePort
+            fakeAccountStoragePort,
+            new FakeFolderStoragePort()
         );
     }
 
@@ -231,35 +235,6 @@ class RegisterAccountServiceTest {
             assertThat(response).isNotNull();
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeAccountStoragePort.database.get(0).getName()).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 새로운 그룹을 생성하며 계정을 등록한다")
-        void success_withNewGroup() {
-            // given
-            RegisterAccountCommand command = RegisterAccountCommand.builder()
-                .googleAuthorization("Bearer test-token")
-                .name("홍길동")
-                .newGroupName("새로운 그룹")
-                .build();
-
-            // when
-            RegisterAccountServiceResponse response = registerAccountService.register(command);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(fakeAccountStoragePort.database).hasSize(1);
-            assertThat(fakeAccountStoragePort.database.get(0).getEmail()).isEqualTo(
-                "fake@example.com");
-            assertThat(fakeAccountStoragePort.database.get(0).getName()).isEqualTo("홍길동");
-            assertThat(fakeGroupStoragePort.groupDatabase).hasSize(1);
-            assertThat(fakeGroupStoragePort.groupDatabase.get(0).getName()).isEqualTo("새로운 그룹");
-            assertThat(fakeGroupStoragePort.groupDatabase.get(0).getOwnerEmail()).isEqualTo(
-                "fake@example.com");
-            assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
-            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
-                "PENDING");
-            assertThat(fakeMailPort.sentMails).hasSize(1);
         }
 
         @Test

@@ -8,10 +8,13 @@ import com.odcloud.adapter.out.mail.MailRequest;
 import com.odcloud.application.port.in.RegisterAccountUseCase;
 import com.odcloud.application.port.in.command.RegisterAccountCommand;
 import com.odcloud.application.port.out.AccountStoragePort;
+import com.odcloud.application.port.out.FilePort;
+import com.odcloud.application.port.out.FolderInfoStoragePort;
 import com.odcloud.application.port.out.GoogleOAuth2Port;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.application.port.out.MailPort;
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -25,9 +28,11 @@ import org.springframework.util.StringUtils;
 class RegisterAccountService implements RegisterAccountUseCase {
 
     private final MailPort mailPort;
+    private final FilePort filePort;
     private final GroupStoragePort groupStoragePort;
     private final GoogleOAuth2Port googleOAuth2Port;
     private final AccountStoragePort accountStoragePort;
+    private final FolderInfoStoragePort folderInfoStoragePort;
 
     @Override
     @Transactional
@@ -44,6 +49,10 @@ class RegisterAccountService implements RegisterAccountUseCase {
             }
             Group group = groupStoragePort.save(Group.of(command.newGroupName(), info.email()));
             groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
+
+            FolderInfo folder = FolderInfo.ofRootFolder(group);
+            folderInfoStoragePort.save(folder);
+            filePort.createFolder(folder.getPath());
 
         } else {
             Group group = groupStoragePort.findById(command.groupId());
