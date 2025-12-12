@@ -19,6 +19,8 @@ public interface GroupStoragePort {
 
     List<GroupAccount> findGroupAccountsByGroupId(String groupId);
 
+    List<GroupAccount> findGroupAccountsByAccountId(Long accountId);
+
     Group findById(String id);
 
     GroupAccount findGroupAccountByGroupIdAndAccountId(UpdateGroupAccountStatusCommand command);

@@ -1,0 +1,45 @@
+package com.odcloud.application.service.find_group_self;
+
+import com.odcloud.application.port.in.FindGroupSelfUseCase;
+import com.odcloud.application.port.out.GroupStoragePort;
+import com.odcloud.application.service.find_group_self.FindGroupSelfServiceResponse.ActiveGroupInfo;
+import com.odcloud.application.service.find_group_self.FindGroupSelfServiceResponse.PendingGroupInfo;
+import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+class FindGroupSelfService implements FindGroupSelfUseCase {
+
+    private final GroupStoragePort groupStoragePort;
+
+    @Override
+    @Transactional(readOnly = true)
+    public FindGroupSelfServiceResponse findSelf(Account account) {
+        List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByAccountId(
+            account.getId());
+
+        List<ActiveGroupInfo> activeGroups = groupAccounts.stream()
+            .filter(ga -> "ACTIVE".equals(ga.getStatus()))
+            .map(ga -> {
+                Group group = groupStoragePort.findById(ga.getGroupId());
+                return ActiveGroupInfo.of(group);
+            })
+            .toList();
+
+        List<PendingGroupInfo> pendingGroups = groupAccounts.stream()
+            .filter(ga -> "PENDING".equals(ga.getStatus()))
+            .map(ga -> {
+                Group group = groupStoragePort.findById(ga.getGroupId());
+                return PendingGroupInfo.of(group);
+            })
+            .toList();
+
+        return FindGroupSelfServiceResponse.of(activeGroups, pendingGroups);
+    }
+}

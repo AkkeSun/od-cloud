@@ -49,6 +49,11 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public List<GroupAccount> findGroupAccountsByAccountId(Long accountId) {
+        return queryDsl.findGroupAccountsByAccountId(accountId);
+    }
+
+    @Override
     public Group findById(String id) {
         return queryDsl.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP));
