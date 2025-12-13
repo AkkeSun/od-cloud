@@ -94,7 +94,6 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
             .groupId(groupId)
             .content(content)
             .startDt(startDt)
-            .endDt(startDt.plusHours(1))
             .notificationDt(LocalDateTime.now())
             .notificationYn("N")
             .modDt(null)
@@ -150,8 +149,6 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
                             .description("일정 내용"),
                         fieldWithPath("data.schedules[].startDt").type(JsonFieldType.STRING)
                             .description("시작일시"),
-                        fieldWithPath("data.schedules[].endDt").type(JsonFieldType.STRING)
-                            .description("종료일시"),
                         fieldWithPath("data.schedules[].notificationDt").type(JsonFieldType.STRING)
                             .description("알림일시")
                     )

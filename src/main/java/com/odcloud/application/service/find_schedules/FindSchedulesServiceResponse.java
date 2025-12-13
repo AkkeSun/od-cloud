@@ -25,7 +25,6 @@ public record FindSchedulesServiceResponse(
         String groupId,
         String content,
         LocalDateTime startDt,
-        LocalDateTime endDt,
         LocalDateTime notificationDt
     ){
 
@@ -36,7 +35,6 @@ public record FindSchedulesServiceResponse(
                 .groupId(schedule.getGroupId())
                 .content(schedule.getContent())
                 .startDt(schedule.getStartDt())
-                .endDt(schedule.getEndDt())
                 .notificationDt(schedule.getNotificationDt())
                 .build();
         }

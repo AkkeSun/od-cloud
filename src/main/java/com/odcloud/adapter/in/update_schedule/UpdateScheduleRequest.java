@@ -21,10 +21,6 @@ record UpdateScheduleRequest(
     @DateTimePattern(message = "유효하지 않은 시작일시 형식 입니다", groups = CustomGroups.class)
     String startDt,
 
-    @NotNull(message = "종료일시는 필수값입니다", groups = NotBlankGroups.class)
-    @DateTimePattern(message = "유효하지 않은 종료일시 형식 입니다", groups = CustomGroups.class)
-    String endDt,
-
     String notificationDt
 ) {
 
@@ -34,7 +30,6 @@ record UpdateScheduleRequest(
             .account(account)
             .content(content)
             .startDt(DateUtil.parse(startDt))
-            .endDt(DateUtil.parse(endDt))
             .notificationDt(notificationDt == null ? null : DateUtil.parse(notificationDt))
             .build();
     }

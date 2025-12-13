@@ -1873,7 +1873,7 @@ paths:
         (닉네임, 이메일), 활성 사용자 수, 내가 매니저인지 여부를 포함합니다.<br>- 대기중인 그룹: 그룹명, 활성 사용자 수, 내가\
         \ 매니저인지 여부만 포함합니다.<br>- 구성원 목록은 ACTIVE 상태이며 매니저를 제외한 멤버들입니다.<br>- 매니저인 그룹이\
         \ 목록의 앞쪽에 정렬됩니다.<br>- 인증 토큰(JWT)이 필수입니다."
-      operationId: "[현재 사용자의 그룹 정보 조회 API] "
+      operationId: "[현재 사용자의 그룹 정보 조회 API] 현재 사용자의 그룹 정보 조회 성공"
       parameters:
       - name: Authorization
         in: header
@@ -1888,18 +1888,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/[response] success_empty"
+                $ref: "#/components/schemas/[response] success"
               examples:
-                '[현재 사용자의 그룹 정보 조회 API] 사용자가 속한 그룹이 없는 경우':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "activeGroups" : [ ],
-                        "pendingGroups" : [ ]
-                      }
-                    }
                 '[현재 사용자의 그룹 정보 조회 API] 현재 사용자의 그룹 정보 조회 성공':
                   value: |-
                     {
@@ -2394,16 +2384,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "endDt" : "2025-01-05T11:00:00",
-                          "notificationDt" : "2025-12-13T11:01:34.324749"
+                          "notificationDt" : "2025-12-13T18:00:32.91664"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "endDt" : "2025-01-15T15:00:00",
-                          "notificationDt" : "2025-12-13T11:01:34.324767"
+                          "notificationDt" : "2025-12-13T18:00:32.916661"
                         } ]
                       }
                     }
@@ -2466,7 +2454,6 @@ paths:
                   {
                     "content" : "개인 회의",
                     "startDt" : "2025/01/01 10:00:00",
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : null,
                     "notificationDt" : null
                   }
@@ -2475,7 +2462,6 @@ paths:
                   {
                     "content" : "개인 회의",
                     "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : null,
                     "notificationDt" : null
                   }
@@ -2484,34 +2470,14 @@ paths:
                   {
                     "content" : "개인 회의",
                     "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : null,
                     "notificationDt" : "2025-01-01 09:50:00"
-                  }
-              '[스케줄 등록 API] 유효하지 않은 종료일시 형식':
-                value: |-
-                  {
-                    "content" : "개인 회의",
-                    "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : "invalid-date",
-                    "groupId" : null,
-                    "notificationDt" : null
-                  }
-              '[스케줄 등록 API] 종료일시 미입력':
-                value: |-
-                  {
-                    "content" : "개인 회의",
-                    "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : null,
-                    "groupId" : null,
-                    "notificationDt" : null
                   }
               '[스케줄 등록 API] 그룹 접근 권한 없음':
                 value: |-
                   {
                     "content" : "그룹 회의",
                     "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : "other-group",
                     "notificationDt" : null
                   }
@@ -2520,7 +2486,6 @@ paths:
                   {
                     "content" : null,
                     "startDt" : "2025-01-01 10:00:00",
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : null,
                     "notificationDt" : null
                   }
@@ -2529,7 +2494,6 @@ paths:
                   {
                     "content" : "개인 회의",
                     "startDt" : null,
-                    "endDt" : "2025-01-01 11:00:00",
                     "groupId" : null,
                     "notificationDt" : null
                   }
@@ -2549,26 +2513,6 @@ paths:
                       "data" : {
                         "errorCode" : 1099,
                         "errorMessage" : "유효하지 않은 사직알시 형식 입니다"
-                      }
-                    }
-                '[스케줄 등록 API] 유효하지 않은 종료일시 형식':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "유효하지 않은 종료일시 형식 입니다"
-                      }
-                    }
-                '[스케줄 등록 API] 종료일시 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "종료일시는 필수값입니다"
                       }
                     }
                 '[스케줄 등록 API] 스케줄 내용 미입력':
@@ -2754,7 +2698,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : "2025-01-02 13:50:00"
                   }
               '[스케줄 수정 API] success_알림시간_없이_수정':
@@ -2762,7 +2705,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 그룹 접근 권한 없음':
@@ -2770,7 +2712,6 @@ paths:
                   {
                     "content" : "수정된 그룹 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 유효하지 않은 시작일시 형식':
@@ -2778,7 +2719,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025/01/02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
@@ -2786,7 +2726,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 스케줄 내용 미입력':
@@ -2794,7 +2733,6 @@ paths:
                   {
                     "content" : null,
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 존재하지 않는 스케줄':
@@ -2802,15 +2740,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
-                    "notificationDt" : null
-                  }
-              '[스케줄 수정 API] 유효하지 않은 종료일시 형식':
-                value: |-
-                  {
-                    "content" : "수정된 회의",
-                    "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "invalid-date",
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 다른 사용자 스케줄 수정 권한 없음':
@@ -2818,15 +2747,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : "2025-01-02 15:00:00",
-                    "notificationDt" : null
-                  }
-              '[스케줄 수정 API] 종료일시 미입력':
-                value: |-
-                  {
-                    "content" : "수정된 회의",
-                    "startDt" : "2025-01-02 14:00:00",
-                    "endDt" : null,
                     "notificationDt" : null
                   }
               '[스케줄 수정 API] 시작일시 미입력':
@@ -2834,7 +2754,6 @@ paths:
                   {
                     "content" : "수정된 회의",
                     "startDt" : null,
-                    "endDt" : "2025-01-02 15:00:00",
                     "notificationDt" : null
                   }
       responses:
@@ -2917,26 +2836,6 @@ paths:
                         "errorMessage" : "내용은 필수값입니다"
                       }
                     }
-                '[스케줄 수정 API] 유효하지 않은 종료일시 형식':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "유효하지 않은 종료일시 형식 입니다"
-                      }
-                    }
-                '[스케줄 수정 API] 종료일시 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "종료일시는 필수값입니다"
-                      }
-                    }
                 '[스케줄 수정 API] 시작일시 미입력':
                   value: |-
                     {
@@ -3006,6 +2905,29 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 스케줄 수정 API':
+      title: "[request] 스케줄 수정 API"
+      required:
+      - content
+      - notificationDt
+      - startDt
+      type: object
+      properties:
+        notificationDt:
+          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
+          oneOf:
+          - null
+          - type: string
+        startDt:
+          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - null
+          - type: string
+        content:
+          description: 스케줄 내용
+          oneOf:
+          - type: string
+          - null
     '[request] 폴더 등록 API':
       title: "[request] 폴더 등록 API"
       required:
@@ -3058,85 +2980,6 @@ components:
           oneOf:
           - type: string
           - null
-    '[response] success_empty':
-      title: "[response] success_empty"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - activeGroups
-          - pendingGroups
-          type: object
-          properties:
-            activeGroups:
-              type: array
-              description: 가입된 그룹 목록
-              items:
-                required:
-                - activeMemberCount
-                - members
-                - name
-                type: object
-                properties:
-                  manager:
-                    type: object
-                    properties:
-                      nickname:
-                        type: string
-                        description: 매니저 닉네임
-                        nullable: true
-                      email:
-                        type: string
-                        description: 매니저 이메일
-                        nullable: true
-                    description: 매니저 정보
-                  members:
-                    type: array
-                    description: 구성원 목록 (매니저 제외)
-                    items:
-                      required:
-                      - email
-                      - nickname
-                      type: object
-                      properties:
-                        nickname:
-                          type: string
-                          description: 구성원 닉네임
-                        email:
-                          type: string
-                          description: 구성원 이메일
-                  name:
-                    type: string
-                    description: 그룹명
-                  activeMemberCount:
-                    type: number
-                    description: 활성 사용자 수
-            pendingGroups:
-              type: array
-              description: 가입 대기중인 그룹 목록
-              items:
-                required:
-                - activeMemberCount
-                - name
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 그룹명
-                  activeMemberCount:
-                    type: number
-                    description: 활성 사용자 수
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
     '[request] 그룹 등록 API':
       title: "[request] 그룹 등록 API"
       required:
@@ -3148,25 +2991,25 @@ components:
           oneOf:
           - null
           - type: string
-    '[request] 스케줄 수정 API':
-      title: "[request] 스케줄 수정 API"
+    '[request] 스케줄 등록 API':
+      title: "[request] 스케줄 등록 API"
       required:
       - content
-      - endDt
+      - groupId
       - notificationDt
       - startDt
       type: object
       properties:
+        groupId:
+          description: 그룹 ID (선택)
+          oneOf:
+          - null
+          - type: string
         notificationDt:
           description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
           oneOf:
           - null
           - type: string
-        endDt:
-          description: 종료일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - type: string
-          - null
         startDt:
           description: 시작일시 (yyyy-MM-dd HH:mm:ss)
           oneOf:
@@ -3445,41 +3288,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[request] 스케줄 등록 API':
-      title: "[request] 스케줄 등록 API"
-      required:
-      - content
-      - endDt
-      - groupId
-      - notificationDt
-      - startDt
-      type: object
-      properties:
-        groupId:
-          description: 그룹 ID (선택)
-          oneOf:
-          - null
-          - type: string
-        notificationDt:
-          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
-          oneOf:
-          - null
-          - type: string
-        endDt:
-          description: 종료일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - type: string
-          - null
-        startDt:
-          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - null
-          - type: string
-        content:
-          description: 스케줄 내용
-          oneOf:
-          - type: string
-          - null
     RegisterQuestionResponse:
       title: RegisterQuestionResponse
       required:

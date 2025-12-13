@@ -50,7 +50,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
             String authorization = "error token";
             given(useCase.register(any())).willThrow(
@@ -68,7 +67,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
@@ -96,7 +94,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             // given
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when & then
@@ -109,24 +106,10 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             // given
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when & then
             performErrorDocument(request, "Bearer test", status().isBadRequest(), "시작일시 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] 종료일시를 입력하지 않은 경우 400 에러를 반환한다")
-        void error_endDtIsNull() throws Exception {
-            // given
-            RegisterScheduleRequest request = RegisterScheduleRequest.builder()
-                .content("개인 회의")
-                .startDt("2025-01-01 10:00:00")
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(), "종료일시 미입력");
         }
 
         @Test
@@ -136,25 +119,10 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025/01/01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when & then
             performErrorDocument(request, "Bearer test", status().isBadRequest(), "유효하지 않은 시작일시 형식");
-        }
-
-        @Test
-        @DisplayName("[error] 유효하지 않은 종료일시 형식인 경우 400 에러를 반환한다")
-        void error_invalidEndDtFormat() throws Exception {
-            // given
-            RegisterScheduleRequest request = RegisterScheduleRequest.builder()
-                .content("개인 회의")
-                .startDt("2025-01-01 10:00:00")
-                .endDt("invalid-date")
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(), "유효하지 않은 종료일시 형식");
         }
 
         @Test
@@ -164,7 +132,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .groupId("other-group")
                 .build();
 
@@ -189,8 +156,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType startDtType = request.startDt() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
-        JsonFieldType endDtType = request.endDt() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType groupIdType = request.groupId() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType notificationDtType = request.notificationDt() == null ?
@@ -214,8 +179,6 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
                             .description("스케줄 내용"),
                         fieldWithPath("startDt").type(startDtType)
                             .description("시작일시 (yyyy-MM-dd HH:mm:ss)"),
-                        fieldWithPath("endDt").type(endDtType)
-                            .description("종료일시 (yyyy-MM-dd HH:mm:ss)"),
                         fieldWithPath("groupId").type(groupIdType)
                             .description("그룹 ID (선택)"),
                         fieldWithPath("notificationDt").type(notificationDtType)

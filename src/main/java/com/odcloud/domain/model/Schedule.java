@@ -21,7 +21,6 @@ public class Schedule {
     private LocalDateTime notificationDt;
     private String notificationYn;
     private LocalDateTime startDt;
-    private LocalDateTime endDt;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
@@ -30,7 +29,6 @@ public class Schedule {
             .writerEmail(command.account().getEmail())
             .content(command.content())
             .startDt(command.startDt())
-            .endDt(command.endDt())
             .groupId(command.groupId())
             .notificationDt(command.notificationDt())
             .notificationYn("N")
@@ -45,7 +43,6 @@ public class Schedule {
     public void update(UpdateScheduleCommand command) {
         this.content = command.content();
         this.startDt = command.startDt();
-        this.endDt = command.endDt();
         this.notificationDt = command.notificationDt();
         this.modDt = LocalDateTime.now();
     }

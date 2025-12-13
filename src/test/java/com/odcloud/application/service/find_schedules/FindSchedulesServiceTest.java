@@ -65,40 +65,6 @@ class FindSchedulesServiceTest {
         }
 
         @Test
-        @DisplayName("[success] 종료일이 조회 범위와 겹치는 일정도 조회한다 (filterType=PRIVATE)")
-        void success_getSchedulesOverlappingEndDate() {
-            // given
-            Account account = createAccount("user@example.com", Arrays.asList());
-
-            // 12월 25일부터 1월 5일까지 이어지는 일정 (시작일이 조회 범위 밖)
-            fakeScheduleStoragePort.database.add(createScheduleWithCustomEndDate(1L, "user@example.com",
-                "연말연시 휴가", LocalDateTime.of(2024, 12, 25, 0, 0), LocalDateTime.of(2025, 1, 5, 23, 59)));
-
-            // 1월 28일부터 2월 3일까지 이어지는 일정 (종료일이 조회 범위 밖)
-            fakeScheduleStoragePort.database.add(createScheduleWithCustomEndDate(2L, "user@example.com",
-                "출장", LocalDateTime.of(2025, 1, 28, 9, 0), LocalDateTime.of(2025, 2, 3, 18, 0)));
-
-            // 1월 내 일정
-            fakeScheduleStoragePort.database.add(createPersonalSchedule(3L, "user@example.com",
-                "1월 15일", LocalDateTime.of(2025, 1, 15, 14, 0)));
-
-            FindSchedulesCommand command = FindSchedulesCommand.builder()
-                .account(account)
-                .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
-                .build();
-
-            // when
-            FindSchedulesServiceResponse response = findSchedulesService.findSchedules(command);
-
-            // then
-            assertThat(response.schedules()).hasSize(3);
-            assertThat(response.schedules().get(0).content()).isEqualTo("연말연시 휴가");
-            assertThat(response.schedules().get(1).content()).isEqualTo("1월 15일");
-            assertThat(response.schedules().get(2).content()).isEqualTo("출장");
-        }
-
-        @Test
         @DisplayName("[success] 특정 그룹 일정만 조회한다 (filterType=그룹명)")
         void success_getSpecificGroupSchedules() {
             // given
@@ -208,7 +174,6 @@ class FindSchedulesServiceTest {
             .groupId(null)
             .content(content)
             .startDt(startDt)
-            .endDt(startDt.plusHours(1))
             .notificationYn("N")
             .regDt(LocalDateTime.now())
             .build();
@@ -222,7 +187,6 @@ class FindSchedulesServiceTest {
             .groupId(groupId)
             .content(content)
             .startDt(startDt)
-            .endDt(startDt.plusHours(1))
             .notificationYn("N")
             .regDt(LocalDateTime.now())
             .build();
@@ -236,7 +200,6 @@ class FindSchedulesServiceTest {
             .groupId(null)
             .content(content)
             .startDt(startDt)
-            .endDt(endDt)
             .notificationYn("N")
             .regDt(LocalDateTime.now())
             .build();

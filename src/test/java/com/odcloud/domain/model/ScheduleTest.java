@@ -25,14 +25,12 @@ class ScheduleTest {
             given(account.getEmail()).willReturn("user@example.com");
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(notificationDt)
                 .build();
 
@@ -48,7 +46,6 @@ class ScheduleTest {
             assertThat(schedule.getWriterEmail()).isEqualTo("user@example.com");
             assertThat(schedule.getContent()).isEqualTo("개인 회의");
             assertThat(schedule.getStartDt()).isEqualTo(startDt);
-            assertThat(schedule.getEndDt()).isEqualTo(endDt);
             assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
             assertThat(schedule.getGroupId()).isNull();
@@ -64,13 +61,11 @@ class ScheduleTest {
             given(account.getEmail()).willReturn("user@example.com");
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 15, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 
@@ -92,13 +87,11 @@ class ScheduleTest {
             given(account.getEmail()).willReturn("user@example.com");
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(null)
                 .build();
 
@@ -123,7 +116,6 @@ class ScheduleTest {
                 .account(account)
                 .content(null)
                 .startDt(null)
-                .endDt(null)
                 .groupId(null)
                 .notificationDt(null)
                 .build();
@@ -136,7 +128,6 @@ class ScheduleTest {
             assertThat(schedule.getWriterEmail()).isNull();
             assertThat(schedule.getContent()).isNull();
             assertThat(schedule.getStartDt()).isNull();
-            assertThat(schedule.getEndDt()).isNull();
             assertThat(schedule.getGroupId()).isNull();
             assertThat(schedule.getNotificationDt()).isNull();
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
@@ -254,21 +245,6 @@ class ScheduleTest {
             assertThat(result).isEqualTo(startDt);
         }
 
-        @Test
-        @DisplayName("[success] getEndDt()로 endDt를 조회한다")
-        void success_getEndDt() {
-            // given
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
-            Schedule schedule = Schedule.builder()
-                .endDt(endDt)
-                .build();
-
-            // when
-            LocalDateTime result = schedule.getEndDt();
-
-            // then
-            assertThat(result).isEqualTo(endDt);
-        }
 
         @Test
         @DisplayName("[success] getModDt()로 modDt를 조회한다")
@@ -313,7 +289,6 @@ class ScheduleTest {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             // when
@@ -325,7 +300,6 @@ class ScheduleTest {
                 .notificationDt(notificationDt)
                 .notificationYn("N")
                 .startDt(startDt)
-                .endDt(endDt)
                 .modDt(now)
                 .regDt(now)
                 .build();
@@ -339,7 +313,6 @@ class ScheduleTest {
             assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
             assertThat(schedule.getStartDt()).isEqualTo(startDt);
-            assertThat(schedule.getEndDt()).isEqualTo(endDt);
             assertThat(schedule.getModDt()).isEqualTo(now);
             assertThat(schedule.getRegDt()).isEqualTo(now);
         }
@@ -356,7 +329,6 @@ class ScheduleTest {
                 .notificationDt(null)
                 .notificationYn(null)
                 .startDt(null)
-                .endDt(null)
                 .modDt(null)
                 .regDt(null)
                 .build();
@@ -370,7 +342,6 @@ class ScheduleTest {
             assertThat(schedule.getNotificationDt()).isNull();
             assertThat(schedule.getNotificationYn()).isNull();
             assertThat(schedule.getStartDt()).isNull();
-            assertThat(schedule.getEndDt()).isNull();
             assertThat(schedule.getModDt()).isNull();
             assertThat(schedule.getRegDt()).isNull();
         }
@@ -380,14 +351,12 @@ class ScheduleTest {
         void success_personalSchedule() {
             // given
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             // when
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .build();
 
             // then
@@ -400,7 +369,6 @@ class ScheduleTest {
         void success_groupSchedule() {
             // given
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             // when
             Schedule schedule = Schedule.builder()
@@ -408,7 +376,6 @@ class ScheduleTest {
                 .groupId("group-123")
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .build();
 
             // then
@@ -441,7 +408,6 @@ class ScheduleTest {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             // when
@@ -453,7 +419,6 @@ class ScheduleTest {
                 notificationDt,
                 "N",
                 startDt,
-                endDt,
                 now,
                 now
             );
@@ -467,7 +432,6 @@ class ScheduleTest {
             assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
             assertThat(schedule.getStartDt()).isEqualTo(startDt);
-            assertThat(schedule.getEndDt()).isEqualTo(endDt);
             assertThat(schedule.getModDt()).isEqualTo(now);
             assertThat(schedule.getRegDt()).isEqualTo(now);
         }
@@ -477,7 +441,6 @@ class ScheduleTest {
         void success_nullValues() {
             // when
             Schedule schedule = new Schedule(
-                null,
                 null,
                 null,
                 null,
@@ -498,7 +461,6 @@ class ScheduleTest {
             assertThat(schedule.getNotificationDt()).isNull();
             assertThat(schedule.getNotificationYn()).isNull();
             assertThat(schedule.getStartDt()).isNull();
-            assertThat(schedule.getEndDt()).isNull();
             assertThat(schedule.getModDt()).isNull();
             assertThat(schedule.getRegDt()).isNull();
         }

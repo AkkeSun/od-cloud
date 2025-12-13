@@ -25,7 +25,6 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
                 .notificationDt(schedule.getNotificationDt())
                 .notificationYn(schedule.getNotificationYn())
                 .startDt(schedule.getStartDt())
-                .endDt(schedule.getEndDt())
                 .modDt(schedule.getModDt())
                 .regDt(schedule.getRegDt())
                 .build();
@@ -52,8 +51,8 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
     public List<Schedule> findSchedules(FindSchedulesCommand command) {
         return database.stream()
             // 일정 기간과 조회 범위가 겹치는 모든 일정 조회
-            .filter(s -> s.getStartDt().isBefore(command.getEndDateTime().plusSeconds(1))
-                && s.getEndDt().isAfter(command.getStartDateTime().minusSeconds(1)))
+            .filter(s -> !s.getStartDt().isBefore(command.getStartDateTime())
+                && !s.getStartDt().isAfter(command.getEndDateTime()))
             .filter(s -> matchesFilterType(s, command))
             .sorted((s1, s2) -> s1.getStartDt().compareTo(s2.getStartDt()))
             .toList();

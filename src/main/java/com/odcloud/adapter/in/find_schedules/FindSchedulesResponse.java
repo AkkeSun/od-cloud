@@ -26,7 +26,6 @@ record FindSchedulesResponse(
         String groupId,
         String content,
         LocalDateTime startDt,
-        LocalDateTime endDt,
         LocalDateTime notificationDt
     ) {
 
@@ -37,7 +36,6 @@ record FindSchedulesResponse(
                 .groupId(dto.groupId())
                 .content(dto.content())
                 .startDt(dto.startDt())
-                .endDt(dto.endDt())
                 .notificationDt(dto.notificationDt())
                 .build();
         }

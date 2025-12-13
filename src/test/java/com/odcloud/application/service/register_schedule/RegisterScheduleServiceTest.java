@@ -44,14 +44,12 @@ class RegisterScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(notificationDt)
                 .build();
 
@@ -64,7 +62,6 @@ class RegisterScheduleServiceTest {
             assertThat(fakeScheduleStoragePort.database.get(0).getWriterEmail()).isEqualTo("user@example.com");
             assertThat(fakeScheduleStoragePort.database.get(0).getContent()).isEqualTo("개인 회의");
             assertThat(fakeScheduleStoragePort.database.get(0).getStartDt()).isEqualTo(startDt);
-            assertThat(fakeScheduleStoragePort.database.get(0).getEndDt()).isEqualTo(endDt);
             assertThat(fakeScheduleStoragePort.database.get(0).getNotificationDt()).isEqualTo(notificationDt);
             assertThat(fakeScheduleStoragePort.database.get(0).getNotificationYn()).isEqualTo("N");
             assertThat(fakeScheduleStoragePort.database.get(0).getGroupId()).isNull();
@@ -82,13 +79,11 @@ class RegisterScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(null)
                 .build();
 
@@ -121,13 +116,11 @@ class RegisterScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 
@@ -161,13 +154,11 @@ class RegisterScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("other-group")
                 .build();
 
@@ -192,13 +183,11 @@ class RegisterScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand command = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 

@@ -11,8 +11,6 @@ public record RegisterScheduleCommand(
 
     LocalDateTime startDt,
 
-    LocalDateTime endDt,
-
     Account account,
 
     String groupId,

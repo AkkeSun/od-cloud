@@ -24,7 +24,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
@@ -40,7 +39,6 @@ class UpdateScheduleRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.content()).isEqualTo("수정된 회의");
             assertThat(command.startDt()).isEqualTo(LocalDateTime.of(2025, 1, 2, 14, 0, 0));
-            assertThat(command.endDt()).isEqualTo(LocalDateTime.of(2025, 1, 2, 15, 0, 0));
             assertThat(command.notificationDt()).isEqualTo(
                 LocalDateTime.of(2025, 1, 2, 13, 50, 0));
         }
@@ -52,7 +50,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 그룹 회의")
                 .startDt("2025-01-02 16:00:00")
-                .endDt("2025-01-02 17:00:00")
                 .build();
 
             Account account = mock(Account.class);
@@ -76,7 +73,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .notificationDt(null)
                 .build();
 
@@ -102,7 +98,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
@@ -110,7 +105,6 @@ class UpdateScheduleRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.content()).isEqualTo("수정된 회의");
             assertThat(request.startDt()).isEqualTo("2025-01-02 14:00:00");
-            assertThat(request.endDt()).isEqualTo("2025-01-02 15:00:00");
             assertThat(request.notificationDt()).isEqualTo("2025-01-02 13:50:00");
         }
 
@@ -121,14 +115,12 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content(null)
                 .startDt(null)
-                .endDt(null)
                 .notificationDt(null)
                 .build();
 
             // then
             assertThat(request.content()).isNull();
             assertThat(request.startDt()).isNull();
-            assertThat(request.endDt()).isNull();
             assertThat(request.notificationDt()).isNull();
         }
     }
@@ -144,13 +136,11 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request1 = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             UpdateScheduleRequest request2 = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when & then
@@ -165,13 +155,11 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request1 = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             UpdateScheduleRequest request2 = UpdateScheduleRequest.builder()
                 .content("다른 회의")
                 .startDt("2025-01-03 14:00:00")
-                .endDt("2025-01-03 15:00:00")
                 .build();
 
             // when & then
@@ -190,7 +178,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when
@@ -207,7 +194,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when
@@ -218,30 +204,12 @@ class UpdateScheduleRequestTest {
         }
 
         @Test
-        @DisplayName("[success] endDt()로 값을 조회한다")
-        void success_endDt() {
-            // given
-            UpdateScheduleRequest request = UpdateScheduleRequest.builder()
-                .content("수정된 회의")
-                .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
-                .build();
-
-            // when
-            String endDt = request.endDt();
-
-            // then
-            assertThat(endDt).isEqualTo("2025-01-02 15:00:00");
-        }
-
-        @Test
         @DisplayName("[success] notificationDt()로 값을 조회한다")
         void success_notificationDt() {
             // given
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
@@ -264,7 +232,6 @@ class UpdateScheduleRequestTest {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when

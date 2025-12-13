@@ -46,8 +46,7 @@ class ScheduleRepository {
         return queryFactory
             .selectFrom(scheduleEntity)
             .where(
-                scheduleEntity.startDt.loe(command.getEndDateTime()),
-                scheduleEntity.endDt.goe(command.getStartDateTime()),
+                scheduleEntity.startDt.between(command.getStartDateTime(), command.getEndDateTime()),
                 buildFilterCondition(command)
             )
             .orderBy(scheduleEntity.startDt.asc())

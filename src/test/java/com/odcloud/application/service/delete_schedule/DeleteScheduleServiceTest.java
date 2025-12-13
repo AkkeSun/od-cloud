@@ -46,13 +46,11 @@ class DeleteScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .build();
 
             Schedule schedule = Schedule.of(registerCommand);
@@ -86,13 +84,11 @@ class DeleteScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 
@@ -127,13 +123,11 @@ class DeleteScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
                 .account(owner)
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .build();
 
             Schedule schedule = Schedule.of(registerCommand);
@@ -173,13 +167,11 @@ class DeleteScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
                 .account(member)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 
@@ -236,13 +228,11 @@ class DeleteScheduleServiceTest {
                 .build();
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
                 .account(creator)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .build();
 

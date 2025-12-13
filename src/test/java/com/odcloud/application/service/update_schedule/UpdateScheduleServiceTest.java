@@ -50,7 +50,6 @@ class UpdateScheduleServiceTest {
                 .writerEmail("user@example.com")
                 .content("기존 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationDt(LocalDateTime.of(2025, 1, 1, 9, 50))
                 .notificationYn("N")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
@@ -59,7 +58,6 @@ class UpdateScheduleServiceTest {
             fakeScheduleStoragePort.database.add(schedule);
 
             LocalDateTime newStartDt = LocalDateTime.of(2025, 1, 2, 14, 0);
-            LocalDateTime newEndDt = LocalDateTime.of(2025, 1, 2, 15, 0);
             LocalDateTime newNotificationDt = LocalDateTime.of(2025, 1, 2, 13, 50);
 
             UpdateScheduleCommand command = UpdateScheduleCommand.builder()
@@ -67,7 +65,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 회의")
                 .startDt(newStartDt)
-                .endDt(newEndDt)
                 .notificationDt(newNotificationDt)
                 .build();
 
@@ -81,7 +78,6 @@ class UpdateScheduleServiceTest {
             assertThat(updatedSchedule.getId()).isEqualTo(1L);
             assertThat(updatedSchedule.getContent()).isEqualTo("수정된 회의");
             assertThat(updatedSchedule.getStartDt()).isEqualTo(newStartDt);
-            assertThat(updatedSchedule.getEndDt()).isEqualTo(newEndDt);
             assertThat(updatedSchedule.getNotificationDt()).isEqualTo(newNotificationDt);
             assertThat(updatedSchedule.getModDt()).isNotNull();
         }
@@ -102,7 +98,6 @@ class UpdateScheduleServiceTest {
                 .writerEmail("user@example.com")
                 .content("기존 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationDt(LocalDateTime.of(2025, 1, 1, 9, 50))
                 .notificationYn("N")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
@@ -115,7 +110,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationDt(null)
                 .build();
 
@@ -154,7 +148,6 @@ class UpdateScheduleServiceTest {
                 .groupId("group-123")
                 .content("기존 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationYn("N")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
@@ -166,7 +159,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 2, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 2, 15, 0))
                 .notificationDt(null)
                 .build();
 
@@ -206,7 +198,6 @@ class UpdateScheduleServiceTest {
                 .groupId("other-group")
                 .content("다른 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationYn("N")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
@@ -218,7 +209,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 회의")
                 .startDt(LocalDateTime.of(2025, 1, 2, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 2, 15, 0))
                 .notificationDt(null)
                 .build();
 
@@ -245,7 +235,6 @@ class UpdateScheduleServiceTest {
                 .writerEmail("other@example.com")
                 .content("다른 사용자의 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationYn("N")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
@@ -257,7 +246,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 회의")
                 .startDt(LocalDateTime.of(2025, 1, 2, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 2, 15, 0))
                 .notificationDt(null)
                 .build();
 
@@ -283,7 +271,6 @@ class UpdateScheduleServiceTest {
                 .account(account)
                 .content("수정된 회의")
                 .startDt(LocalDateTime.of(2025, 1, 2, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 2, 15, 0))
                 .notificationDt(null)
                 .build();
 

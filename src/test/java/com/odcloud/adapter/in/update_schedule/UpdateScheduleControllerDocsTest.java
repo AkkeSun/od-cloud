@@ -53,7 +53,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
             String authorization = "error token";
             given(useCase.update(any())).willThrow(
@@ -71,7 +70,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
@@ -100,7 +98,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             UpdateScheduleServiceResponse serviceResponse =
@@ -128,7 +125,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             // given
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when & then
@@ -142,26 +138,11 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             // given
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when & then
             performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
                 "시작일시 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] 종료일시를 입력하지 않은 경우 400 에러를 반환한다")
-        void error_endDtIsNull() throws Exception {
-            // given
-            UpdateScheduleRequest request = UpdateScheduleRequest.builder()
-                .content("수정된 회의")
-                .startDt("2025-01-02 14:00:00")
-                .build();
-
-            // when & then
-            performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
-                "종료일시 미입력");
         }
 
         @Test
@@ -171,27 +152,11 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025/01/02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             // when & then
             performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
                 "유효하지 않은 시작일시 형식");
-        }
-
-        @Test
-        @DisplayName("[error] 유효하지 않은 종료일시 형식인 경우 400 에러를 반환한다")
-        void error_invalidEndDtFormat() throws Exception {
-            // given
-            UpdateScheduleRequest request = UpdateScheduleRequest.builder()
-                .content("수정된 회의")
-                .startDt("2025-01-02 14:00:00")
-                .endDt("invalid-date")
-                .build();
-
-            // when & then
-            performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
-                "유효하지 않은 종료일시 형식");
         }
 
         @Test
@@ -201,7 +166,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 그룹 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             given(useCase.update(any()))
@@ -219,7 +183,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             given(useCase.update(any()))
@@ -237,7 +200,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             UpdateScheduleRequest request = UpdateScheduleRequest.builder()
                 .content("수정된 회의")
                 .startDt("2025-01-02 14:00:00")
-                .endDt("2025-01-02 15:00:00")
                 .build();
 
             given(useCase.update(any()))
@@ -263,8 +225,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType startDtType = request.startDt() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
-        JsonFieldType endDtType = request.endDt() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType notificationDtType = request.notificationDt() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
 
@@ -289,8 +249,6 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
                             .description("스케줄 내용"),
                         fieldWithPath("startDt").type(startDtType)
                             .description("시작일시 (yyyy-MM-dd HH:mm:ss)"),
-                        fieldWithPath("endDt").type(endDtType)
-                            .description("종료일시 (yyyy-MM-dd HH:mm:ss)"),
                         fieldWithPath("notificationDt").type(notificationDtType)
                             .description("알림일시 (선택, yyyy-MM-dd HH:mm:ss)")
                     )

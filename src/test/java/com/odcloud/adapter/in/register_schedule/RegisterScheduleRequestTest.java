@@ -24,7 +24,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
@@ -39,7 +38,6 @@ class RegisterScheduleRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.content()).isEqualTo("개인 회의");
             assertThat(command.startDt()).isEqualTo(LocalDateTime.of(2025, 1, 1, 10, 0, 0));
-            assertThat(command.endDt()).isEqualTo(LocalDateTime.of(2025, 1, 1, 11, 0, 0));
             assertThat(command.notificationDt()).isEqualTo(LocalDateTime.of(2025, 1, 1, 9, 50, 0));
             assertThat(command.groupId()).isNull();
         }
@@ -51,7 +49,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 14:00:00")
-                .endDt("2025-01-01 15:00:00")
                 .groupId("group-123")
                 .build();
 
@@ -76,7 +73,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .notificationDt(null)
                 .build();
 
@@ -102,7 +98,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .groupId("group-123")
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
@@ -111,7 +106,6 @@ class RegisterScheduleRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.content()).isEqualTo("개인 회의");
             assertThat(request.startDt()).isEqualTo("2025-01-01 10:00:00");
-            assertThat(request.endDt()).isEqualTo("2025-01-01 11:00:00");
             assertThat(request.groupId()).isEqualTo("group-123");
             assertThat(request.notificationDt()).isEqualTo("2025-01-01 09:50:00");
         }
@@ -123,7 +117,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content(null)
                 .startDt(null)
-                .endDt(null)
                 .groupId(null)
                 .notificationDt(null)
                 .build();
@@ -131,7 +124,6 @@ class RegisterScheduleRequestTest {
             // then
             assertThat(request.content()).isNull();
             assertThat(request.startDt()).isNull();
-            assertThat(request.endDt()).isNull();
             assertThat(request.groupId()).isNull();
             assertThat(request.notificationDt()).isNull();
         }
@@ -148,13 +140,11 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request1 = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             RegisterScheduleRequest request2 = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when & then
@@ -169,13 +159,11 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request1 = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             RegisterScheduleRequest request2 = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-02 10:00:00")
-                .endDt("2025-01-02 11:00:00")
                 .build();
 
             // when & then
@@ -194,7 +182,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when
@@ -211,7 +198,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when
@@ -221,22 +207,6 @@ class RegisterScheduleRequestTest {
             assertThat(startDt).isEqualTo("2025-01-01 10:00:00");
         }
 
-        @Test
-        @DisplayName("[success] endDt()로 값을 조회한다")
-        void success_endDt() {
-            // given
-            RegisterScheduleRequest request = RegisterScheduleRequest.builder()
-                .content("개인 회의")
-                .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
-                .build();
-
-            // when
-            String endDt = request.endDt();
-
-            // then
-            assertThat(endDt).isEqualTo("2025-01-01 11:00:00");
-        }
 
         @Test
         @DisplayName("[success] groupId()로 값을 조회한다")
@@ -245,7 +215,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .groupId("group-123")
                 .build();
 
@@ -263,7 +232,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
@@ -286,7 +254,6 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .endDt("2025-01-01 11:00:00")
                 .build();
 
             // when

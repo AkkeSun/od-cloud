@@ -38,9 +38,6 @@ class ScheduleEntity {
     @Column(name = "START_DT")
     private LocalDateTime startDt;
 
-    @Column(name = "END_DT")
-    private LocalDateTime endDt;
-
     @Column(name = "NOTIFICATION_DT")
     private LocalDateTime notificationDt;
 
@@ -62,7 +59,6 @@ class ScheduleEntity {
             .notificationDt(schedule.getNotificationDt())
             .notificationYn(schedule.getNotificationYn())
             .startDt(schedule.getStartDt())
-            .endDt(schedule.getEndDt())
             .modDt(schedule.getModDt())
             .regDt(schedule.getRegDt())
             .build();
@@ -77,7 +73,6 @@ class ScheduleEntity {
             .notificationDt(notificationDt)
             .notificationYn(notificationYn)
             .startDt(startDt)
-            .endDt(endDt)
             .modDt(modDt)
             .regDt(regDt)
             .build();

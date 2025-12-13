@@ -15,8 +15,6 @@ public record UpdateScheduleCommand(
 
     LocalDateTime startDt,
 
-    LocalDateTime endDt,
-
     LocalDateTime notificationDt
 ) {
 }

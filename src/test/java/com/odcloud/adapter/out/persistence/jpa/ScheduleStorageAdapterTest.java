@@ -45,14 +45,12 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(notificationDt)
                 .regDt(now)
                 .build();
@@ -72,7 +70,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
             assertThat(savedEntity.getContent()).isEqualTo("개인 회의");
             assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
-            assertThat(savedEntity.getEndDt()).isEqualTo(endDt);
             assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(savedEntity.getGroupId()).isNull();
         }
@@ -83,13 +80,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 15, 0);
 
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .groupId("group-123")
                 .regDt(now)
                 .build();
@@ -117,13 +112,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
                 .content("회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(null)
                 .regDt(now)
                 .build();
@@ -149,13 +142,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             ScheduleEntity existingSchedule = ScheduleEntity.builder()
                 .writerEmail("user@example.com")
                 .content("기존 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .regDt(now)
                 .build();
             entityManager.persist(existingSchedule);
@@ -163,7 +154,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             LocalDateTime newStartDt = LocalDateTime.of(2025, 1, 1, 14, 0);
-            LocalDateTime newEndDt = LocalDateTime.of(2025, 1, 1, 15, 0);
             LocalDateTime modDt = LocalDateTime.now();
 
             Schedule updatedSchedule = Schedule.builder()
@@ -171,7 +161,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("수정된 회의")
                 .startDt(newStartDt)
-                .endDt(newEndDt)
                 .modDt(modDt)
                 .regDt(now)
                 .build();
@@ -186,7 +175,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getContent()).isEqualTo("수정된 회의");
             assertThat(savedEntity.getStartDt()).isEqualTo(newStartDt);
-            assertThat(savedEntity.getEndDt()).isEqualTo(newEndDt);
         }
 
         @Test
@@ -195,24 +183,20 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt1 = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt1 = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             Schedule schedule1 = Schedule.builder()
                 .writerEmail("user1@example.com")
                 .content("회의 1")
                 .startDt(startDt1)
-                .endDt(endDt1)
                 .regDt(now)
                 .build();
 
             LocalDateTime startDt2 = LocalDateTime.of(2025, 1, 1, 14, 0);
-            LocalDateTime endDt2 = LocalDateTime.of(2025, 1, 1, 15, 0);
 
             Schedule schedule2 = Schedule.builder()
                 .writerEmail("user2@example.com")
                 .content("회의 2")
                 .startDt(startDt2)
-                .endDt(endDt2)
                 .regDt(now)
                 .build();
 
@@ -236,7 +220,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
             LocalDateTime modDt = LocalDateTime.now();
 
@@ -244,7 +227,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("전체 필드 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(notificationDt)
                 .groupId("group-123")
                 .modDt(modDt)
@@ -266,7 +248,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
             assertThat(savedEntity.getContent()).isEqualTo("전체 필드 회의");
             assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
-            assertThat(savedEntity.getEndDt()).isEqualTo(endDt);
             assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(savedEntity.getGroupId()).isEqualTo("group-123");
         }
@@ -277,13 +258,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
                 .content("회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .regDt(now)
                 .build();
 
@@ -313,14 +292,12 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
             LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
 
             ScheduleEntity entity = ScheduleEntity.builder()
                 .writerEmail("user@example.com")
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationDt(notificationDt)
                 .notificationYn("N")
                 .regDt(now)
@@ -338,7 +315,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getWriterEmail()).isEqualTo("user@example.com");
             assertThat(result.getContent()).isEqualTo("개인 회의");
             assertThat(result.getStartDt()).isEqualTo(startDt);
-            assertThat(result.getEndDt()).isEqualTo(endDt);
             assertThat(result.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(result.getNotificationYn()).isEqualTo("N");
         }
@@ -349,14 +325,12 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 15, 0);
 
             ScheduleEntity entity = ScheduleEntity.builder()
                 .writerEmail("user@example.com")
                 .groupId("group-123")
                 .content("그룹 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -395,13 +369,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             ScheduleEntity entity = ScheduleEntity.builder()
                 .writerEmail("user@example.com")
                 .content("개인 회의")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -426,13 +398,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime endDt = LocalDateTime.of(2025, 1, 1, 11, 0);
 
             ScheduleEntity entity1 = ScheduleEntity.builder()
                 .writerEmail("user1@example.com")
                 .content("회의 1")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -441,7 +411,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user2@example.com")
                 .content("회의 2")
                 .startDt(startDt)
-                .endDt(endDt)
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -495,7 +464,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("1월 1일 개인 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 1, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -504,7 +472,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("1월 15일 개인 회의")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -515,7 +482,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-1")
                 .content("그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -525,7 +491,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("2월 1일 개인 회의")
                 .startDt(LocalDateTime.of(2025, 2, 1, 10, 0))
-                .endDt(LocalDateTime.of(2025, 2, 1, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -568,7 +533,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-1")
                 .content("그룹1 회의 1")
                 .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -578,7 +542,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-1")
                 .content("그룹1 회의 2")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -589,7 +552,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-2")
                 .content("그룹2 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -631,7 +593,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("개인 회의")
                 .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -642,7 +603,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-1")
                 .content("그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -653,7 +613,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .groupId("group-999")
                 .content("다른 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 10, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -682,68 +641,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(2);
         }
 
-        @Test
-        @DisplayName("[success] 종료일이 조회 범위와 겹치는 일정도 조회한다")
-        void success_findSchedulesOverlappingEndDate() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // 12월 25일 ~ 1월 5일 휴가 (시작일이 조회 범위 밖)
-            ScheduleEntity crossYearSchedule = ScheduleEntity.builder()
-                .writerEmail("user@example.com")
-                .content("연말연시 휴가")
-                .startDt(LocalDateTime.of(2024, 12, 25, 0, 0))
-                .endDt(LocalDateTime.of(2025, 1, 5, 23, 59))
-                .notificationYn("N")
-                .regDt(now)
-                .build();
-
-            // 1월 28일 ~ 2월 3일 출장 (종료일이 조회 범위 밖)
-            ScheduleEntity crossMonthSchedule = ScheduleEntity.builder()
-                .writerEmail("user@example.com")
-                .content("출장")
-                .startDt(LocalDateTime.of(2025, 1, 28, 9, 0))
-                .endDt(LocalDateTime.of(2025, 2, 3, 18, 0))
-                .notificationYn("N")
-                .regDt(now)
-                .build();
-
-            // 1월 내 일정
-            ScheduleEntity withinMonthSchedule = ScheduleEntity.builder()
-                .writerEmail("user@example.com")
-                .content("1월 15일 회의")
-                .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
-                .notificationYn("N")
-                .regDt(now)
-                .build();
-
-            entityManager.persist(crossYearSchedule);
-            entityManager.persist(crossMonthSchedule);
-            entityManager.persist(withinMonthSchedule);
-            entityManager.flush();
-            entityManager.clear();
-
-            Account account = Account.builder()
-                .email("user@example.com")
-                .groups(Arrays.asList())
-                .build();
-
-            FindSchedulesCommand command = FindSchedulesCommand.builder()
-                .account(account)
-                .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
-                .build();
-
-            // when
-            List<Schedule> result = adapter.findSchedules(command);
-
-            // then
-            assertThat(result).hasSize(3);
-            assertThat(result.get(0).getContent()).isEqualTo("연말연시 휴가");
-            assertThat(result.get(1).getContent()).isEqualTo("1월 15일 회의");
-            assertThat(result.get(2).getContent()).isEqualTo("출장");
-        }
 
         @Test
         @DisplayName("[success] 조건에 맞는 일정이 없으면 빈 목록을 반환한다")
@@ -777,7 +674,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("1월 20일")
                 .startDt(LocalDateTime.of(2025, 1, 20, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 20, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -786,7 +682,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("1월 5일")
                 .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
-                .endDt(LocalDateTime.of(2025, 1, 5, 11, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();
@@ -795,7 +690,6 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("1월 15일")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
-                .endDt(LocalDateTime.of(2025, 1, 15, 15, 0))
                 .notificationYn("N")
                 .regDt(now)
                 .build();

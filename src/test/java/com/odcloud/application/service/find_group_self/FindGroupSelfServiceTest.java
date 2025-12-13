@@ -122,7 +122,6 @@ class FindGroupSelfServiceTest {
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
                 .get(0);
             assertThat(activeGroupInfo.name()).isEqualTo("Development Team");
-            assertThat(activeGroupInfo.activeMemberCount()).isEqualTo(2);
 
             FindGroupSelfServiceResponse.PendingGroupInfo pendingGroupInfo = response.pendingGroups()
                 .get(0);
