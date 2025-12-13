@@ -85,12 +85,6 @@ paths:
                     "groupId" : null,
                     "newGroupName" : "새로운 그룹"
                   }
-              '[계정 등록 API] 그룹 아이디 미입력':
-                value: |-
-                  {
-                    "name" : "홍길동",
-                    "groupId" : null
-                  }
       responses:
         "500":
           description: "500"
@@ -179,16 +173,6 @@ paths:
                       "data" : {
                         "errorCode" : 1099,
                         "errorMessage" : "이름은 필수값 입니다"
-                      }
-                    }
-                '[계정 등록 API] 그룹 아이디 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "그룹 아이디는 필수값 입니다"
                       }
                     }
         "401":
@@ -1879,6 +1863,81 @@ paths:
                         "errorMessage" : "그룹 이름은 필수값 입니다"
                       }
                     }
+  /groups/self:
+    get:
+      tags:
+      - Account
+      summary: 현재 사용자의 그룹 정보 조회 API
+      description: "현재 인증된 사용자가 속한 그룹의 정보를 조회하는 API 입니다.<br><br>- 가입된 그룹(activeGroups)과\
+        \ 가입 대기중인 그룹(pendingGroups)을 분리하여 반환합니다.<br>- 가입된 그룹: 그룹명, 매니저 정보, 구성원 목록\
+        (닉네임, 이메일), 활성 사용자 수, 내가 매니저인지 여부를 포함합니다.<br>- 대기중인 그룹: 그룹명, 활성 사용자 수, 내가\
+        \ 매니저인지 여부만 포함합니다.<br>- 구성원 목록은 ACTIVE 상태이며 매니저를 제외한 멤버들입니다.<br>- 매니저인 그룹이\
+        \ 목록의 앞쪽에 정렬됩니다.<br>- 인증 토큰(JWT)이 필수입니다."
+      operationId: "[현재 사용자의 그룹 정보 조회 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: "인증 토큰 (Bearer {token})"
+        required: true
+        schema:
+          type: string
+        example: Bearer test-token-123
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success_empty"
+              examples:
+                '[현재 사용자의 그룹 정보 조회 API] 사용자가 속한 그룹이 없는 경우':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "activeGroups" : [ ],
+                        "pendingGroups" : [ ]
+                      }
+                    }
+                '[현재 사용자의 그룹 정보 조회 API] 현재 사용자의 그룹 정보 조회 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "activeGroups" : [ {
+                          "name" : "My Team",
+                          "manager" : {
+                            "nickname" : "Manager",
+                            "email" : "manager@example.com"
+                          },
+                          "members" : [ {
+                            "nickname" : "Member1",
+                            "email" : "member1@example.com"
+                          }, {
+                            "nickname" : "Member2",
+                            "email" : "member2@example.com"
+                          } ],
+                          "activeMemberCount" : 3
+                        }, {
+                          "name" : "Development Team",
+                          "manager" : {
+                            "nickname" : "OtherManager",
+                            "email" : "other@example.com"
+                          },
+                          "members" : [ {
+                            "nickname" : "Member3",
+                            "email" : "member3@example.com"
+                          } ],
+                          "activeMemberCount" : 2
+                        } ],
+                        "pendingGroups" : [ {
+                          "name" : "Marketing Team",
+                          "activeMemberCount" : 1
+                        } ]
+                      }
+                    }
   /groups/{groupId}/accounts:
     get:
       tags:
@@ -2336,7 +2395,7 @@ paths:
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
                           "endDt" : "2025-01-05T11:00:00",
-                          "notificationDt" : "2025-12-11T16:21:11.763763"
+                          "notificationDt" : "2025-12-13T11:01:34.324749"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
@@ -2344,7 +2403,7 @@ paths:
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
                           "endDt" : "2025-01-15T15:00:00",
-                          "notificationDt" : "2025-12-11T16:21:11.763783"
+                          "notificationDt" : "2025-12-13T11:01:34.324767"
                         } ]
                       }
                     }
@@ -2976,17 +3035,6 @@ components:
           oneOf:
           - type: number
           - null
-    '[request] 그룹 등록 API':
-      title: "[request] 그룹 등록 API"
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          description: 그룹명
-          oneOf:
-          - null
-          - type: string
     '[request] 계정 등록 API':
       title: "[request] 계정 등록 API"
       required:
@@ -3010,6 +3058,96 @@ components:
           oneOf:
           - type: string
           - null
+    '[response] success_empty':
+      title: "[response] success_empty"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - activeGroups
+          - pendingGroups
+          type: object
+          properties:
+            activeGroups:
+              type: array
+              description: 가입된 그룹 목록
+              items:
+                required:
+                - activeMemberCount
+                - members
+                - name
+                type: object
+                properties:
+                  manager:
+                    type: object
+                    properties:
+                      nickname:
+                        type: string
+                        description: 매니저 닉네임
+                        nullable: true
+                      email:
+                        type: string
+                        description: 매니저 이메일
+                        nullable: true
+                    description: 매니저 정보
+                  members:
+                    type: array
+                    description: 구성원 목록 (매니저 제외)
+                    items:
+                      required:
+                      - email
+                      - nickname
+                      type: object
+                      properties:
+                        nickname:
+                          type: string
+                          description: 구성원 닉네임
+                        email:
+                          type: string
+                          description: 구성원 이메일
+                  name:
+                    type: string
+                    description: 그룹명
+                  activeMemberCount:
+                    type: number
+                    description: 활성 사용자 수
+            pendingGroups:
+              type: array
+              description: 가입 대기중인 그룹 목록
+              items:
+                required:
+                - activeMemberCount
+                - name
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 그룹명
+                  activeMemberCount:
+                    type: number
+                    description: 활성 사용자 수
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[request] 그룹 등록 API':
+      title: "[request] 그룹 등록 API"
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          description: 그룹명
+          oneOf:
+          - null
+          - type: string
     '[request] 스케줄 수정 API':
       title: "[request] 스케줄 수정 API"
       required:
