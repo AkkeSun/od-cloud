@@ -43,7 +43,7 @@ public record FindGroupSelfServiceResponse(
                 .name(group.getName())
                 .manager(managerInfo)
                 .members(memberInfos)
-                .activeMemberCount(memberInfos.size())
+                .activeMemberCount(memberInfos.size() + 1)
                 .build();
         }
     }
