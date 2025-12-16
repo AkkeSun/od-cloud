@@ -87,4 +87,9 @@ public class FileInfo {
         this.fileLoc = newFileLoc;
         this.modDt = LocalDateTime.now();
     }
+
+    public void addFileNameNumber(int number) {
+        this.fileName = fileName.split("\\.")[0] + "(" + number + ")" + fileName.substring(
+            fileName.lastIndexOf(".") + 1);
+    }
 }
