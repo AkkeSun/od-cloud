@@ -47,7 +47,6 @@ class DeleteFolderServiceTest {
                 .parentId(null)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Empty Folder")
                 .path("/empty")
                 .build();
@@ -76,7 +75,6 @@ class DeleteFolderServiceTest {
                 .parentId(null)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Folder With Files")
                 .path("/folder")
                 .build();
@@ -121,7 +119,6 @@ class DeleteFolderServiceTest {
                 .parentId(null)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Parent Folder")
                 .path("/parent")
                 .build();
@@ -131,7 +128,6 @@ class DeleteFolderServiceTest {
                 .parentId(1L)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Child Folder 1")
                 .path("/parent/child1")
                 .build();
@@ -141,7 +137,6 @@ class DeleteFolderServiceTest {
                 .parentId(1L)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Child Folder 2")
                 .path("/parent/child2")
                 .build();
@@ -151,7 +146,6 @@ class DeleteFolderServiceTest {
                 .parentId(2L)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Grand Child Folder")
                 .path("/parent/child1/grandchild")
                 .build();
@@ -183,7 +177,6 @@ class DeleteFolderServiceTest {
                 .parentId(null)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Parent Folder")
                 .path("/parent")
                 .build();
@@ -193,7 +186,6 @@ class DeleteFolderServiceTest {
                 .parentId(1L)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Child Folder")
                 .path("/parent/child")
                 .build();
@@ -242,7 +234,6 @@ class DeleteFolderServiceTest {
                 .parentId(null)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Private Folder")
                 .path("/private")
                 .build();

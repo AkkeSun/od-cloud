@@ -36,7 +36,6 @@ class FolderTest {
             assertThat(folder.getParentId()).isNull();
             assertThat(folder.getName()).isEqualTo("테스트 그룹");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
-            assertThat(folder.getAccessLevel()).isEqualTo("PUBLIC");
             assertThat(folder.getRegDt()).isAfter(before);
             assertThat(folder.getRegDt()).isBefore(after);
         }
@@ -58,7 +57,6 @@ class FolderTest {
             assertThat(folder.getParentId()).isNull();
             assertThat(folder.getName()).isNull();
             assertThat(folder.getOwner()).isNull();
-            assertThat(folder.getAccessLevel()).isEqualTo("PUBLIC");
         }
     }
 
@@ -74,8 +72,7 @@ class FolderTest {
                 1L,
                 "group-123",
                 "서브 폴더",
-                "owner@example.com",
-                "PRIVATE"
+                "owner@example.com"
             );
             String parentPath = "/group-123";
 
@@ -94,7 +91,6 @@ class FolderTest {
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
             assertThat(folder.getPath()).startsWith("/group-123/");
             assertThat(folder.getPath()).contains("_");
-            assertThat(folder.getAccessLevel()).isEqualTo("PRIVATE");
             assertThat(folder.getRegDt()).isAfter(before);
             assertThat(folder.getRegDt()).isBefore(after);
         }
@@ -107,9 +103,7 @@ class FolderTest {
                 1L,
                 "group-123",
                 "서브 폴더",
-                "owner@example.com",
-                "PUBLIC"
-            );
+                "owner@example.com");
             String parentPath = "/test";
 
             // when
@@ -129,9 +123,7 @@ class FolderTest {
                 3L,
                 "group-123",
                 "서브 폴더",
-                "owner@example.com",
-                "PUBLIC"
-            );
+                "owner@example.com");
             String parentPath = "/group-123/folder1/folder2";
 
             // when
@@ -150,9 +142,7 @@ class FolderTest {
                 null,
                 null,
                 null,
-                null,
-                null
-            );
+                null);
             String parentPath = "/group-123";
 
             // when
@@ -164,29 +154,9 @@ class FolderTest {
             assertThat(folder.getGroupId()).isNull();
             assertThat(folder.getName()).isNull();
             assertThat(folder.getOwner()).isNull();
-            assertThat(folder.getAccessLevel()).isNull();
             assertThat(folder.getPath()).startsWith("/group-123/");
         }
 
-        @Test
-        @DisplayName("[success] 다양한 accessLevel로 서브 폴더를 생성한다")
-        void success_variousAccessLevels() {
-            // given
-            RegisterFolderCommand publicCommand = new RegisterFolderCommand(
-                1L, "group-123", "공개 폴더", "owner@example.com", "PUBLIC"
-            );
-            RegisterFolderCommand privateCommand = new RegisterFolderCommand(
-                1L, "group-123", "비공개 폴더", "owner@example.com", "PRIVATE"
-            );
-
-            // when
-            FolderInfo publicFolder = FolderInfo.createSubFolder(publicCommand, "/group-123");
-            FolderInfo privateFolder = FolderInfo.createSubFolder(privateCommand, "/group-123");
-
-            // then
-            assertThat(publicFolder.getAccessLevel()).isEqualTo("PUBLIC");
-            assertThat(privateFolder.getAccessLevel()).isEqualTo("PRIVATE");
-        }
     }
 
     @Nested
@@ -284,21 +254,6 @@ class FolderTest {
         }
 
         @Test
-        @DisplayName("[success] getAccessLevel()로 accessLevel을 조회한다")
-        void success_getAccessLevel() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .accessLevel("PUBLIC")
-                .build();
-
-            // when
-            String accessLevel = folder.getAccessLevel();
-
-            // then
-            assertThat(accessLevel).isEqualTo("PUBLIC");
-        }
-
-        @Test
         @DisplayName("[success] getModDt()로 modDt를 조회한다")
         void success_getModDt() {
             // given
@@ -364,7 +319,6 @@ class FolderTest {
                 "테스트 폴더",
                 "owner@example.com",
                 "/group-123",
-                "PUBLIC",
                 now,
                 now
             );
@@ -377,7 +331,6 @@ class FolderTest {
             assertThat(folder.getName()).isEqualTo("테스트 폴더");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
             assertThat(folder.getPath()).isEqualTo("/group-123");
-            assertThat(folder.getAccessLevel()).isEqualTo("PUBLIC");
             assertThat(folder.getModDt()).isEqualTo(now);
             assertThat(folder.getRegDt()).isEqualTo(now);
         }

@@ -39,7 +39,6 @@ class FindFilesResponseTest {
                     .id(11L)
                     .name("Folder 1")
                     .groupId("group1")
-                    .accessLevel("PUBLIC")
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -48,7 +47,6 @@ class FindFilesResponseTest {
                     .id(12L)
                     .name("Folder 2")
                     .groupId("group1")
-                    .accessLevel("PRIVATE")
                     .regDt("2024-01-02 00:00:00")
                     .build();
 
@@ -80,12 +78,10 @@ class FindFilesResponseTest {
             assertThat(response.folders().get(0).id()).isEqualTo(11L);
             assertThat(response.folders().get(0).name()).isEqualTo("Folder 1");
             assertThat(response.folders().get(0).groupId()).isEqualTo("group1");
-            assertThat(response.folders().get(0).accessLevel()).isEqualTo("PUBLIC");
             assertThat(response.folders().get(0).regDt()).isEqualTo("2024-01-01 00:00:00");
 
             assertThat(response.folders().get(1).id()).isEqualTo(12L);
             assertThat(response.folders().get(1).name()).isEqualTo("Folder 2");
-            assertThat(response.folders().get(1).accessLevel()).isEqualTo("PRIVATE");
         }
 
         @Test
@@ -164,7 +160,6 @@ class FindFilesResponseTest {
                     .id(11L)
                     .name("Test Folder")
                     .groupId("group1")
-                    .accessLevel("PUBLIC")
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -197,7 +192,6 @@ class FindFilesResponseTest {
                     .id(1L)
                     .name("Test Folder")
                     .groupId("group1")
-                    .accessLevel("PUBLIC")
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -210,7 +204,6 @@ class FindFilesResponseTest {
             assertThat(response.id()).isEqualTo(1L);
             assertThat(response.name()).isEqualTo("Test Folder");
             assertThat(response.groupId()).isEqualTo("group1");
-            assertThat(response.accessLevel()).isEqualTo("PUBLIC");
             assertThat(response.regDt()).isEqualTo("2024-01-01 00:00:00");
         }
 
@@ -223,7 +216,6 @@ class FindFilesResponseTest {
                     .id(2L)
                     .name("Private Folder")
                     .groupId("group2")
-                    .accessLevel("PRIVATE")
                     .regDt("2024-01-02 00:00:00")
                     .build();
 
@@ -235,7 +227,6 @@ class FindFilesResponseTest {
             assertThat(response.id()).isEqualTo(2L);
             assertThat(response.name()).isEqualTo("Private Folder");
             assertThat(response.groupId()).isEqualTo("group2");
-            assertThat(response.accessLevel()).isEqualTo("PRIVATE");
         }
     }
 
@@ -323,7 +314,6 @@ class FindFilesResponseTest {
                     .id(2L)
                     .name("Test Folder")
                     .groupId("group1")
-                    .accessLevel("PUBLIC")
                     .regDt("2024-01-01 00:00:00")
                     .build();
 

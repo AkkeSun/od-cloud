@@ -53,7 +53,6 @@ class FindFilesServiceTest {
                 .name("Parent Folder")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(parentFolder);
@@ -65,7 +64,6 @@ class FindFilesServiceTest {
                 .name("Child Folder")
                 .owner("user@example.com")
                 .path("/group1/child")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder);
@@ -124,7 +122,6 @@ class FindFilesServiceTest {
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder);
@@ -189,7 +186,6 @@ class FindFilesServiceTest {
                 .name("Group1 Folder")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder1);
@@ -201,7 +197,6 @@ class FindFilesServiceTest {
                 .name("Group2 Folder")
                 .owner("user@example.com")
                 .path("/group2")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder2);
@@ -213,7 +208,6 @@ class FindFilesServiceTest {
                 .name("Child of Group1")
                 .owner("user@example.com")
                 .path("/group1/child")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder1);
@@ -225,7 +219,6 @@ class FindFilesServiceTest {
                 .name("Child of Group2")
                 .owner("user@example.com")
                 .path("/group1/child2")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder2);
@@ -267,7 +260,6 @@ class FindFilesServiceTest {
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder);

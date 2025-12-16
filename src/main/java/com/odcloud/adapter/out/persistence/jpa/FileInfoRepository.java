@@ -82,10 +82,8 @@ class FileInfoRepository {
             SELECT f.ID, f.FOLDER_ID, f.FILE_NAME, f.FILE_LOC, f.MOD_DT, f.REG_DT
             FROM FILE_INFO f
             INNER JOIN FOLDER_INFO fo ON f.FOLDER_ID = fo.ID
-            WHERE (
-                 (fo.GROUP_ID IN (:groupIds) AND fo.ACCESS_LEVEL = 'PUBLIC')
-                 OR (fo.OWNER = :email AND fo.ACCESS_LEVEL = 'PRIVATE')
-                 ) %s
+            WHERE fo.GROUP_ID IN (:groupIds)
+                  %s
             ORDER BY
             """ + getSortRule(command.sortType());
 
@@ -106,7 +104,6 @@ class FileInfoRepository {
 
         Query query = entityManager.createNativeQuery(sql.toString(), FileInfoEntity.class);
         query.setParameter("groupIds", command.account().getGroupIds());
-        query.setParameter("email", command.account().getEmail());
 
         if (command.isFulltextSearch() && !isH2) {
             query.setParameter("keyword", command.keyword() + "*");

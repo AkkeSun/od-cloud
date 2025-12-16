@@ -38,105 +38,6 @@ class DeleteFileServiceTest {
     class Describe_deleteFile {
 
         @Test
-        @DisplayName("[success] PRIVATE 폴더의 소유주가 단일 파일을 삭제한다")
-        void success_privateFolder_owner_singleFile() {
-            // given
-            String ownerEmail = "owner@test.com";
-            FolderInfo privateFolder = FolderInfo.builder()
-                .id(1L)
-                .groupId(null)
-                .owner(ownerEmail)
-                .accessLevel("PRIVATE")
-                .name("Private Folder")
-                .path("/private")
-                .build();
-            fakeFolderStoragePort.database.add(privateFolder);
-
-            FileInfo file = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test.txt")
-                .fileLoc("/storage/test.txt")
-                .build();
-            fakeFileStoragePort.database.add(file);
-
-            Account ownerAccount = Account.builder()
-                .email(ownerEmail)
-                .groups(List.of())
-                .build();
-
-            DeleteFileCommand command = DeleteFileCommand.builder()
-                .account(ownerAccount)
-                .fileIds(List.of(1L))
-                .build();
-
-            // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
-
-            // then
-            assertThat(response.result()).isTrue();
-            assertThat(response.logs()).hasSize(1);
-            assertThat(response.logs().get(0).fileId()).isEqualTo(1L);
-            assertThat(response.logs().get(0).errorMessage()).isNull();
-            assertThat(fakeFileStoragePort.database).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 여러 파일을 동시에 삭제한다")
-        void success_multipleFiles() {
-            // given
-            String ownerEmail = "owner@test.com";
-            FolderInfo privateFolder = FolderInfo.builder()
-                .id(1L)
-                .groupId(null)
-                .owner(ownerEmail)
-                .accessLevel("PRIVATE")
-                .name("Private Folder")
-                .path("/private")
-                .build();
-            fakeFolderStoragePort.database.add(privateFolder);
-
-            FileInfo file1 = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test1.txt")
-                .fileLoc("/storage/test1.txt")
-                .build();
-            FileInfo file2 = FileInfo.builder()
-                .id(2L)
-                .folderId(1L)
-                .fileName("test2.txt")
-                .fileLoc("/storage/test2.txt")
-                .build();
-            FileInfo file3 = FileInfo.builder()
-                .id(3L)
-                .folderId(1L)
-                .fileName("test3.txt")
-                .fileLoc("/storage/test3.txt")
-                .build();
-            fakeFileStoragePort.database.addAll(List.of(file1, file2, file3));
-
-            Account ownerAccount = Account.builder()
-                .email(ownerEmail)
-                .groups(List.of())
-                .build();
-
-            DeleteFileCommand command = DeleteFileCommand.builder()
-                .account(ownerAccount)
-                .fileIds(List.of(1L, 2L, 3L))
-                .build();
-
-            // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
-
-            // then
-            assertThat(response.result()).isTrue();
-            assertThat(response.logs()).hasSize(3);
-            assertThat(response.logs().stream().allMatch(log -> log.errorMessage() == null)).isTrue();
-            assertThat(fakeFileStoragePort.database).isEmpty();
-        }
-
-        @Test
         @DisplayName("[partial_success] 일부 파일만 삭제 성공한다")
         void partialSuccess_someFilesFailDueToPermission() {
             // given
@@ -147,7 +48,6 @@ class DeleteFileServiceTest {
                 .id(1L)
                 .groupId(null)
                 .owner(ownerEmail)
-                .accessLevel("PRIVATE")
                 .name("Private Folder")
                 .path("/private")
                 .build();
@@ -196,7 +96,6 @@ class DeleteFileServiceTest {
                 .id(1L)
                 .groupId(groupId)
                 .owner("owner@test.com")
-                .accessLevel("PUBLIC")
                 .name("Public Folder")
                 .path("/public")
                 .build();
@@ -239,7 +138,6 @@ class DeleteFileServiceTest {
                 .id(1L)
                 .groupId(groupId)
                 .owner("owner@test.com")
-                .accessLevel("PUBLIC")
                 .name("Public Folder")
                 .path("/public")
                 .build();
@@ -294,51 +192,6 @@ class DeleteFileServiceTest {
             assertThat(response.result()).isFalse();
             assertThat(response.logs()).hasSize(1);
             assertThat(response.logs().get(0).errorMessage()).isNotNull();
-        }
-
-        @Test
-        @DisplayName("[mixed] 일부는 성공하고 일부는 실패한다")
-        void mixed_successAndFailure() {
-            // given
-            String ownerEmail = "owner@test.com";
-            FolderInfo privateFolder = FolderInfo.builder()
-                .id(1L)
-                .groupId(null)
-                .owner(ownerEmail)
-                .accessLevel("PRIVATE")
-                .name("Private Folder")
-                .path("/private")
-                .build();
-            fakeFolderStoragePort.database.add(privateFolder);
-
-            FileInfo file1 = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test1.txt")
-                .fileLoc("/storage/test1.txt")
-                .build();
-            fakeFileStoragePort.database.add(file1);
-
-            Account ownerAccount = Account.builder()
-                .email(ownerEmail)
-                .groups(List.of())
-                .build();
-
-            // fileId 1은 존재, 999는 존재하지 않음
-            DeleteFileCommand command = DeleteFileCommand.builder()
-                .account(ownerAccount)
-                .fileIds(List.of(1L, 999L))
-                .build();
-
-            // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
-
-            // then
-            assertThat(response.result()).isFalse(); // 하나라도 실패하면 false
-            assertThat(response.logs()).hasSize(2);
-            assertThat(response.logs().get(0).errorMessage()).isNull(); // 첫 번째는 성공
-            assertThat(response.logs().get(1).errorMessage()).isNotNull(); // 두 번째는 실패
-            assertThat(fakeFileStoragePort.database).isEmpty(); // 첫 번째 파일은 삭제됨
         }
     }
 }

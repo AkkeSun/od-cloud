@@ -88,31 +88,6 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[success] 접근 권한만 수정한다")
-        void success_updateAccessLevelOnly() throws Exception {
-            // given
-            UpdateFolderRequest request = UpdateFolderRequest.builder()
-                .accessLevel("PRIVATE")
-                .build();
-
-            UpdateFolderServiceResponse serviceResponse = UpdateFolderServiceResponse.ofSuccess();
-            given(useCase.updateFolder(any())).willReturn(serviceResponse);
-
-            // when & then
-            performDocument(1L, request, "Bearer test", status().isOk(),
-                "success_접근권한만_수정", "success",
-                fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
-                    .description("상태 코드"),
-                fieldWithPath("message").type(JsonFieldType.STRING)
-                    .description("상태 메시지"),
-                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                    .description("응답 데이터"),
-                fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부")
-            );
-        }
-
-        @Test
         @DisplayName("[success] 상위 폴더를 변경한다")
         void success_updateParentFolder() throws Exception {
             // given
@@ -138,13 +113,12 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[success] 폴더명, 접근권한, 상위 폴더를 모두 수정한다")
+        @DisplayName("[success] 폴더명, 상위 폴더를 모두 수정한다")
         void success_updateAll() throws Exception {
             // given
             UpdateFolderRequest request = UpdateFolderRequest.builder()
                 .name("수정된 폴더명")
                 .parentId(2L)
-                .accessLevel("PUBLIC")
                 .build();
 
             UpdateFolderServiceResponse serviceResponse = UpdateFolderServiceResponse.ofSuccess();
@@ -161,19 +135,6 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
                     .description("수정 성공 여부")
             );
-        }
-
-        @Test
-        @DisplayName("[error] 유효하지 않은 접근 권한 값인 경우 400 에러를 반환한다")
-        void error_invalidAccessLevel() throws Exception {
-            // given
-            UpdateFolderRequest request = UpdateFolderRequest.builder()
-                .accessLevel("INVALID")
-                .build();
-
-            // when & then
-            performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
-                "유효하지 않은 접근 권한 값");
         }
 
         @Test
@@ -271,8 +232,6 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType parentIdType = request.parentId() == null ?
             JsonFieldType.NULL : JsonFieldType.NUMBER;
-        JsonFieldType accessLevelType = request.accessLevel() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
 
         mockMvc.perform(patch("/folders/{fileId}", folderId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -286,7 +245,7 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                 resource(ResourceSnippetParameters.builder()
                     .tag("Folder")
                     .summary("폴더 정보 수정 API")
-                    .description("폴더의 이름, 상위 폴더, 접근 권한을 수정하는 API 입니다")
+                    .description("폴더의 이름, 상위 폴더를 수정하는 API 입니다")
                     .pathParameters(
                         parameterWithName("fileId").description("수정할 폴더 ID")
                     )
@@ -294,9 +253,7 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("name").type(nameType)
                             .description("폴더명 (선택)"),
                         fieldWithPath("parentId").type(parentIdType)
-                            .description("상위 폴더 ID (선택)"),
-                        fieldWithPath("accessLevel").type(accessLevelType)
-                            .description("접근 권한 (선택, PRIVATE 또는 PUBLIC)")
+                            .description("상위 폴더 ID (선택)")
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(responseFields)

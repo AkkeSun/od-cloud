@@ -7,8 +7,7 @@ public record RegisterFolderCommand(
     Long parentId,
     String groupId,
     String name,
-    String owner,
-    String accessLevel
+    String owner
 ) {
 
 }

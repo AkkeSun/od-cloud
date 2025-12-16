@@ -33,7 +33,6 @@ public record FindFilesServiceResponse(
         Long id,
         String name,
         String groupId,
-        String accessLevel,
         String regDt
     ) {
 
@@ -42,7 +41,6 @@ public record FindFilesServiceResponse(
                 .id(folder.getId())
                 .name(folder.getName())
                 .groupId(folder.getGroupId())
-                .accessLevel(folder.getAccessLevel())
                 .regDt(folder.getRegDtString())
                 .build();
         }

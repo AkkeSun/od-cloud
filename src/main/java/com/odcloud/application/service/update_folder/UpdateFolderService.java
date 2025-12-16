@@ -38,7 +38,7 @@ class UpdateFolderService implements UpdateFolderUseCase {
         } else if (command.name() != null && !command.name().equals(folder.getName())) {
             handleNameChange(folder, command);
         } else {
-            folder.update(command.name(), command.accessLevel());
+            folder.update(command.name());
         }
 
         folderStoragePort.save(folder);
@@ -63,7 +63,7 @@ class UpdateFolderService implements UpdateFolderUseCase {
 
         filePort.moveFolder(folder.getPath(), newPath);
 
-        folder.updateWithNewPath(newName, command.accessLevel(), newPath);
+        folder.updateWithNewPath(newName, newPath);
         folder.updateParentId(command.parentId());
     }
 
@@ -71,6 +71,6 @@ class UpdateFolderService implements UpdateFolderUseCase {
         if (folderStoragePort.existsSameFolderName(folder.getParentId(), command.name())) {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
-        folder.update(command.name(), command.accessLevel());
+        folder.update(command.name());
     }
 }

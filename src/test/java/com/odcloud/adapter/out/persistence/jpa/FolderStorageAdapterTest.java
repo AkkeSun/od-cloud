@@ -46,7 +46,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("루트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .build();
 
@@ -68,7 +67,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedFolders.get(0).getName()).isEqualTo("루트 폴더");
             assertThat(savedFolders.get(0).getOwner()).isEqualTo("owner@example.com");
             assertThat(savedFolders.get(0).getPath()).isEqualTo("/test-group");
-            assertThat(savedFolders.get(0).getAccessLevel()).isEqualTo("PUBLIC");
         }
 
         @Test
@@ -84,7 +82,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -97,7 +94,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("서브 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/subfolder")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .build();
 
@@ -130,7 +126,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("기존 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -145,7 +140,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("업데이트된 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PRIVATE")
                 .regDt(now)
                 .modDt(now.plusHours(1))
                 .build();
@@ -160,7 +154,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 existingFolder.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getName()).isEqualTo("업데이트된 폴더");
-            assertThat(savedEntity.getAccessLevel()).isEqualTo("PRIVATE");
         }
 
         @Test
@@ -176,7 +169,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -189,7 +181,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("서브 폴더 1")
                 .owner("owner@example.com")
                 .path("/test-group/sub1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .build();
 
@@ -199,7 +190,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("서브 폴더 2")
                 .owner("owner@example.com")
                 .path("/test-group/sub2")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .build();
 
@@ -209,7 +199,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("서브 폴더 3")
                 .owner("owner@example.com")
                 .path("/test-group/sub3")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .build();
 
@@ -235,51 +224,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
         }
 
         @Test
-        @DisplayName("[success] 다양한 접근 레벨의 폴더를 저장한다")
-        void success_variousAccessLevels() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            FolderInfo publicFolder = FolderInfo.builder()
-                .parentId(null)
-                .groupId("test-group")
-                .name("공개 폴더")
-                .owner("owner@example.com")
-                .path("/test-group/public")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .build();
-
-            FolderInfo privateFolder = FolderInfo.builder()
-                .parentId(null)
-                .groupId("test-group")
-                .name("비공개 폴더")
-                .owner("owner@example.com")
-                .path("/test-group/private")
-                .accessLevel("PRIVATE")
-                .regDt(now)
-                .build();
-
-            // when
-            adapter.save(publicFolder);
-            adapter.save(privateFolder);
-            entityManager.flush();
-            entityManager.clear();
-
-            // then
-            var savedFolders = entityManager
-                .createQuery(
-                    "SELECT f FROM FolderInfoEntity f WHERE f.groupId = :groupId ORDER BY f.accessLevel",
-                    FolderInfoEntity.class)
-                .setParameter("groupId", "test-group")
-                .getResultList();
-
-            assertThat(savedFolders).hasSize(2);
-            assertThat(savedFolders.get(0).getAccessLevel()).isEqualTo("PRIVATE");
-            assertThat(savedFolders.get(1).getAccessLevel()).isEqualTo("PUBLIC");
-        }
-
-        @Test
         @DisplayName("[success] null modDt로 폴더를 저장한다")
         void success_nullModDt() {
             // given
@@ -290,7 +234,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(null)
                 .build();
@@ -327,7 +270,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -345,7 +287,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getName()).isEqualTo("테스트 폴더");
             assertThat(result.getOwner()).isEqualTo("owner@example.com");
             assertThat(result.getPath()).isEqualTo("/test-group");
-            assertThat(result.getAccessLevel()).isEqualTo("PUBLIC");
         }
 
         @Test
@@ -361,7 +302,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -374,7 +314,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("서브 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/subfolder")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -415,7 +354,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("폴더 1")
                 .owner("owner@example.com")
                 .path("/group-1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -427,7 +365,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("폴더 2")
                 .owner("owner@example.com")
                 .path("/group-2")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -464,7 +401,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -477,7 +413,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("기존 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/existing")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -505,7 +440,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -533,7 +467,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더 1")
                 .owner("owner@example.com")
                 .path("/group-1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -546,7 +479,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더 2")
                 .owner("owner@example.com")
                 .path("/group-2")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -559,7 +491,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("공통 이름")
                 .owner("owner@example.com")
                 .path("/group-1/common")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -587,7 +518,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -600,7 +530,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("폴더 A")
                 .owner("owner@example.com")
                 .path("/test-group/a")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -611,7 +540,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("폴더 B")
                 .owner("owner@example.com")
                 .path("/test-group/b")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -622,7 +550,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("폴더 C")
                 .owner("owner@example.com")
                 .path("/test-group/c")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -650,7 +577,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -663,7 +589,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("TestFolder")
                 .owner("owner@example.com")
                 .path("/test-group/test")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -695,7 +620,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Parent Folder")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -708,7 +632,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Child 1")
                 .owner("user@example.com")
                 .path("/group1/child1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -720,7 +643,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Child 2")
                 .owner("user@example.com")
                 .path("/group1/child2")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -763,7 +685,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Project A")
                 .owner("user@example.com")
                 .path("/group1/projectA")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -775,7 +696,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Documents")
                 .owner("user@example.com")
                 .path("/group1/documents")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -787,7 +707,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Project B")
                 .owner("user@example.com")
                 .path("/group1/projectB")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -830,7 +749,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Parent")
                 .owner("user@example.com")
                 .path("/group1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -843,7 +761,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Child of Group1")
                 .owner("user@example.com")
                 .path("/group1/child1")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -856,7 +773,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .name("Child of Group2")
                 .owner("user@example.com")
                 .path("/group1/child2")
-                .accessLevel("PUBLIC")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -885,198 +801,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(2);
             assertThat(result.get(0).getName()).isEqualTo("Child of Group1");
             assertThat(result.get(0).getGroupId()).isEqualTo("group1");
-        }
-
-        @Test
-        @DisplayName("[success] PUBLIC 폴더만 조회한다")
-        void success_onlyPublicFolders() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // PUBLIC 폴더 생성
-            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId("group1")
-                .name("Public Folder")
-                .owner("other@example.com")
-                .path("/group1/public")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFolder);
-
-            // PRIVATE 폴더 생성 (다른 소유자)
-            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId("group1")
-                .name("Private Folder")
-                .owner("other@example.com")
-                .path("/group1/private")
-                .accessLevel("PRIVATE")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFolder);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
-                .build();
-
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
-                .account(account)
-                .folderId(null)
-                .sortType("NAME_ASC")
-                .build();
-
-            // when
-            var result = adapter.findAll(command);
-
-            // then
-            assertThat(result).hasSize(1);
-            assertThat(result.get(0).getName()).isEqualTo("Public Folder");
-            assertThat(result.get(0).getAccessLevel()).isEqualTo("PUBLIC");
-        }
-
-        @Test
-        @DisplayName("[success] 소유자는 자신의 PRIVATE 폴더를 조회할 수 있다")
-        void success_ownerCanSeePrivateFolders() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // PUBLIC 폴더 생성
-            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId("group1")
-                .name("Public Folder")
-                .owner("owner@example.com")
-                .path("/group1/public")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFolder);
-
-            // PRIVATE 폴더 생성 (동일 소유자)
-            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId("group1")
-                .name("Private Folder")
-                .owner("owner@example.com")
-                .path("/group1/private")
-                .accessLevel("PRIVATE")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFolder);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
-                .id(1L)
-                .email("owner@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
-                .build();
-
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
-                .account(account)
-                .folderId(null)
-                .sortType("NAME_ASC")
-                .build();
-
-            // when
-            var result = adapter.findAll(command);
-
-            // then
-            assertThat(result).hasSize(2);
-            assertThat(result).extracting(FolderInfo::getName)
-                .containsExactlyInAnyOrder("Public Folder", "Private Folder");
-        }
-
-        @Test
-        @DisplayName("[success] 정렬 순서를 적용한다")
-        void success_withSorting() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // 부모 폴더 생성
-            FolderInfoEntity parentFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId("group1")
-                .name("Parent")
-                .owner("user@example.com")
-                .path("/group1")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(parentFolder);
-
-            // 폴더 생성 (역순으로)
-            FolderInfoEntity folder1 = FolderInfoEntity.builder()
-                .parentId(parentFolder.getId())
-                .groupId("group1")
-                .name("C Folder")
-                .owner("user@example.com")
-                .path("/group1/c")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(folder1);
-
-            FolderInfoEntity folder2 = FolderInfoEntity.builder()
-                .parentId(parentFolder.getId())
-                .groupId("group1")
-                .name("A Folder")
-                .owner("user@example.com")
-                .path("/group1/a")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(folder2);
-
-            FolderInfoEntity folder3 = FolderInfoEntity.builder()
-                .parentId(parentFolder.getId())
-                .groupId("group1")
-                .name("B Folder")
-                .owner("user@example.com")
-                .path("/group1/b")
-                .accessLevel("PUBLIC")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(folder3);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
-                .build();
-
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
-                .account(account)
-                .folderId(parentFolder.getId())
-                .sortType("NAME_DESC")
-                .build();
-
-            // when
-            var result = adapter.findAll(command);
-
-            // then
-            assertThat(result).hasSize(3);
-            assertThat(result).extracting(FolderInfo::getName)
-                .containsExactly("C Folder", "B Folder", "A Folder");
         }
     }
 }

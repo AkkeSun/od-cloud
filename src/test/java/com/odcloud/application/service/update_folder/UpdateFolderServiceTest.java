@@ -54,7 +54,6 @@ class UpdateFolderServiceTest {
                 .name("기존 폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -76,47 +75,6 @@ class UpdateFolderServiceTest {
             assertThat(updatedFolder.getId()).isEqualTo(1L);
             assertThat(updatedFolder.getName()).isEqualTo("수정된 폴더명");
             assertThat(updatedFolder.getPath()).isEqualTo("/group-123/folder1");
-            assertThat(updatedFolder.getModDt()).isNotNull();
-            assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(0);
-        }
-
-        @Test
-        @DisplayName("[success] 접근 권한만 수정한다")
-        void success_updateAccessLevelOnly() {
-            // given
-            Account account = Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(Arrays.asList())
-                .build();
-
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .parentId(0L)
-                .groupId("group-123")
-                .name("폴더명")
-                .owner("user@example.com")
-                .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
-                .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
-                .build();
-
-            fakeFolderStoragePort.database.add(folder);
-
-            UpdateFolderCommand command = UpdateFolderCommand.builder()
-                .folderId(1L)
-                .account(account)
-                .accessLevel("PRIVATE")
-                .build();
-
-            // when
-            UpdateFolderServiceResponse response = updateFolderService.updateFolder(command);
-
-            // then
-            assertThat(response.result()).isTrue();
-            FolderInfo updatedFolder = fakeFolderStoragePort.database.get(0);
-            assertThat(updatedFolder.getAccessLevel()).isEqualTo("PRIVATE");
-            assertThat(updatedFolder.getName()).isEqualTo("폴더명");
             assertThat(updatedFolder.getModDt()).isNotNull();
             assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(0);
         }
@@ -153,7 +111,6 @@ class UpdateFolderServiceTest {
                 .name("폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -182,7 +139,7 @@ class UpdateFolderServiceTest {
         }
 
         @Test
-        @DisplayName("[success] 폴더명, 접근권한, 상위 폴더를 모두 수정한다")
+        @DisplayName("[success] 폴더명, 상위 폴더를 모두 수정한다")
         void success_updateAll() {
             // given
             Account account = Account.builder()
@@ -213,7 +170,6 @@ class UpdateFolderServiceTest {
                 .name("기존 폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -226,7 +182,6 @@ class UpdateFolderServiceTest {
                 .account(account)
                 .name("수정된 폴더명")
                 .parentId(2L)
-                .accessLevel("PRIVATE")
                 .build();
 
             // when
@@ -237,7 +192,6 @@ class UpdateFolderServiceTest {
             FolderInfo updatedFolder = fakeFolderStoragePort.findById(1L);
             assertThat(updatedFolder.getName()).isEqualTo("수정된 폴더명");
             assertThat(updatedFolder.getParentId()).isEqualTo(2L);
-            assertThat(updatedFolder.getAccessLevel()).isEqualTo("PRIVATE");
             assertThat(updatedFolder.getPath()).startsWith("/group-123/parent/");
             assertThat(updatedFolder.getModDt()).isNotNull();
             assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(1);
@@ -260,7 +214,6 @@ class UpdateFolderServiceTest {
                 .name("폴더명")
                 .owner("other@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -302,7 +255,6 @@ class UpdateFolderServiceTest {
                 .name("폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -347,7 +299,6 @@ class UpdateFolderServiceTest {
                 .name("기존 폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -400,7 +351,6 @@ class UpdateFolderServiceTest {
                 .name("폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -461,7 +411,6 @@ class UpdateFolderServiceTest {
                 .name("폴더명")
                 .owner("user@example.com")
                 .path("/group-123/folder1")
-                .accessLevel("PUBLIC")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 

@@ -12,9 +12,7 @@ public record UpdateFolderCommand(
 
     String name,
 
-    Long parentId,
-
-    String accessLevel
+    Long parentId
 ) {
 
 }

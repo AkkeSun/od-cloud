@@ -41,9 +41,6 @@ class FolderInfoEntity {
     @Column(name = "PATH")
     private String path;
 
-    @Column(name = "ACCESS_LEVEL")
-    private String accessLevel;
-
     @Column(name = "MOD_DT")
     private LocalDateTime modDt;
 
@@ -58,7 +55,6 @@ class FolderInfoEntity {
             .name(folder.getName())
             .owner(folder.getOwner())
             .path(folder.getPath())
-            .accessLevel(folder.getAccessLevel())
             .modDt(folder.getModDt())
             .regDt(folder.getRegDt())
             .build();

@@ -50,7 +50,6 @@ class RegisterFolderServiceTest {
                 .groupId("test-group")
                 .name("New Folder")
                 .owner("owner@example.com")
-                .accessLevel("PUBLIC")
                 .build();
 
             // when
@@ -91,7 +90,6 @@ class RegisterFolderServiceTest {
                 .groupId("test-group")
                 .name("Existing Folder")
                 .owner("owner@example.com")
-                .accessLevel("PUBLIC")
                 .build();
 
             // when & then

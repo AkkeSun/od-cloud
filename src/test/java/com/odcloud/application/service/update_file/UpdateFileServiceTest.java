@@ -51,7 +51,6 @@ class UpdateFileServiceTest {
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -97,7 +96,6 @@ class UpdateFileServiceTest {
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -107,7 +105,6 @@ class UpdateFileServiceTest {
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -152,7 +149,6 @@ class UpdateFileServiceTest {
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -162,7 +158,6 @@ class UpdateFileServiceTest {
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -228,7 +223,6 @@ class UpdateFileServiceTest {
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -276,7 +270,6 @@ class UpdateFileServiceTest {
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -286,7 +279,6 @@ class UpdateFileServiceTest {
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -323,56 +315,7 @@ class UpdateFileServiceTest {
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_SAVED_FILE_NAME);
         }
-
-        @Test
-        @DisplayName("[failure] PRIVATE 폴더에 권한이 없는 사용자가 접근하면 예외가 발생한다")
-        void failure_accessDeniedToPrivateFolder() {
-            // given
-            FolderInfo sourceFolder = FolderInfo.builder()
-                .id(1L)
-                .groupId("test-group")
-                .name("Source Folder")
-                .owner("test@example.com")
-                .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
-                .build();
-            fakeFolderStoragePort.database.add(sourceFolder);
-
-            FolderInfo targetFolder = FolderInfo.builder()
-                .id(2L)
-                .groupId("test-group")
-                .name("Private Folder")
-                .owner("owner@example.com")
-                .path("/test-group/folder2")
-                .accessLevel("PRIVATE")
-                .build();
-            fakeFolderStoragePort.database.add(targetFolder);
-
-            FileInfo file = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test.txt")
-                .fileLoc("/test-group/folder1/abc123_20241120.txt")
-                .regDt(LocalDateTime.now())
-                .build();
-            fakeFileStoragePort.database.add(file);
-
-            Account account = Account.builder()
-                .email("unauthorized@example.com")
-                .build();
-
-            UpdateFileCommand command = UpdateFileCommand.builder()
-                .fileId(1L)
-                .account(account)
-                .folderId(2L)
-                .build();
-
-            // when & then
-            assertThatThrownBy(() -> updateFileService.update(command))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_FORBIDDEN_ACCESS);
-        }
-
+        
         @Test
         @DisplayName("[success] PRIVATE 폴더의 소유자는 접근할 수 있다")
         void success_ownerCanAccessPrivateFolder() {
@@ -383,7 +326,6 @@ class UpdateFileServiceTest {
                 .name("Source Folder")
                 .owner("owner@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -393,7 +335,6 @@ class UpdateFileServiceTest {
                 .name("Private Folder")
                 .owner("owner@example.com")
                 .path("/test-group/folder2")
-                .accessLevel("PRIVATE")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -435,7 +376,6 @@ class UpdateFileServiceTest {
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
-                .accessLevel("PUBLIC")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 

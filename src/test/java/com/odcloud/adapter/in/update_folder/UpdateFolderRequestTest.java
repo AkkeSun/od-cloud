@@ -23,7 +23,6 @@ class UpdateFolderRequestTest {
             UpdateFolderRequest request = UpdateFolderRequest.builder()
                 .name("수정된 폴더명")
                 .parentId(2L)
-                .accessLevel("PUBLIC")
                 .build();
 
             Account account = mock(Account.class);
@@ -38,7 +37,6 @@ class UpdateFolderRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.name()).isEqualTo("수정된 폴더명");
             assertThat(command.parentId()).isEqualTo(2L);
-            assertThat(command.accessLevel()).isEqualTo("PUBLIC");
         }
 
         @Test
@@ -58,27 +56,6 @@ class UpdateFolderRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.name()).isEqualTo("수정된 폴더명");
             assertThat(command.parentId()).isNull();
-            assertThat(command.accessLevel()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] 접근 권한만 있는 Request를 Command로 변환한다")
-        void success_accessLevelOnly() {
-            // given
-            UpdateFolderRequest request = UpdateFolderRequest.builder()
-                .accessLevel("PRIVATE")
-                .build();
-
-            Account account = mock(Account.class);
-
-            // when
-            UpdateFolderCommand command = request.toCommand(1L, account);
-
-            // then
-            assertThat(command).isNotNull();
-            assertThat(command.name()).isNull();
-            assertThat(command.parentId()).isNull();
-            assertThat(command.accessLevel()).isEqualTo("PRIVATE");
         }
 
         @Test
@@ -98,7 +75,6 @@ class UpdateFolderRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.name()).isNull();
             assertThat(command.parentId()).isEqualTo(2L);
-            assertThat(command.accessLevel()).isNull();
         }
     }
 
@@ -113,14 +89,12 @@ class UpdateFolderRequestTest {
             UpdateFolderRequest request = UpdateFolderRequest.builder()
                 .name("수정된 폴더명")
                 .parentId(2L)
-                .accessLevel("PUBLIC")
                 .build();
 
             // then
             assertThat(request).isNotNull();
             assertThat(request.name()).isEqualTo("수정된 폴더명");
             assertThat(request.parentId()).isEqualTo(2L);
-            assertThat(request.accessLevel()).isEqualTo("PUBLIC");
         }
 
         @Test
@@ -130,13 +104,11 @@ class UpdateFolderRequestTest {
             UpdateFolderRequest request = UpdateFolderRequest.builder()
                 .name(null)
                 .parentId(null)
-                .accessLevel(null)
                 .build();
 
             // then
             assertThat(request.name()).isNull();
             assertThat(request.parentId()).isNull();
-            assertThat(request.accessLevel()).isNull();
         }
     }
 }

@@ -22,7 +22,6 @@ public class FolderInfo {
     private String name;
     private String owner;
     private String path;
-    private String accessLevel;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
@@ -33,7 +32,6 @@ public class FolderInfo {
             .name(group.getName())
             .owner(group.getOwnerEmail())
             .path("/" + group.getId())
-            .accessLevel("PUBLIC")
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -50,7 +48,6 @@ public class FolderInfo {
             .name(command.name())
             .owner(command.owner())
             .path(parentPath + "/" + folderName)
-            .accessLevel(command.accessLevel())
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -59,22 +56,16 @@ public class FolderInfo {
         return DateUtil.formatDateTime(regDt);
     }
 
-    public void update(String name, String accessLevel) {
+    public void update(String name) {
         if (name != null) {
             this.name = name;
-        }
-        if (accessLevel != null) {
-            this.accessLevel = accessLevel;
         }
         this.modDt = LocalDateTime.now();
     }
 
-    public void updateWithNewPath(String name, String accessLevel, String newPath) {
+    public void updateWithNewPath(String name, String newPath) {
         if (name != null) {
             this.name = name;
-        }
-        if (accessLevel != null) {
-            this.accessLevel = accessLevel;
         }
         this.path = newPath;
         this.modDt = LocalDateTime.now();

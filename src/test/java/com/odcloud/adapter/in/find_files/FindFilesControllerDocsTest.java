@@ -87,7 +87,6 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                     .id(11L)
                     .name("Documents")
                     .groupId("group1")
-                    .accessLevel("PUBLIC")
                     .regDt("2024-01-01 12:00:00")
                     .build();
 
@@ -96,7 +95,6 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                     .id(12L)
                     .name("Private")
                     .groupId("group1")
-                    .accessLevel("PRIVATE")
                     .regDt("2024-01-02 12:00:00")
                     .build();
 
@@ -127,8 +125,6 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                     .type(JsonFieldType.STRING).description("폴더 이름"),
                 fieldWithPath("data.folders[].groupId")
                     .type(JsonFieldType.STRING).description("그룹 ID"),
-                fieldWithPath("data.folders[].accessLevel")
-                    .type(JsonFieldType.STRING).description("접근 권한 (PUBLIC/PRIVATE)"),
                 fieldWithPath("data.folders[].regDt")
                     .type(JsonFieldType.STRING).description("등록일시"),
                 fieldWithPath("data.files")

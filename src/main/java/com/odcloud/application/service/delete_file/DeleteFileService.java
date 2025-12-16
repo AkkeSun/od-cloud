@@ -33,10 +33,11 @@ class DeleteFileService implements DeleteFileUseCase {
             try {
                 FileInfo file = fileInfoStoragePort.findById(fileId);
                 FolderInfo folder = folderInfoStoragePort.findById(file.getFolderId());
-                validateDeletePermission(command, folder);
+                if (!command.account().getGroupIds().contains(folder.getGroupId())) {
+                    throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
+                }
                 filePort.deleteFile(file.getFileLoc());
                 fileInfoStoragePort.delete(file);
-
                 logs.add(DeleteFileServiceResponseItem.ofSuccess(fileId));
             } catch (Exception e) {
                 allSuccess = false;
@@ -51,23 +52,5 @@ class DeleteFileService implements DeleteFileUseCase {
             .result(allSuccess)
             .logs(logs)
             .build();
-    }
-
-    private void validateDeletePermission(DeleteFileCommand command, FolderInfo folder) {
-        String accessLevel = folder.getAccessLevel();
-        if ("PRIVATE".equalsIgnoreCase(accessLevel)) {
-            if (!folder.getOwner().equals(command.account().getEmail())) {
-                throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
-            }
-            return;
-        }
-
-        if ("PUBLIC".equalsIgnoreCase(accessLevel)) {
-            if (!command.account().getGroupIds().contains(folder.getGroupId())) {
-                throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
-            }
-            return;
-        }
-        throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
     }
 }

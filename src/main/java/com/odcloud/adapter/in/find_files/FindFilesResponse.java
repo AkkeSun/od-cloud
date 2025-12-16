@@ -28,7 +28,6 @@ record FindFilesResponse(
         Long id,
         String name,
         String groupId,
-        String accessLevel,
         String regDt
     ) {
         public static FolderResponse of(FindFilesServiceResponse.FolderResponseItem item) {
@@ -36,7 +35,6 @@ record FindFilesResponse(
                 .id(item.id())
                 .name(item.name())
                 .groupId(item.groupId())
-                .accessLevel(item.accessLevel())
                 .regDt(item.regDt())
                 .build();
         }

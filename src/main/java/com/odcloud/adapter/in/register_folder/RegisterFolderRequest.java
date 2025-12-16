@@ -3,8 +3,6 @@ package com.odcloud.adapter.in.register_folder;
 import com.odcloud.application.port.in.command.RegisterFolderCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
-import com.odcloud.infrastructure.validation.Contains;
-import com.odcloud.infrastructure.validation.groups.ValidationGroups.CustomGroups;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,14 +17,7 @@ record RegisterFolderRequest(
     String groupId, // 위에서 받아오는걸로 수정
 
     @NotBlank(message = "폴더명은 필수값 입니다", groups = NotBlankGroups.class)
-    String name,
-
-    @NotBlank(message = "접근 범위는 필수값 입니다", groups = NotBlankGroups.class)
-    @Contains(
-        values = {"PRIVATE", "PUBLIC"},
-        message = "유효하지 않은 접근 범위 입니다",
-        groups = CustomGroups.class)
-    String accessLevel
+    String name
 ) {
 
     RegisterFolderCommand toCommand(Account account) {
@@ -35,7 +26,6 @@ record RegisterFolderRequest(
             .groupId(groupId)
             .name(name)
             .owner(account.getEmail())
-            .accessLevel(accessLevel)
             .build();
     }
 

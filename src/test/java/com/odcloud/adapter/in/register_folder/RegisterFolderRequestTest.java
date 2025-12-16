@@ -24,7 +24,6 @@ class RegisterFolderRequestTest {
                 .parentId(1L)
                 .groupId("group-123")
                 .name("name")
-                .accessLevel("PUBLIC")
                 .build();
 
             Account account = mock(Account.class);
@@ -49,7 +48,6 @@ class RegisterFolderRequestTest {
                 .parentId(null)
                 .groupId(null)
                 .name(null)
-                .accessLevel(null)
                 .build();
 
             Account account = mock(Account.class);
@@ -74,7 +72,6 @@ class RegisterFolderRequestTest {
                 .parentId(0L)
                 .groupId("")
                 .name("")
-                .accessLevel("")
                 .build();
 
             Account account = mock(Account.class);

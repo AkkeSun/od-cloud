@@ -32,7 +32,6 @@ class FolderInfoRepository {
             folderInfoEntity.name,
             folderInfoEntity.owner,
             folderInfoEntity.path,
-            folderInfoEntity.accessLevel,
             folderInfoEntity.modDt,
             folderInfoEntity.regDt
         );
@@ -57,12 +56,10 @@ class FolderInfoRepository {
 
     public List<FolderInfo> findAll(FindFilesCommand command) {
         String sql = """
-            SELECT ID, PARENT_ID, GROUP_ID, NAME, PATH, OWNER, ACCESS_LEVEL, REG_DT, MOD_DT
+            SELECT ID, PARENT_ID, GROUP_ID, NAME, PATH, OWNER, REG_DT, MOD_DT
             FROM FOLDER_INFO
-            WHERE (
-                 (GROUP_ID IN (:groupIds) AND ACCESS_LEVEL = 'PUBLIC')
-                 OR (OWNER = :email AND ACCESS_LEVEL = 'PRIVATE')
-                 ) %s
+            WHERE GROUP_ID IN (:groupIds)
+                  %s
             ORDER BY
             """ + getSortRule(command.sortType());
 
@@ -83,7 +80,6 @@ class FolderInfoRepository {
 
         Query query = entityManager.createNativeQuery(sql.toString(), FolderInfoEntity.class);
         query.setParameter("groupIds", command.account().getGroupIds());
-        query.setParameter("email", command.account().getEmail());
 
         if (command.isFulltextSearch() && !isH2) {
             query.setParameter("keyword", command.keyword() + "*");
@@ -102,7 +98,6 @@ class FolderInfoRepository {
                 .parentId(entity.getParentId())
                 .groupId(entity.getGroupId())
                 .name(entity.getName())
-                .accessLevel(entity.getAccessLevel())
                 .regDt(entity.getRegDt())
                 .build())
             .toList();

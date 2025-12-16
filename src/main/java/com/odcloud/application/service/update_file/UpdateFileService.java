@@ -1,6 +1,5 @@
 package com.odcloud.application.service.update_file;
 
-import static com.odcloud.infrastructure.exception.ErrorCode.Business_FORBIDDEN_ACCESS;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FILE_NAME;
 
 import com.odcloud.application.port.in.UpdateFileUseCase;
@@ -49,11 +48,6 @@ class UpdateFileService implements UpdateFileUseCase {
         if (command.folderId() != null && !command.folderId().equals(file.getFolderId())) {
             FolderInfo targetFolder = folderStoragePort.findById(command.folderId());
 
-            // 접근 권한 확인
-            if (!hasAccessToFolder(targetFolder, command.account().getEmail())) {
-                throw new CustomBusinessException(Business_FORBIDDEN_ACCESS);
-            }
-
             // 대상 폴더에 동일한 파일명이 있는지 확인
             String targetFileName =
                 command.fileName() != null ? command.fileName() : file.getFileName();
@@ -74,16 +68,6 @@ class UpdateFileService implements UpdateFileUseCase {
         fileStoragePort.save(file);
 
         return UpdateFileServiceResponse.ofSuccess();
-    }
-
-    private boolean hasAccessToFolder(FolderInfo folder, String userEmail) {
-        // PUBLIC 폴더는 모두 접근 가능
-        if ("PUBLIC".equals(folder.getAccessLevel())) {
-            return true;
-        }
-
-        // PRIVATE 폴더는 소유자만 접근 가능
-        return folder.getOwner().equals(userEmail);
     }
 
     private String generateNewFileLoc(FolderInfo targetFolder, String originalFileName) {

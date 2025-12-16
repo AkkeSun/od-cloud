@@ -29,7 +29,6 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
             .name(folder.getName())
             .owner(folder.getOwner())
             .path(folder.getPath())
-            .accessLevel(folder.getAccessLevel())
             .parentId(folder.getParentId() == null ? 0 : folder.getParentId())
             .regDt(folder.getRegDt())
             .modDt(folder.getModDt())

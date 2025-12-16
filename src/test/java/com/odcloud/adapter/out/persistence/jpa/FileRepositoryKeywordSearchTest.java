@@ -46,51 +46,21 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .name("Public Folder")
             .owner("admin@example.com")
             .path("/group1/public")
-            .accessLevel("PUBLIC")
             .regDt(now)
             .modDt(now)
             .build();
         entityManager.persist(publicFolder);
 
-        // 2. 본인의 PRIVATE 폴더 생성
-        FolderInfoEntity myPrivateFolder = FolderInfoEntity.builder()
-            .parentId(null)
-            .groupId("group1")
-            .name("My Private Folder")
-            .owner("user@example.com")
-            .path("/group1/my-private")
-            .accessLevel("PRIVATE")
-            .regDt(now)
-            .modDt(now)
-            .build();
-        entityManager.persist(myPrivateFolder);
-
-        // 3. 다른 사람의 PRIVATE 폴더 생성
-        FolderInfoEntity otherPrivateFolder = FolderInfoEntity.builder()
-            .parentId(null)
-            .groupId("group1")
-            .name("Other Private Folder")
-            .owner("other@example.com")
-            .path("/group1/other-private")
-            .accessLevel("PRIVATE")
-            .regDt(now)
-            .modDt(now)
-            .build();
-        entityManager.persist(otherPrivateFolder);
-
-        // 4. 권한 없는 그룹의 PUBLIC 폴더 생성
         FolderInfoEntity noAccessPublicFolder = FolderInfoEntity.builder()
             .parentId(null)
             .groupId("group2")
             .name("No Access Public Folder")
             .owner("admin@example.com")
             .path("/group2/public")
-            .accessLevel("PUBLIC")
             .regDt(now)
             .modDt(now)
             .build();
         entityManager.persist(noAccessPublicFolder);
-
         entityManager.flush();
 
         // PUBLIC 폴더에 파일 생성
@@ -103,26 +73,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .build();
         entityManager.persist(publicFile);
 
-        // 본인의 PRIVATE 폴더에 파일 생성
-        FileInfoEntity myPrivateFile = FileInfoEntity.builder()
-            .folderId(myPrivateFolder.getId())
-            .fileName("test-my-private.pdf")
-            .fileLoc("/group1/my-private/test-my-private.pdf")
-            .regDt(now)
-            .modDt(now)
-            .build();
-        entityManager.persist(myPrivateFile);
-
-        // 다른 사람의 PRIVATE 폴더에 파일 생성 (검색 안되어야 함)
-        FileInfoEntity otherPrivateFile = FileInfoEntity.builder()
-            .folderId(otherPrivateFolder.getId())
-            .fileName("test-other-private.doc")
-            .fileLoc("/group1/other-private/test-other-private.doc")
-            .regDt(now)
-            .modDt(now)
-            .build();
-        entityManager.persist(otherPrivateFile);
-
         // 권한 없는 그룹의 PUBLIC 폴더에 파일 생성 (검색 안되어야 함)
         FileInfoEntity noAccessFile = FileInfoEntity.builder()
             .folderId(noAccessPublicFolder.getId())
@@ -132,7 +82,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .modDt(now)
             .build();
         entityManager.persist(noAccessFile);
-
         entityManager.flush();
         entityManager.clear();
 
@@ -155,9 +104,9 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         System.out.println("=== 검색 결과 ===");
         result.forEach(file -> System.out.println("Found: " + file.getFileName()));
 
-        assertThat(result).hasSize(2);
+        assertThat(result).hasSize(1);
         assertThat(result).extracting(FileInfo::getFileName)
-            .containsExactlyInAnyOrder("test-public.txt", "test-my-private.pdf");
+            .containsExactlyInAnyOrder("test-public.txt");
     }
 
     @Test
@@ -172,7 +121,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .name("Test Folder")
             .owner("user@example.com")
             .path("/group1/test")
-            .accessLevel("PUBLIC")
             .regDt(now)
             .modDt(now)
             .build();

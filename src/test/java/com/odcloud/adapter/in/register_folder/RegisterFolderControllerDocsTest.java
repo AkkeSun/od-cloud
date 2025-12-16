@@ -51,7 +51,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(1L)
                 .groupId("group-123")
                 .name("새 폴더")
-                .accessLevel("PUBLIC")
                 .build();
             String authorization = "error token";
             given(useCase.createFolder(any())).willThrow(
@@ -70,7 +69,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(1L)
                 .groupId("group-123")
                 .name("새 폴더")
-                .accessLevel("PUBLIC")
                 .build();
 
             RegisterFolderServiceResponse serviceResponse =
@@ -99,7 +97,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(null)
                 .groupId("group-123")
                 .name("새 폴더")
-                .accessLevel("PUBLIC")
                 .build();
 
             // when & then
@@ -112,7 +109,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
                 .name("새 폴더")
-                .accessLevel("PUBLIC")
                 .build();
 
             performErrorDocument(request, "Bearer token", status().isBadRequest(), "그룹 아이디 미입력");
@@ -124,36 +120,9 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
                 .groupId("group-123")
-                .accessLevel("PUBLIC")
                 .build();
 
             performErrorDocument(request, "Bearer token", status().isBadRequest(), "이름 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] accessLevel 이 빈 문자열이면 400을 반환한다.")
-        void error_accessLevelIsBlank() throws Exception {
-            RegisterFolderRequest request = RegisterFolderRequest.builder()
-                .parentId(1L)
-                .groupId("group-123")
-                .name("새 폴더")
-                .build();
-
-            performErrorDocument(request, "Bearer token", status().isBadRequest(), "접근 범위 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] accessLevel 이 잘못된 값이면 400을 반환한다.")
-        void error_accessLevelIsInvalid() throws Exception {
-            RegisterFolderRequest request = RegisterFolderRequest.builder()
-                .parentId(1L)
-                .groupId("group-123")
-                .name("새 폴더")
-                .accessLevel("INVALID")
-                .build();
-
-            performErrorDocument(request, "Bearer token", status().isBadRequest(),
-                "유효하지 않은 접근 범위 입력");
         }
 
         @Test
@@ -163,7 +132,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(999L)
                 .groupId("group-123")
                 .name("새 폴더")
-                .accessLevel("PUBLIC")
                 .build();
 
             given(useCase.createFolder(any()))
@@ -181,7 +149,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(1L)
                 .groupId("group-123")
                 .name("중복 폴더")
-                .accessLevel("PUBLIC")
                 .build();
 
             given(useCase.createFolder(any()))
@@ -208,8 +175,6 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType nameType = request.name() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
-        JsonFieldType accessLevelType = request.accessLevel() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
 
         mockMvc.perform(post("/folders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -231,9 +196,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("groupId").type(groupIdType)
                             .description("그룹 ID"),
                         fieldWithPath("name").type(nameType)
-                            .description("폴더명"),
-                        fieldWithPath("accessLevel").type(accessLevelType)
-                            .description("접근 권한 (필수, PRIVATE/PUBLIC 중 하나)")
+                            .description("폴더명")
                     )
                     .responseFields(responseFields)
                     .requestSchema(Schema.schema("[request] " + apiName))
