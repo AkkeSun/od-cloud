@@ -7,8 +7,6 @@ import com.odcloud.application.port.out.FilePort;
 import com.odcloud.application.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,6 @@ class RegisterFileService implements RegisterFileUseCase {
     public RegisterFileServiceResponse register(RegisterFileCommand command) {
         FolderInfo folder = folderStoragePort.findById(command.folderId());
 
-        List<String> savedFileNames = new ArrayList<>();
         for (MultipartFile multipartFile : command.files()) {
             FileInfo file = FileInfo.create(folder, multipartFile);
             int fileNumber = 1;
@@ -40,7 +37,6 @@ class RegisterFileService implements RegisterFileUseCase {
 
             fileStoragePort.save(file);
             filePort.uploadFile(file);
-            savedFileNames.add(file.getFileName());
         }
 
         return RegisterFileServiceResponse.ofSuccess();
