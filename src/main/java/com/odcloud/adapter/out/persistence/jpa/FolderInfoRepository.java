@@ -143,6 +143,8 @@ class FolderInfoRepository {
 
     @Transactional
     void delete(FolderInfo folder) {
-        entityManager.remove(FolderInfoEntity.of(folder));
+        queryFactory.delete(folderInfoEntity)
+            .where(folderInfoEntity.id.eq(folder.getId()))
+            .execute();
     }
 }

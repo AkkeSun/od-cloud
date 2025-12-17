@@ -153,6 +153,8 @@ class FileInfoRepository {
 
     @Transactional
     public void delete(FileInfo file) {
-        entityManager.remove(FileInfoEntity.of(file));
+        queryFactory.delete(fileInfoEntity)
+            .where(fileInfoEntity.id.eq(file.getId()))
+            .execute();
     }
 }
