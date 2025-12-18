@@ -9,6 +9,7 @@ import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
+import com.odcloud.fakeClass.FakeProfileConstant;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ class FindFilesServiceTest {
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         findFilesService = new FindFilesService(
+            FakeProfileConstant.create(),
             fakeFileStoragePort,
             fakeFolderStoragePort
         );

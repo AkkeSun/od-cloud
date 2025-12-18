@@ -21,6 +21,7 @@ public record FindGroupSelfServiceResponse(
 
     @Builder
     public record ActiveGroupInfo(
+        String id,
         String name,
         MemberInfo manager,
         List<MemberInfo> members,
@@ -40,6 +41,7 @@ public record FindGroupSelfServiceResponse(
                 .toList();
 
             return ActiveGroupInfo.builder()
+                .id(group.getId())
                 .name(group.getName())
                 .manager(managerInfo)
                 .members(memberInfos)
@@ -50,12 +52,14 @@ public record FindGroupSelfServiceResponse(
 
     @Builder
     public record PendingGroupInfo(
+        String id,
         String name,
         int activeMemberCount
     ) {
 
         public static PendingGroupInfo of(Group group) {
             return PendingGroupInfo.builder()
+                .id(group.getId())
                 .name(group.getName())
                 .activeMemberCount((int) group.getGroupMembers().stream()
                     .filter(member -> "ACTIVE".equals(member.getStatus()))

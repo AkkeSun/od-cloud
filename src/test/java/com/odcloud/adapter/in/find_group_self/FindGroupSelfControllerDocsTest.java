@@ -115,6 +115,7 @@ class FindGroupSelfControllerDocsTest {
 
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup1 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
+                    .id("activeGroup-1")
                     .name("My Team")
                     .manager(manager1)
                     .members(List.of(member1, member2))
@@ -135,6 +136,7 @@ class FindGroupSelfControllerDocsTest {
 
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup2 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
+                    .id("activeGroup-2")
                     .name("Development Team")
                     .manager(manager2)
                     .members(List.of(member3))
@@ -143,6 +145,7 @@ class FindGroupSelfControllerDocsTest {
 
             FindGroupSelfServiceResponse.PendingGroupInfo pendingGroup =
                 FindGroupSelfServiceResponse.PendingGroupInfo.builder()
+                    .id("pendingGroup")
                     .name("Marketing Team")
                     .activeMemberCount(1)
                     .build();
@@ -166,6 +169,8 @@ class FindGroupSelfControllerDocsTest {
                     .type(JsonFieldType.OBJECT).description("응답 데이터"),
                 fieldWithPath("data.activeGroups")
                     .type(JsonFieldType.ARRAY).description("가입된 그룹 목록"),
+                fieldWithPath("data.activeGroups[].id")
+                    .type(JsonFieldType.STRING).description("그룹 아이디"),
                 fieldWithPath("data.activeGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.activeGroups[].manager")
@@ -184,6 +189,8 @@ class FindGroupSelfControllerDocsTest {
                     .type(JsonFieldType.NUMBER).description("활성 사용자 수"),
                 fieldWithPath("data.pendingGroups")
                     .type(JsonFieldType.ARRAY).description("가입 대기중인 그룹 목록"),
+                fieldWithPath("data.pendingGroups[].id")
+                    .type(JsonFieldType.STRING).description("그룹 아이디"),
                 fieldWithPath("data.pendingGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.pendingGroups[].activeMemberCount")
