@@ -37,6 +37,12 @@ public class FileInfo {
     public static FileInfo create(FolderInfo folder, MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         String extension = getFileExtension(originalFileName);
+        String onlyFileName = originalFileName.replace(extension, "");
+        if (onlyFileName.length() > 40) {
+            onlyFileName = onlyFileName.substring(0, onlyFileName.length() - 40);
+            originalFileName = onlyFileName + extension;
+        }
+
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String serverFileName = uuid + "_" + date + extension;
