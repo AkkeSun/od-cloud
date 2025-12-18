@@ -121,6 +121,20 @@ class GroupRepository {
             .fetch();
     }
 
+    List<Group> findByOwnerEmail(String ownerEmail) {
+        return queryFactory
+            .select(Projections.constructor(
+                Group.class,
+                groupEntity.id,
+                groupEntity.ownerEmail,
+                groupEntity.name,
+                groupEntity.regDt
+            ))
+            .from(groupEntity)
+            .where(groupEntity.ownerEmail.eq(ownerEmail))
+            .fetch();
+    }
+
     List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         List<GroupAccount> groupAccounts = queryFactory
             .select(Projections.constructor(
@@ -168,6 +182,33 @@ class GroupRepository {
             .on(groupAccountEntity.groupId.eq(groupEntity.id))
             .where(groupAccountEntity.accountId.eq(accountId))
             .orderBy(groupAccountEntity.id.desc())
+            .fetch();
+        return groupAccounts;
+    }
+
+    List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
+        List<GroupAccount> groupAccounts = queryFactory
+            .select(Projections.constructor(
+                GroupAccount.class,
+                groupAccountEntity.id,
+                groupAccountEntity.groupId,
+                groupAccountEntity.accountId,
+                groupEntity.name,
+                accountEntity.name,
+                accountEntity.nickname,
+                accountEntity.email,
+                groupAccountEntity.status,
+                groupAccountEntity.modDt,
+                groupAccountEntity.regDt
+            ))
+            .from(groupAccountEntity)
+            .innerJoin(accountEntity)
+            .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .innerJoin(groupEntity)
+            .on(groupAccountEntity.groupId.eq(groupEntity.id))
+            .where(groupEntity.ownerEmail.eq(ownerEmail)
+                .and(groupAccountEntity.status.eq("PENDING")))
+            .orderBy(groupAccountEntity.groupId.asc(), groupAccountEntity.regDt.asc())
             .fetch();
 
         groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));

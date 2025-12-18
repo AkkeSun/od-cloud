@@ -1769,6 +1769,86 @@ paths:
                         "errorMessage" : "그룹 이름은 필수값 입니다"
                       }
                     }
+  /groups/pending-accounts:
+    get:
+      tags:
+      - Group
+      summary: 그룹 오너의 PENDING 상태 사용자 목록 조회 API
+      description: "현재 로그인한 사용자가 오너로 있는 그룹의 PENDING 상태 사용자 목록을 조회하는 API입니다.<br><br>-\
+        \ 그룹별로 묶어서 응답합니다.<br>- 각 사용자의 닉네임, 아이디(accountId), 요청날짜(requestDate)를 포함합니\
+        다.<br>- PENDING 상태 사용자가 없는 그룹은 응답에 포함되지 않습니다."
+      operationId: "[그룹 오너의 PENDING 상태 사용자 목록 조회 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: error token
+      responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 오너의 PENDING 상태 사용자 목록 조회 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success-empty"
+              examples:
+                '[그룹 오너의 PENDING 상태 사용자 목록 조회 API] 빈 목록 조회':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groups" : [ ]
+                      }
+                    }
+                '[그룹 오너의 PENDING 상태 사용자 목록 조회 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "groups" : [ {
+                          "groupId" : "group-1",
+                          "groupName" : "Test Group 1",
+                          "pendingAccounts" : [ {
+                            "accountId" : 10,
+                            "nickname" : "User1",
+                            "requestDate" : "2025-01-01T10:00:00"
+                          }, {
+                            "accountId" : 11,
+                            "nickname" : "User2",
+                            "requestDate" : "2025-01-02T11:00:00"
+                          } ]
+                        }, {
+                          "groupId" : "group-2",
+                          "groupName" : "Test Group 2",
+                          "pendingAccounts" : [ {
+                            "accountId" : 12,
+                            "nickname" : "User3",
+                            "requestDate" : "2025-01-03T12:00:00"
+                          } ]
+                        } ]
+                      }
+                    }
   /groups/self:
     get:
       tags:
@@ -1803,6 +1883,7 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "activeGroups" : [ {
+                          "id" : "activeGroup-1",
                           "name" : "My Team",
                           "manager" : {
                             "nickname" : "Manager",
@@ -1817,6 +1898,7 @@ paths:
                           } ],
                           "activeMemberCount" : 3
                         }, {
+                          "id" : "activeGroup-2",
                           "name" : "Development Team",
                           "manager" : {
                             "nickname" : "OtherManager",
@@ -1829,6 +1911,7 @@ paths:
                           "activeMemberCount" : 2
                         } ],
                         "pendingGroups" : [ {
+                          "id" : "pendingGroup",
                           "name" : "Marketing Team",
                           "activeMemberCount" : 1
                         } ]
@@ -1907,6 +1990,78 @@ paths:
                       "data" : {
                         "errorCode" : 2099,
                         "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+  /groups/{groupId}/join:
+    post:
+      tags:
+      - Group
+      summary: 그룹 가입 요청 API
+      description: 그룹에 가입 요청을 생성하는 API 입니다. GroupAccount 상태가 PENDING으로 등록됩니다.
+      operationId: "[그룹 가입 요청 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 가입 요청할 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: error token
+      responses:
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 가입 요청 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 가입 요청 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 가입 요청 API] 존재하지 않는 그룹 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4009,
+                        "errorMessage" : "등록되지 않은 그룹 입니다"
                       }
                     }
   /groups/{groupId}/accounts/{accountId}/status:
@@ -2290,14 +2445,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-16T16:30:35.295549"
+                          "notificationDt" : "2025-12-19T00:42:23.350055"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-16T16:30:35.295566"
+                          "notificationDt" : "2025-12-19T00:42:23.350072"
                         } ]
                       }
                     }
@@ -3212,6 +3367,61 @@ components:
           oneOf:
           - type: string
           - null
+    '[response] success-empty':
+      title: "[response] success-empty"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - groups
+          type: object
+          properties:
+            groups:
+              type: array
+              description: PENDING 상태 사용자가 있는 그룹 목록
+              items:
+                required:
+                - groupId
+                - groupName
+                - pendingAccounts
+                type: object
+                properties:
+                  pendingAccounts:
+                    type: array
+                    description: PENDING 상태 사용자 목록
+                    items:
+                      required:
+                      - accountId
+                      - nickname
+                      - requestDate
+                      type: object
+                      properties:
+                        accountId:
+                          type: number
+                          description: 사용자 ID
+                        requestDate:
+                          type: string
+                          description: 가입 요청 날짜
+                        nickname:
+                          type: string
+                          description: 사용자 닉네임
+                  groupName:
+                    type: string
+                    description: 그룹명
+                  groupId:
+                    type: string
+                    description: 그룹 ID
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     FindQuestionsResponse:
       title: FindQuestionsResponse
       required:

@@ -55,6 +55,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(group -> group.getName().contains(keyword))
             .toList();
     }
+    
     @Override
     public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         return groupAccountDatabase.stream()
@@ -75,6 +76,19 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(group -> group.getId().equals(id))
             .findFirst()
             .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP));
+    }
+
+    @Override
+    public List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
+        List<String> ownerGroupIds = groupDatabase.stream()
+            .filter(group -> group.getOwnerEmail().equals(ownerEmail))
+            .map(Group::getId)
+            .toList();
+
+        return groupAccountDatabase.stream()
+            .filter(ga -> ownerGroupIds.contains(ga.getGroupId()))
+            .filter(ga -> "PENDING".equals(ga.getStatus()))
+            .toList();
     }
 
     @Override

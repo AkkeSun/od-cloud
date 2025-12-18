@@ -26,8 +26,15 @@ class DeleteFolderService implements DeleteFolderUseCase {
     @Transactional
     public DeleteFolderServiceResponse deleteFolder(Account account, Long folderId) {
         FolderInfo folder = folderInfoStoragePort.findById(folderId);
-        if (!account.getGroupIds().contains(folder.getGroupId())) {
-            throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
+
+        if (folder.getGroupId() != null) {
+            if (!account.getGroupIds().contains(folder.getGroupId())) {
+                throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
+            }
+        } else {
+            if (!folder.getOwner().equals(account.getEmail())) {
+                throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
+            }
         }
 
         filePort.deleteFolder(folder.getPath());

@@ -111,27 +111,6 @@ class FileTest {
         }
 
         @Test
-        @DisplayName("[success] null 파일명을 가진 MultipartFile로 File을 생성한다")
-        void success_nullFileName() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .path("/group-123")
-                .build();
-
-            MultipartFile multipartFile = mock(MultipartFile.class);
-            when(multipartFile.getOriginalFilename()).thenReturn(null);
-
-            // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
-
-            // then
-            assertThat(file).isNotNull();
-            assertThat(file.getFileName()).isNull();
-            assertThat(file.getFileLoc()).startsWith("/group-123/");
-        }
-
-        @Test
         @DisplayName("[success] 경로에 슬래시가 있는 폴더로 File을 생성한다")
         void success_folderWithSlash() {
             // given

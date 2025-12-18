@@ -42,7 +42,7 @@ class GroupStorageAdapter implements GroupStoragePort {
     public List<Group> findByKeyword(String keyword) {
         return queryDsl.findByKeyword(keyword);
     }
-    
+
     @Override
     public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         return queryDsl.findGroupAccountsByGroupId(groupId);
@@ -57,6 +57,11 @@ class GroupStorageAdapter implements GroupStoragePort {
     public Group findById(String id) {
         return queryDsl.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP));
+    }
+
+    @Override
+    public List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
+        return queryDsl.findPendingGroupAccountsByOwnerEmail(ownerEmail);
     }
 
     @Override

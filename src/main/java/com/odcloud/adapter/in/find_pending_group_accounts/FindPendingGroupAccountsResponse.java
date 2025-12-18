@@ -1,0 +1,47 @@
+package com.odcloud.adapter.in.find_pending_group_accounts;
+
+import com.odcloud.application.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+record FindPendingGroupAccountsResponse(
+    List<GroupPendingAccounts> groups
+) {
+
+    static FindPendingGroupAccountsResponse of(
+        FindPendingGroupAccountsServiceResponse serviceResponse
+    ) {
+        List<GroupPendingAccounts> groups = serviceResponse.groups().stream()
+            .map(group -> new GroupPendingAccounts(
+                group.groupId(),
+                group.groupName(),
+                group.pendingAccounts().stream()
+                    .map(account -> new PendingAccountInfo(
+                        account.accountId(),
+                        account.nickname(),
+                        account.requestDate()
+                    ))
+                    .collect(Collectors.toList())
+            ))
+            .collect(Collectors.toList());
+
+        return new FindPendingGroupAccountsResponse(groups);
+    }
+
+    record GroupPendingAccounts(
+        String groupId,
+        String groupName,
+        List<PendingAccountInfo> pendingAccounts
+    ) {
+
+    }
+
+    record PendingAccountInfo(
+        Long accountId,
+        String nickname,
+        LocalDateTime requestDate
+    ) {
+
+    }
+}
