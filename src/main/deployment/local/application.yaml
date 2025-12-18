@@ -69,6 +69,6 @@ service-constant:
   file-upload:
     base-path: /Users/od/IdeaProjects/od-cloud
 
-  web-server-host: http://localhost:8080
+  web-server-host: http://localhost:8080/uploads
 
   aes-secret-key: ${AES_SECRET}

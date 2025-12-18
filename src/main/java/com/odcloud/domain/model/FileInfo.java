@@ -88,6 +88,10 @@ public class FileInfo {
         this.modDt = LocalDateTime.now();
     }
 
+    public void updateFileLocForHosting(String webServerHost) {
+        this.fileLoc = webServerHost + fileLoc;
+    }
+
     public void updateFolder(Long newFolderId, String newFileLoc) {
         this.folderId = newFolderId;
         this.fileLoc = newFileLoc;
