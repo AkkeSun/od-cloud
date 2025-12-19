@@ -48,4 +48,10 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
             accountId, osType, deviceId, result.isPresent());
         return result;
     }
+
+    @Override
+    public void delete(Long id) {
+        boolean removed = database.removeIf(d -> d.getId().equals(id));
+        log.info("FakeAccountDeviceStoragePort delete: id={}, removed={}", id, removed);
+    }
 }

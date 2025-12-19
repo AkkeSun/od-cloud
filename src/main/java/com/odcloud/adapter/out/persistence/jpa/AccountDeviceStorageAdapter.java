@@ -25,4 +25,9 @@ class AccountDeviceStorageAdapter implements AccountDeviceStoragePort {
     ) {
         return repository.findByAccountIdAndOsTypeAndDeviceId(accountId, osType, deviceId);
     }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }

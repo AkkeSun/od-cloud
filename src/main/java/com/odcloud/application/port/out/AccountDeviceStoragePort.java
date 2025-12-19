@@ -10,4 +10,6 @@ public interface AccountDeviceStoragePort {
     Optional<AccountDevice> findByAccountIdAndOsTypeAndDeviceId(
         Long accountId, String osType, String deviceId
     );
+
+    void delete(Long id);
 }

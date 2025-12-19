@@ -44,6 +44,13 @@ class AccountDeviceRepository {
         return Optional.ofNullable(entity).map(this::toDomain);
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        queryFactory.delete(accountDeviceEntity)
+            .where(accountDeviceEntity.id.eq(id))
+            .execute();
+    }
+
     private AccountDeviceEntity toEntity(AccountDevice device) {
         return AccountDeviceEntity.builder()
             .id(device.getId())
