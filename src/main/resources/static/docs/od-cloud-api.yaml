@@ -1832,10 +1832,14 @@ paths:
                           "pendingAccounts" : [ {
                             "accountId" : 10,
                             "nickname" : "User1",
+                            "name" : "홍길동",
+                            "email" : "user1@example.com",
                             "requestDate" : "2025-01-01T10:00:00"
                           }, {
                             "accountId" : 11,
                             "nickname" : "User2",
+                            "name" : "김철수",
+                            "email" : "user2@example.com",
                             "requestDate" : "2025-01-02T11:00:00"
                           } ]
                         }, {
@@ -1844,6 +1848,8 @@ paths:
                           "pendingAccounts" : [ {
                             "accountId" : 12,
                             "nickname" : "User3",
+                            "name" : "이영희",
+                            "email" : "user3@example.com",
                             "requestDate" : "2025-01-03T12:00:00"
                           } ]
                         } ]
@@ -2069,7 +2075,7 @@ paths:
       tags:
       - Account
       summary: 그룹 계정 상태 변경 API
-      description: "그룹 내 계정의 상태를 변경합니다. (PENDING, ACTIVE, BLOCK)"
+      description: 그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE 또는 DENIED)
       operationId: "[그룹 계정 상태 변경 API] "
       parameters:
       - name: groupId
@@ -2100,7 +2106,14 @@ paths:
               '[그룹 계정 상태 변경 API] 유효하지 않은 상태값 입력':
                 value: |-
                   {
-                    "status" : "INVALID"
+                    "status" : "INVALID",
+                    "deniedCause" : null
+                  }
+              '[그룹 계정 상태 변경 API] success-active':
+                value: |-
+                  {
+                    "status" : "ACTIVE",
+                    "deniedCause" : null
                   }
               '[그룹 계정 상태 변경 API] success':
                 value: |-
@@ -2110,22 +2123,32 @@ paths:
               '[그룹 계정 상태 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                 value: |-
                   {
-                    "status" : "ACTIVE"
+                    "status" : "ACTIVE",
+                    "deniedCause" : null
                   }
               '[그룹 계정 상태 변경 API] 그룹 소유자의 요청이 아님':
                 value: |-
                   {
-                    "status" : "ACTIVE"
+                    "status" : "ACTIVE",
+                    "deniedCause" : null
                   }
               '[그룹 계정 상태 변경 API] 상태값 미입력':
                 value: |-
                   {
-                    "status" : null
+                    "status" : null,
+                    "deniedCause" : null
                   }
               '[그룹 계정 상태 변경 API] 등록되지 않은 그룹 사용자':
                 value: |-
                   {
-                    "status" : "ACTIVE"
+                    "status" : "ACTIVE",
+                    "deniedCause" : null
+                  }
+              '[그룹 계정 상태 변경 API] success-denied':
+                value: |-
+                  {
+                    "status" : "DENIED",
+                    "deniedCause" : "그룹 가입 요건을 충족하지 못했습니다."
                   }
       responses:
         "400":
@@ -2142,7 +2165,7 @@ paths:
                       "message" : "BAD_REQUEST",
                       "data" : {
                         "errorCode" : 1099,
-                        "errorMessage" : "유효하지 않은 상태값 입니다"
+                        "errorMessage" : "유효하지 않은 상태값 입니다. ACTIVE 또는 DENIED만 가능합니다."
                       }
                     }
                 '[그룹 계정 상태 변경 API] 상태값 미입력':
@@ -2162,7 +2185,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
+                '[그룹 계정 상태 변경 API] success-active':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
                 '[그룹 계정 상태 변경 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[그룹 계정 상태 변경 API] success-denied':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -2445,14 +2486,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-19T00:42:23.350055"
+                          "notificationDt" : "2025-12-19T10:06:24.937441"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-19T00:42:23.350072"
+                          "notificationDt" : "2025-12-19T10:06:24.937455"
                         } ]
                       }
                     }
@@ -3163,6 +3204,69 @@ components:
           oneOf:
           - type: number
           - null
+    '[response] success-empty':
+      title: "[response] success-empty"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - groups
+          type: object
+          properties:
+            groups:
+              type: array
+              description: PENDING 상태 사용자가 있는 그룹 목록
+              items:
+                required:
+                - groupId
+                - groupName
+                - pendingAccounts
+                type: object
+                properties:
+                  pendingAccounts:
+                    type: array
+                    description: PENDING 상태 사용자 목록
+                    items:
+                      required:
+                      - accountId
+                      - email
+                      - name
+                      - nickname
+                      - requestDate
+                      type: object
+                      properties:
+                        accountId:
+                          type: number
+                          description: 사용자 ID
+                        requestDate:
+                          type: string
+                          description: 가입 요청 날짜
+                        nickname:
+                          type: string
+                          description: 사용자 닉네임
+                        name:
+                          type: string
+                          description: 사용자 이름
+                        email:
+                          type: string
+                          description: 사용자 이메일
+                  groupName:
+                    type: string
+                    description: 그룹명
+                  groupId:
+                    type: string
+                    description: 그룹 ID
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     '[request] 파일 정보 수정 API':
       title: "[request] 파일 정보 수정 API"
       type: object
@@ -3239,6 +3343,21 @@ components:
         content:
           type: string
           description: 답변 내용
+    '[request] 그룹 계정 상태 변경 API':
+      title: "[request] 그룹 계정 상태 변경 API"
+      required:
+      - status
+      type: object
+      properties:
+        deniedCause:
+          type: string
+          description: 거절 사유 (status가 DENIED인 경우 필수)
+          nullable: true
+        status:
+          description: 계정 상태 (ACTIVE / DENIED)
+          oneOf:
+          - type: string
+          - null
     RegisterAnswerResponse:
       title: RegisterAnswerResponse
       required:
@@ -3349,72 +3468,6 @@ components:
             result:
               type: boolean
               description: 등록 성공 여부
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
-    '[request] 그룹 계정 상태 변경 API':
-      title: "[request] 그룹 계정 상태 변경 API"
-      required:
-      - status
-      type: object
-      properties:
-        status:
-          description: 계정 상태 (PENDING / ACTIVE / BLOCK)
-          oneOf:
-          - type: string
-          - null
-    '[response] success-empty':
-      title: "[response] success-empty"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - groups
-          type: object
-          properties:
-            groups:
-              type: array
-              description: PENDING 상태 사용자가 있는 그룹 목록
-              items:
-                required:
-                - groupId
-                - groupName
-                - pendingAccounts
-                type: object
-                properties:
-                  pendingAccounts:
-                    type: array
-                    description: PENDING 상태 사용자 목록
-                    items:
-                      required:
-                      - accountId
-                      - nickname
-                      - requestDate
-                      type: object
-                      properties:
-                        accountId:
-                          type: number
-                          description: 사용자 ID
-                        requestDate:
-                          type: string
-                          description: 가입 요청 날짜
-                        nickname:
-                          type: string
-                          description: 사용자 닉네임
-                  groupName:
-                    type: string
-                    description: 그룹명
-                  groupId:
-                    type: string
-                    description: 그룹 ID
           description: 응답 데이터
         httpStatus:
           type: number

@@ -79,6 +79,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
+                groupAccountEntity.deniedCause,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -142,16 +143,20 @@ class GroupRepository {
                 groupAccountEntity.id,
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
+                groupEntity.name,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
+                groupAccountEntity.deniedCause,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
             .from(groupAccountEntity)
             .innerJoin(accountEntity)
             .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .innerJoin(groupEntity)
+            .on(groupAccountEntity.groupId.eq(groupEntity.id))
             .where(groupAccountEntity.groupId.eq(groupId))
             .orderBy(groupAccountEntity.id.asc())
             .fetch();
@@ -172,6 +177,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
+                groupAccountEntity.deniedCause,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -183,6 +189,8 @@ class GroupRepository {
             .where(groupAccountEntity.accountId.eq(accountId))
             .orderBy(groupAccountEntity.id.desc())
             .fetch();
+
+        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
         return groupAccounts;
     }
 
@@ -198,6 +206,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
+                groupAccountEntity.deniedCause,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -227,6 +236,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
+                groupAccountEntity.deniedCause,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))

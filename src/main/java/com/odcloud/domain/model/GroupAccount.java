@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +21,12 @@ public class GroupAccount {
     private String nickName;
     private String email;
     private String status;
+    private String deniedCause;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
     public GroupAccount(Long id, String groupId, Long accountId, String name, String nickName,
-        String email, String status, LocalDateTime modDt, LocalDateTime regDt) {
+        String email, String status, String deniedCause, LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;
         this.accountId = accountId;
@@ -32,10 +34,10 @@ public class GroupAccount {
         this.nickName = nickName;
         this.email = email;
         this.status = status;
+        this.deniedCause = deniedCause;
         this.modDt = modDt;
         this.regDt = regDt;
     }
-
 
     public static GroupAccount ofPending(Group group, Account account) {
         return GroupAccount.builder()
@@ -60,9 +62,14 @@ public class GroupAccount {
         this.name = name;
     }
 
-    public void updateStatus(String status) {
-        this.status = status;
+    public void updateStatus(UpdateGroupAccountStatusCommand command) {
+        this.status = command.status();
+        this.deniedCause = command.deniedCause();
         this.modDt = LocalDateTime.now();
+    }
+
+    public boolean isPending() {
+        return "PENDING".equals(status);
     }
 
     public boolean isActive() {

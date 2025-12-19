@@ -41,6 +41,7 @@ public enum ErrorCode {
     Business_FORBIDDEN_ACCESS(4019, "접근 권한이 없습니다"),
     Business_NOT_FOUND_QUESTION(4020, "조회된 문의가 없습니다"),
     Business_ALREADY_EXISTS_ANSWER(4021, "이미 답변이 등록된 문의입니다"),
+    Business_INVALID_GROUP_ACCOUNT_STATUS(4022, "PENDING 상태의 사용자만 상태 변경이 가능합니다"),
 
     ;
 

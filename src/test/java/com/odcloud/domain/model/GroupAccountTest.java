@@ -2,6 +2,7 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -131,47 +132,17 @@ class GroupAccountTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            groupAccount.updateStatus("APPROVED");
+            groupAccount.updateStatus(UpdateGroupAccountStatusCommand.builder()
+                .status("ACTIVE")
+                .build());
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
-            assertThat(groupAccount.getStatus()).isEqualTo("APPROVED");
+            assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
             assertThat(groupAccount.getModDt()).isAfter(before);
             assertThat(groupAccount.getModDt()).isBefore(after);
             assertThat(groupAccount.getModDt()).isAfter(initialModDt);
-        }
-
-        @Test
-        @DisplayName("[success] status를 ACTIVE로 업데이트한다")
-        void success_active() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .status("PENDING")
-                .build();
-
-            // when
-            groupAccount.updateStatus("ACTIVE");
-
-            // then
-            assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
-            assertThat(groupAccount.getModDt()).isNotNull();
-        }
-
-        @Test
-        @DisplayName("[success] status를 null로 업데이트한다")
-        void success_null() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .status("ACTIVE")
-                .build();
-
-            // when
-            groupAccount.updateStatus(null);
-
-            // then
-            assertThat(groupAccount.getStatus()).isNull();
-            assertThat(groupAccount.getModDt()).isNotNull();
         }
     }
 
@@ -413,45 +384,6 @@ class GroupAccountTest {
     }
 
     @Nested
-    @DisplayName("[allArgsConstructor] AllArgsConstructor 테스트")
-    class Describe_allArgsConstructor {
-
-        @Test
-        @DisplayName("[success] AllArgsConstructor로 GroupAccount를 생성한다")
-        void success() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // when
-            GroupAccount groupAccount = new GroupAccount(
-                1L,
-                "group-123",
-                100L,
-                "테스트 그룹",
-                "홍길동",
-                "테스터",
-                "test@example.com",
-                "ACTIVE",
-                now,
-                now
-            );
-
-            // then
-            assertThat(groupAccount).isNotNull();
-            assertThat(groupAccount.getId()).isEqualTo(1L);
-            assertThat(groupAccount.getGroupId()).isEqualTo("group-123");
-            assertThat(groupAccount.getAccountId()).isEqualTo(100L);
-            assertThat(groupAccount.getGroupName()).isEqualTo("테스트 그룹");
-            assertThat(groupAccount.getName()).isEqualTo("홍길동");
-            assertThat(groupAccount.getNickName()).isEqualTo("테스터");
-            assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
-            assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
-            assertThat(groupAccount.getModDt()).isEqualTo(now);
-            assertThat(groupAccount.getRegDt()).isEqualTo(now);
-        }
-    }
-
-    @Nested
     @DisplayName("[customConstructor] Custom Constructor 테스트")
     class Describe_customConstructor {
 
@@ -466,10 +398,12 @@ class GroupAccountTest {
                 1L,
                 "group-123",
                 100L,
+                "Test Group",
                 "홍길동",
                 "테스터",
                 "test@example.com",
                 "ACTIVE",
+                null,
                 now,
                 now
             );
@@ -479,13 +413,14 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isEqualTo(1L);
             assertThat(groupAccount.getGroupId()).isEqualTo("group-123");
             assertThat(groupAccount.getAccountId()).isEqualTo(100L);
+            assertThat(groupAccount.getGroupName()).isEqualTo("Test Group");
             assertThat(groupAccount.getName()).isEqualTo("홍길동");
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");
             assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
             assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
+            assertThat(groupAccount.getDeniedCause()).isNull();
             assertThat(groupAccount.getModDt()).isEqualTo(now);
             assertThat(groupAccount.getRegDt()).isEqualTo(now);
-            assertThat(groupAccount.getGroupName()).isNull();
         }
 
         @Test
@@ -493,7 +428,7 @@ class GroupAccountTest {
         void success_nullValues() {
             // when
             GroupAccount groupAccount = new GroupAccount(
-                null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null, null
             );
 
             // then
@@ -501,10 +436,12 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isNull();
             assertThat(groupAccount.getGroupId()).isNull();
             assertThat(groupAccount.getAccountId()).isNull();
+            assertThat(groupAccount.getGroupName()).isNull();
             assertThat(groupAccount.getName()).isNull();
             assertThat(groupAccount.getNickName()).isNull();
             assertThat(groupAccount.getEmail()).isNull();
             assertThat(groupAccount.getStatus()).isNull();
+            assertThat(groupAccount.getDeniedCause()).isNull();
             assertThat(groupAccount.getModDt()).isNull();
             assertThat(groupAccount.getRegDt()).isNull();
         }
