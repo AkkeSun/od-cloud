@@ -20,6 +20,8 @@ record FindPendingGroupAccountsResponse(
                     .map(account -> new PendingAccountInfo(
                         account.accountId(),
                         account.nickname(),
+                        account.name(),
+                        account.email(),
                         account.requestDate()
                     ))
                     .collect(Collectors.toList())
@@ -40,6 +42,8 @@ record FindPendingGroupAccountsResponse(
     record PendingAccountInfo(
         Long accountId,
         String nickname,
+        String name,
+        String email,
         LocalDateTime requestDate
     ) {
 

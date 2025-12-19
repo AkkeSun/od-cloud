@@ -52,6 +52,8 @@ public record FindPendingGroupAccountsServiceResponse(
     public record PendingAccountInfo(
         Long accountId,
         String nickname,
+        String name,
+        String email,
         LocalDateTime requestDate
     ) {
 
@@ -59,6 +61,8 @@ public record FindPendingGroupAccountsServiceResponse(
             return PendingAccountInfo.builder()
                 .accountId(groupAccount.getAccountId())
                 .nickname(groupAccount.getNickName())
+                .name(groupAccount.getName())
+                .email(groupAccount.getEmail())
                 .requestDate(groupAccount.getRegDt())
                 .build();
         }

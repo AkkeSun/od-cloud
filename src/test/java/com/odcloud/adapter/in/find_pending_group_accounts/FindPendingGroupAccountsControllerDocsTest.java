@@ -76,6 +76,8 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                 FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
                     .accountId(10L)
                     .nickname("User1")
+                    .name("홍길동")
+                    .email("user1@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 1, 10, 0))
                     .build();
 
@@ -83,6 +85,8 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                 FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
                     .accountId(11L)
                     .nickname("User2")
+                    .name("김철수")
+                    .email("user2@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 2, 11, 0))
                     .build();
 
@@ -90,6 +94,8 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                 FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
                     .accountId(12L)
                     .nickname("User3")
+                    .name("이영희")
+                    .email("user3@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 3, 12, 0))
                     .build();
 
@@ -131,6 +137,12 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.groups[].pendingAccounts[].accountId").type(
                         JsonFieldType.NUMBER)
                     .description("사용자 ID"),
+                fieldWithPath("data.groups[].pendingAccounts[].name").type(
+                        JsonFieldType.STRING)
+                    .description("사용자 이름"),
+                fieldWithPath("data.groups[].pendingAccounts[].email").type(
+                        JsonFieldType.STRING)
+                    .description("사용자 이메일"),
                 fieldWithPath("data.groups[].pendingAccounts[].nickname").type(
                         JsonFieldType.STRING)
                     .description("사용자 닉네임"),
