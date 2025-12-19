@@ -659,6 +659,113 @@ paths:
                         "errorMessage" : "deviceId는 필수값 입니다"
                       }
                     }
+    delete:
+      tags:
+      - Device
+      summary: 디바이스 삭제 API
+      description: "로그인한 사용자의 디바이스 정보를 삭제합니다.<br><br>- accountId, osType, deviceId\
+        \ 조합으로 디바이스를 찾아 삭제합니다.<br>- 로그인한 사용자의 디바이스만 삭제할 수 있습니다.<br>- 존재하지 않는 디바이스를\
+        \ 삭제하려고 하면 에러가 발생합니다."
+      operationId: "[디바이스 삭제 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 디바이스 삭제 API"
+            examples:
+              '[디바이스 삭제 API] success':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-123"
+                  }
+              '[디바이스 삭제 API] 존재하지 않는 디바이스':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-999"
+                  }
+              '[디바이스 삭제 API] 다른 사용자의 디바이스':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-123"
+                  }
+              '[디바이스 삭제 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-123"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[디바이스 삭제 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[디바이스 삭제 API] 존재하지 않는 디바이스':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4023,
+                        "errorMessage" : "조회된 디바이스가 없습니다"
+                      }
+                    }
+                '[디바이스 삭제 API] 다른 사용자의 디바이스':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[디바이스 삭제 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
   /files:
     get:
       tags:
@@ -2638,14 +2745,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-19T16:49:50.030175"
+                          "notificationDt" : "2025-12-19T17:35:41.617042"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-19T16:49:50.03019"
+                          "notificationDt" : "2025-12-19T17:35:41.617063"
                         } ]
                       }
                     }
@@ -3604,6 +3711,19 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 디바이스 삭제 API':
+      title: "[request] 디바이스 삭제 API"
+      required:
+      - deviceId
+      - osType
+      type: object
+      properties:
+        osType:
+          type: string
+          description: "OS 타입 (iOS, Android 등)"
+        deviceId:
+          type: string
+          description: 디바이스 고유 ID
     RegisterQuestionResponse:
       title: RegisterQuestionResponse
       required:
