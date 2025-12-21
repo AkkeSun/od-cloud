@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import com.google.gson.JsonObject;
 import com.odcloud.application.port.in.command.RegisterDeviceCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,16 @@ public class AccountDevice {
     private LocalDateTime lastLoginDt;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
+
+    public AccountDevice(Long id, Long accountId, String osType, String deviceId, String fcmToken,
+        String appVersion) {
+        this.id = id;
+        this.accountId = accountId;
+        this.osType = osType;
+        this.deviceId = deviceId;
+        this.fcmToken = fcmToken;
+        this.appVersion = appVersion;
+    }
 
     public static AccountDevice of(RegisterDeviceCommand command) {
         return AccountDevice.builder()
@@ -53,6 +64,22 @@ public class AccountDevice {
         }
         if (!this.appVersion.equals(command.appVersion())) {
             this.appVersion = command.appVersion();
+            this.modDt = LocalDateTime.now();
         }
+    }
+
+    public void resetFcmToken() {
+        this.fcmToken = "RESET";
+        this.modDt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("accountId", this.accountId);
+        obj.addProperty("osType", this.osType);
+        obj.addProperty("deviceId", this.deviceId);
+        obj.addProperty("appVersion", this.appVersion);
+        return obj.toString();
     }
 }

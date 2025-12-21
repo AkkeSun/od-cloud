@@ -1,10 +1,13 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QAccountDeviceEntity.accountDeviceEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QGroupAccountEntity.groupAccountEntity;
 
 import com.odcloud.domain.model.AccountDevice;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,10 +47,40 @@ class AccountDeviceRepository {
         return Optional.ofNullable(entity).map(this::toDomain);
     }
 
+    public List<AccountDevice> findByGroupIdForPush(String groupId) {
+        return queryFactory.select(Projections.constructor(AccountDevice.class,
+                accountDeviceEntity.id,
+                accountDeviceEntity.accountId,
+                accountDeviceEntity.osType,
+                accountDeviceEntity.deviceId,
+                accountDeviceEntity.fcmToken,
+                accountDeviceEntity.appVersion
+            ))
+            .from(accountDeviceEntity)
+            .where(accountDeviceEntity.accountId.in(
+                    queryFactory.select(groupAccountEntity.accountId)
+                        .from(groupAccountEntity)
+                        .where(groupAccountEntity.groupId.eq(groupId))
+                        .fetch())
+                .and(accountDeviceEntity.pushYn.eq("Y"))
+                .and(accountDeviceEntity.fcmToken.ne("RESET")))
+            .fetch();
+    }
+
     @Transactional
     public void deleteById(Long id) {
         queryFactory.delete(accountDeviceEntity)
             .where(accountDeviceEntity.id.eq(id))
+            .execute();
+    }
+
+    @Transactional
+    public void updateFcmToken(List<AccountDevice> accountDevices) {
+        queryFactory.update(accountDeviceEntity)
+            .set(accountDeviceEntity.fcmToken, accountDevices.getFirst().getFcmToken())
+            .set(accountDeviceEntity.modDt, accountDevices.getFirst().getModDt())
+            .where(accountDeviceEntity.id.in(
+                accountDevices.stream().map(AccountDevice::getId).toList()))
             .execute();
     }
 

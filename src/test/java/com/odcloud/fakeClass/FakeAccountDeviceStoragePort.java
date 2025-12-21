@@ -50,6 +50,11 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
     }
 
     @Override
+    public List<AccountDevice> findByGroupIdForPush(String groupId) {
+        return List.of();
+    }
+
+    @Override
     public void delete(Long id) {
         boolean removed = database.removeIf(d -> d.getId().equals(id));
         log.info("FakeAccountDeviceStoragePort delete: id={}, removed={}", id, removed);

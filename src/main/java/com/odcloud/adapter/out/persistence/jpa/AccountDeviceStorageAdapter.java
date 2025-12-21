@@ -2,13 +2,12 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import com.odcloud.application.port.out.AccountDeviceStoragePort;
 import com.odcloud.domain.model.AccountDevice;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 @RequiredArgsConstructor
 class AccountDeviceStorageAdapter implements AccountDeviceStoragePort {
 
@@ -27,7 +26,17 @@ class AccountDeviceStorageAdapter implements AccountDeviceStoragePort {
     }
 
     @Override
+    public List<AccountDevice> findByGroupIdForPush(String groupId) {
+        return repository.findByGroupIdForPush(groupId);
+    }
+
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void updateFcmToken(List<AccountDevice> accountDevices) {
+        repository.updateFcmToken(accountDevices);
     }
 }

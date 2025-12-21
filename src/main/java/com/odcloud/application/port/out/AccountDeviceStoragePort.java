@@ -1,6 +1,7 @@
 package com.odcloud.application.port.out;
 
 import com.odcloud.domain.model.AccountDevice;
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountDeviceStoragePort {
@@ -11,5 +12,9 @@ public interface AccountDeviceStoragePort {
         Long accountId, String osType, String deviceId
     );
 
+    List<AccountDevice> findByGroupIdForPush(String groupId);
+
     void delete(Long id);
+
+    void updateFcmToken(List<AccountDevice> invalidDevices);
 }
