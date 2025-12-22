@@ -1,6 +1,7 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QAccountDeviceEntity.accountDeviceEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QAccountEntity.accountEntity;
 import static com.odcloud.adapter.out.persistence.jpa.QGroupAccountEntity.groupAccountEntity;
 
 import com.odcloud.domain.model.AccountDevice;
@@ -62,6 +63,23 @@ class AccountDeviceRepository {
                         .from(groupAccountEntity)
                         .where(groupAccountEntity.groupId.eq(groupId))
                         .fetch())
+                .and(accountDeviceEntity.pushYn.eq("Y"))
+                .and(accountDeviceEntity.fcmToken.ne("RESET")))
+            .fetch();
+    }
+
+    public List<AccountDevice> findByWriterEmailForPush(String writerEmail) {
+        return queryFactory.select(Projections.constructor(AccountDevice.class,
+                accountDeviceEntity.id,
+                accountDeviceEntity.accountId,
+                accountDeviceEntity.osType,
+                accountDeviceEntity.deviceId,
+                accountDeviceEntity.fcmToken,
+                accountDeviceEntity.appVersion
+            ))
+            .from(accountDeviceEntity)
+            .innerJoin(accountEntity).on(accountDeviceEntity.accountId.eq(accountEntity.id))
+            .where(accountEntity.email.eq(writerEmail)
                 .and(accountDeviceEntity.pushYn.eq("Y"))
                 .and(accountDeviceEntity.fcmToken.ne("RESET")))
             .fetch();

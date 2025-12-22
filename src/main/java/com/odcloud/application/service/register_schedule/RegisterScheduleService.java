@@ -46,7 +46,7 @@ class RegisterScheduleService implements RegisterSchedulerUseCase {
 
             if (!devices.isEmpty()) {
                 Group group = groupStoragePort.findById(command.groupId());
-                pushFcmUseCase.push(
+                pushFcmUseCase.pushAsync(
                     PushFcmCommand.ofNewSchedule(devices, group, command.startDt()));
             }
         }

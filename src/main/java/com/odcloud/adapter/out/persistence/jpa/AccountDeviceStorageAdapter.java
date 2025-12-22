@@ -31,6 +31,11 @@ class AccountDeviceStorageAdapter implements AccountDeviceStoragePort {
     }
 
     @Override
+    public List<AccountDevice> findByWriterEmailForPush(String writerEmail) {
+        return repository.findByWriterEmailForPush(writerEmail);
+    }
+
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }

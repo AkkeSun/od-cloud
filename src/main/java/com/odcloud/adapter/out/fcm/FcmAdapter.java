@@ -14,6 +14,7 @@ import com.google.firebase.messaging.SendResponse;
 import com.odcloud.application.port.in.command.PushFcmCommand;
 import com.odcloud.application.port.out.FcmPort;
 import com.odcloud.domain.model.AccountDevice;
+import com.odcloud.infrastructure.util.CollectionUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ class FcmAdapter implements FcmPort {
     public List<AccountDevice> push(PushFcmCommand command) {
         List<AccountDevice> invalidDevices = new ArrayList<>();
 
-        for (List<AccountDevice> devices : chunk(command.devices(), chunkSize)) {
+        for (List<AccountDevice> devices : CollectionUtil.partition(command.devices(), chunkSize)) {
             try {
                 log.info("[FCM] Push - title:{},  message: {}, devices: {}",
                     command.title(), command.body(), devices);
@@ -72,7 +73,7 @@ class FcmAdapter implements FcmPort {
 
                 BatchResponse response = FirebaseMessaging.getInstance()
                     .sendEachForMulticast(multicastMessage);
-                
+
                 if (response.getFailureCount() > 0) {
                     for (int i = 0; i < response.getResponses().size(); i++) {
                         SendResponse sendResponse = response.getResponses().get(i);
@@ -97,13 +98,5 @@ class FcmAdapter implements FcmPort {
         }
 
         return invalidDevices;
-    }
-
-    private static <T> List<List<T>> chunk(List<T> list, int size) {
-        List<List<T>> chunks = new ArrayList<>();
-        for (int i = 0; i < list.size(); i += size) {
-            chunks.add(list.subList(i, Math.min(list.size(), i + size)));
-        }
-        return chunks;
     }
 }

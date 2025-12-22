@@ -6,6 +6,7 @@ import com.odcloud.application.port.in.command.FindSchedulesCommand;
 import com.odcloud.application.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,5 +42,18 @@ class ScheduleStorageAdapter implements ScheduleStoragePort {
             .stream()
             .map(ScheduleEntity::toDomain)
             .toList();
+    }
+
+    @Override
+    public List<Schedule> findSchedulesForNotification(LocalDateTime currentTime) {
+        return repository.findSchedulesForNotification(currentTime)
+            .stream()
+            .map(ScheduleEntity::toDomain)
+            .toList();
+    }
+
+    @Override
+    public void updateNotificationYn(List<Long> scheduleIds) {
+        repository.updateNotificationYn(scheduleIds);
     }
 }

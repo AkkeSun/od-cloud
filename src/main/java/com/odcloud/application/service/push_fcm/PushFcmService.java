@@ -17,7 +17,6 @@ class PushFcmService implements PushFcmUseCase {
     private final FcmPort fcmPort;
     private final AccountDeviceStoragePort accountDeviceStoragePort;
 
-    @Async
     @Override
     public void push(PushFcmCommand command) {
         List<AccountDevice> invalidDevices = fcmPort.push(command);
@@ -25,5 +24,11 @@ class PushFcmService implements PushFcmUseCase {
             invalidDevices.forEach(AccountDevice::resetFcmToken);
             accountDeviceStoragePort.updateFcmToken(invalidDevices);
         }
+    }
+
+    @Async
+    @Override
+    public void pushAsync(PushFcmCommand command) {
+        push(command);
     }
 }

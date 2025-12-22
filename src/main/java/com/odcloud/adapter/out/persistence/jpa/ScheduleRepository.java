@@ -7,6 +7,7 @@ import com.odcloud.domain.model.Schedule;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -46,7 +47,8 @@ class ScheduleRepository {
         return queryFactory
             .selectFrom(scheduleEntity)
             .where(
-                scheduleEntity.startDt.between(command.getStartDateTime(), command.getEndDateTime()),
+                scheduleEntity.startDt.between(command.getStartDateTime(),
+                    command.getEndDateTime()),
                 buildFilterCondition(command)
             )
             .orderBy(scheduleEntity.startDt.asc())
@@ -69,5 +71,25 @@ class ScheduleRepository {
         }
 
         return scheduleEntity.groupId.eq(filterType);
+    }
+
+    public List<ScheduleEntity> findSchedulesForNotification(LocalDateTime currentTime) {
+        return queryFactory
+            .selectFrom(scheduleEntity)
+            .where(
+                scheduleEntity.notificationDt.loe(currentTime),
+                scheduleEntity.notificationYn.eq("N"),
+                scheduleEntity.startDt.goe(currentTime)
+            )
+            .fetch();
+    }
+
+    @Transactional
+    public void updateNotificationYn(List<Long> scheduleIds) {
+        queryFactory
+            .update(scheduleEntity)
+            .set(scheduleEntity.notificationYn, "Y")
+            .where(scheduleEntity.id.in(scheduleIds))
+            .execute();
     }
 }

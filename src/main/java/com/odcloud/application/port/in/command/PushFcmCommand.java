@@ -2,6 +2,8 @@ package com.odcloud.application.port.in.command;
 
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.Schedule;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -32,4 +34,32 @@ public record PushFcmCommand(
             .build();
     }
 
+    public static PushFcmCommand ofNotificationSchedule(Schedule schedule,
+        List<AccountDevice> devices, String title) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", "schedule");
+        data.put("groupId", schedule.isGroupSchedule() ? schedule.getGroupId() : "PRIVATE");
+        data.put("regDt", schedule.getStartDt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        boolean isToday = schedule.getStartDt().toLocalDate().equals(LocalDate.now());
+        boolean hasMinute = schedule.getStartDt().getMinute() != 0;
+
+        String timeFormat;
+        if (isToday) {
+            timeFormat = hasMinute ? "H시 m분" : "H시";
+        } else {
+            timeFormat = hasMinute ? "M월 d일 H시 m분" : "M월 d일 H시";
+        }
+
+        String body = String.format("%s %s",
+            schedule.getStartDt().format(DateTimeFormatter.ofPattern(timeFormat)),
+            schedule.getContent());
+
+        return PushFcmCommand.builder()
+            .devices(devices)
+            .title(title)
+            .body(body)
+            .data(data)
+            .build();
+    }
 }
