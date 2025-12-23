@@ -73,6 +73,17 @@ public class AccountDevice {
         this.modDt = LocalDateTime.now();
     }
 
+    public void updateDevice(String pushYn, String fcmToken) {
+        if (pushYn != null && !this.pushYn.equals(pushYn)) {
+            this.pushYn = pushYn;
+            this.modDt = LocalDateTime.now();
+        }
+        if (fcmToken != null && !this.fcmToken.equals(fcmToken)) {
+            this.fcmToken = fcmToken;
+            this.modDt = LocalDateTime.now();
+        }
+    }
+
     @Override
     public String toString() {
         JsonObject obj = new JsonObject();

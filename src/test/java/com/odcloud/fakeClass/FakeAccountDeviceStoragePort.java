@@ -55,8 +55,22 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
     }
 
     @Override
+    public List<AccountDevice> findByWriterEmailForPush(String writerEmail) {
+        return List.of();
+    }
+
     public void delete(Long id) {
         boolean removed = database.removeIf(d -> d.getId().equals(id));
         log.info("FakeAccountDeviceStoragePort delete: id={}, removed={}", id, removed);
+    }
+
+    @Override
+    public void updateFcmToken(List<AccountDevice> invalidDevices) {
+        for (AccountDevice invalidDevice : invalidDevices) {
+            database.stream()
+                .filter(d -> d.getId().equals(invalidDevice.getId()))
+                .forEach(d -> d.resetFcmToken());
+        }
+        log.info("FakeAccountDeviceStoragePort updateFcmToken: count={}", invalidDevices.size());
     }
 }

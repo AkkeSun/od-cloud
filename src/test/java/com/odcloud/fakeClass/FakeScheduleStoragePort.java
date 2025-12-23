@@ -6,6 +6,7 @@ import com.odcloud.application.port.in.command.FindSchedulesCommand;
 import com.odcloud.application.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +57,39 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
             .filter(s -> matchesFilterType(s, command))
             .sorted((s1, s2) -> s1.getStartDt().compareTo(s2.getStartDt()))
             .toList();
+    }
+
+    @Override
+    public List<Schedule> findSchedulesForNotification(LocalDateTime currentTime) {
+        return database.stream()
+            .filter(s -> s.getNotificationDt() != null)
+            .filter(s -> !s.getNotificationDt().isAfter(currentTime))
+            .filter(s -> "N".equals(s.getNotificationYn()))
+            .toList();
+    }
+
+    @Override
+    public void updateNotificationYn(List<Long> scheduleIds) {
+        for (Long scheduleId : scheduleIds) {
+            for (int i = 0; i < database.size(); i++) {
+                Schedule s = database.get(i);
+                if (scheduleId.equals(s.getId())) {
+                    Schedule updated = Schedule.builder()
+                        .id(s.getId())
+                        .writerEmail(s.getWriterEmail())
+                        .groupId(s.getGroupId())
+                        .content(s.getContent())
+                        .notificationDt(s.getNotificationDt())
+                        .notificationYn("Y")
+                        .startDt(s.getStartDt())
+                        .modDt(LocalDateTime.now())
+                        .regDt(s.getRegDt())
+                        .build();
+                    database.set(i, updated);
+                    break;
+                }
+            }
+        }
     }
 
     private boolean matchesFilterType(Schedule schedule, FindSchedulesCommand command) {

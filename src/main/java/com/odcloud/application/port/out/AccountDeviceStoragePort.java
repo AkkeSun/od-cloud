@@ -15,8 +15,6 @@ public interface AccountDeviceStoragePort {
     List<AccountDevice> findByGroupIdForPush(String groupId);
 
     List<AccountDevice> findByWriterEmailForPush(String writerEmail);
-
-    void delete(Long id);
-
+    
     void updateFcmToken(List<AccountDevice> invalidDevices);
 }

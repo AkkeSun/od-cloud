@@ -1,0 +1,12 @@
+package com.odcloud.adapter.in.controller.update_device;
+
+import com.odcloud.application.service.update_device.UpdateDeviceServiceResponse;
+
+record UpdateDeviceResponse(
+    Boolean result
+) {
+
+    static UpdateDeviceResponse of(UpdateDeviceServiceResponse serviceResponse) {
+        return new UpdateDeviceResponse(serviceResponse.result());
+    }
+}

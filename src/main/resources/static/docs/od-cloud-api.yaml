@@ -659,14 +659,14 @@ paths:
                         "errorMessage" : "deviceId는 필수값 입니다"
                       }
                     }
-    delete:
+    patch:
       tags:
       - Device
-      summary: 디바이스 삭제 API
-      description: "로그인한 사용자의 디바이스 정보를 삭제합니다.<br><br>- accountId, osType, deviceId\
-        \ 조합으로 디바이스를 찾아 삭제합니다.<br>- 로그인한 사용자의 디바이스만 삭제할 수 있습니다.<br>- 존재하지 않는 디바이스를\
-        \ 삭제하려고 하면 에러가 발생합니다."
-      operationId: "[디바이스 삭제 API] "
+      summary: 디바이스 정보 수정 API
+      description: "사용자의 디바이스 정보를 수정합니다.<br><br>- pushYn: 푸시 알림 수신 여부 (Y/N)<br>- fcmToken:\
+        \ FCM 푸시 토큰<br>- 두 필드 모두 선택적이며, 제공된 필드만 업데이트됩니다.<br>- osType과 deviceId로 대상\
+        \ 디바이스를 식별합니다."
+      operationId: "[디바이스 정보 수정 API] "
       parameters:
       - name: Authorization
         in: header
@@ -679,33 +679,109 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/[request] 디바이스 삭제 API"
+              $ref: "#/components/schemas/[request] 디바이스 정보 수정 API"
             examples:
-              '[디바이스 삭제 API] success':
+              '[디바이스 정보 수정 API] deviceId 미입력':
                 value: |-
                   {
                     "osType" : "iOS",
-                    "deviceId" : "device-123"
+                    "deviceId" : null,
+                    "pushYn" : "N",
+                    "fcmToken" : "new-fcm-token"
                   }
-              '[디바이스 삭제 API] 존재하지 않는 디바이스':
+              '[디바이스 정보 수정 API] osType 미입력':
                 value: |-
                   {
-                    "osType" : "iOS",
-                    "deviceId" : "device-999"
+                    "osType" : null,
+                    "deviceId" : "device-123",
+                    "pushYn" : "N",
+                    "fcmToken" : "new-fcm-token"
                   }
-              '[디바이스 삭제 API] 다른 사용자의 디바이스':
+              '[디바이스 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                 value: |-
                   {
                     "osType" : "iOS",
-                    "deviceId" : "device-123"
+                    "deviceId" : "device-123",
+                    "pushYn" : "N",
+                    "fcmToken" : "new-fcm-token"
                   }
-              '[디바이스 삭제 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+              '[디바이스 정보 수정 API] success fcmToken only':
                 value: |-
                   {
                     "osType" : "iOS",
-                    "deviceId" : "device-123"
+                    "deviceId" : "device-123",
+                    "pushYn" : null,
+                    "fcmToken" : "new-fcm-token"
+                  }
+              '[디바이스 정보 수정 API] 디바이스 존재하지 않음':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "non-existent-device",
+                    "pushYn" : "N",
+                    "fcmToken" : "new-fcm-token"
+                  }
+              '[디바이스 정보 수정 API] success':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-123",
+                    "pushYn" : "N",
+                    "fcmToken" : "new-fcm-token"
+                  }
+              '[디바이스 정보 수정 API] success pushYn only':
+                value: |-
+                  {
+                    "osType" : "iOS",
+                    "deviceId" : "device-123",
+                    "pushYn" : "N",
+                    "fcmToken" : null
                   }
       responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[디바이스 정보 수정 API] deviceId 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "deviceId는 필수값 입니다"
+                      }
+                    }
+                '[디바이스 정보 수정 API] osType 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "osType은 필수값 입니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[디바이스 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
         "200":
           description: "200"
           content:
@@ -713,7 +789,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
-                '[디바이스 삭제 API] success':
+                '[디바이스 정보 수정 API] success fcmToken only':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[디바이스 정보 수정 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[디바이스 정보 수정 API] success pushYn only':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -729,7 +823,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
-                '[디바이스 삭제 API] 존재하지 않는 디바이스':
+                '[디바이스 정보 수정 API] 디바이스 존재하지 않음':
                   value: |-
                     {
                       "httpStatus" : 500,
@@ -737,33 +831,6 @@ paths:
                       "data" : {
                         "errorCode" : 4023,
                         "errorMessage" : "조회된 디바이스가 없습니다"
-                      }
-                    }
-                '[디바이스 삭제 API] 다른 사용자의 디바이스':
-                  value: |-
-                    {
-                      "httpStatus" : 500,
-                      "message" : "INTERNAL_SERVER_ERROR",
-                      "data" : {
-                        "errorCode" : 3001,
-                        "errorMessage" : "접근권한이 없습니다"
-                      }
-                    }
-        "401":
-          description: "401"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 삭제 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 401,
-                      "message" : "UNAUTHORIZED",
-                      "data" : {
-                        "errorCode" : 2099,
-                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
                       }
                     }
   /files:
@@ -2374,11 +2441,6 @@ paths:
                     "status" : "ACTIVE",
                     "deniedCause" : null
                   }
-              '[그룹 계정 상태 변경 API] success':
-                value: |-
-                  {
-                    "status" : "ACTIVE"
-                  }
               '[그룹 계정 상태 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                 value: |-
                   {
@@ -2445,15 +2507,6 @@ paths:
                 $ref: "#/components/schemas/[response] success"
               examples:
                 '[그룹 계정 상태 변경 API] success-active':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[그룹 계정 상태 변경 API] success':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -2745,14 +2798,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-19T17:35:41.617042"
+                          "notificationDt" : "2025-12-23T22:25:39.637885"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-19T17:35:41.617063"
+                          "notificationDt" : "2025-12-23T22:25:39.637901"
                         } ]
                       }
                     }
@@ -3711,19 +3764,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[request] 디바이스 삭제 API':
-      title: "[request] 디바이스 삭제 API"
-      required:
-      - deviceId
-      - osType
-      type: object
-      properties:
-        osType:
-          type: string
-          description: "OS 타입 (iOS, Android 등)"
-        deviceId:
-          type: string
-          description: 디바이스 고유 ID
     RegisterQuestionResponse:
       title: RegisterQuestionResponse
       required:
@@ -3747,6 +3787,26 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 디바이스 정보 수정 API':
+      title: "[request] 디바이스 정보 수정 API"
+      type: object
+      properties:
+        osType:
+          type: string
+          description: "OS 타입 (iOS, Android 등)"
+          nullable: true
+        pushYn:
+          type: string
+          description: 푸시 알림 수신 여부 (Y/N)
+          nullable: true
+        fcmToken:
+          type: string
+          description: FCM 푸시 토큰
+          nullable: true
+        deviceId:
+          type: string
+          description: 디바이스 고유 ID
+          nullable: true
     '[request] 디바이스 등록 API':
       title: "[request] 디바이스 등록 API"
       type: object

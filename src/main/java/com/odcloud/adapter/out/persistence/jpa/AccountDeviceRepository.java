@@ -84,14 +84,7 @@ class AccountDeviceRepository {
                 .and(accountDeviceEntity.fcmToken.ne("RESET")))
             .fetch();
     }
-
-    @Transactional
-    public void deleteById(Long id) {
-        queryFactory.delete(accountDeviceEntity)
-            .where(accountDeviceEntity.id.eq(id))
-            .execute();
-    }
-
+    
     @Transactional
     public void updateFcmToken(List<AccountDevice> accountDevices) {
         queryFactory.update(accountDeviceEntity)
