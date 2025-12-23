@@ -2,14 +2,18 @@ package com.odcloud.application.service.update_group_account_status;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
+import com.odcloud.application.port.in.PushFcmUseCase;
 import com.odcloud.application.port.in.UpdateGroupAccountStatusUseCase;
+import com.odcloud.application.port.in.command.PushFcmCommand;
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.port.out.AccountDeviceStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
-import com.odcloud.application.port.out.MailPort;
+import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase {
 
-    private final MailPort mailPort;
+    private final PushFcmUseCase pushFcmUseCase;
     private final GroupStoragePort groupStoragePort;
+    private final AccountDeviceStoragePort accountDeviceStoragePort;
 
     @Override
     @Transactional
@@ -38,8 +43,12 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
 
         groupAccount.updateStatus(command);
         groupStoragePort.save(groupAccount);
+        List<AccountDevice> devices = accountDeviceStoragePort.findByAccountEmailForPush(
+            groupAccount.getEmail());
 
-        // todo: 푸시알림
+        if (!devices.isEmpty()) {
+            pushFcmUseCase.pushAsync(PushFcmCommand.ofUpdateGroupStatus(devices, command, group));
+        }
         return UpdateGroupAccountStatusServiceResponse.ofSuccess();
     }
 }

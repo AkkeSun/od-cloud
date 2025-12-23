@@ -69,7 +69,21 @@ public record PushFcmCommand(
         return PushFcmCommand.builder()
             .devices(devices)
             .title(group.getName())
-            .body("그룹 가입 신청서가 등록되었습니다.")
+            .body("가입 신청서가 등록되었습니다")
+            .data(data)
+            .build();
+    }
+
+    public static PushFcmCommand ofUpdateGroupStatus(List<AccountDevice> devices,
+        UpdateGroupAccountStatusCommand command, Group group) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", "group");
+
+        return PushFcmCommand.builder()
+            .devices(devices)
+            .title(group.getName())
+            .body(command.status().equals("ACTIVE") ?
+                "가입 요청이 승인 되었습니다" : "가입 요청이 반려 되었습니다")
             .data(data)
             .build();
     }
