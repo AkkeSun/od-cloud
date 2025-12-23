@@ -32,7 +32,7 @@ class SendScheduleNotificationChunkProcessor {
             try {
                 List<AccountDevice> devices = schedule.isGroupSchedule() ?
                     accountDeviceStoragePort.findByGroupIdForPush(schedule.getGroupId()) :
-                    accountDeviceStoragePort.findByWriterEmailForPush(schedule.getWriterEmail());
+                    accountDeviceStoragePort.findByAccountEmailForPush(schedule.getWriterEmail());
 
                 if (devices.isEmpty()) {
                     continue;

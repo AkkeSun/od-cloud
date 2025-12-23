@@ -13,8 +13,9 @@ public interface AccountDeviceStoragePort {
     );
 
     List<AccountDevice> findByGroupIdForPush(String groupId);
-
-    List<AccountDevice> findByWriterEmailForPush(String writerEmail);
     
+    List<AccountDevice> findByAccountEmailForPush(String ownerEmail);
+
     void updateFcmToken(List<AccountDevice> invalidDevices);
+
 }

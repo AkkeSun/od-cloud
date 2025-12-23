@@ -62,4 +62,15 @@ public record PushFcmCommand(
             .data(data)
             .build();
     }
+
+    public static PushFcmCommand ofGroupPending(Group group, List<AccountDevice> devices) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", "group-join");
+        return PushFcmCommand.builder()
+            .devices(devices)
+            .title(group.getName())
+            .body("그룹 가입 신청서가 등록되었습니다.")
+            .data(data)
+            .build();
+    }
 }

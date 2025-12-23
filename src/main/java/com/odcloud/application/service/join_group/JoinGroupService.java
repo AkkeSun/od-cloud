@@ -1,6 +1,9 @@
 package com.odcloud.application.service.join_group;
 
 import com.odcloud.application.port.in.JoinGroupUseCase;
+import com.odcloud.application.port.in.PushFcmUseCase;
+import com.odcloud.application.port.in.command.PushFcmCommand;
+import com.odcloud.application.port.out.AccountDeviceStoragePort;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
@@ -13,13 +16,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class JoinGroupService implements JoinGroupUseCase {
 
+    private final PushFcmUseCase pushFcmUseCase;
     private final GroupStoragePort groupStoragePort;
+    private final AccountDeviceStoragePort deviceStoragePort;
 
     @Override
     @Transactional
     public JoinGroupServiceResponse join(String groupId, Account account) {
         Group group = groupStoragePort.findById(groupId);
         groupStoragePort.save(GroupAccount.ofPending(group, account));
+
+        pushFcmUseCase.pushAsync(PushFcmCommand.ofGroupPending(group,
+            deviceStoragePort.findByAccountEmailForPush(group.getOwnerEmail())));
         return JoinGroupServiceResponse.ofSuccess();
     }
 }

@@ -68,7 +68,7 @@ class AccountDeviceRepository {
             .fetch();
     }
 
-    public List<AccountDevice> findByWriterEmailForPush(String writerEmail) {
+    public List<AccountDevice> findByAccountEmailForPush(String accountEmail) {
         return queryFactory.select(Projections.constructor(AccountDevice.class,
                 accountDeviceEntity.id,
                 accountDeviceEntity.accountId,
@@ -79,12 +79,12 @@ class AccountDeviceRepository {
             ))
             .from(accountDeviceEntity)
             .innerJoin(accountEntity).on(accountDeviceEntity.accountId.eq(accountEntity.id))
-            .where(accountEntity.email.eq(writerEmail)
+            .where(accountEntity.email.eq(accountEmail)
                 .and(accountDeviceEntity.pushYn.eq("Y"))
                 .and(accountDeviceEntity.fcmToken.ne("RESET")))
             .fetch();
     }
-    
+
     @Transactional
     public void updateFcmToken(List<AccountDevice> accountDevices) {
         queryFactory.update(accountDeviceEntity)
