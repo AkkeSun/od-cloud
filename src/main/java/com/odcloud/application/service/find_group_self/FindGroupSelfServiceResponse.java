@@ -8,14 +8,17 @@ import lombok.Builder;
 @Builder
 public record FindGroupSelfServiceResponse(
     List<ActiveGroupInfo> activeGroups,
-    List<PendingGroupInfo> pendingGroups
+    List<PendingGroupInfo> pendingGroups,
+    List<DeniedGroupInfo> deniedGroups
 ) {
 
     public static FindGroupSelfServiceResponse of(List<ActiveGroupInfo> activeGroups,
-        List<PendingGroupInfo> pendingGroups) {
+        List<PendingGroupInfo> pendingGroups,
+        List<DeniedGroupInfo> deniedGroups) {
         return FindGroupSelfServiceResponse.builder()
             .activeGroups(activeGroups)
             .pendingGroups(pendingGroups)
+            .deniedGroups(deniedGroups)
             .build();
     }
 
@@ -64,6 +67,22 @@ public record FindGroupSelfServiceResponse(
                 .activeMemberCount((int) group.getGroupMembers().stream()
                     .filter(member -> "ACTIVE".equals(member.getStatus()))
                     .count())
+                .build();
+        }
+    }
+
+    @Builder
+    public record DeniedGroupInfo(
+        String id,
+        String name,
+        String deniedCause
+    ) {
+
+        public static DeniedGroupInfo of(Group group, GroupAccount groupAccount) {
+            return DeniedGroupInfo.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .deniedCause(groupAccount.getDeniedCause())
                 .build();
         }
     }

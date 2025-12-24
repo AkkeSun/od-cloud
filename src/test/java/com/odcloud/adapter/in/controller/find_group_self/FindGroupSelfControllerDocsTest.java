@@ -150,9 +150,17 @@ class FindGroupSelfControllerDocsTest {
                     .activeMemberCount(1)
                     .build();
 
+            FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroup =
+                FindGroupSelfServiceResponse.DeniedGroupInfo.builder()
+                    .id("deniedGroup")
+                    .name("Sales Team")
+                    .deniedCause("요청이 거부되었습니다")
+                    .build();
+
             FindGroupSelfServiceResponse serviceResponse = FindGroupSelfServiceResponse.builder()
                 .activeGroups(List.of(activeGroup1, activeGroup2))
                 .pendingGroups(List.of(pendingGroup))
+                .deniedGroups(List.of(deniedGroup))
                 .build();
 
             given(useCase.findSelf(any())).willReturn(serviceResponse);
@@ -194,7 +202,15 @@ class FindGroupSelfControllerDocsTest {
                 fieldWithPath("data.pendingGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.pendingGroups[].activeMemberCount")
-                    .type(JsonFieldType.NUMBER).description("활성 사용자 수")
+                    .type(JsonFieldType.NUMBER).description("활성 사용자 수"),
+                fieldWithPath("data.deniedGroups")
+                    .type(JsonFieldType.ARRAY).description("가입 거부된 그룹 목록"),
+                fieldWithPath("data.deniedGroups[].id")
+                    .type(JsonFieldType.STRING).description("그룹 아이디"),
+                fieldWithPath("data.deniedGroups[].name")
+                    .type(JsonFieldType.STRING).description("그룹명"),
+                fieldWithPath("data.deniedGroups[].deniedCause")
+                    .type(JsonFieldType.STRING).description("거부 사유")
             );
         }
     }
@@ -214,9 +230,10 @@ class FindGroupSelfControllerDocsTest {
                         .tag("Account")
                         .summary("현재 사용자의 그룹 정보 조회 API")
                         .description("현재 인증된 사용자가 속한 그룹의 정보를 조회하는 API 입니다.<br><br>"
-                            + "- 가입된 그룹(activeGroups)과 가입 대기중인 그룹(pendingGroups)을 분리하여 반환합니다.<br>"
+                            + "- 가입된 그룹(activeGroups), 가입 대기중인 그룹(pendingGroups), 가입 거부된 그룹(deniedGroups)을 분리하여 반환합니다.<br>"
                             + "- 가입된 그룹: 그룹명, 매니저 정보, 구성원 목록(닉네임, 이메일), 활성 사용자 수, 내가 매니저인지 여부를 포함합니다.<br>"
                             + "- 대기중인 그룹: 그룹명, 활성 사용자 수, 내가 매니저인지 여부만 포함합니다.<br>"
+                            + "- 거부된 그룹: 그룹명, 거부 사유를 포함합니다.<br>"
                             + "- 구성원 목록은 ACTIVE 상태이며 매니저를 제외한 멤버들입니다.<br>"
                             + "- 매니저인 그룹이 목록의 앞쪽에 정렬됩니다.<br>"
                             + "- 인증 토큰(JWT)이 필수입니다.")

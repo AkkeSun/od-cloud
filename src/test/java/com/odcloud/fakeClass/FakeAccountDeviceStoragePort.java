@@ -44,7 +44,8 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
                 && d.getOsType().equals(osType)
                 && d.getDeviceId().equals(deviceId))
             .findFirst();
-        log.info("FakeAccountDeviceStoragePort findByAccountIdAndOsTypeAndDeviceId: accountId={}, osType={}, deviceId={}, found={}",
+        log.info(
+            "FakeAccountDeviceStoragePort findByAccountIdAndOsTypeAndDeviceId: accountId={}, osType={}, deviceId={}, found={}",
             accountId, osType, deviceId, result.isPresent());
         return result;
     }
@@ -55,7 +56,7 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
     }
 
     @Override
-    public List<AccountDevice> findByWriterEmailForPush(String writerEmail) {
+    public List<AccountDevice> findByAccountEmailForPush(String ownerEmail) {
         return List.of();
     }
 
@@ -69,7 +70,7 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
         for (AccountDevice invalidDevice : invalidDevices) {
             database.stream()
                 .filter(d -> d.getId().equals(invalidDevice.getId()))
-                .forEach(d -> d.resetFcmToken());
+                .forEach(AccountDevice::resetFcmToken);
         }
         log.info("FakeAccountDeviceStoragePort updateFcmToken: count={}", invalidDevices.size());
     }

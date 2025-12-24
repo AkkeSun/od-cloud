@@ -6,8 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
+import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
-import com.odcloud.fakeClass.FakeMailPort;
+import com.odcloud.fakeClass.FakePushFcmUseCase;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,17 +18,20 @@ import org.junit.jupiter.api.Test;
 
 class UpdateGroupAccountStatusServiceTest {
 
-    private FakeMailPort fakeMailPort;
+    private FakePushFcmUseCase fakePushFcmUseCase;
     private FakeGroupStoragePort fakeGroupStoragePort;
+    private FakeAccountDeviceStoragePort fakeAccountDeviceStoragePort;
     private UpdateGroupAccountStatusService updateGroupAccountStatusService;
 
     @BeforeEach
     void setUp() {
-        fakeMailPort = new FakeMailPort();
+        fakePushFcmUseCase = new FakePushFcmUseCase();
         fakeGroupStoragePort = new FakeGroupStoragePort();
+        fakeAccountDeviceStoragePort = new FakeAccountDeviceStoragePort();
         updateGroupAccountStatusService = new UpdateGroupAccountStatusService(
-            fakeMailPort,
-            fakeGroupStoragePort
+            fakePushFcmUseCase,
+            fakeGroupStoragePort,
+            fakeAccountDeviceStoragePort
         );
     }
 
@@ -116,7 +120,7 @@ class UpdateGroupAccountStatusServiceTest {
 
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "PENDING");
-            assertThat(fakeMailPort.sentMails).isEmpty();
+            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
 
@@ -147,7 +151,7 @@ class UpdateGroupAccountStatusServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode",
                     ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT);
 
-            assertThat(fakeMailPort.sentMails).isEmpty();
+            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
         @Test
@@ -236,7 +240,6 @@ class UpdateGroupAccountStatusServiceTest {
                 "DENIED");
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getDeniedCause()).isEqualTo(
                 deniedCause);
-            assertThat(fakeMailPort.sentMails).isEmpty();
         }
     }
 }

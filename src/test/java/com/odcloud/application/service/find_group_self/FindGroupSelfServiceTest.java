@@ -118,6 +118,7 @@ class FindGroupSelfServiceTest {
             // then
             assertThat(response.activeGroups()).hasSize(1);
             assertThat(response.pendingGroups()).hasSize(1);
+            assertThat(response.deniedGroups()).isEmpty();
 
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
                 .get(0);
@@ -147,6 +148,102 @@ class FindGroupSelfServiceTest {
             // then
             assertThat(response.activeGroups()).isEmpty();
             assertThat(response.pendingGroups()).isEmpty();
+            assertThat(response.deniedGroups()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] 거부된 그룹도 조회할 수 있다")
+        void success_includeDeniedGroups() {
+            // given
+            Long userId = 1L;
+            String userEmail = "user1@example.com";
+
+            // ACTIVE 그룹 설정
+            Group activeGroup = Group.builder()
+                .id("group-1")
+                .ownerEmail("manager1@example.com")
+                .name("Development Team")
+                .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
+                .build();
+
+            GroupAccount userActiveAccount = GroupAccount.builder()
+                .id(1L)
+                .groupId("group-1")
+                .groupName("Development Team")
+                .accountId(userId)
+                .nickName("User1")
+                .email(userEmail)
+                .status("ACTIVE")
+                .build();
+
+            GroupAccount managerMember = GroupAccount.builder()
+                .id(2L)
+                .groupId("group-1")
+                .accountId(2L)
+                .nickName("Manager1")
+                .email("manager1@example.com")
+                .status("ACTIVE")
+                .build();
+
+            activeGroup.updateGroupMembers(List.of(userActiveAccount, managerMember));
+
+            // DENIED 그룹 설정
+            Group deniedGroup = Group.builder()
+                .id("group-2")
+                .ownerEmail("manager2@example.com")
+                .name("Marketing Team")
+                .regDt(LocalDateTime.of(2024, 1, 2, 12, 0))
+                .build();
+
+            GroupAccount userDeniedAccount = GroupAccount.builder()
+                .id(3L)
+                .groupId("group-2")
+                .groupName("Marketing Team")
+                .accountId(userId)
+                .nickName("User1")
+                .email(userEmail)
+                .status("DENIED")
+                .deniedCause("요청이 거부되었습니다")
+                .build();
+
+            GroupAccount managerMember2 = GroupAccount.builder()
+                .id(4L)
+                .groupId("group-2")
+                .accountId(3L)
+                .nickName("Manager2")
+                .email("manager2@example.com")
+                .status("ACTIVE")
+                .build();
+
+            deniedGroup.updateGroupMembers(List.of(userDeniedAccount, managerMember2));
+
+            fakeGroupStoragePort.groupDatabase.add(activeGroup);
+            fakeGroupStoragePort.groupDatabase.add(deniedGroup);
+            fakeGroupStoragePort.groupAccountDatabase.add(userActiveAccount);
+            fakeGroupStoragePort.groupAccountDatabase.add(userDeniedAccount);
+
+            Account account = Account.builder()
+                .id(userId)
+                .email(userEmail)
+                .build();
+
+            // when
+            FindGroupSelfServiceResponse response = findGroupSelfService.findSelf(account);
+
+            // then
+            assertThat(response.activeGroups()).hasSize(1);
+            assertThat(response.pendingGroups()).isEmpty();
+            assertThat(response.deniedGroups()).hasSize(1);
+
+            FindGroupSelfServiceResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
+                .get(0);
+            assertThat(activeGroupInfo.name()).isEqualTo("Development Team");
+
+            FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroupInfo = response.deniedGroups()
+                .get(0);
+            assertThat(deniedGroupInfo.id()).isEqualTo("group-2");
+            assertThat(deniedGroupInfo.name()).isEqualTo("Marketing Team");
+            assertThat(deniedGroupInfo.deniedCause()).isEqualTo("요청이 거부되었습니다");
         }
     }
 }

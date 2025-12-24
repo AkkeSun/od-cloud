@@ -3,6 +3,7 @@ package com.odcloud.application.service.find_group_self;
 import com.odcloud.application.port.in.FindGroupSelfUseCase;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.application.service.find_group_self.FindGroupSelfServiceResponse.ActiveGroupInfo;
+import com.odcloud.application.service.find_group_self.FindGroupSelfServiceResponse.DeniedGroupInfo;
 import com.odcloud.application.service.find_group_self.FindGroupSelfServiceResponse.PendingGroupInfo;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
@@ -40,6 +41,14 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
             })
             .toList();
 
-        return FindGroupSelfServiceResponse.of(activeGroups, pendingGroups);
+        List<DeniedGroupInfo> deniedGroups = groupAccounts.stream()
+            .filter(ga -> "DENIED".equals(ga.getStatus()))
+            .map(ga -> {
+                Group group = groupStoragePort.findById(ga.getGroupId());
+                return DeniedGroupInfo.of(group, ga);
+            })
+            .toList();
+
+        return FindGroupSelfServiceResponse.of(activeGroups, pendingGroups, deniedGroups);
     }
 }
