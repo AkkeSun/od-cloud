@@ -2186,11 +2186,12 @@ paths:
       tags:
       - Account
       summary: 현재 사용자의 그룹 정보 조회 API
-      description: "현재 인증된 사용자가 속한 그룹의 정보를 조회하는 API 입니다.<br><br>- 가입된 그룹(activeGroups)과\
-        \ 가입 대기중인 그룹(pendingGroups)을 분리하여 반환합니다.<br>- 가입된 그룹: 그룹명, 매니저 정보, 구성원 목록\
-        (닉네임, 이메일), 활성 사용자 수, 내가 매니저인지 여부를 포함합니다.<br>- 대기중인 그룹: 그룹명, 활성 사용자 수, 내가\
-        \ 매니저인지 여부만 포함합니다.<br>- 구성원 목록은 ACTIVE 상태이며 매니저를 제외한 멤버들입니다.<br>- 매니저인 그룹이\
-        \ 목록의 앞쪽에 정렬됩니다.<br>- 인증 토큰(JWT)이 필수입니다."
+      description: "현재 인증된 사용자가 속한 그룹의 정보를 조회하는 API 입니다.<br><br>- 가입된 그룹(activeGroups),\
+        \ 가입 대기중인 그룹(pendingGroups), 가입 거부된 그룹(deniedGroups)을 분리하여 반환합니다.<br>- 가입된\
+        \ 그룹: 그룹명, 매니저 정보, 구성원 목록(닉네임, 이메일), 활성 사용자 수, 내가 매니저인지 여부를 포함합니다.<br>- 대기\
+        중인 그룹: 그룹명, 활성 사용자 수, 내가 매니저인지 여부만 포함합니다.<br>- 거부된 그룹: 그룹명, 거부 사유를 포함합니다.<br>-\
+        \ 구성원 목록은 ACTIVE 상태이며 매니저를 제외한 멤버들입니다.<br>- 매니저인 그룹이 목록의 앞쪽에 정렬됩니다.<br>- 인\
+        증 토큰(JWT)이 필수입니다."
       operationId: "[현재 사용자의 그룹 정보 조회 API] 현재 사용자의 그룹 정보 조회 성공"
       parameters:
       - name: Authorization
@@ -2246,6 +2247,11 @@ paths:
                           "id" : "pendingGroup",
                           "name" : "Marketing Team",
                           "activeMemberCount" : 1
+                        } ],
+                        "deniedGroups" : [ {
+                          "id" : "deniedGroup",
+                          "name" : "Sales Team",
+                          "deniedCause" : "요청이 거부되었습니다"
                         } ]
                       }
                     }
@@ -2798,14 +2804,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-23T22:25:39.637885"
+                          "notificationDt" : "2025-12-24T10:24:28.214197"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-23T22:25:39.637901"
+                          "notificationDt" : "2025-12-24T10:24:28.214213"
                         } ]
                       }
                     }
@@ -3306,12 +3312,96 @@ components:
       properties:
         data:
           required:
-          - result
+          - activeGroups
+          - deniedGroups
+          - pendingGroups
           type: object
           properties:
-            result:
-              type: boolean
-              description: 상태 변경 성공 여부
+            activeGroups:
+              type: array
+              description: 가입된 그룹 목록
+              items:
+                required:
+                - activeMemberCount
+                - id
+                - members
+                - name
+                type: object
+                properties:
+                  manager:
+                    type: object
+                    properties:
+                      nickname:
+                        type: string
+                        description: 매니저 닉네임
+                        nullable: true
+                      email:
+                        type: string
+                        description: 매니저 이메일
+                        nullable: true
+                    description: 매니저 정보
+                  members:
+                    type: array
+                    description: 구성원 목록 (매니저 제외)
+                    items:
+                      required:
+                      - email
+                      - nickname
+                      type: object
+                      properties:
+                        nickname:
+                          type: string
+                          description: 구성원 닉네임
+                        email:
+                          type: string
+                          description: 구성원 이메일
+                  name:
+                    type: string
+                    description: 그룹명
+                  id:
+                    type: string
+                    description: 그룹 아이디
+                  activeMemberCount:
+                    type: number
+                    description: 활성 사용자 수
+            deniedGroups:
+              type: array
+              description: 가입 거부된 그룹 목록
+              items:
+                required:
+                - deniedCause
+                - id
+                - name
+                type: object
+                properties:
+                  deniedCause:
+                    type: string
+                    description: 거부 사유
+                  name:
+                    type: string
+                    description: 그룹명
+                  id:
+                    type: string
+                    description: 그룹 아이디
+            pendingGroups:
+              type: array
+              description: 가입 대기중인 그룹 목록
+              items:
+                required:
+                - activeMemberCount
+                - id
+                - name
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 그룹명
+                  id:
+                    type: string
+                    description: 그룹 아이디
+                  activeMemberCount:
+                    type: number
+                    description: 활성 사용자 수
           description: 응답 데이터
         httpStatus:
           type: number
