@@ -27,6 +27,7 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
 
         List<ActiveGroupInfo> activeGroups = groupAccounts.stream()
             .filter(ga -> "ACTIVE".equals(ga.getStatus()))
+            .filter(ga -> "Y".equals(ga.getShowYn()))
             .map(ga -> {
                 Group group = groupStoragePort.findById(ga.getGroupId());
                 return ActiveGroupInfo.of(group);
@@ -35,6 +36,7 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
 
         List<PendingGroupInfo> pendingGroups = groupAccounts.stream()
             .filter(ga -> "PENDING".equals(ga.getStatus()))
+            .filter(ga -> "Y".equals(ga.getShowYn()))
             .map(ga -> {
                 Group group = groupStoragePort.findById(ga.getGroupId());
                 return PendingGroupInfo.of(group);
@@ -43,6 +45,7 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
 
         List<DeniedGroupInfo> deniedGroups = groupAccounts.stream()
             .filter(ga -> "DENIED".equals(ga.getStatus()))
+            .filter(ga -> "Y".equals(ga.getShowYn()))
             .map(ga -> {
                 Group group = groupStoragePort.findById(ga.getGroupId());
                 return DeniedGroupInfo.of(group, ga);

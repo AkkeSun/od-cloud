@@ -38,6 +38,9 @@ class GroupAccountEntity {
     @Column(name = "DENIED_CAUSE")
     private String deniedCause;
 
+    @Column(name = "SHOW_YN")
+    private String showYn;
+
     @Column(name = "MOD_DT")
     private LocalDateTime modDt;
 
@@ -51,6 +54,7 @@ class GroupAccountEntity {
             .accountId(groupAccount.getAccountId())
             .status(groupAccount.getStatus())
             .deniedCause(groupAccount.getDeniedCause())
+            .showYn(groupAccount.getShowYn())
             .modDt(groupAccount.getModDt())
             .regDt(groupAccount.getRegDt())
             .build();

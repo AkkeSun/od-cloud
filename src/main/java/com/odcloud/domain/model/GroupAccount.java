@@ -22,6 +22,7 @@ public class GroupAccount {
     private String email;
     private String status;
     private String deniedCause;
+    private String showYn;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
@@ -44,6 +45,7 @@ public class GroupAccount {
             .groupId(group.getId())
             .accountId(account.getId())
             .status("PENDING")
+            .showYn("Y")
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -53,6 +55,7 @@ public class GroupAccount {
             .groupId(group.getId())
             .accountId(account.getId())
             .status("ACTIVE")
+            .showYn("Y")
             .modDt(LocalDateTime.now())
             .regDt(LocalDateTime.now())
             .build();
