@@ -71,6 +71,11 @@ public class GroupAccount {
         this.modDt = LocalDateTime.now();
     }
 
+    public void updateShowYn(String showYn) {
+        this.showYn = showYn;
+        this.modDt = LocalDateTime.now();
+    }
+
     public boolean isPending() {
         return "PENDING".equals(status);
     }

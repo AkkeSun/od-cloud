@@ -75,17 +75,21 @@ class GroupRepository {
                 groupAccountEntity.id,
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
+                groupEntity.name,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
                 groupAccountEntity.deniedCause,
+                groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
             .from(groupAccountEntity)
             .innerJoin(accountEntity)
             .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .innerJoin(groupEntity)
+            .on(groupAccountEntity.groupId.eq(groupEntity.id))
             .where(groupAccountEntity.groupId.eq(id))
             .fetch();
 
@@ -135,6 +139,7 @@ class GroupRepository {
                 accountEntity.email,
                 groupAccountEntity.status,
                 groupAccountEntity.deniedCause,
+                groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -164,6 +169,7 @@ class GroupRepository {
                 accountEntity.email,
                 groupAccountEntity.status,
                 groupAccountEntity.deniedCause,
+                groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -193,6 +199,7 @@ class GroupRepository {
                 accountEntity.email,
                 groupAccountEntity.status,
                 groupAccountEntity.deniedCause,
+                groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))
@@ -223,6 +230,7 @@ class GroupRepository {
                 accountEntity.email,
                 groupAccountEntity.status,
                 groupAccountEntity.deniedCause,
+                groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
             ))

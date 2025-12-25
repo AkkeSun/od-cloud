@@ -51,6 +51,7 @@ class FindGroupSelfServiceTest {
                 .nickName("User1")
                 .email(userEmail)
                 .status("ACTIVE")
+                .showYn("Y")
                 .build();
 
             GroupAccount otherActiveMember = GroupAccount.builder()
@@ -89,6 +90,7 @@ class FindGroupSelfServiceTest {
                 .nickName("User1")
                 .email(userEmail)
                 .status("PENDING")
+                .showYn("Y")
                 .build();
 
             GroupAccount managerMember = GroupAccount.builder()
@@ -174,6 +176,7 @@ class FindGroupSelfServiceTest {
                 .nickName("User1")
                 .email(userEmail)
                 .status("ACTIVE")
+                .showYn("Y")
                 .build();
 
             GroupAccount managerMember = GroupAccount.builder()
@@ -204,6 +207,7 @@ class FindGroupSelfServiceTest {
                 .email(userEmail)
                 .status("DENIED")
                 .deniedCause("요청이 거부되었습니다")
+                .showYn("Y")
                 .build();
 
             GroupAccount managerMember2 = GroupAccount.builder()

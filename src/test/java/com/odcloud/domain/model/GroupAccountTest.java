@@ -398,7 +398,6 @@ class GroupAccountTest {
                 1L,
                 "group-123",
                 100L,
-                "Test Group",
                 "홍길동",
                 "테스터",
                 "test@example.com",
@@ -413,7 +412,6 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isEqualTo(1L);
             assertThat(groupAccount.getGroupId()).isEqualTo("group-123");
             assertThat(groupAccount.getAccountId()).isEqualTo(100L);
-            assertThat(groupAccount.getGroupName()).isEqualTo("Test Group");
             assertThat(groupAccount.getName()).isEqualTo("홍길동");
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");
             assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
@@ -428,7 +426,7 @@ class GroupAccountTest {
         void success_nullValues() {
             // when
             GroupAccount groupAccount = new GroupAccount(
-                null, null, null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null
             );
 
             // then
@@ -436,7 +434,6 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isNull();
             assertThat(groupAccount.getGroupId()).isNull();
             assertThat(groupAccount.getAccountId()).isNull();
-            assertThat(groupAccount.getGroupName()).isNull();
             assertThat(groupAccount.getName()).isNull();
             assertThat(groupAccount.getNickName()).isNull();
             assertThat(groupAccount.getEmail()).isNull();

@@ -1,6 +1,7 @@
 package com.odcloud.fakeClass;
 
 import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.port.in.command.UpdateGroupAccountUseYnCommand;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
@@ -96,6 +97,15 @@ public class FakeGroupStoragePort implements GroupStoragePort {
         return groupAccountDatabase.stream()
             .filter(ga -> ga.getGroupId().equals(command.groupId())
                 && ga.getAccountId().equals(command.accountId()))
+            .findFirst()
+            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
+    }
+
+    @Override
+    public GroupAccount findGroupAccountByGroupIdAndAccountId(UpdateGroupAccountUseYnCommand command) {
+        return groupAccountDatabase.stream()
+            .filter(ga -> ga.getGroupId().equals(command.groupId())
+                && ga.getAccountId().equals(command.account().getId()))
             .findFirst()
             .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
     }

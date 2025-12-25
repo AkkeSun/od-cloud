@@ -2402,6 +2402,150 @@ paths:
                         "errorMessage" : "등록되지 않은 그룹 입니다"
                       }
                     }
+  /groups/{groupId}/useYn:
+    patch:
+      tags:
+      - Account
+      summary: 그룹 계정 노출 여부 변경 API
+      description: 그룹 내 자신의 계정 노출 여부를 변경합니다. (Y 또는 N)
+      operationId: "[그룹 계정 노출 여부 변경 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 그룹 계정 노출 여부 변경 API"
+            examples:
+              '[그룹 계정 노출 여부 변경 API] success-Y':
+                value: |-
+                  {
+                    "showYn" : "Y"
+                  }
+              '[그룹 계정 노출 여부 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "showYn" : "Y"
+                  }
+              '[그룹 계정 노출 여부 변경 API] 등록되지 않은 그룹 사용자':
+                value: |-
+                  {
+                    "showYn" : "Y"
+                  }
+              '[그룹 계정 노출 여부 변경 API] 유효하지 않은 노출 여부 입력':
+                value: |-
+                  {
+                    "showYn" : "INVALID"
+                  }
+              '[그룹 계정 노출 여부 변경 API] success-N':
+                value: |-
+                  {
+                    "showYn" : "N"
+                  }
+              '[그룹 계정 노출 여부 변경 API] 노출 여부 미입력':
+                value: |-
+                  {
+                    "showYn" : null
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 계정 노출 여부 변경 API] success-Y':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[그룹 계정 노출 여부 변경 API] success-N':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 노출 여부 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 노출 여부 변경 API] 등록되지 않은 그룹 사용자':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4010,
+                        "errorMessage" : "등록되지 않은 그룹 사용자 입니다"
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 계정 노출 여부 변경 API] 유효하지 않은 노출 여부 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "유효하지 않은 노출 유무 입니다"
+                      }
+                    }
+                '[그룹 계정 노출 여부 변경 API] 노출 여부 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "노출 유무는 필수값 입니다"
+                      }
+                    }
   /groups/{groupId}/accounts/{accountId}/status:
     patch:
       tags:
@@ -2804,14 +2948,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-24T10:24:28.214197"
+                          "notificationDt" : "2025-12-24T15:27:01.491867"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-24T10:24:28.214213"
+                          "notificationDt" : "2025-12-24T15:27:01.491885"
                         } ]
                       }
                     }
@@ -3917,6 +4061,17 @@ components:
           type: string
           description: 디바이스 고유 ID
           nullable: true
+    '[request] 그룹 계정 노출 여부 변경 API':
+      title: "[request] 그룹 계정 노출 여부 변경 API"
+      required:
+      - showYn
+      type: object
+      properties:
+        showYn:
+          description: 노출 여부 (Y / N)
+          oneOf:
+          - null
+          - type: string
     FindQuestionsResponse:
       title: FindQuestionsResponse
       required:
