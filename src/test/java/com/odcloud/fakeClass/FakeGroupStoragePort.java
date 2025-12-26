@@ -1,7 +1,5 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
-import com.odcloud.application.port.in.command.UpdateGroupAccountUseYnCommand;
 import com.odcloud.application.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
@@ -56,7 +54,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(group -> group.getName().contains(keyword))
             .toList();
     }
-    
+
     @Override
     public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
         return groupAccountDatabase.stream()
@@ -80,6 +78,11 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
+    public GroupAccount findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId) {
+        return null;
+    }
+
+    @Override
     public List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
         List<String> ownerGroupIds = groupDatabase.stream()
             .filter(group -> group.getOwnerEmail().equals(ownerEmail))
@@ -90,23 +93,5 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(ga -> ownerGroupIds.contains(ga.getGroupId()))
             .filter(ga -> "PENDING".equals(ga.getStatus()))
             .toList();
-    }
-
-    @Override
-    public GroupAccount findGroupAccountByGroupIdAndAccountId(UpdateGroupAccountStatusCommand command) {
-        return groupAccountDatabase.stream()
-            .filter(ga -> ga.getGroupId().equals(command.groupId())
-                && ga.getAccountId().equals(command.accountId()))
-            .findFirst()
-            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
-    }
-
-    @Override
-    public GroupAccount findGroupAccountByGroupIdAndAccountId(UpdateGroupAccountUseYnCommand command) {
-        return groupAccountDatabase.stream()
-            .filter(ga -> ga.getGroupId().equals(command.groupId())
-                && ga.getAccountId().equals(command.account().getId()))
-            .findFirst()
-            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
     }
 }

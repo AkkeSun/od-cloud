@@ -36,7 +36,8 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
             throw new CustomBusinessException(Business_INVALID_GROUP_OWNER);
         }
 
-        GroupAccount groupAccount = groupStoragePort.findGroupAccountByGroupIdAndAccountId(command);
+        GroupAccount groupAccount = groupStoragePort.findGroupAccountByGroupIdAndAccountId(
+            command.groupId(), command.accountId());
         if (!groupAccount.isPending()) {
             throw new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_ACCOUNT_STATUS);
         }
