@@ -79,7 +79,11 @@ public class FakeGroupStoragePort implements GroupStoragePort {
 
     @Override
     public GroupAccount findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId) {
-        return null;
+        return groupAccountDatabase.stream()
+            .filter(ga -> ga.getGroupId().equals(groupId))
+            .filter(ga -> ga.getAccountId().equals(accountId))
+            .findFirst()
+            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
     }
 
     @Override

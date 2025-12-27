@@ -118,7 +118,6 @@ class FindGroupSelfControllerDocsTest {
                     .id("activeGroup-1")
                     .name("My Team")
                     .manager(manager1)
-                    .members(List.of(member1, member2))
                     .activeMemberCount(3)
                     .build();
 
@@ -139,7 +138,6 @@ class FindGroupSelfControllerDocsTest {
                     .id("activeGroup-2")
                     .name("Development Team")
                     .manager(manager2)
-                    .members(List.of(member3))
                     .activeMemberCount(2)
                     .build();
 
@@ -187,12 +185,6 @@ class FindGroupSelfControllerDocsTest {
                     .type(JsonFieldType.STRING).description("매니저 닉네임").optional(),
                 fieldWithPath("data.activeGroups[].manager.email")
                     .type(JsonFieldType.STRING).description("매니저 이메일").optional(),
-                fieldWithPath("data.activeGroups[].members")
-                    .type(JsonFieldType.ARRAY).description("구성원 목록 (매니저 제외)"),
-                fieldWithPath("data.activeGroups[].members[].nickname")
-                    .type(JsonFieldType.STRING).description("구성원 닉네임"),
-                fieldWithPath("data.activeGroups[].members[].email")
-                    .type(JsonFieldType.STRING).description("구성원 이메일"),
                 fieldWithPath("data.activeGroups[].activeMemberCount")
                     .type(JsonFieldType.NUMBER).description("활성 사용자 수"),
                 fieldWithPath("data.pendingGroups")

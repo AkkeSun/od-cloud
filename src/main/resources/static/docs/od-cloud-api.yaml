@@ -2222,13 +2222,6 @@ paths:
                             "nickname" : "Manager",
                             "email" : "manager@example.com"
                           },
-                          "members" : [ {
-                            "nickname" : "Member1",
-                            "email" : "member1@example.com"
-                          }, {
-                            "nickname" : "Member2",
-                            "email" : "member2@example.com"
-                          } ],
                           "activeMemberCount" : 3
                         }, {
                           "id" : "activeGroup-2",
@@ -2237,10 +2230,6 @@ paths:
                             "nickname" : "OtherManager",
                             "email" : "other@example.com"
                           },
-                          "members" : [ {
-                            "nickname" : "Member3",
-                            "email" : "member3@example.com"
-                          } ],
                           "activeMemberCount" : 2
                         } ],
                         "pendingGroups" : [ {
@@ -2252,6 +2241,76 @@ paths:
                           "id" : "deniedGroup",
                           "name" : "Sales Team",
                           "deniedCause" : "요청이 거부되었습니다"
+                        } ]
+                      }
+                    }
+  /groups/{groupId}:
+    get:
+      tags:
+      - Group
+      summary: 그룹 상세 조회 API
+      description: "그룹 ID로 그룹의 상세 정보를 조회합니다. 그룹장, 멤버 목록, 최근 공지사항(최대 5개)을 포함합니다."
+      operationId: "[그룹 상세 조회 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 상세 조회 API] 존재하지 않는 그룹 ID':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4009,
+                        "errorMessage" : "등록되지 않은 그룹 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 상세 조회 API] 그룹 상세 조회 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "id" : "test-group",
+                        "name" : "My Team",
+                        "manager" : {
+                          "nickname" : "Manager",
+                          "email" : "manager@example.com"
+                        },
+                        "members" : [ {
+                          "nickname" : "Member1",
+                          "email" : "member1@example.com"
+                        }, {
+                          "nickname" : "Member2",
+                          "email" : "member2@example.com"
+                        } ],
+                        "activeMemberCount" : 3,
+                        "notices" : [ {
+                          "id" : 5,
+                          "title" : "12월 27일 공지사항",
+                          "content" : "공지사항 내용입니다."
+                        }, {
+                          "id" : 4,
+                          "title" : "중요 공지",
+                          "content" : "중요한 내용입니다."
                         } ]
                       }
                     }
@@ -2400,6 +2459,140 @@ paths:
                       "data" : {
                         "errorCode" : 4009,
                         "errorMessage" : "등록되지 않은 그룹 입니다"
+                      }
+                    }
+  /groups/{groupId}/notices:
+    post:
+      tags:
+      - Group
+      summary: 그룹 공지사항 등록 API
+      description: 그룹장이 공지사항을 등록하고 그룹원들에게 푸시 알림을 전송하는 API 입니다
+      operationId: "[그룹 공지사항 등록 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 그룹 공지사항 등록 API"
+            examples:
+              '[그룹 공지사항 등록 API] 제목 자동 생성 성공':
+                value: |-
+                  {
+                    "title" : null,
+                    "content" : "공지사항 내용입니다."
+                  }
+              '[그룹 공지사항 등록 API] 그룹 소유자가 아님':
+                value: |-
+                  {
+                    "title" : "공지사항 제목",
+                    "content" : "공지사항 내용입니다."
+                  }
+              '[그룹 공지사항 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "title" : "공지사항 제목",
+                    "content" : "공지사항 내용입니다."
+                  }
+              '[그룹 공지사항 등록 API] 내용 미입력':
+                value: |-
+                  {
+                    "title" : "공지사항 제목",
+                    "content" : null
+                  }
+              '[그룹 공지사항 등록 API] success':
+                value: |-
+                  {
+                    "title" : "공지사항 제목",
+                    "content" : "공지사항 내용입니다."
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 공지사항 등록 API] 제목 자동 생성 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[그룹 공지사항 등록 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 공지사항 등록 API] 그룹 소유자가 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4014,
+                        "errorMessage" : "그룹 소유자만 처리할 수 있습니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 공지사항 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 공지사항 등록 API] 내용 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "내용은 필수값 입니다"
                       }
                     }
   /groups/{groupId}/useYn:
@@ -2948,14 +3141,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-24T15:27:01.491867"
+                          "notificationDt" : "2025-12-27T15:48:07.146128"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-24T15:27:01.491885"
+                          "notificationDt" : "2025-12-27T15:48:07.146143"
                         } ]
                       }
                     }
@@ -3468,7 +3661,6 @@ components:
                 required:
                 - activeMemberCount
                 - id
-                - members
                 - name
                 type: object
                 properties:
@@ -3484,21 +3676,6 @@ components:
                         description: 매니저 이메일
                         nullable: true
                     description: 매니저 정보
-                  members:
-                    type: array
-                    description: 구성원 목록 (매니저 제외)
-                    items:
-                      required:
-                      - email
-                      - nickname
-                      type: object
-                      properties:
-                        nickname:
-                          type: string
-                          description: 구성원 닉네임
-                        email:
-                          type: string
-                          description: 구성원 이메일
                   name:
                     type: string
                     description: 그룹명
@@ -4178,6 +4355,23 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 그룹 공지사항 등록 API':
+      title: "[request] 그룹 공지사항 등록 API"
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        title:
+          description: 공지사항 제목
+          oneOf:
+          - type: string
+          - null
+        content:
+          description: 공지사항 내용
+          oneOf:
+          - type: string
+          - null
 
   securitySchemes:
     APIKey:

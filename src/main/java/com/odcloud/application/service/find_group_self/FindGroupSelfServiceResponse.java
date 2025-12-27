@@ -27,28 +27,20 @@ public record FindGroupSelfServiceResponse(
         String id,
         String name,
         MemberInfo manager,
-        List<MemberInfo> members,
         int activeMemberCount
     ) {
 
         public static ActiveGroupInfo of(Group group) {
-            MemberInfo managerInfo = group.getGroupMembers().stream()
-                .filter(member -> member.getEmail().equals(group.getOwnerEmail()))
-                .findFirst()
-                .map(MemberInfo::of).get();
-
-            List<MemberInfo> memberInfos = group.getGroupMembers().stream()
-                .filter(member -> "ACTIVE".equals(member.getStatus()))
-                .filter(member -> !member.getEmail().equals(group.getOwnerEmail()))
-                .map(MemberInfo::of)
-                .toList();
-
             return ActiveGroupInfo.builder()
                 .id(group.getId())
                 .name(group.getName())
-                .manager(managerInfo)
-                .members(memberInfos)
-                .activeMemberCount(memberInfos.size() + 1)
+                .manager(group.getGroupMembers().stream()
+                    .filter(member -> member.getEmail().equals(group.getOwnerEmail()))
+                    .findFirst()
+                    .map(MemberInfo::of).get())
+                .activeMemberCount((int) group.getGroupMembers().stream()
+                    .filter(member -> "ACTIVE".equals(member.getStatus()))
+                    .count())
                 .build();
         }
     }

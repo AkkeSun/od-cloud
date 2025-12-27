@@ -30,7 +30,6 @@ record FindGroupSelfResponse(
         String id,
         String name,
         MemberInfo manager,
-        List<MemberInfo> members,
         int activeMemberCount
     ) {
         public static ActiveGroupInfo of(FindGroupSelfServiceResponse.ActiveGroupInfo item) {
@@ -38,9 +37,6 @@ record FindGroupSelfResponse(
                 .id(item.id())
                 .name(item.name())
                 .manager(MemberInfo.of(item.manager()))
-                .members(item.members().stream()
-                    .map(MemberInfo::of)
-                    .toList())
                 .activeMemberCount(item.activeMemberCount())
                 .build();
         }
