@@ -416,7 +416,7 @@ class GroupAccountTest {
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");
             assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
             assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
-            assertThat(groupAccount.getDeniedCause()).isNull();
+            assertThat(groupAccount.getMemo()).isNull();
             assertThat(groupAccount.getModDt()).isEqualTo(now);
             assertThat(groupAccount.getRegDt()).isEqualTo(now);
         }
@@ -438,7 +438,7 @@ class GroupAccountTest {
             assertThat(groupAccount.getNickName()).isNull();
             assertThat(groupAccount.getEmail()).isNull();
             assertThat(groupAccount.getStatus()).isNull();
-            assertThat(groupAccount.getDeniedCause()).isNull();
+            assertThat(groupAccount.getMemo()).isNull();
             assertThat(groupAccount.getModDt()).isNull();
             assertThat(groupAccount.getRegDt()).isNull();
         }

@@ -155,55 +155,13 @@ class UpdateGroupAccountStatusServiceTest {
         }
 
         @Test
-        @DisplayName("[failure] PENDING 상태가 아닌 사용자의 상태 변경 시도하면 예외가 발생한다")
-        void failure_notPendingStatus() {
+        @DisplayName("[success] DENIED 상태로 변경하면서 메모를 저장한다")
+        void success_deniedWithMemo() {
             // given
             String groupId = "test-group";
             String ownerEmail = "owner@example.com";
             Long accountId = 1L;
-
-            Group group = Group.builder()
-                .id(groupId)
-                .ownerEmail(ownerEmail)
-                .name("Test Group")
-                .build();
-            fakeGroupStoragePort.groupDatabase.add(group);
-
-            GroupAccount groupAccount = GroupAccount.builder()
-                .id(1L)
-                .groupId(groupId)
-                .accountId(accountId)
-                .email("user@example.com")
-                .name("사용자")
-                .status("ACTIVE")
-                .build();
-            fakeGroupStoragePort.groupAccountDatabase.add(groupAccount);
-
-            UpdateGroupAccountStatusCommand command = UpdateGroupAccountStatusCommand.builder()
-                .groupId(groupId)
-                .accountId(accountId)
-                .groupOwnerEmail(ownerEmail)
-                .status("DENIED")
-                .build();
-
-            // when & then
-            assertThatThrownBy(() -> updateGroupAccountStatusService.updateStatus(command))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode",
-                    ErrorCode.Business_INVALID_GROUP_ACCOUNT_STATUS);
-
-            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
-                "ACTIVE");
-        }
-
-        @Test
-        @DisplayName("[success] DENIED 상태로 변경하면서 거절 사유를 저장한다")
-        void success_deniedWithCause() {
-            // given
-            String groupId = "test-group";
-            String ownerEmail = "owner@example.com";
-            Long accountId = 1L;
-            String deniedCause = "그룹 가입 요건을 충족하지 못했습니다.";
+            String memo = "그룹 가입 요건을 충족하지 못했습니다.";
 
             Group group = Group.builder()
                 .id(groupId)
@@ -227,7 +185,7 @@ class UpdateGroupAccountStatusServiceTest {
                 .accountId(accountId)
                 .groupOwnerEmail(ownerEmail)
                 .status("DENIED")
-                .deniedCause(deniedCause)
+                .memo(memo)
                 .build();
 
             // when
@@ -238,8 +196,54 @@ class UpdateGroupAccountStatusServiceTest {
             assertThat(response).isNotNull();
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "DENIED");
-            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getDeniedCause()).isEqualTo(
-                deniedCause);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getMemo()).isEqualTo(
+                memo);
+        }
+
+        @Test
+        @DisplayName("[success] BLOCK 상태로 변경하면서 메모를 저장한다")
+        void success_blockWithMemo() {
+            // given
+            String groupId = "test-group";
+            String ownerEmail = "owner@example.com";
+            Long accountId = 1L;
+            String memo = "부적절한 행동으로 차단되었습니다.";
+
+            Group group = Group.builder()
+                .id(groupId)
+                .ownerEmail(ownerEmail)
+                .name("Test Group")
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            GroupAccount groupAccount = GroupAccount.builder()
+                .id(1L)
+                .groupId(groupId)
+                .accountId(accountId)
+                .email("user@example.com")
+                .name("사용자")
+                .status("PENDING")
+                .build();
+            fakeGroupStoragePort.groupAccountDatabase.add(groupAccount);
+
+            UpdateGroupAccountStatusCommand command = UpdateGroupAccountStatusCommand.builder()
+                .groupId(groupId)
+                .accountId(accountId)
+                .groupOwnerEmail(ownerEmail)
+                .status("BLOCK")
+                .memo(memo)
+                .build();
+
+            // when
+            UpdateGroupAccountStatusServiceResponse response = updateGroupAccountStatusService
+                .updateStatus(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
+                "BLOCK");
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getMemo()).isEqualTo(
+                memo);
         }
     }
 }

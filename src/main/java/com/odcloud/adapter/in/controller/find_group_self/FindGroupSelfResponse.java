@@ -32,6 +32,7 @@ record FindGroupSelfResponse(
         MemberInfo manager,
         int activeMemberCount
     ) {
+
         public static ActiveGroupInfo of(FindGroupSelfServiceResponse.ActiveGroupInfo item) {
             return ActiveGroupInfo.builder()
                 .id(item.id())
@@ -48,6 +49,7 @@ record FindGroupSelfResponse(
         String name,
         int activeMemberCount
     ) {
+
         public static PendingGroupInfo of(FindGroupSelfServiceResponse.PendingGroupInfo item) {
             return PendingGroupInfo.builder()
                 .id(item.id())
@@ -63,6 +65,7 @@ record FindGroupSelfResponse(
         String name,
         String deniedCause
     ) {
+
         public static DeniedGroupInfo of(FindGroupSelfServiceResponse.DeniedGroupInfo item) {
             return DeniedGroupInfo.builder()
                 .id(item.id())
@@ -77,6 +80,7 @@ record FindGroupSelfResponse(
         String nickname,
         String email
     ) {
+
         public static MemberInfo of(FindGroupSelfServiceResponse.MemberInfo item) {
             return MemberInfo.builder()
                 .nickname(item.nickname())

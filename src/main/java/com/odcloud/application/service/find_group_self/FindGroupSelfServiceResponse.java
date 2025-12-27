@@ -74,7 +74,7 @@ public record FindGroupSelfServiceResponse(
             return DeniedGroupInfo.builder()
                 .id(group.getId())
                 .name(group.getName())
-                .deniedCause(groupAccount.getDeniedCause())
+                .deniedCause(groupAccount.getMemo())
                 .build();
         }
     }

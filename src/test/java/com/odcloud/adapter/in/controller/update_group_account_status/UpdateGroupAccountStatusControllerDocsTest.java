@@ -52,7 +52,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             String groupId = "group-abc123";
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
-                .deniedCause(null)
+                .memo(null)
                 .build();
             given(useCase.updateStatus(any())).willThrow(
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
@@ -70,7 +70,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
-                .deniedCause(null)
+                .memo(null)
                 .build();
 
             UpdateGroupAccountStatusServiceResponse serviceResponse =
@@ -93,14 +93,14 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[success] 유효한 상태값(DENIED)으로 변경하고 거절 사유를 입력한다")
+        @DisplayName("[success] 유효한 상태값(DENIED)으로 변경하고 메모를 입력한다")
         void success_denied() throws Exception {
             // given
             String groupId = "group-abc123";
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("DENIED")
-                .deniedCause("그룹 가입 요건을 충족하지 못했습니다.")
+                .memo("그룹 가입 요건을 충족하지 못했습니다.")
                 .build();
 
             UpdateGroupAccountStatusServiceResponse serviceResponse =
@@ -123,13 +123,43 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
+        @DisplayName("[success] 유효한 상태값(BLOCK)으로 변경하고 메모를 입력한다")
+        void success_block() throws Exception {
+            // given
+            String groupId = "group-abc123";
+            Long accountId = 1L;
+            UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
+                .status("BLOCK")
+                .memo("부적절한 행동으로 차단되었습니다.")
+                .build();
+
+            UpdateGroupAccountStatusServiceResponse serviceResponse =
+                UpdateGroupAccountStatusServiceResponse.ofSuccess();
+
+            given(useCase.updateStatus(any())).willReturn(serviceResponse);
+
+            // when & then
+            performDocument("Bearer test", groupId, accountId, request, status().isOk(),
+                "success-block", "success",
+                fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
+                    .description("상태 코드"),
+                fieldWithPath("message").type(JsonFieldType.STRING)
+                    .description("상태 메시지"),
+                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                    .description("응답 데이터"),
+                fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
+                    .description("상태 변경 성공 여부")
+            );
+        }
+
+        @Test
         @DisplayName("[error] status 를 입력핮 않은 경우 400 에러를 반환한다")
         void error_statusIsBlank() throws Exception {
             // given
             String groupId = "group-abc123";
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
-                .deniedCause(null)
+                .memo(null)
                 .build();
 
             // when & then
@@ -145,7 +175,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("INVALID")
-                .deniedCause(null)
+                .memo(null)
                 .build();
 
             // when & then
@@ -161,7 +191,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
-                .deniedCause(null)
+                .memo(null)
                 .build();
 
             given(useCase.updateStatus(any()))
@@ -181,7 +211,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
-                .deniedCause(null)
+                .memo(null)
                 .build();
 
             given(useCase.updateStatus(any()))
@@ -220,7 +250,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                 resource(ResourceSnippetParameters.builder()
                     .tag("Account")
                     .summary("그룹 계정 상태 변경 API")
-                    .description("그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE 또는 DENIED)")
+                    .description("그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE, DENIED, BLOCK)")
                     .pathParameters(
                         parameterWithName("groupId")
                             .description("그룹 ID"),
@@ -230,9 +260,9 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                     .requestFields(
                         fieldWithPath("status").type(statusType)
                             .description(
-                                "계정 상태 (ACTIVE / DENIED)"),
-                        fieldWithPath("deniedCause").type(JsonFieldType.STRING)
-                            .description("거절 사유 (status가 DENIED인 경우 필수)").optional()
+                                "계정 상태 (ACTIVE / DENIED / BLOCK)"),
+                        fieldWithPath("memo").type(JsonFieldType.STRING)
+                            .description("메모 (status가 DENIED 또는 BLOCK인 경우 사용)").optional()
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(responseFields)

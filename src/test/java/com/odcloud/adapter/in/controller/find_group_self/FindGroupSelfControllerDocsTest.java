@@ -101,18 +101,6 @@ class FindGroupSelfControllerDocsTest {
                     .email("manager@example.com")
                     .build();
 
-            FindGroupSelfServiceResponse.MemberInfo member1 =
-                FindGroupSelfServiceResponse.MemberInfo.builder()
-                    .nickname("Member1")
-                    .email("member1@example.com")
-                    .build();
-
-            FindGroupSelfServiceResponse.MemberInfo member2 =
-                FindGroupSelfServiceResponse.MemberInfo.builder()
-                    .nickname("Member2")
-                    .email("member2@example.com")
-                    .build();
-
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup1 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
                     .id("activeGroup-1")
@@ -126,13 +114,6 @@ class FindGroupSelfControllerDocsTest {
                     .nickname("OtherManager")
                     .email("other@example.com")
                     .build();
-
-            FindGroupSelfServiceResponse.MemberInfo member3 =
-                FindGroupSelfServiceResponse.MemberInfo.builder()
-                    .nickname("Member3")
-                    .email("member3@example.com")
-                    .build();
-
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup2 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
                     .id("activeGroup-2")

@@ -80,7 +80,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.deniedCause,
+                groupAccountEntity.memo,
                 groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
@@ -138,7 +138,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.deniedCause,
+                groupAccountEntity.memo,
                 groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
@@ -168,7 +168,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.deniedCause,
+                groupAccountEntity.memo,
                 groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
@@ -198,7 +198,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.deniedCause,
+                groupAccountEntity.memo,
                 groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt
@@ -229,7 +229,7 @@ class GroupRepository {
                 accountEntity.nickname,
                 accountEntity.email,
                 groupAccountEntity.status,
-                groupAccountEntity.deniedCause,
+                groupAccountEntity.memo,
                 groupAccountEntity.showYn,
                 groupAccountEntity.modDt,
                 groupAccountEntity.regDt

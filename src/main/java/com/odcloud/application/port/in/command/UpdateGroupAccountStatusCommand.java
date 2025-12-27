@@ -8,7 +8,7 @@ public record UpdateGroupAccountStatusCommand(
     Long accountId,
     String groupOwnerEmail,
     String status,
-    String deniedCause
+    String memo
 ) {
 
 }

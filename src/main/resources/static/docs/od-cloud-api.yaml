@@ -2895,7 +2895,7 @@ paths:
       tags:
       - Account
       summary: 그룹 계정 상태 변경 API
-      description: 그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE 또는 DENIED)
+      description: "그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE, DENIED, BLOCK)"
       operationId: "[그룹 계정 상태 변경 API] "
       parameters:
       - name: groupId
@@ -2927,43 +2927,49 @@ paths:
                 value: |-
                   {
                     "status" : "INVALID",
-                    "deniedCause" : null
+                    "memo" : null
                   }
               '[그룹 계정 상태 변경 API] success-active':
                 value: |-
                   {
                     "status" : "ACTIVE",
-                    "deniedCause" : null
+                    "memo" : null
                   }
               '[그룹 계정 상태 변경 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                 value: |-
                   {
                     "status" : "ACTIVE",
-                    "deniedCause" : null
+                    "memo" : null
+                  }
+              '[그룹 계정 상태 변경 API] success-block':
+                value: |-
+                  {
+                    "status" : "BLOCK",
+                    "memo" : "부적절한 행동으로 차단되었습니다."
                   }
               '[그룹 계정 상태 변경 API] 그룹 소유자의 요청이 아님':
                 value: |-
                   {
                     "status" : "ACTIVE",
-                    "deniedCause" : null
+                    "memo" : null
                   }
               '[그룹 계정 상태 변경 API] 상태값 미입력':
                 value: |-
                   {
                     "status" : null,
-                    "deniedCause" : null
+                    "memo" : null
                   }
               '[그룹 계정 상태 변경 API] 등록되지 않은 그룹 사용자':
                 value: |-
                   {
                     "status" : "ACTIVE",
-                    "deniedCause" : null
+                    "memo" : null
                   }
               '[그룹 계정 상태 변경 API] success-denied':
                 value: |-
                   {
                     "status" : "DENIED",
-                    "deniedCause" : "그룹 가입 요건을 충족하지 못했습니다."
+                    "memo" : "그룹 가입 요건을 충족하지 못했습니다."
                   }
       responses:
         "400":
@@ -2980,7 +2986,7 @@ paths:
                       "message" : "BAD_REQUEST",
                       "data" : {
                         "errorCode" : 1099,
-                        "errorMessage" : "유효하지 않은 상태값 입니다. ACTIVE 또는 DENIED만 가능합니다."
+                        "errorMessage" : "유효하지 않은 상태값 입니다."
                       }
                     }
                 '[그룹 계정 상태 변경 API] 상태값 미입력':
@@ -3001,6 +3007,15 @@ paths:
                 $ref: "#/components/schemas/[response] success"
               examples:
                 '[그룹 계정 상태 변경 API] success-active':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+                '[그룹 계정 상태 변경 API] success-block':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -3292,14 +3307,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-27T16:19:47.116022"
+                          "notificationDt" : "2025-12-27T17:46:09.459566"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-27T16:19:47.116037"
+                          "notificationDt" : "2025-12-27T17:46:09.459581"
                         } ]
                       }
                     }
@@ -4217,21 +4232,6 @@ components:
         content:
           type: string
           description: 답변 내용
-    '[request] 그룹 계정 상태 변경 API':
-      title: "[request] 그룹 계정 상태 변경 API"
-      required:
-      - status
-      type: object
-      properties:
-        deniedCause:
-          type: string
-          description: 거절 사유 (status가 DENIED인 경우 필수)
-          nullable: true
-        status:
-          description: 계정 상태 (ACTIVE / DENIED)
-          oneOf:
-          - type: string
-          - null
     RegisterAnswerResponse:
       title: RegisterAnswerResponse
       required:
@@ -4476,6 +4476,21 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 그룹 계정 상태 변경 API':
+      title: "[request] 그룹 계정 상태 변경 API"
+      required:
+      - status
+      type: object
+      properties:
+        memo:
+          type: string
+          description: 메모 (status가 DENIED 또는 BLOCK인 경우 사용)
+          nullable: true
+        status:
+          description: 계정 상태 (ACTIVE / DENIED / BLOCK)
+          oneOf:
+          - type: string
+          - null
     '[response] success_all':
       title: "[response] success_all"
       required:

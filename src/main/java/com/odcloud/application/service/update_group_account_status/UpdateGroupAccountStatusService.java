@@ -12,7 +12,6 @@ import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
-import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,18 +37,19 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
 
         GroupAccount groupAccount = groupStoragePort.findGroupAccountByGroupIdAndAccountId(
             command.groupId(), command.accountId());
-        if (!groupAccount.isPending()) {
-            throw new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_ACCOUNT_STATUS);
-        }
-
         groupAccount.updateStatus(command);
         groupStoragePort.save(groupAccount);
-        List<AccountDevice> devices = accountDeviceStoragePort.findByAccountEmailForPush(
-            groupAccount.getEmail());
 
-        if (!devices.isEmpty()) {
-            pushFcmUseCase.pushAsync(PushFcmCommand.ofUpdateGroupStatus(devices, command, group));
+        if (!groupAccount.isBlock()) {
+            List<AccountDevice> devices = accountDeviceStoragePort.findByAccountEmailForPush(
+                groupAccount.getEmail());
+
+            if (!devices.isEmpty()) {
+                pushFcmUseCase.pushAsync(
+                    PushFcmCommand.ofUpdateGroupStatus(devices, command, group));
+            }
         }
+
         return UpdateGroupAccountStatusServiceResponse.ofSuccess();
     }
 }

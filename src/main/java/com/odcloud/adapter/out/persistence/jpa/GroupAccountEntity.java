@@ -35,8 +35,8 @@ class GroupAccountEntity {
     @Column(name = "STATUS")
     private String status;
 
-    @Column(name = "DENIED_CAUSE")
-    private String deniedCause;
+    @Column(name = "MEMO")
+    private String memo;
 
     @Column(name = "SHOW_YN")
     private String showYn;
@@ -53,7 +53,7 @@ class GroupAccountEntity {
             .groupId(groupAccount.getGroupId())
             .accountId(groupAccount.getAccountId())
             .status(groupAccount.getStatus())
-            .deniedCause(groupAccount.getDeniedCause())
+            .memo(groupAccount.getMemo())
             .showYn(groupAccount.getShowYn())
             .modDt(groupAccount.getModDt())
             .regDt(groupAccount.getRegDt())

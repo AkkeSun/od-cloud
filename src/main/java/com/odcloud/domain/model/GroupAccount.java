@@ -21,13 +21,13 @@ public class GroupAccount {
     private String nickName;
     private String email;
     private String status;
-    private String deniedCause;
+    private String memo;
     private String showYn;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
     public GroupAccount(Long id, String groupId, Long accountId, String name, String nickName,
-        String email, String status, String deniedCause, LocalDateTime modDt, LocalDateTime regDt) {
+        String email, String status, String memo, LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;
         this.accountId = accountId;
@@ -35,7 +35,7 @@ public class GroupAccount {
         this.nickName = nickName;
         this.email = email;
         this.status = status;
-        this.deniedCause = deniedCause;
+        this.memo = memo;
         this.modDt = modDt;
         this.regDt = regDt;
     }
@@ -67,7 +67,7 @@ public class GroupAccount {
 
     public void updateStatus(UpdateGroupAccountStatusCommand command) {
         this.status = command.status();
-        this.deniedCause = command.deniedCause();
+        this.memo = command.memo();
         this.modDt = LocalDateTime.now();
     }
 
@@ -76,8 +76,8 @@ public class GroupAccount {
         this.modDt = LocalDateTime.now();
     }
 
-    public boolean isPending() {
-        return "PENDING".equals(status);
+    public boolean isBlock() {
+        return "BLOCK".equals(status);
     }
 
     public boolean isActive() {

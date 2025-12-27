@@ -13,14 +13,14 @@ import lombok.Builder;
 record UpdateGroupAccountStatusRequest(
 
     @Contains(
-        values = {"ACTIVE", "DENIED"},
-        message = "유효하지 않은 상태값 입니다. ACTIVE 또는 DENIED만 가능합니다.",
+        values = {"ACTIVE", "DENIED", "BLOCK"},
+        message = "유효하지 않은 상태값 입니다.",
         groups = CustomGroups.class
     )
     @NotBlank(message = "상태는 필수값 입니다", groups = NotBlankGroups.class)
     String status,
 
-    String deniedCause
+    String memo
 ) {
 
     UpdateGroupAccountStatusCommand toCommand(String groupId, Long accountId, Account account) {
@@ -29,7 +29,7 @@ record UpdateGroupAccountStatusRequest(
             .accountId(accountId)
             .groupOwnerEmail(account.getEmail())
             .status(status)
-            .deniedCause(deniedCause)
+            .memo(memo)
             .build();
     }
 

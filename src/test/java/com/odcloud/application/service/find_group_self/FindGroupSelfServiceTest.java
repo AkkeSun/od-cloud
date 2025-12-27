@@ -72,7 +72,8 @@ class FindGroupSelfServiceTest {
                 .status("ACTIVE")
                 .build();
 
-            activeGroup.updateGroupMembers(List.of(userActiveAccount, otherActiveMember, ownerActiveMember));
+            activeGroup.updateGroupMembers(
+                List.of(userActiveAccount, otherActiveMember, ownerActiveMember));
 
             // PENDING 그룹 설정
             Group pendingGroup = Group.builder()
@@ -206,7 +207,7 @@ class FindGroupSelfServiceTest {
                 .nickName("User1")
                 .email(userEmail)
                 .status("DENIED")
-                .deniedCause("요청이 거부되었습니다")
+                .memo("요청이 거부되었습니다")
                 .showYn("Y")
                 .build();
 
