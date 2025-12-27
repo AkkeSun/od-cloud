@@ -967,7 +967,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when
             com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command);
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
 
             // then
             assertThat(result).isNotNull();
@@ -1025,7 +1025,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when
             com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command);
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
 
             // then
             assertThat(result).isNotNull();
@@ -1059,7 +1059,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
                 com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command)
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
             );
         }
 
@@ -1089,7 +1089,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
                 com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command)
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
             );
         }
 
@@ -1133,7 +1133,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
                 com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command)
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
             );
         }
 
@@ -1183,7 +1183,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when
             com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command);
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
 
             // then
             assertThat(result).isNotNull();

@@ -2,6 +2,7 @@ package com.odcloud.application.port.in.command;
 
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.Notice;
 import com.odcloud.domain.model.Schedule;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -84,6 +85,21 @@ public record PushFcmCommand(
             .title(group.getName())
             .body(command.status().equals("ACTIVE") ?
                 "가입 요청이 승인 되었습니다" : "가입 요청이 반려 되었습니다")
+            .data(data)
+            .build();
+    }
+
+    public static PushFcmCommand ofNotice(List<AccountDevice> devices, Group group,
+        Notice notice) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", "notice");
+        data.put("groupId", group.getId());
+        data.put("noticeId", String.valueOf(notice.getId()));
+
+        return PushFcmCommand.builder()
+            .devices(devices)
+            .title(group.getName())
+            .body("새로운 공지사항이 등록되었어요. 지금 바로 확인해보세요!")
             .data(data)
             .build();
     }
