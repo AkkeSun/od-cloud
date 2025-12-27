@@ -65,43 +65,6 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         }
 
         @Test
-        @DisplayName("[success] 기존 공지사항을 업데이트한다")
-        void success_update() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-            NoticeEntity existingEntity = NoticeEntity.builder()
-                .groupId("test-group")
-                .title("기존 제목")
-                .content("기존 내용")
-                .writerEmail("writer@example.com")
-                .regDt(now)
-                .build();
-            entityManager.persist(existingEntity);
-            entityManager.flush();
-            entityManager.clear();
-
-            Notice updatedNotice = Notice.builder()
-                .id(existingEntity.getId())
-                .groupId("test-group")
-                .title("수정된 제목")
-                .content("수정된 내용")
-                .writerEmail("writer@example.com")
-                .regDt(now)
-                .build();
-
-            // when
-            Notice result = adapter.save(updatedNotice);
-            entityManager.flush();
-            entityManager.clear();
-
-            // then
-            NoticeEntity entity = entityManager.find(NoticeEntity.class, existingEntity.getId());
-            assertThat(entity).isNotNull();
-            assertThat(entity.getTitle()).isEqualTo("수정된 제목");
-            assertThat(entity.getContent()).isEqualTo("수정된 내용");
-        }
-
-        @Test
         @DisplayName("[success] 모든 필드가 올바르게 저장된다")
         void success_allFields() {
             // given
@@ -348,6 +311,309 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             assertThat(notice.getContent()).isEqualTo("테스트 내용");
             assertThat(notice.getWriterEmail()).isEqualTo("test@example.com");
             assertThat(notice.getRegDt()).isEqualTo(now);
+        }
+    }
+
+    @Nested
+    @DisplayName("[findById] ID로 공지사항을 조회하는 메소드")
+    class Describe_findById {
+
+        @Test
+        @DisplayName("[success] ID로 공지사항을 조회한다")
+        void success() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            NoticeEntity entity = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("테스트 공지")
+                .content("테스트 내용")
+                .writerEmail("test@example.com")
+                .regDt(now)
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            // when
+            Notice result = adapter.findById(entity.getId());
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getId()).isEqualTo(entity.getId());
+            assertThat(result.getGroupId()).isEqualTo("test-group");
+            assertThat(result.getTitle()).isEqualTo("테스트 공지");
+            assertThat(result.getContent()).isEqualTo("테스트 내용");
+            assertThat(result.getWriterEmail()).isEqualTo("test@example.com");
+            assertThat(result.getRegDt()).isEqualTo(now);
+        }
+
+        @Test
+        @DisplayName("[error] 존재하지 않는 ID로 조회 시 예외를 발생시킨다")
+        void error_notFound() {
+            // when & then
+            org.junit.jupiter.api.Assertions.assertThrows(
+                com.odcloud.infrastructure.exception.CustomBusinessException.class,
+                () -> adapter.findById(999L)
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("[delete] 공지사항을 삭제하는 메소드")
+    class Describe_delete {
+
+        @Test
+        @DisplayName("[success] 공지사항을 삭제한다")
+        void success() {
+            // given
+            NoticeEntity entity = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("삭제될 공지")
+                .content("내용")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Long noticeId = entity.getId();
+            Notice notice = Notice.builder()
+                .id(noticeId)
+                .groupId("test-group")
+                .build();
+
+            // when
+            adapter.delete(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity deletedEntity = entityManager.find(NoticeEntity.class, noticeId);
+            assertThat(deletedEntity).isNull();
+        }
+
+        @Test
+        @DisplayName("[success] 존재하지 않는 ID로 삭제 시도해도 에러가 발생하지 않는다")
+        void success_notFound() {
+            // given
+            Notice notice = Notice.builder()
+                .id(999L)
+                .groupId("test-group")
+                .build();
+
+            // when & then
+            org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+                () -> adapter.delete(notice)
+            );
+        }
+
+        @Test
+        @DisplayName("[success] 삭제 후 다른 공지사항은 남아있다")
+        void success_otherNoticesRemain() {
+            // given
+            NoticeEntity entity1 = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("삭제될 공지")
+                .content("내용 1")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+
+            NoticeEntity entity2 = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("남을 공지")
+                .content("내용 2")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+
+            entityManager.persist(entity1);
+            entityManager.persist(entity2);
+            entityManager.flush();
+            entityManager.clear();
+
+            Notice notice = Notice.builder()
+                .id(entity1.getId())
+                .groupId("test-group")
+                .build();
+
+            // when
+            adapter.delete(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity deletedEntity = entityManager.find(NoticeEntity.class, entity1.getId());
+            NoticeEntity remainingEntity = entityManager.find(NoticeEntity.class,
+                entity2.getId());
+
+            assertThat(deletedEntity).isNull();
+            assertThat(remainingEntity).isNotNull();
+            assertThat(remainingEntity.getTitle()).isEqualTo("남을 공지");
+        }
+    }
+
+    @Nested
+    @DisplayName("[update] 공지사항을 수정하는 메소드")
+    class Describe_update {
+
+        @Test
+        @DisplayName("[success] 공지사항을 수정한다")
+        void success() {
+            // given
+            NoticeEntity entity = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("원본 제목")
+                .content("원본 내용")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Notice notice = Notice.builder()
+                .id(entity.getId())
+                .groupId("test-group")
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .writerEmail("test@example.com")
+                .regDt(entity.getRegDt())
+                .build();
+
+            // when
+            adapter.update(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity updatedEntity = entityManager.find(NoticeEntity.class, entity.getId());
+            assertThat(updatedEntity).isNotNull();
+            assertThat(updatedEntity.getTitle()).isEqualTo("수정된 제목");
+            assertThat(updatedEntity.getContent()).isEqualTo("수정된 내용");
+            assertThat(updatedEntity.getGroupId()).isEqualTo("test-group");
+            assertThat(updatedEntity.getWriterEmail()).isEqualTo("test@example.com");
+        }
+
+        @Test
+        @DisplayName("[success] 제목만 수정된다")
+        void success_titleOnly() {
+            // given
+            NoticeEntity entity = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("원본 제목")
+                .content("원본 내용")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Notice notice = Notice.builder()
+                .id(entity.getId())
+                .groupId("test-group")
+                .title("수정된 제목")
+                .content("원본 내용")
+                .writerEmail("test@example.com")
+                .regDt(entity.getRegDt())
+                .build();
+
+            // when
+            adapter.update(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity updatedEntity = entityManager.find(NoticeEntity.class, entity.getId());
+            assertThat(updatedEntity).isNotNull();
+            assertThat(updatedEntity.getTitle()).isEqualTo("수정된 제목");
+            assertThat(updatedEntity.getContent()).isEqualTo("원본 내용");
+        }
+
+        @Test
+        @DisplayName("[success] 내용만 수정된다")
+        void success_contentOnly() {
+            // given
+            NoticeEntity entity = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("원본 제목")
+                .content("원본 내용")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Notice notice = Notice.builder()
+                .id(entity.getId())
+                .groupId("test-group")
+                .title("원본 제목")
+                .content("수정된 내용")
+                .writerEmail("test@example.com")
+                .regDt(entity.getRegDt())
+                .build();
+
+            // when
+            adapter.update(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity updatedEntity = entityManager.find(NoticeEntity.class, entity.getId());
+            assertThat(updatedEntity).isNotNull();
+            assertThat(updatedEntity.getTitle()).isEqualTo("원본 제목");
+            assertThat(updatedEntity.getContent()).isEqualTo("수정된 내용");
+        }
+
+        @Test
+        @DisplayName("[success] 수정 후 다른 공지사항은 영향받지 않는다")
+        void success_otherNoticesUnaffected() {
+            // given
+            NoticeEntity entity1 = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("수정될 공지")
+                .content("내용 1")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+
+            NoticeEntity entity2 = NoticeEntity.builder()
+                .groupId("test-group")
+                .title("원본 공지")
+                .content("내용 2")
+                .writerEmail("test@example.com")
+                .regDt(LocalDateTime.now())
+                .build();
+
+            entityManager.persist(entity1);
+            entityManager.persist(entity2);
+            entityManager.flush();
+            entityManager.clear();
+
+            Notice notice = Notice.builder()
+                .id(entity1.getId())
+                .groupId("test-group")
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .writerEmail("test@example.com")
+                .regDt(entity1.getRegDt())
+                .build();
+
+            // when
+            adapter.update(notice);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            NoticeEntity updatedEntity = entityManager.find(NoticeEntity.class, entity1.getId());
+            NoticeEntity unchangedEntity = entityManager.find(NoticeEntity.class, entity2.getId());
+
+            assertThat(updatedEntity.getTitle()).isEqualTo("수정된 제목");
+            assertThat(unchangedEntity.getTitle()).isEqualTo("원본 공지");
+            assertThat(unchangedEntity.getContent()).isEqualTo("내용 2");
         }
     }
 }

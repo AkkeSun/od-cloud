@@ -41,6 +41,9 @@ class NoticeEntity {
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
 
+    @Column(name = "MOD_DT")
+    private LocalDateTime modDt;
+
     static NoticeEntity of(Notice notice) {
         return NoticeEntity.builder()
             .id(notice.getId())
@@ -49,6 +52,7 @@ class NoticeEntity {
             .content(notice.getContent())
             .writerEmail(notice.getWriterEmail())
             .regDt(notice.getRegDt())
+            .modDt(notice.getModDt())
             .build();
     }
 
@@ -60,6 +64,7 @@ class NoticeEntity {
             .content(content)
             .writerEmail(writerEmail)
             .regDt(regDt)
+            .modDt(modDt)
             .build();
     }
 }

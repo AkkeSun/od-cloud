@@ -43,6 +43,7 @@ public enum ErrorCode {
     Business_ALREADY_EXISTS_ANSWER(4021, "이미 답변이 등록된 문의입니다"),
     Business_INVALID_GROUP_ACCOUNT_STATUS(4022, "PENDING 상태의 사용자만 상태 변경이 가능합니다"),
     Business_DoesNotExists_DEVICE(4023, "조회된 디바이스가 없습니다"),
+    Business_NOT_FOUND_NOTICE(4024, "조회된 공지사항이 없습니다"),
 
     ;
 

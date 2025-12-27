@@ -19,12 +19,13 @@ class NoticeRepository {
 
     @Transactional
     NoticeEntity save(NoticeEntity entity) {
-        if (entity.getId() == null) {
-            entityManager.persist(entity);
-        } else {
-            entityManager.merge(entity);
-        }
+        entityManager.persist(entity);
         return entity;
+    }
+
+    java.util.Optional<NoticeEntity> findById(Long id) {
+        NoticeEntity entity = entityManager.find(NoticeEntity.class, id);
+        return java.util.Optional.ofNullable(entity);
     }
 
     List<NoticeEntity> findByGroupId(String groupId, int limit) {
@@ -34,5 +35,22 @@ class NoticeRepository {
             .orderBy(noticeEntity.regDt.desc())
             .limit(limit)
             .fetch();
+    }
+
+    @Transactional
+    void delete(Long id) {
+        queryFactory.delete(noticeEntity)
+            .where(noticeEntity.id.eq(id))
+            .execute();
+    }
+
+    @Transactional
+    void update(Long id, String title, String content, java.time.LocalDateTime modDt) {
+        queryFactory.update(noticeEntity)
+            .set(noticeEntity.title, title)
+            .set(noticeEntity.content, content)
+            .set(noticeEntity.modDt, modDt)
+            .where(noticeEntity.id.eq(id))
+            .execute();
     }
 }

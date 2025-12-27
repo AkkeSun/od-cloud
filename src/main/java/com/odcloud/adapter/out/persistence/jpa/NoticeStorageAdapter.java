@@ -19,9 +19,28 @@ class NoticeStorageAdapter implements NoticeStoragePort {
     }
 
     @Override
+    public Notice findById(Long noticeId) {
+        return repository.findById(noticeId)
+            .map(NoticeEntity::toDomain)
+            .orElseThrow(() -> new com.odcloud.infrastructure.exception.CustomBusinessException(
+                com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_NOTICE));
+    }
+
+    @Override
     public List<Notice> findByGroupId(String groupId, int limit) {
         return repository.findByGroupId(groupId, limit).stream()
             .map(NoticeEntity::toDomain)
             .toList();
+    }
+
+    @Override
+    public void delete(Notice notice) {
+        repository.delete(notice.getId());
+    }
+
+    @Override
+    public void update(Notice notice) {
+        repository.update(notice.getId(), notice.getTitle(), notice.getContent(),
+            notice.getModDt());
     }
 }

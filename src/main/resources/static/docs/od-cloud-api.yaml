@@ -2739,6 +2739,157 @@ paths:
                         "errorMessage" : "노출 유무는 필수값 입니다"
                       }
                     }
+  /groups/{groupId}/notices/{noticeId}:
+    put:
+      tags:
+      - Notice
+      summary: 공지사항 수정 API
+      description: 그룹장이 공지사항을 수정합니다.
+      operationId: "[공지사항 수정 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: noticeId
+        in: path
+        description: 공지사항 ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 공지사항 수정 API"
+            examples:
+              '[공지사항 수정 API] 공지사항 수정 성공':
+                value: |-
+                  {
+                    "title" : "수정된 제목",
+                    "content" : "수정된 내용"
+                  }
+              '[공지사항 수정 API] 그룹장이 아님':
+                value: |-
+                  {
+                    "title" : "수정된 제목",
+                    "content" : "수정된 내용"
+                  }
+              '[공지사항 수정 API] 존재하지 않는 공지사항':
+                value: |-
+                  {
+                    "title" : "수정된 제목",
+                    "content" : "수정된 내용"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[공지사항 수정 API] 공지사항 수정 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[공지사항 수정 API] 그룹장이 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4014,
+                        "errorMessage" : "그룹 소유자만 처리할 수 있습니다"
+                      }
+                    }
+                '[공지사항 수정 API] 존재하지 않는 공지사항':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4024,
+                        "errorMessage" : "조회된 공지사항이 없습니다"
+                      }
+                    }
+    delete:
+      tags:
+      - Notice
+      summary: 공지사항 삭제 API
+      description: 그룹장이 공지사항을 삭제합니다.
+      operationId: "[공지사항 삭제 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: noticeId
+        in: path
+        description: 공지사항 ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[공지사항 삭제 API] 공지사항 삭제 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[공지사항 삭제 API] 그룹장이 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4014,
+                        "errorMessage" : "그룹 소유자만 처리할 수 있습니다"
+                      }
+                    }
+                '[공지사항 삭제 API] 존재하지 않는 공지사항':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4024,
+                        "errorMessage" : "조회된 공지사항이 없습니다"
+                      }
+                    }
   /groups/{groupId}/accounts/{accountId}/status:
     patch:
       tags:
@@ -3141,14 +3292,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-27T15:48:07.146128"
+                          "notificationDt" : "2025-12-27T16:19:47.116022"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-27T15:48:07.146143"
+                          "notificationDt" : "2025-12-27T16:19:47.116037"
                         } ]
                       }
                     }
@@ -4198,6 +4349,19 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 공지사항 수정 API':
+      title: "[request] 공지사항 수정 API"
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: 수정할 제목
+        content:
+          type: string
+          description: 수정할 내용
     '[request] 디바이스 정보 수정 API':
       title: "[request] 디바이스 정보 수정 API"
       type: object

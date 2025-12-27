@@ -1,6 +1,7 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.application.port.in.command.RegisterNoticeCommand;
+import com.odcloud.application.port.in.command.UpdateNoticeCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Notice {
     private String content;
     private String writerEmail;
     private LocalDateTime regDt;
+    private LocalDateTime modDt;
 
     public static Notice of(RegisterNoticeCommand command) {
         return Notice.builder()
@@ -28,5 +30,11 @@ public class Notice {
             .writerEmail(command.account().getEmail())
             .regDt(LocalDateTime.now())
             .build();
+    }
+
+    public void update(UpdateNoticeCommand command) {
+        this.title = command.title();
+        this.content = command.content();
+        this.modDt = LocalDateTime.now();
     }
 }
