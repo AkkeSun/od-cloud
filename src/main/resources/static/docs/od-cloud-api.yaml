@@ -1553,7 +1553,7 @@ paths:
   /folders/{fileId}:
     patch:
       tags:
-      - Folder
+      - File
       summary: 폴더 정보 수정 API
       description: "폴더의 이름, 상위 폴더를 수정하는 API 입니다"
       operationId: "[폴더 정보 수정 API] "
@@ -1750,7 +1750,7 @@ paths:
   /folders/{folderId}:
     delete:
       tags:
-      - Folder
+      - File
       summary: 폴더 삭제 API
       description: 폴더 삭제 API 에러 케이스
       operationId: "[폴더 삭제 API] "
@@ -2317,7 +2317,7 @@ paths:
   /groups/{groupId}/accounts:
     get:
       tags:
-      - Account
+      - Group
       summary: 그룹 계정 목록 조회 API
       description: 특정 그룹에 속한 계정 목록을 조회합니다.
       operationId: "[그룹 계정 목록 조회 API] "
@@ -2598,7 +2598,7 @@ paths:
   /groups/{groupId}/useYn:
     patch:
       tags:
-      - Account
+      - Group
       summary: 그룹 계정 노출 여부 변경 API
       description: 그룹 내 자신의 계정 노출 여부를 변경합니다. (Y 또는 N)
       operationId: "[그룹 계정 노출 여부 변경 API] "
@@ -2742,7 +2742,7 @@ paths:
   /groups/{groupId}/notices/{noticeId}:
     put:
       tags:
-      - Notice
+      - Group
       summary: 공지사항 수정 API
       description: 그룹장이 공지사항을 수정합니다.
       operationId: "[공지사항 수정 API] "
@@ -2829,7 +2829,7 @@ paths:
                     }
     delete:
       tags:
-      - Notice
+      - Group
       summary: 공지사항 삭제 API
       description: 그룹장이 공지사항을 삭제합니다.
       operationId: "[공지사항 삭제 API] "
@@ -2893,7 +2893,7 @@ paths:
   /groups/{groupId}/accounts/{accountId}/status:
     patch:
       tags:
-      - Account
+      - Group
       summary: 그룹 계정 상태 변경 API
       description: "그룹 내 PENDING 상태인 계정의 상태를 변경합니다. (ACTIVE, DENIED, BLOCK)"
       operationId: "[그룹 계정 상태 변경 API] "
@@ -3307,14 +3307,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-27T17:46:09.459566"
+                          "notificationDt" : "2025-12-30T13:21:33.783637"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-27T17:46:09.459581"
+                          "notificationDt" : "2025-12-30T13:21:33.783652"
                         } ]
                       }
                     }
@@ -4349,19 +4349,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[request] 공지사항 수정 API':
-      title: "[request] 공지사항 수정 API"
-      required:
-      - content
-      - title
-      type: object
-      properties:
-        title:
-          type: string
-          description: 수정할 제목
-        content:
-          type: string
-          description: 수정할 내용
     '[request] 디바이스 정보 수정 API':
       title: "[request] 디바이스 정보 수정 API"
       type: object
@@ -4382,6 +4369,19 @@ components:
           type: string
           description: 디바이스 고유 ID
           nullable: true
+    '[request] 공지사항 수정 API':
+      title: "[request] 공지사항 수정 API"
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: 수정할 제목
+        content:
+          type: string
+          description: 수정할 내용
     '[request] 디바이스 등록 API':
       title: "[request] 디바이스 등록 API"
       type: object
@@ -4402,17 +4402,6 @@ components:
           type: string
           description: 디바이스 고유 ID
           nullable: true
-    '[request] 그룹 계정 노출 여부 변경 API':
-      title: "[request] 그룹 계정 노출 여부 변경 API"
-      required:
-      - showYn
-      type: object
-      properties:
-        showYn:
-          description: 노출 여부 (Y / N)
-          oneOf:
-          - null
-          - type: string
     FindQuestionsResponse:
       title: FindQuestionsResponse
       required:
@@ -4476,6 +4465,17 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 그룹 계정 노출 여부 변경 API':
+      title: "[request] 그룹 계정 노출 여부 변경 API"
+      required:
+      - showYn
+      type: object
+      properties:
+        showYn:
+          description: 노출 여부 (Y / N)
+          oneOf:
+          - null
+          - type: string
     '[request] 그룹 계정 상태 변경 API':
       title: "[request] 그룹 계정 상태 변경 API"
       required:

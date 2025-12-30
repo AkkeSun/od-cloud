@@ -28,13 +28,13 @@ class UpdateAccountService implements UpdateAccountUseCase {
             FileInfo file = FileInfo.ofProfilePicture(command.pictureFile());
             filePort.uploadFile(file);
 
-            if (account.getPicture().startsWith(constant.getAccountProfileURI() )) {
-                filePort.deleteFile(account.getPicture().replace(constant.getAccountProfileURI(), ""));
+            if (account.getPicture().startsWith(constant.webServerHost())) {
+                filePort.deleteFile(account.getPicture().replace(constant.webServerHost(), ""));
             }
-            account.updatePicture(constant.getAccountProfileURI() + file.getFileLoc());
+            account.updatePicture(constant.webServerHost() + file.getFileLoc());
         }
 
-        if(StringUtils.hasText(command.nickname())){
+        if (StringUtils.hasText(command.nickname())) {
             account.updateNickname(command.nickname());
         }
 

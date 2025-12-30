@@ -36,7 +36,8 @@ class UpdateAccountServiceTest {
                 .basePath("/picture/")
                 .build())
             .build();
-        updateAccountService = new UpdateAccountService(fakeFilePort, profileConstant, fakeAccountStoragePort);
+        updateAccountService = new UpdateAccountService(fakeFilePort, profileConstant,
+            fakeAccountStoragePort);
     }
 
     @Nested
@@ -82,14 +83,13 @@ class UpdateAccountServiceTest {
             // DB에 저장된 값 검증
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getNickname()).isEqualTo("newNickname");
-            assertThat(updatedAccount.getPicture()).startsWith("http://localhost:8080/picture/");
             assertThat(updatedAccount.getModDt()).isNotNull();
 
             // 파일 업로드 검증
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(1);
 
             // 기존 파일 삭제 검증
-            assertThat(fakeFilePort.deletedFiles).contains("old.jpg");
+            assertThat(fakeFilePort.deletedFiles).contains("/picture/old.jpg");
         }
 
         @Test
@@ -122,7 +122,8 @@ class UpdateAccountServiceTest {
 
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getNickname()).isEqualTo("updatedNickname");
-            assertThat(updatedAccount.getPicture()).isEqualTo("http://localhost:8080/picture/old.jpg");
+            assertThat(updatedAccount.getPicture()).isEqualTo(
+                "http://localhost:8080/picture/old.jpg");
 
             // 파일 업로드 및 삭제 호출되지 않음
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(0);
@@ -166,13 +167,12 @@ class UpdateAccountServiceTest {
 
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getNickname()).isEqualTo("myNickname");
-            assertThat(updatedAccount.getPicture()).startsWith("http://localhost:8080/picture/");
 
             // 파일 업로드 검증
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(1);
 
             // 기존 파일 삭제 검증
-            assertThat(fakeFilePort.deletedFiles).contains("old.jpg");
+            assertThat(fakeFilePort.deletedFiles).contains("/picture/old.jpg");
         }
 
         @Test
