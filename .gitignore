@@ -44,3 +44,7 @@ CLAUDE.md
 HEXAGONAL_TEST_GUIDE.md
 
 *firebase-service-account.json
+
+*.jpeg
+*.png
+*.pdf
