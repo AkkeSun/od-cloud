@@ -24,13 +24,14 @@ class RegisterDeviceService implements RegisterDeviceUseCase {
             command.deviceId()
         );
 
+        AccountDevice savedDevice;
         if (existingDevice.isPresent()) {
             AccountDevice device = existingDevice.get();
             device.updateDeviceInfo(command);
-            storagePort.save(device);
+            savedDevice = storagePort.save(device);
         } else {
-            storagePort.save(AccountDevice.of(command));
+            savedDevice = storagePort.save(AccountDevice.of(command));
         }
-        return RegisterDeviceServiceResponse.ofSuccess();
+        return RegisterDeviceServiceResponse.of(savedDevice);
     }
 }

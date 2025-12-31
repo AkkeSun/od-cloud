@@ -19,6 +19,7 @@ import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.device.port.in.RegisterDeviceUseCase;
 import com.odcloud.application.device.service.register_device.RegisterDeviceServiceResponse;
+import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -73,8 +74,16 @@ class RegisterDeviceControllerDocsTest extends RestDocsSupport {
                 .fcmToken("fcm-token-123")
                 .build();
 
+            AccountDevice mockDevice = AccountDevice.builder()
+                .accountId(123L)
+                .osType("iOS")
+                .deviceId("device-123")
+                .appVersion("1.0.0")
+                .fcmToken("fcm-token-123")
+                .pushYn("Y")
+                .build();
             RegisterDeviceServiceResponse serviceResponse =
-                RegisterDeviceServiceResponse.ofSuccess();
+                RegisterDeviceServiceResponse.of(mockDevice);
 
             given(useCase.register(any())).willReturn(serviceResponse);
 
@@ -87,7 +96,19 @@ class RegisterDeviceControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("디바이스 등록 성공 여부")
+                    .description("디바이스 등록 성공 여부"),
+                fieldWithPath("data.accountId").type(JsonFieldType.NUMBER)
+                    .description("계정 ID"),
+                fieldWithPath("data.osType").type(JsonFieldType.STRING)
+                    .description("OS 타입"),
+                fieldWithPath("data.deviceId").type(JsonFieldType.STRING)
+                    .description("디바이스 ID"),
+                fieldWithPath("data.appVersion").type(JsonFieldType.STRING)
+                    .description("앱 버전"),
+                fieldWithPath("data.fcmToken").type(JsonFieldType.STRING)
+                    .description("FCM 토큰"),
+                fieldWithPath("data.pushYn").type(JsonFieldType.STRING)
+                    .description("푸시 알림 사용 여부 (Y/N)")
             );
         }
 

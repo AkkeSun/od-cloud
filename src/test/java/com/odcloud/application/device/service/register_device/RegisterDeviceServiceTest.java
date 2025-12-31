@@ -44,6 +44,12 @@ class RegisterDeviceServiceTest {
             // then
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.accountId()).isEqualTo(1L);
+            assertThat(response.osType()).isEqualTo("iOS");
+            assertThat(response.deviceId()).isEqualTo("device-123");
+            assertThat(response.appVersion()).isEqualTo("1.0.0");
+            assertThat(response.fcmToken()).isEqualTo("fcm-token-123");
+            assertThat(response.pushYn()).isEqualTo("Y");
             assertThat(fakeAccountDeviceStoragePort.database).hasSize(1);
 
             AccountDevice savedDevice = fakeAccountDeviceStoragePort.database.get(0);
@@ -95,6 +101,12 @@ class RegisterDeviceServiceTest {
 
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.accountId()).isEqualTo(1L);
+            assertThat(response.osType()).isEqualTo("iOS");
+            assertThat(response.deviceId()).isEqualTo("device-123");
+            assertThat(response.appVersion()).isEqualTo("2.0.0");
+            assertThat(response.fcmToken()).isEqualTo("new-fcm-token");
+            assertThat(response.pushYn()).isEqualTo("Y");
             assertThat(fakeAccountDeviceStoragePort.database).hasSize(1);
 
             AccountDevice updatedDevice = fakeAccountDeviceStoragePort.database.get(0);
@@ -148,6 +160,8 @@ class RegisterDeviceServiceTest {
 
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.fcmToken()).isEqualTo("new-fcm-token");
+            assertThat(response.appVersion()).isEqualTo("1.5.0");
             assertThat(fakeAccountDeviceStoragePort.database).hasSize(1);
 
             AccountDevice updatedDevice = fakeAccountDeviceStoragePort.database.get(0);
@@ -198,6 +212,9 @@ class RegisterDeviceServiceTest {
 
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.accountId()).isEqualTo(1L);
+            assertThat(response.osType()).isEqualTo("iOS");
+            assertThat(response.deviceId()).isEqualTo("device-789");
             assertThat(fakeAccountDeviceStoragePort.database).hasSize(1);
 
             AccountDevice updatedDevice = fakeAccountDeviceStoragePort.database.get(0);
@@ -236,6 +253,12 @@ class RegisterDeviceServiceTest {
             // then
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.accountId()).isEqualTo(1L);
+            assertThat(response.osType()).isEqualTo("Android");
+            assertThat(response.deviceId()).isEqualTo("device-456");
+            assertThat(response.appVersion()).isEqualTo("1.0.0");
+            assertThat(response.fcmToken()).isEqualTo("fcm-token-456");
+            assertThat(response.pushYn()).isEqualTo("Y");
             assertThat(fakeAccountDeviceStoragePort.database).hasSize(2);
 
             AccountDevice newDevice = fakeAccountDeviceStoragePort.database.stream()
