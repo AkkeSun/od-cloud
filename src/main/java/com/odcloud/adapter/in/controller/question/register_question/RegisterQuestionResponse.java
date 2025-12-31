@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.question.register_question;
 
-import com.odcloud.application.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
 import lombok.Builder;
 
 @Builder

@@ -2,8 +2,8 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_SCHEDULE;
 
-import com.odcloud.application.port.in.command.FindSchedulesCommand;
-import com.odcloud.application.port.out.ScheduleStoragePort;
+import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
+import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDateTime;

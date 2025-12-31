@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.schedule.update_schedule;
 
-import com.odcloud.application.port.in.command.UpdateScheduleCommand;
+import com.odcloud.application.schedule.port.in.command.UpdateScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
 import com.odcloud.infrastructure.util.StringUtil;

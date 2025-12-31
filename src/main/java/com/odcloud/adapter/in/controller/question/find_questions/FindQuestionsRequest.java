@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.question.find_questions;
 
-import com.odcloud.application.port.in.command.FindQuestionsCommand;
+import com.odcloud.application.question.port.in.command.FindQuestionsCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

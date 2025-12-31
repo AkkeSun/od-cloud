@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.register_group;
 
-import com.odcloud.application.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
 import lombok.Builder;
 
 @Builder

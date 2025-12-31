@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.find_group_account_list;
 
-import com.odcloud.application.port.in.FindGroupAccountListUseCase;
-import com.odcloud.application.service.find_group_account_list.FindGroupAccountListServiceResponse;
+import com.odcloud.application.group.port.in.FindGroupAccountListUseCase;
+import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.GroupStoragePort;
+import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

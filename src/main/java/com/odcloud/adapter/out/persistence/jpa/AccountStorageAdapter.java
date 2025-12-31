@@ -2,7 +2,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_ACCOUNT;
 
-import com.odcloud.application.port.out.AccountStoragePort;
+import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;

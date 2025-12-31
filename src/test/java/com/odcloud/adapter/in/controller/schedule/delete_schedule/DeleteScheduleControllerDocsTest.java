@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.DeleteScheduleUseCase;
-import com.odcloud.application.service.delete_schedule.DeleteScheduleServiceResponse;
+import com.odcloud.application.schedule.port.in.DeleteScheduleUseCase;
+import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

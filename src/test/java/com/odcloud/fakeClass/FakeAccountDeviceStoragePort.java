@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import java.util.ArrayList;
 import java.util.List;

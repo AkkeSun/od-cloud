@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.update_notice;
 
-import com.odcloud.application.service.update_notice.UpdateNoticeServiceResponse;
+import com.odcloud.application.group.service.update_notice.UpdateNoticeServiceResponse;
 
 record UpdateNoticeResponse(
     Boolean result

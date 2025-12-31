@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.auth.reissue_token;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.reissue_token.ReissueTokenServiceResponse;
+import com.odcloud.application.auth.service.reissue_token.ReissueTokenServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

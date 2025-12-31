@@ -4,7 +4,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SEND_EMAIL
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
 
-import com.odcloud.application.port.out.MailPort;
+import com.odcloud.application.util.port.out.MailPort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.group.register_group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

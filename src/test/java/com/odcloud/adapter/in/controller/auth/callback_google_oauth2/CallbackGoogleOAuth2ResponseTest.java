@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.auth.callback_google_oauth2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

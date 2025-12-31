@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.download_file;
 
-import com.odcloud.application.port.in.DownloadFileUseCase;
-import com.odcloud.application.service.download_file.DownloadFileServiceResponse;
+import com.odcloud.application.file.port.in.DownloadFileUseCase;
+import com.odcloud.application.file.service.download_file.DownloadFileServiceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;

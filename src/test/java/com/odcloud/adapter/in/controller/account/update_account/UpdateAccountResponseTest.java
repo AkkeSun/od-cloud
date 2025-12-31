@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.account.update_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

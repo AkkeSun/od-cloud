@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.in.PushFcmUseCase;
-import com.odcloud.application.port.in.command.PushFcmCommand;
+import com.odcloud.application.device.port.in.command.PushFcmCommand;
+import com.odcloud.application.device.port.in.PushFcmUseCase;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

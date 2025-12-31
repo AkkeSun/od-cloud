@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.file.delete_file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.port.in.command.DeleteFileCommand;
+import com.odcloud.application.file.port.in.command.DeleteFileCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import java.util.List;

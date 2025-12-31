@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_GROUP;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT;
 
-import com.odcloud.application.port.out.GroupStoragePort;
+import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

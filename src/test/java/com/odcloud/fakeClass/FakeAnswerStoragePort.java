@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.AnswerStoragePort;
+import com.odcloud.application.question.port.out.AnswerStoragePort;
 import com.odcloud.domain.model.Answer;
 import java.util.ArrayList;
 import java.util.List;

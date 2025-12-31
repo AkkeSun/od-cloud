@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.account.update_account;
 
-import com.odcloud.application.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
 
 record UpdateAccountResponse(
     Boolean result

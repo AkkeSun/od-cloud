@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.file.update_file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.update_file.UpdateFileServiceResponse;
+import com.odcloud.application.file.service.update_file.UpdateFileServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

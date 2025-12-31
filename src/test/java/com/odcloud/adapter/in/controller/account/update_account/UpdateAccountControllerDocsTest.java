@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.UpdateAccountUseCase;
-import com.odcloud.application.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.port.in.UpdateAccountUseCase;
+import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

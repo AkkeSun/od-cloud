@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
-import com.odcloud.application.port.in.command.RegisterFileCommand;
+import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.schedule.update_schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.update_schedule.UpdateScheduleServiceResponse;
+import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

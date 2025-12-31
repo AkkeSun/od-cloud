@@ -1,11 +1,11 @@
 package com.odcloud.adapter.in.controller.schedule.register_schedule;
 
-import com.odcloud.application.port.in.RegisterSchedulerUseCase;
-import com.odcloud.application.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.port.in.RegisterSchedulerUseCase;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
 import com.odcloud.infrastructure.validation.groups.ValidationSequence;
-import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.find_files;
 
-import com.odcloud.application.service.find_files.FindFilesServiceResponse;
+import com.odcloud.application.file.service.find_files.FindFilesServiceResponse;
 import java.util.List;
 import lombok.Builder;
 
@@ -30,6 +30,7 @@ record FindFilesResponse(
         String groupId,
         String regDt
     ) {
+
         public static FolderResponse of(FindFilesServiceResponse.FolderResponseItem item) {
             return FolderResponse.builder()
                 .id(item.id())
@@ -47,6 +48,7 @@ record FindFilesResponse(
         String fileLoc,
         String regDt
     ) {
+
         public static FileResponse of(FindFilesServiceResponse.FileResponseItem item) {
             return FileResponse.builder()
                 .id(item.id())

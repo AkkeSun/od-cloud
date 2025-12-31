@@ -7,9 +7,9 @@ import static com.odcloud.infrastructure.util.JsonUtil.toJsonParams;
 import static com.odcloud.infrastructure.util.JsonUtil.toJsonString;
 import static com.odcloud.infrastructure.util.TextUtil.truncateTextLimit;
 
-import com.odcloud.application.port.out.ApiCallLogStoragePort;
-import com.odcloud.application.port.out.ApiInfoStoragePort;
-import com.odcloud.application.port.out.RedisStoragePort;
+import com.odcloud.application.auth.port.out.RedisStoragePort;
+import com.odcloud.application.util.port.out.ApiCallLogStoragePort;
+import com.odcloud.application.util.port.out.ApiInfoStoragePort;
 import com.odcloud.domain.model.ApiCallLog;
 import com.odcloud.domain.model.ApiInfo;
 import com.odcloud.infrastructure.util.JwtUtil;

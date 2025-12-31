@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.register_folder;
 
-import com.odcloud.application.port.in.command.RegisterFolderCommand;
+import com.odcloud.application.file.port.in.command.RegisterFolderCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.groups.ValidationGroups.NotBlankGroups;

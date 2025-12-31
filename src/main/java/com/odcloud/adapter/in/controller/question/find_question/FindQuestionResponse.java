@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.question.find_question;
 
-import com.odcloud.application.service.find_question.FindQuestionServiceResponse;
+import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse;
 import java.time.LocalDateTime;
 import lombok.Builder;
 

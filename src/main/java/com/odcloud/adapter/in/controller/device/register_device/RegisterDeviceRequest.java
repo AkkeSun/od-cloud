@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.device.register_device;
 
-import com.odcloud.application.port.in.command.RegisterDeviceCommand;
+import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

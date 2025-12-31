@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.application.port.out.ApiInfoStoragePort;
+import com.odcloud.application.util.port.out.ApiInfoStoragePort;
 import com.odcloud.domain.model.ApiCallLog;
 import com.odcloud.domain.model.ApiInfo;
 import jakarta.transaction.Transactional;

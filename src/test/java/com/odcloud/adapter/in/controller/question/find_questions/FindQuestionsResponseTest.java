@@ -3,7 +3,7 @@ package com.odcloud.adapter.in.controller.question.find_questions;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.adapter.in.controller.question.find_questions.FindQuestionsResponse.QuestionDto;
-import com.odcloud.application.service.find_questions.FindQuestionsServiceResponse;
+import com.odcloud.application.question.service.find_questions.FindQuestionsServiceResponse;
 import com.odcloud.domain.model.Question;
 import java.time.LocalDateTime;
 import java.util.List;

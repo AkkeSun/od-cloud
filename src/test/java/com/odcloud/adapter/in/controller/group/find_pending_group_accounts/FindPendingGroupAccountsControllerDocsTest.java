@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.FindPendingGroupAccountsUseCase;
-import com.odcloud.application.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
+import com.odcloud.application.group.port.in.FindPendingGroupAccountsUseCase;
+import com.odcloud.application.group.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;

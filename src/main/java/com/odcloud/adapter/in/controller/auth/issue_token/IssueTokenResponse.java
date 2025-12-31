@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.auth.issue_token;
 
-import com.odcloud.application.service.issue_token.IssueTokenServiceResponse;
+import com.odcloud.application.auth.service.issue_token.IssueTokenServiceResponse;
 import lombok.Builder;
 
 @Builder

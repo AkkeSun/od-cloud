@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.auth.callback_google_oauth2;
 
-import com.odcloud.application.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
 
 record CallbackGoogleOAuth2Response(
     String googleAccessToken

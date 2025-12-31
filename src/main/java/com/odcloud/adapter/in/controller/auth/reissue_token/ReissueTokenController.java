@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.auth.reissue_token;
 
-import com.odcloud.application.port.in.ReissueTokenUseCase;
-import com.odcloud.application.service.reissue_token.ReissueTokenServiceResponse;
+import com.odcloud.application.auth.port.in.ReissueTokenUseCase;
+import com.odcloud.application.auth.service.reissue_token.ReissueTokenServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;

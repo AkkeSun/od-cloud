@@ -1,6 +1,6 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.port.in.command.RegisterAnswerCommand;
+import com.odcloud.application.question.port.in.command.RegisterAnswerCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

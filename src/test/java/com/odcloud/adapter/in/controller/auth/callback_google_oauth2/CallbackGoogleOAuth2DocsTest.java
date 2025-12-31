@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.CallbackGoogleOAuth2UseCase;
-import com.odcloud.application.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
+import com.odcloud.application.auth.port.in.CallbackGoogleOAuth2UseCase;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

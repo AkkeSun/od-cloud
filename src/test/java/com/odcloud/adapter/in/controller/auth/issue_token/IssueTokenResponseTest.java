@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.auth.issue_token;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.issue_token.IssueTokenServiceResponse;
+import com.odcloud.application.auth.service.issue_token.IssueTokenServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

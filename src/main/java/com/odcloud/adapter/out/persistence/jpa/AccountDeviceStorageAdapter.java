@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.application.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import java.util.List;
 import java.util.Optional;

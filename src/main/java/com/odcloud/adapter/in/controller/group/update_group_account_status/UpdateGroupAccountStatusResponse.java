@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.update_group_account_status;
 
-import com.odcloud.application.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
+import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
 
 record UpdateGroupAccountStatusResponse(
     Boolean result

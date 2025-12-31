@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.file.register_folder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.register_folder.RegisterFolderServiceResponse;
+import com.odcloud.application.file.service.register_folder.RegisterFolderServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

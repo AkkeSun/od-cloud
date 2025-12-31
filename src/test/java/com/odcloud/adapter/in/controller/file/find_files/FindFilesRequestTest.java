@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.file.find_files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.file.find_files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.find_files.FindFilesServiceResponse;
+import com.odcloud.application.file.service.find_files.FindFilesServiceResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

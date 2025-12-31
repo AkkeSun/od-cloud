@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.scheduler;
 
-import com.odcloud.application.port.in.SendScheduleNotificationUseCase;
+import com.odcloud.application.schedule.port.in.SendScheduleNotificationUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;

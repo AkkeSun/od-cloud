@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.group.join_group;
 
-import com.odcloud.application.port.in.JoinGroupUseCase;
-import com.odcloud.application.service.join_group.JoinGroupServiceResponse;
+import com.odcloud.application.group.port.in.JoinGroupUseCase;
+import com.odcloud.application.group.service.join_group.JoinGroupServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

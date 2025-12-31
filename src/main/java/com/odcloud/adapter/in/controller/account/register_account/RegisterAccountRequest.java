@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.account.register_account;
 
-import com.odcloud.application.port.in.command.RegisterAccountCommand;
+import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

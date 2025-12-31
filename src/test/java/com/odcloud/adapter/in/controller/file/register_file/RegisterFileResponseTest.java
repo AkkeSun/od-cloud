@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
-import com.odcloud.application.service.register_file.RegisterFileServiceResponse;
+import com.odcloud.application.file.service.register_file.RegisterFileServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,7 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.FileInfoStoragePort;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -52,7 +53,7 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
 
     @Override
     public List<FileInfo> findAll(
-        com.odcloud.application.port.in.command.FindFilesCommand command) {
+        FindFilesCommand command) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
@@ -73,7 +74,8 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
     @Override
     public boolean existsByFolderIdAndName(Long folderId, String name) {
         return database.stream()
-            .anyMatch(file -> file.getFolderId().equals(folderId) && file.getFileName().equals(name));
+            .anyMatch(
+                file -> file.getFolderId().equals(folderId) && file.getFileName().equals(name));
     }
 
     @Override
@@ -89,7 +91,8 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
             throw new RuntimeException("Storage failure");
         }
         database.remove(file);
-        log.info("FakeFileStoragePort deleted file: id={}, name={}", file.getId(), file.getFileName());
+        log.info("FakeFileStoragePort deleted file: id={}, name={}", file.getId(),
+            file.getFileName());
     }
 
     public void reset() {

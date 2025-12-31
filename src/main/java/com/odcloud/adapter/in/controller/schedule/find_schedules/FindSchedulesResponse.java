@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.schedule.find_schedules;
 
-import com.odcloud.application.service.find_schedules.FindSchedulesServiceResponse;
-import com.odcloud.application.service.find_schedules.FindSchedulesServiceResponse.FindSchedulesServiceResponseItem;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesServiceResponse;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesServiceResponse.FindSchedulesServiceResponseItem;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

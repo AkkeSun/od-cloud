@@ -1,0 +1,33 @@
+package com.odcloud.application.file.service.find_files;
+
+import com.odcloud.application.file.port.in.FindFilesUseCase;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.out.FileInfoStoragePort;
+import com.odcloud.application.file.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FileInfo;
+import com.odcloud.domain.model.FolderInfo;
+import com.odcloud.infrastructure.constant.ProfileConstant;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+class FindFilesService implements FindFilesUseCase {
+
+    private final ProfileConstant constant;
+    private final FileInfoStoragePort fileStoragePort;
+    private final FolderInfoStoragePort folderStoragePort;
+
+    @Override
+    @Transactional(readOnly = true)
+    public FindFilesServiceResponse findAll(FindFilesCommand command) {
+        String webServerHost = constant.webServerHost();
+        List<FileInfo> files = fileStoragePort.findAll(command);
+        files.forEach(fileInfo -> fileInfo.updateFileLocForHosting(webServerHost));
+
+        List<FolderInfo> folders = folderStoragePort.findAll(command);
+        return FindFilesServiceResponse.of(files, folders, command.folderId());
+    }
+}

@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.device.update_device;
 
-import com.odcloud.application.service.update_device.UpdateDeviceServiceResponse;
+import com.odcloud.application.device.service.update_device.UpdateDeviceServiceResponse;
 
 record UpdateDeviceResponse(
     Boolean result

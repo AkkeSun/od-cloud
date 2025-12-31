@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.find_groups;
 
-import com.odcloud.application.port.in.FindGroupsUseCase;
-import com.odcloud.application.service.find_groups.FindGroupsServiceResponse;
+import com.odcloud.application.group.port.in.FindGroupsUseCase;
+import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

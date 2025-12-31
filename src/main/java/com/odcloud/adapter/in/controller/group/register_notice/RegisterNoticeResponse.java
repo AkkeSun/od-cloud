@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.register_notice;
 
-import com.odcloud.application.service.register_notice.RegisterNoticeServiceResponse;
+import com.odcloud.application.group.service.register_notice.RegisterNoticeServiceResponse;
 
 record RegisterNoticeResponse(
     Boolean result

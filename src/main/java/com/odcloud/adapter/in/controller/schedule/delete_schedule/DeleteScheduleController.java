@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.schedule.delete_schedule;
 
-import com.odcloud.application.port.in.DeleteScheduleUseCase;
-import com.odcloud.application.service.delete_schedule.DeleteScheduleServiceResponse;
+import com.odcloud.application.schedule.port.in.DeleteScheduleUseCase;
+import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;

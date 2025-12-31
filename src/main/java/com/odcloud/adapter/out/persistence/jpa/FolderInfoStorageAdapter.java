@@ -2,8 +2,8 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExists_FOLDER;
 
-import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.application.port.out.FolderInfoStoragePort;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.util.List;

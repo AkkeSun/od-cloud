@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.NoticeStoragePort;
+import com.odcloud.application.group.port.out.NoticeStoragePort;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;

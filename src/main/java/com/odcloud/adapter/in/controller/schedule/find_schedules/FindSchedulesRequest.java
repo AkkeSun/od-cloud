@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.schedule.find_schedules;
 
-import com.odcloud.application.port.in.command.FindSchedulesCommand;
+import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.DateUtil;
 import com.odcloud.infrastructure.util.StringUtil;

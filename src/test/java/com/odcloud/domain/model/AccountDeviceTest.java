@@ -2,7 +2,7 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.port.in.command.RegisterDeviceCommand;
+import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

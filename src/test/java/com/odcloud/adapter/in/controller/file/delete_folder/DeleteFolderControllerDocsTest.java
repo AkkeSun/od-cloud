@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.DeleteFolderUseCase;
-import com.odcloud.application.service.delete_folder.DeleteFolderServiceResponse;
+import com.odcloud.application.file.port.in.DeleteFolderUseCase;
+import com.odcloud.application.file.service.delete_folder.DeleteFolderServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

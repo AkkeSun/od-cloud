@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.update_folder;
 
-import com.odcloud.application.service.update_folder.UpdateFolderServiceResponse;
+import com.odcloud.application.file.service.update_folder.UpdateFolderServiceResponse;
 import lombok.Builder;
 
 @Builder

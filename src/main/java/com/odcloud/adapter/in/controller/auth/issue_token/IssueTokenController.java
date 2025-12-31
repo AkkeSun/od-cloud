@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.auth.issue_token;
 
-import com.odcloud.application.port.in.IssueTokenUseCase;
-import com.odcloud.application.service.issue_token.IssueTokenServiceResponse;
+import com.odcloud.application.auth.port.in.IssueTokenUseCase;
+import com.odcloud.application.auth.service.issue_token.IssueTokenServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

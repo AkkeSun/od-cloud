@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.QuestionStoragePort;
+import com.odcloud.application.question.port.out.QuestionStoragePort;
 import com.odcloud.domain.model.Question;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;

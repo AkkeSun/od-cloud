@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.auth.reissue_token;
 
-import com.odcloud.application.service.reissue_token.ReissueTokenServiceResponse;
+import com.odcloud.application.auth.service.reissue_token.ReissueTokenServiceResponse;
 import lombok.Builder;
 
 @Builder

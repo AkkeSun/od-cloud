@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.find_group;
 
-import com.odcloud.application.service.find_group.FindGroupServiceResponse;
+import com.odcloud.application.group.service.find_group.FindGroupServiceResponse;
 import java.util.List;
 import lombok.Builder;
 

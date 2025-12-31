@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.port.in.command.RegisterScheduleCommand;
-import com.odcloud.application.port.in.command.UpdateScheduleCommand;
+import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
+import com.odcloud.application.schedule.port.in.command.UpdateScheduleCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

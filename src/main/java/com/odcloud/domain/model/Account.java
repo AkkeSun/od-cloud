@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.port.in.command.RegisterAccountCommand;
+import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,7 +72,7 @@ public class Account {
     public void updateGroups(List<Group> groups) {
         this.groups = groups;
     }
-    
+
 
     public void updatePicture(String picture) {
         this.picture = picture;

@@ -2,7 +2,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QFolderInfoEntity.folderInfoEntity;
 
-import com.odcloud.application.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.FolderInfo;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;

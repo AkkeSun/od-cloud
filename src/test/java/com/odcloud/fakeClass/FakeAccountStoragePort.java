@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.AccountStoragePort;
+import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;

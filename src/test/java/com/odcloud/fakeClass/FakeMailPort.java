@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
 import com.odcloud.adapter.out.mail.MailRequest;
-import com.odcloud.application.port.out.MailPort;
+import com.odcloud.application.util.port.out.MailPort;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

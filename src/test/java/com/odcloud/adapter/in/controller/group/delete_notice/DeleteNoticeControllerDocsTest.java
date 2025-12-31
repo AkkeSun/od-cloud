@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.DeleteNoticeUseCase;
-import com.odcloud.application.service.delete_notice.DeleteNoticeServiceResponse;
+import com.odcloud.application.group.port.in.DeleteNoticeUseCase;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeServiceResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

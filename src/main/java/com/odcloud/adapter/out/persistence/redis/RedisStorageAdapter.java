@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.redis;
 import static com.odcloud.infrastructure.util.JsonUtil.parseJson;
 import static com.odcloud.infrastructure.util.JsonUtil.parseJsonList;
 
-import com.odcloud.application.port.out.RedisStoragePort;
+import com.odcloud.application.auth.port.out.RedisStoragePort;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +39,7 @@ class RedisStorageAdapter implements RedisStoragePort {
         if (clazz == String.class) {
             return clazz.cast(redisData);
         }
-        
+
         return parseJson(redisData, clazz);
     }
 

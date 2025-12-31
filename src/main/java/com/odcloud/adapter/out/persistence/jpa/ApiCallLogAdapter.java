@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.application.port.out.ApiCallLogStoragePort;
+import com.odcloud.application.util.port.out.ApiCallLogStoragePort;
 import com.odcloud.domain.model.ApiCallLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

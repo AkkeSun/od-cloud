@@ -2,7 +2,7 @@ package com.odcloud.fakeClass;
 
 import com.odcloud.adapter.out.client.google.GoogleTokenResponse;
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.port.out.GoogleOAuth2Port;
+import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;

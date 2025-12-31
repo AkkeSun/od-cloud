@@ -2,7 +2,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QScheduleEntity.scheduleEntity;
 
-import com.odcloud.application.port.in.command.FindSchedulesCommand;
+import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Schedule;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

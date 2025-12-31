@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.device.register_device;
 
-import com.odcloud.application.service.register_device.RegisterDeviceServiceResponse;
+import com.odcloud.application.device.service.register_device.RegisterDeviceServiceResponse;
 
 record RegisterDeviceResponse(
     Boolean result

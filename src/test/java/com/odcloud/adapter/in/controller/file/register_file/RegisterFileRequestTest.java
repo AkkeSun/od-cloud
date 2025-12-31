@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
-import com.odcloud.application.port.in.command.RegisterFileCommand;
+import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import java.util.ArrayList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.update_folder;
 
-import com.odcloud.application.port.in.command.UpdateFolderCommand;
+import com.odcloud.application.file.port.in.command.UpdateFolderCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import lombok.Builder;

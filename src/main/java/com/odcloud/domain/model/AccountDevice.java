@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
 import com.google.gson.JsonObject;
-import com.odcloud.application.port.in.command.RegisterDeviceCommand;
+import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

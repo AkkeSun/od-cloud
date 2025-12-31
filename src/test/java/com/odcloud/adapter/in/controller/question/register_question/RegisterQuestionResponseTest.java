@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.question.register_question;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

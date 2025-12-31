@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.group.find_group_account_list;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.find_group_account_list.FindGroupAccountListServiceResponse;
+import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListServiceResponse;
 import com.odcloud.domain.model.GroupAccount;
 import java.time.LocalDateTime;
 import java.util.List;

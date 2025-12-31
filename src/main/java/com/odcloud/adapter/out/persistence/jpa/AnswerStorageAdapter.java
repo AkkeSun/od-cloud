@@ -1,6 +1,6 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
-import com.odcloud.application.port.out.AnswerStoragePort;
+import com.odcloud.application.question.port.out.AnswerStoragePort;
 import com.odcloud.domain.model.Answer;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

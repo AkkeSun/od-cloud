@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.question.find_question;
 
-import com.odcloud.application.port.in.FindQuestionUseCase;
-import com.odcloud.application.service.find_question.FindQuestionServiceResponse;
+import com.odcloud.application.question.port.in.FindQuestionUseCase;
+import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.out.RedisStoragePort;
+import com.odcloud.application.auth.port.out.RedisStoragePort;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

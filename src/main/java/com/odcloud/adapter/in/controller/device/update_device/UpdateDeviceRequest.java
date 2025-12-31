@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.device.update_device;
 
-import com.odcloud.application.port.in.command.UpdateDeviceCommand;
+import com.odcloud.application.device.port.in.command.UpdateDeviceCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

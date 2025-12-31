@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.update_group_account_status;
 
-import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.Contains;

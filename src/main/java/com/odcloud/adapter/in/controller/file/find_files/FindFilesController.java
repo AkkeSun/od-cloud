@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.file.find_files;
 
-import com.odcloud.application.port.in.FindFilesUseCase;
-import com.odcloud.application.service.find_files.FindFilesServiceResponse;
+import com.odcloud.application.file.port.in.FindFilesUseCase;
+import com.odcloud.application.file.service.find_files.FindFilesServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.group.update_group_account_show_yn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.service.update_group_account_use_yn.UpdateGroupAccountUseYnServiceResponse;
+import com.odcloud.application.group.service.update_group_account_use_yn.UpdateGroupAccountUseYnServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

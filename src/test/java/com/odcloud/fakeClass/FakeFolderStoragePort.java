@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.port.in.command.FindFilesCommand;
-import com.odcloud.application.port.out.FolderInfoStoragePort;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -68,7 +68,8 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
                 if (command.folderId() == null) {
                     return true;
                 }
-                return folder.getParentId() != null && folder.getParentId().equals(command.folderId());
+                return folder.getParentId() != null && folder.getParentId()
+                    .equals(command.folderId());
             })
             .filter(folder -> {
                 if (command.groupId() == null || command.groupId().isBlank()) {
@@ -98,7 +99,8 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
     @Override
     public void delete(FolderInfo folder) {
         database.removeIf(f -> f.getId().equals(folder.getId()));
-        log.info("FakeFolderStoragePort deleted folder: id={}, name={}", folder.getId(), folder.getName());
+        log.info("FakeFolderStoragePort deleted folder: id={}, name={}", folder.getId(),
+            folder.getName());
     }
 
     public void reset() {

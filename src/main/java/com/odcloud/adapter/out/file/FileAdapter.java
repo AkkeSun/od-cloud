@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.file;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_DOWNLOAD_ERROR;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_UPLOAD_ERROR;
 
-import com.odcloud.application.port.out.FilePort;
+import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

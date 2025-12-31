@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.delete_file;
 
-import com.odcloud.application.port.in.command.DeleteFileCommand;
+import com.odcloud.application.file.port.in.command.DeleteFileCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotEmpty;

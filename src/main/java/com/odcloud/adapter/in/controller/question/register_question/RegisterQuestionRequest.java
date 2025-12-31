@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.question.register_question;
 
-import com.odcloud.application.port.in.command.RegisterQuestionCommand;
+import com.odcloud.application.question.port.in.command.RegisterQuestionCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;

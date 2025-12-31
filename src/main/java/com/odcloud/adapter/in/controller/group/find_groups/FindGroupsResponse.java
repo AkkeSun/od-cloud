@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.find_groups;
 
-import com.odcloud.application.service.find_groups.FindGroupsServiceResponse;
+import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
 import java.util.List;
 import lombok.Builder;
 
@@ -24,6 +24,7 @@ record FindGroupsResponse(
         String ownerEmail,
         String regDt
     ) {
+
         public static GroupResponse of(FindGroupsServiceResponse.GroupResponseItem item) {
             return GroupResponse.builder()
                 .id(item.id())

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.adapter.in.controller.question.find_question.FindQuestionResponse.AnswerDto;
 import com.odcloud.adapter.in.controller.question.find_question.FindQuestionResponse.QuestionDto;
-import com.odcloud.application.service.find_question.FindQuestionServiceResponse;
-import com.odcloud.application.service.find_question.FindQuestionServiceResponse.AnswerResponseItem;
-import com.odcloud.application.service.find_question.FindQuestionServiceResponse.QuestionResponseItem;
+import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse;
+import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse.AnswerResponseItem;
+import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse.QuestionResponseItem;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

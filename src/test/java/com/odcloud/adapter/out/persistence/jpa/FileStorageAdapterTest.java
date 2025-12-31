@@ -3,6 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.FileInfo;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -504,7 +505,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(folder.getId())
                 .sortType("NAME_ASC")
@@ -574,7 +575,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .keyword("report")
                 .sortType("NAME_ASC")
@@ -648,7 +649,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(publicFolder.getId())
                 .sortType("NAME_ASC")
@@ -721,7 +722,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(privateFolder.getId())
                 .sortType("NAME_ASC")
@@ -790,7 +791,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(folder.getId())
                 .sortType("NAME_DESC")
@@ -843,7 +844,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .keyword("test")
                 .sortType("NAME_ASC")
@@ -917,7 +918,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .keyword("report")
                 .sortType("NAME_ASC")

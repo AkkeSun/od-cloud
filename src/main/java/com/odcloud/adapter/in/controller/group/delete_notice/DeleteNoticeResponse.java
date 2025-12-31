@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.delete_notice;
 
-import com.odcloud.application.service.delete_notice.DeleteNoticeServiceResponse;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeServiceResponse;
 
 record DeleteNoticeResponse(
     Boolean result

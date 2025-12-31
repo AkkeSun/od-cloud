@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.find_group;
 
-import com.odcloud.application.port.in.FindGroupUseCase;
-import com.odcloud.application.service.find_group.FindGroupServiceResponse;
+import com.odcloud.application.group.port.in.FindGroupUseCase;
+import com.odcloud.application.group.service.find_group.FindGroupServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

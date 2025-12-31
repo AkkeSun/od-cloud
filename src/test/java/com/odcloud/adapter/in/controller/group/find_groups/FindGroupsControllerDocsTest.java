@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.FindGroupsUseCase;
-import com.odcloud.application.service.find_groups.FindGroupsServiceResponse;
+import com.odcloud.application.group.port.in.FindGroupsUseCase;
+import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

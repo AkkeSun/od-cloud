@@ -2,7 +2,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_QUESTION;
 
-import com.odcloud.application.port.out.QuestionStoragePort;
+import com.odcloud.application.question.port.out.QuestionStoragePort;
 import com.odcloud.domain.model.Question;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import lombok.RequiredArgsConstructor;

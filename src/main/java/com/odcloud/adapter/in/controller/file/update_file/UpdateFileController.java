@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.file.update_file;
 
-import com.odcloud.application.port.in.UpdateFileUseCase;
-import com.odcloud.application.service.update_file.UpdateFileServiceResponse;
+import com.odcloud.application.file.port.in.UpdateFileUseCase;
+import com.odcloud.application.file.service.update_file.UpdateFileServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;

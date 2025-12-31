@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

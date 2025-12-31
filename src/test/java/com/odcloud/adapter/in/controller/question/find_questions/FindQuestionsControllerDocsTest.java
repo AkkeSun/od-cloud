@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.FindQuestionsUseCase;
-import com.odcloud.application.service.find_questions.FindQuestionsServiceResponse;
+import com.odcloud.application.question.port.in.FindQuestionsUseCase;
+import com.odcloud.application.question.service.find_questions.FindQuestionsServiceResponse;
 import com.odcloud.domain.model.Question;
 import java.time.LocalDateTime;
 import java.util.List;

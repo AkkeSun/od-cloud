@@ -3,6 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
+import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.FolderInfo;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -657,7 +658,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(parentFolder.getId())
                 .sortType("NAME_ASC")
@@ -721,7 +722,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .keyword("Project")
                 .sortType("NAME_ASC")
@@ -784,10 +785,11 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1"), com.odcloud.domain.model.Group.of("group2")))
+                .groups(List.of(com.odcloud.domain.model.Group.of("group1"),
+                    com.odcloud.domain.model.Group.of("group2")))
                 .build();
 
-            com.odcloud.application.port.in.command.FindFilesCommand command = com.odcloud.application.port.in.command.FindFilesCommand.builder()
+            FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(parentFolder.getId())
                 .groupId("group1")

@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
-import com.odcloud.application.port.in.RegisterFileUseCase;
-import com.odcloud.application.service.register_file.RegisterFileServiceResponse;
+import com.odcloud.application.file.port.in.RegisterFileUseCase;
+import com.odcloud.application.file.service.register_file.RegisterFileServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

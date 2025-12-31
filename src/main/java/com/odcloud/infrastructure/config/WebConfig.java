@@ -1,7 +1,7 @@
 package com.odcloud.infrastructure.config;
 
 import com.odcloud.infrastructure.constant.ProfileConstant;
-import com.odcloud.resolver.LoginAccountResolver;
+import com.odcloud.infrastructure.resolver.LoginAccountResolver;
 import java.nio.file.Paths;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

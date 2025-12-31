@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.RegisterDeviceUseCase;
-import com.odcloud.application.service.register_device.RegisterDeviceServiceResponse;
+import com.odcloud.application.device.port.in.RegisterDeviceUseCase;
+import com.odcloud.application.device.service.register_device.RegisterDeviceServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.question.register_question;
 
-import com.odcloud.application.port.in.RegisterQuestionUseCase;
-import com.odcloud.application.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.port.in.RegisterQuestionUseCase;
+import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

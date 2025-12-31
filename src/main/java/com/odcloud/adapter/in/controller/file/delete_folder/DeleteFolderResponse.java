@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.file.delete_folder;
 
-import com.odcloud.application.service.delete_folder.DeleteFolderServiceResponse;
+import com.odcloud.application.file.service.delete_folder.DeleteFolderServiceResponse;
 import lombok.Builder;
 
 @Builder

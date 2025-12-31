@@ -2,7 +2,7 @@ package com.odcloud.adapter.out.client.google;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_USER_INFO_ERROR;
 
-import com.odcloud.application.port.out.GoogleOAuth2Port;
+import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.Duration;
@@ -35,7 +35,7 @@ class GoogleOAuth2ClientAdapter implements GoogleOAuth2Port {
                     .build()))
             .build()
             .createClient(GoogleTokenClient.class);
-        
+
         this.userInfoClient = HttpServiceProxyFactory.builder()
             .exchangeAdapter(RestClientAdapter.create(
                 RestClient.builder()

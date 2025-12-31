@@ -3,7 +3,9 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
+import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.GroupAccount;
+import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -958,8 +960,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
             entityManager.clear();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId(groupId)
                     .accountId(account.getId())
                     .status("REJECTED")
@@ -967,7 +969,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when
             com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId());
 
             // then
             assertThat(result).isNotNull();
@@ -1016,16 +1019,17 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
             entityManager.clear();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId(groupId)
                     .accountId(account.getId())
                     .status("APPROVED")
                     .build();
 
             // when
-            com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
+            GroupAccount result =
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId());
 
             // then
             assertThat(result).isNotNull();
@@ -1049,8 +1053,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(account);
             entityManager.flush();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId("non-existent-group")
                     .accountId(account.getId())
                     .status("APPROVED")
@@ -1059,7 +1063,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
                 com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId())
             );
         }
 
@@ -1079,8 +1084,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(group);
             entityManager.flush();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId(groupId)
                     .accountId(999999L)
                     .status("APPROVED")
@@ -1089,7 +1094,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
                 com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId())
             );
         }
 
@@ -1123,8 +1129,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
             entityManager.clear();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId(groupId)
                     .accountId(account.getId())
                     .status("APPROVED")
@@ -1132,8 +1138,9 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when & then
             org.junit.jupiter.api.Assertions.assertThrows(
-                com.odcloud.infrastructure.exception.CustomBusinessException.class,
-                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId())
+                CustomBusinessException.class,
+                () -> adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId())
             );
         }
 
@@ -1174,8 +1181,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             entityManager.flush();
             entityManager.clear();
 
-            com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand command =
-                com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand.builder()
+            UpdateGroupAccountStatusCommand command =
+                UpdateGroupAccountStatusCommand.builder()
                     .groupId(groupId)
                     .accountId(account.getId())
                     .status("APPROVED")
@@ -1183,7 +1190,8 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // when
             com.odcloud.domain.model.GroupAccount result =
-                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(), command.accountId());
+                adapter.findGroupAccountByGroupIdAndAccountId(command.groupId(),
+                    command.accountId());
 
             // then
             assertThat(result).isNotNull();

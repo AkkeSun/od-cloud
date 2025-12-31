@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.port.in.command.RegisterAccountCommand;
+import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class AccountTest {
-    
+
     @Nested
     @DisplayName("[of] Claims로부터 Account를 생성하는 정적 팩토리 메서드")
     class Describe_of_fromClaims {
@@ -79,7 +79,7 @@ class AccountTest {
             when(claims.get("groups")).thenReturn(List.of());
             when(claims.get("nickname")).thenReturn("nickname");
             when(claims.get("picture")).thenReturn("picture");
-            
+
             // when
             Account account = Account.of(claims);
 

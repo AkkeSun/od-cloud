@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.account.register_account;
 
-import com.odcloud.application.service.register_account.RegisterAccountServiceResponse;
+import com.odcloud.application.account.service.register_account.RegisterAccountServiceResponse;
 
 record RegisterAccountResponse(
     Boolean result

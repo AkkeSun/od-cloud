@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.download_files;
 
-import com.odcloud.application.port.in.DownloadFilesUseCase;
-import com.odcloud.application.service.download_files.DownloadFilesServiceResponse;
+import com.odcloud.application.file.port.in.DownloadFilesUseCase;
+import com.odcloud.application.file.service.download_files.DownloadFilesServiceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

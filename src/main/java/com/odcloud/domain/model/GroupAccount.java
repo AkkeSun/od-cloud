@@ -1,6 +1,6 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

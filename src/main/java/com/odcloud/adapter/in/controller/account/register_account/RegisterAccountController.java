@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.account.register_account;
 
-import com.odcloud.application.port.in.RegisterAccountUseCase;
-import com.odcloud.application.service.register_account.RegisterAccountServiceResponse;
+import com.odcloud.application.account.port.in.RegisterAccountUseCase;
+import com.odcloud.application.account.service.register_account.RegisterAccountServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

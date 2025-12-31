@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.account.update_account;
 
-import com.odcloud.application.port.in.command.UpdateAccountCommand;
+import com.odcloud.application.account.port.in.command.UpdateAccountCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.FileType;

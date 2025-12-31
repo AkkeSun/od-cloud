@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.port.in.UpdateDeviceUseCase;
-import com.odcloud.application.service.update_device.UpdateDeviceServiceResponse;
+import com.odcloud.application.device.port.in.UpdateDeviceUseCase;
+import com.odcloud.application.device.service.update_device.UpdateDeviceServiceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;

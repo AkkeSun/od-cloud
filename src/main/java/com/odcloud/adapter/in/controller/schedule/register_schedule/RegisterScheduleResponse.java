@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.schedule.register_schedule;
 
-import com.odcloud.application.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
 import lombok.Builder;
 
 @Builder

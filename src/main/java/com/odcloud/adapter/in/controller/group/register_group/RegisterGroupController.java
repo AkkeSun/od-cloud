@@ -1,10 +1,10 @@
 package com.odcloud.adapter.in.controller.group.register_group;
 
-import com.odcloud.application.port.in.RegisterGroupUseCase;
-import com.odcloud.application.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.port.in.RegisterGroupUseCase;
+import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.resolver.LoginAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

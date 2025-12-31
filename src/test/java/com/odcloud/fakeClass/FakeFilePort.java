@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
 import com.odcloud.adapter.out.file.FileResponse;
-import com.odcloud.application.port.out.FilePort;
+import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.domain.model.FileInfo;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

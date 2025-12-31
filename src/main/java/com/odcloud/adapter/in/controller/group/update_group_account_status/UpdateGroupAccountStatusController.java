@@ -1,11 +1,11 @@
 package com.odcloud.adapter.in.controller.group.update_group_account_status;
 
-import com.odcloud.application.port.in.UpdateGroupAccountStatusUseCase;
-import com.odcloud.application.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
+import com.odcloud.application.group.port.in.UpdateGroupAccountStatusUseCase;
+import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
 import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
 import com.odcloud.infrastructure.validation.groups.ValidationSequence;
-import com.odcloud.resolver.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;

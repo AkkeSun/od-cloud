@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.find_pending_group_accounts;
 
-import com.odcloud.application.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
+import com.odcloud.application.group.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
