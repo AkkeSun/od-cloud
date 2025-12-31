@@ -79,6 +79,8 @@ class UpdateAccountServiceTest {
             // then
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
+            assertThat(response.nickname()).isEqualTo("newNickname");
+            assertThat(response.picture()).isNotNull().startsWith("http://localhost:8080");
 
             // DB에 저장된 값 검증
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
@@ -119,6 +121,8 @@ class UpdateAccountServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
+            assertThat(response.nickname()).isEqualTo("updatedNickname");
+            assertThat(response.picture()).isEqualTo("http://localhost:8080/picture/old.jpg");
 
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getNickname()).isEqualTo("updatedNickname");
@@ -164,6 +168,8 @@ class UpdateAccountServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
+            assertThat(response.nickname()).isEqualTo("myNickname");
+            assertThat(response.picture()).isNotNull().startsWith("http://localhost:8080");
 
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getNickname()).isEqualTo("myNickname");
@@ -209,6 +215,8 @@ class UpdateAccountServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
+            assertThat(response.nickname()).isEqualTo("nickname");
+            assertThat(response.picture()).isNotNull().startsWith("http");
 
             // 파일 업로드는 호출됨
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(1);
@@ -246,6 +254,7 @@ class UpdateAccountServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
+            assertThat(response.nickname()).isEqualTo("newNickname");
 
             Account updatedAccount = fakeAccountStoragePort.findByEmail("user@example.com");
             assertThat(updatedAccount.getModDt()).isNotNull();

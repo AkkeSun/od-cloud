@@ -39,7 +39,7 @@ class UpdateAccountService implements UpdateAccountUseCase {
         }
 
         account.updateModDt();
-        accountStoragePort.save(account);
-        return UpdateAccountServiceResponse.ofSuccess();
+        Account updatedAccount = accountStoragePort.save(account);
+        return UpdateAccountServiceResponse.of(updatedAccount);
     }
 }

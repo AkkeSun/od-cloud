@@ -18,8 +18,10 @@ import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.account.port.in.UpdateAccountUseCase;
 import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,8 +58,12 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 "image-content".getBytes()
             );
 
+            Account mockAccount = Account.builder()
+                .nickname("새닉네임")
+                .picture("http://localhost:8080/picture/profile.png")
+                .build();
             UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.ofSuccess();
+                UpdateAccountServiceResponse.of(mockAccount);
 
             given(useCase.update(any())).willReturn(serviceResponse);
 
@@ -71,7 +77,11 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부")
+                    .description("수정 성공 여부"),
+                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                    .description("수정된 닉네임"),
+                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                    .description("수정된 프로필 사진 URL")
             );
         }
 
@@ -82,8 +92,12 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
             String authorization = "Bearer valid-token";
             String nickname = "새닉네임";
 
+            Account mockAccount = Account.builder()
+                .nickname("새닉네임")
+                .picture("http://localhost:8080/picture/old.png")
+                .build();
             UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.ofSuccess();
+                UpdateAccountServiceResponse.of(mockAccount);
 
             given(useCase.update(any())).willReturn(serviceResponse);
 
@@ -96,7 +110,11 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부")
+                    .description("수정 성공 여부"),
+                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                    .description("수정된 닉네임"),
+                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                    .description("프로필 사진 URL")
             );
         }
 
@@ -112,8 +130,12 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 "image-content".getBytes()
             );
 
+            Account mockAccount = Account.builder()
+                .nickname("기존닉네임")
+                .picture("http://localhost:8080/picture/profile.png")
+                .build();
             UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.ofSuccess();
+                UpdateAccountServiceResponse.of(mockAccount);
 
             given(useCase.update(any())).willReturn(serviceResponse);
 
@@ -127,7 +149,11 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부")
+                    .description("수정 성공 여부"),
+                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                    .description("닉네임"),
+                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                    .description("수정된 프로필 사진 URL")
             );
         }
 
