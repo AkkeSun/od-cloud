@@ -107,6 +107,8 @@ class FindGroupSelfControllerDocsTest {
                     .name("My Team")
                     .manager(manager1)
                     .activeMemberCount(3)
+                    .storageUsed(1024000L)
+                    .storageTotal(3221225472L)
                     .build();
 
             FindGroupSelfServiceResponse.MemberInfo manager2 =
@@ -120,6 +122,8 @@ class FindGroupSelfControllerDocsTest {
                     .name("Development Team")
                     .manager(manager2)
                     .activeMemberCount(2)
+                    .storageUsed(512000L)
+                    .storageTotal(3221225472L)
                     .build();
 
             FindGroupSelfServiceResponse.PendingGroupInfo pendingGroup =
@@ -168,6 +172,10 @@ class FindGroupSelfControllerDocsTest {
                     .type(JsonFieldType.STRING).description("매니저 이메일").optional(),
                 fieldWithPath("data.activeGroups[].activeMemberCount")
                     .type(JsonFieldType.NUMBER).description("활성 사용자 수"),
+                fieldWithPath("data.activeGroups[].storageUsed")
+                    .type(JsonFieldType.NUMBER).description("스토리지 사용량 (Byte)").optional(),
+                fieldWithPath("data.activeGroups[].storageTotal")
+                    .type(JsonFieldType.NUMBER).description("전체 스토리지 용량 (Byte)").optional(),
                 fieldWithPath("data.pendingGroups")
                     .type(JsonFieldType.ARRAY).description("가입 대기중인 그룹 목록"),
                 fieldWithPath("data.pendingGroups[].id")

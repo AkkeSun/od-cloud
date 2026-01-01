@@ -1,5 +1,6 @@
 package com.odcloud.application.group.service.register_group;
 
+import static com.odcloud.infrastructure.exception.ErrorCode.Business_GROUP_LIMIT_EXCEEDED;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROUP;
 
 import com.odcloud.application.account.port.out.AccountStoragePort;
@@ -31,6 +32,10 @@ class RegisterGroupService implements RegisterGroupUseCase {
     public RegisterGroupServiceResponse register(RegisterGroupCommand command) {
         if (groupStoragePort.existsByName(command.name())) {
             throw new CustomBusinessException(Business_SAVED_GROUP);
+        }
+
+        if (groupStoragePort.countByOwnerEmail(command.ownerEmail()) >= 3) {
+            throw new CustomBusinessException(Business_GROUP_LIMIT_EXCEEDED);
         }
 
         Group group = Group.of(command);

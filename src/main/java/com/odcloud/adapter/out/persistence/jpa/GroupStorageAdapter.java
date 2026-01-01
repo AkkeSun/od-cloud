@@ -33,6 +33,11 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public long countByOwnerEmail(String ownerEmail) {
+        return queryDsl.countByOwnerEmail(ownerEmail);
+    }
+
+    @Override
     public List<Group> findAll() {
         return queryDsl.findAll();
     }

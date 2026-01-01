@@ -10,6 +10,7 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,16 +21,19 @@ class DeleteFileServiceTest {
 
     private FakeFileStoragePort fakeFileStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
+    private FakeGroupStoragePort fakeGroupStoragePort;
     private DeleteFileService deleteFileService;
 
     @BeforeEach
     void setUp() {
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
+        fakeGroupStoragePort = new FakeGroupStoragePort();
         deleteFileService = new DeleteFileService(
             new FakeFilePort(),
             fakeFileStoragePort,
-            fakeFolderStoragePort
+            fakeFolderStoragePort,
+            fakeGroupStoragePort
         );
     }
 
@@ -193,6 +197,169 @@ class DeleteFileServiceTest {
             assertThat(response.result()).isFalse();
             assertThat(response.logs()).hasSize(1);
             assertThat(response.logs().get(0).errorMessage()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("[success] 파일 삭제 시 그룹 스토리지 용량이 감소한다")
+        void success_storageDecreased() {
+            // given
+            String groupId = "test-group";
+            Group group = Group.builder()
+                .id(groupId)
+                .name("Test Group")
+                .storageUsed(1000L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .groupId(groupId)
+                .owner("owner@test.com")
+                .name("Test Folder")
+                .path("/test")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            FileInfo file = FileInfo.builder()
+                .id(1L)
+                .folderId(1L)
+                .fileName("test.txt")
+                .fileLoc("/storage/test.txt")
+                .fileSize(300L)
+                .build();
+            fakeFileStoragePort.database.add(file);
+
+            Account account = Account.builder()
+                .email("user@test.com")
+                .groups(List.of(Group.of(groupId)))
+                .build();
+
+            DeleteFileCommand command = DeleteFileCommand.builder()
+                .account(account)
+                .fileIds(List.of(1L))
+                .build();
+
+            // when
+            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeFileStoragePort.database).isEmpty();
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(700L);
+        }
+
+        @Test
+        @DisplayName("[success] 여러 파일 삭제 시 그룹 스토리지 용량이 각각 감소한다")
+        void success_multipleFilesStorageDecreased() {
+            // given
+            String groupId = "test-group";
+            Group group = Group.builder()
+                .id(groupId)
+                .name("Test Group")
+                .storageUsed(1500L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .groupId(groupId)
+                .owner("owner@test.com")
+                .name("Test Folder")
+                .path("/test")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            FileInfo file1 = FileInfo.builder()
+                .id(1L)
+                .folderId(1L)
+                .fileName("test1.txt")
+                .fileLoc("/storage/test1.txt")
+                .fileSize(300L)
+                .build();
+            FileInfo file2 = FileInfo.builder()
+                .id(2L)
+                .folderId(1L)
+                .fileName("test2.txt")
+                .fileLoc("/storage/test2.txt")
+                .fileSize(200L)
+                .build();
+            fakeFileStoragePort.database.addAll(List.of(file1, file2));
+
+            Account account = Account.builder()
+                .email("user@test.com")
+                .groups(List.of(Group.of(groupId)))
+                .build();
+
+            DeleteFileCommand command = DeleteFileCommand.builder()
+                .account(account)
+                .fileIds(List.of(1L, 2L))
+                .build();
+
+            // when
+            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeFileStoragePort.database).isEmpty();
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(1000L);
+        }
+
+        @Test
+        @DisplayName("[success] 파일 크기가 null인 경우에도 삭제가 성공한다")
+        void success_fileSizeNull() {
+            // given
+            String groupId = "test-group";
+            Group group = Group.builder()
+                .id(groupId)
+                .name("Test Group")
+                .storageUsed(1000L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .groupId(groupId)
+                .owner("owner@test.com")
+                .name("Test Folder")
+                .path("/test")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            FileInfo file = FileInfo.builder()
+                .id(1L)
+                .folderId(1L)
+                .fileName("test.txt")
+                .fileLoc("/storage/test.txt")
+                .fileSize(null)
+                .build();
+            fakeFileStoragePort.database.add(file);
+
+            Account account = Account.builder()
+                .email("user@test.com")
+                .groups(List.of(Group.of(groupId)))
+                .build();
+
+            DeleteFileCommand command = DeleteFileCommand.builder()
+                .account(account)
+                .fileIds(List.of(1L))
+                .build();
+
+            // when
+            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeFileStoragePort.database).isEmpty();
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(1000L);
         }
     }
 }

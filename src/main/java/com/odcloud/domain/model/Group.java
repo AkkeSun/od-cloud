@@ -18,7 +18,10 @@ public class Group {
     private String id;
     private String name;
     private String ownerEmail;
+    private Long storageUsed;
+    private Long storageTotal;
     private List<GroupAccount> groupMembers;
+    private LocalDateTime modDt;
     private LocalDateTime regDt;
 
     public Group(String id, String ownerEmail, String name, LocalDateTime regDt) {
@@ -33,6 +36,8 @@ public class Group {
             .id(StringUtil.generateRandomString(6))
             .name(command.name())
             .ownerEmail(command.ownerEmail())
+            .storageUsed(0L)
+            .storageTotal(3221225472L)
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -42,6 +47,8 @@ public class Group {
             .id(StringUtil.generateRandomString(6))
             .name(name)
             .ownerEmail(ownerEmail)
+            .storageUsed(0L)
+            .storageTotal(3221225472L)
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -61,5 +68,22 @@ public class Group {
 
     public void updateGroupMembers(List<GroupAccount> groupMembers) {
         this.groupMembers = groupMembers;
+    }
+
+    public void increaseStorageUsed(long size) {
+        this.storageUsed = (this.storageUsed != null ? this.storageUsed : 0L) + size;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void decreaseStorageUsed(long size) {
+        this.storageUsed = Math.max(0L,
+            (this.storageUsed != null ? this.storageUsed : 0L) - size);
+        this.modDt = LocalDateTime.now();
+    }
+
+    public boolean canUpload(long fileSize) {
+        long currentUsed = this.storageUsed != null ? this.storageUsed : 0L;
+        long totalStorage = this.storageTotal != null ? this.storageTotal : 3221225472L;
+        return (currentUsed + fileSize) <= totalStorage;
     }
 }

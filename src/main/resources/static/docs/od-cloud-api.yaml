@@ -2234,7 +2234,9 @@ paths:
                             "nickname" : "Manager",
                             "email" : "manager@example.com"
                           },
-                          "activeMemberCount" : 3
+                          "activeMemberCount" : 3,
+                          "storageUsed" : 1024000,
+                          "storageTotal" : 3221225472
                         }, {
                           "id" : "activeGroup-2",
                           "name" : "Development Team",
@@ -2242,7 +2244,9 @@ paths:
                             "nickname" : "OtherManager",
                             "email" : "other@example.com"
                           },
-                          "activeMemberCount" : 2
+                          "activeMemberCount" : 2,
+                          "storageUsed" : 512000,
+                          "storageTotal" : 3221225472
                         } ],
                         "pendingGroups" : [ {
                           "id" : "pendingGroup",
@@ -3319,14 +3323,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2025-12-31T14:28:49.846858"
+                          "notificationDt" : "2026-01-01T23:47:05.022163"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2025-12-31T14:28:49.846874"
+                          "notificationDt" : "2026-01-01T23:47:05.022177"
                         } ]
                       }
                     }
@@ -3842,6 +3846,10 @@ components:
                 - name
                 type: object
                 properties:
+                  storageUsed:
+                    type: number
+                    description: 스토리지 사용량 (Byte)
+                    nullable: true
                   manager:
                     type: object
                     properties:
@@ -3857,6 +3865,10 @@ components:
                   name:
                     type: string
                     description: 그룹명
+                  storageTotal:
+                    type: number
+                    description: 전체 스토리지 용량 (Byte)
+                    nullable: true
                   id:
                     type: string
                     description: 그룹 아이디

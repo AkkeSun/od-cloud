@@ -30,6 +30,7 @@ class FileInfoRepository {
             fileInfoEntity.folderId,
             fileInfoEntity.fileName,
             fileInfoEntity.fileLoc,
+            fileInfoEntity.fileSize,
             fileInfoEntity.modDt,
             fileInfoEntity.regDt
         );
@@ -79,7 +80,7 @@ class FileInfoRepository {
 
     public List<FileInfo> findAll(FindFilesCommand command) {
         String sql = """
-            SELECT f.ID, f.FOLDER_ID, f.FILE_NAME, f.FILE_LOC, f.MOD_DT, f.REG_DT
+            SELECT f.ID, f.FOLDER_ID, f.FILE_NAME, f.FILE_LOC, f.FILE_SIZE, f.MOD_DT, f.REG_DT
             FROM FILE_INFO f
             INNER JOIN FOLDER_INFO fo ON f.FOLDER_ID = fo.ID
             WHERE fo.GROUP_ID IN (:groupIds)
@@ -122,6 +123,7 @@ class FileInfoRepository {
                 .folderId(entity.getFolderId())
                 .fileName(entity.getFileName())
                 .fileLoc(entity.getFileLoc())
+                .fileSize(entity.getFileSize())
                 .modDt(entity.getModDt())
                 .regDt(entity.getRegDt())
                 .build())

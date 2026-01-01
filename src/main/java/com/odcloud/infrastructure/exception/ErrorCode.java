@@ -44,6 +44,8 @@ public enum ErrorCode {
     Business_INVALID_GROUP_ACCOUNT_STATUS(4022, "PENDING 상태의 사용자만 상태 변경이 가능합니다"),
     Business_DoesNotExists_DEVICE(4023, "조회된 디바이스가 없습니다"),
     Business_NOT_FOUND_NOTICE(4024, "조회된 공지사항이 없습니다"),
+    Business_GROUP_LIMIT_EXCEEDED(4025, "사용자당 최대 3개의 그룹만 생성할 수 있습니다"),
+    Business_STORAGE_LIMIT_EXCEEDED(4026, "그룹 스토리지 용량이 부족합니다"),
 
     ;
 

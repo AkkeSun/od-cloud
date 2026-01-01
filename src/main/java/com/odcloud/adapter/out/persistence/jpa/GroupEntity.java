@@ -29,6 +29,15 @@ class GroupEntity {
     @Column(name = "OWNER_EMAIL")
     private String ownerEmail;
 
+    @Column(name = "STORAGE_USED")
+    private Long storageUsed;
+
+    @Column(name = "STORAGE_TOTAL")
+    private Long storageTotal;
+
+    @Column(name = "MOD_DT")
+    private LocalDateTime modDt;
+
     @Column(name = "REG_DT")
     private LocalDateTime regDt;
 
@@ -37,6 +46,9 @@ class GroupEntity {
             .id(group.getId())
             .ownerEmail(group.getOwnerEmail())
             .name(group.getName())
+            .storageUsed(group.getStorageUsed())
+            .storageTotal(group.getStorageTotal())
+            .modDt(group.getModDt())
             .regDt(group.getRegDt())
             .build();
     }
@@ -46,6 +58,9 @@ class GroupEntity {
             .id(id)
             .ownerEmail(ownerEmail)
             .name(name)
+            .storageUsed(storageUsed)
+            .storageTotal(storageTotal)
+            .modDt(modDt)
             .regDt(regDt)
             .build();
     }

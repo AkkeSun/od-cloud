@@ -40,6 +40,9 @@ class FileInfoEntity {
     @Column(name = "FILE_LOC")
     private String fileLoc;
 
+    @Column(name = "FILE_SIZE")
+    private Long fileSize;
+
     @Column(name = "MOD_DT")
     private LocalDateTime modDt;
 
@@ -52,6 +55,7 @@ class FileInfoEntity {
             .folderId(file.getFolderId())
             .fileName(file.getFileName())
             .fileLoc(file.getFileLoc())
+            .fileSize(file.getFileSize())
             .modDt(file.getModDt())
             .regDt(file.getRegDt())
             .build();

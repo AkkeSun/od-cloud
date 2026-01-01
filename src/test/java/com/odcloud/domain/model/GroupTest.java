@@ -36,6 +36,8 @@ class GroupTest {
             assertThat(group).isNotNull();
             assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(group.getName()).isEqualTo("테스트 그룹");
+            assertThat(group.getStorageUsed()).isEqualTo(0L);
+            assertThat(group.getStorageTotal()).isEqualTo(3221225472L);
             assertThat(group.getRegDt()).isAfter(before);
             assertThat(group.getRegDt()).isBefore(after);
         }
@@ -319,6 +321,196 @@ class GroupTest {
             assertThat(group.getOwnerEmail()).isNull();
             assertThat(group.getName()).isNull();
             assertThat(group.getRegDt()).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("[increaseStorageUsed] 스토리지 사용량을 증가시키는 메서드")
+    class Describe_increaseStorageUsed {
+
+        @Test
+        @DisplayName("[success] 스토리지 사용량을 증가시킨다")
+        void success() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(100L)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            group.increaseStorageUsed(50L);
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+            assertThat(group.getStorageUsed()).isEqualTo(150L);
+            assertThat(group.getModDt()).isAfter(before);
+            assertThat(group.getModDt()).isBefore(after);
+        }
+
+        @Test
+        @DisplayName("[success] storageUsed가 null일 때 스토리지 사용량을 증가시킨다")
+        void success_nullStorageUsed() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(null)
+                .build();
+
+            // when
+            group.increaseStorageUsed(50L);
+
+            // then
+            assertThat(group.getStorageUsed()).isEqualTo(50L);
+        }
+    }
+
+    @Nested
+    @DisplayName("[decreaseStorageUsed] 스토리지 사용량을 감소시키는 메서드")
+    class Describe_decreaseStorageUsed {
+
+        @Test
+        @DisplayName("[success] 스토리지 사용량을 감소시킨다")
+        void success() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(100L)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            group.decreaseStorageUsed(30L);
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+            assertThat(group.getStorageUsed()).isEqualTo(70L);
+            assertThat(group.getModDt()).isAfter(before);
+            assertThat(group.getModDt()).isBefore(after);
+        }
+
+        @Test
+        @DisplayName("[success] 감소값이 현재 사용량보다 클 때 0으로 설정한다")
+        void success_negativeResult() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(50L)
+                .build();
+
+            // when
+            group.decreaseStorageUsed(100L);
+
+            // then
+            assertThat(group.getStorageUsed()).isEqualTo(0L);
+        }
+
+        @Test
+        @DisplayName("[success] storageUsed가 null일 때 0으로 설정한다")
+        void success_nullStorageUsed() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(null)
+                .build();
+
+            // when
+            group.decreaseStorageUsed(50L);
+
+            // then
+            assertThat(group.getStorageUsed()).isEqualTo(0L);
+        }
+    }
+
+    @Nested
+    @DisplayName("[canUpload] 파일 업로드 가능 여부를 확인하는 메서드")
+    class Describe_canUpload {
+
+        @Test
+        @DisplayName("[success] 업로드 가능한 경우 true를 반환한다")
+        void success_canUpload() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(1000L)
+                .storageTotal(3221225472L)
+                .build();
+
+            // when
+            boolean result = group.canUpload(500L);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] 업로드 불가능한 경우 false를 반환한다")
+        void success_cannotUpload() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(3221225000L)
+                .storageTotal(3221225472L)
+                .build();
+
+            // when
+            boolean result = group.canUpload(1000L);
+
+            // then
+            assertThat(result).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] 정확히 용량에 맞는 경우 true를 반환한다")
+        void success_exactMatch() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(3221225000L)
+                .storageTotal(3221225472L)
+                .build();
+
+            // when
+            boolean result = group.canUpload(472L);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] storageUsed가 null일 때 업로드 가능 여부를 확인한다")
+        void success_nullStorageUsed() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(null)
+                .storageTotal(3221225472L)
+                .build();
+
+            // when
+            boolean result = group.canUpload(1000L);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] storageTotal이 null일 때 기본값으로 업로드 가능 여부를 확인한다")
+        void success_nullStorageTotal() {
+            // given
+            Group group = Group.builder()
+                .id("group-123")
+                .storageUsed(1000L)
+                .storageTotal(null)
+                .build();
+
+            // when
+            boolean result = group.canUpload(500L);
+
+            // then
+            assertThat(result).isTrue();
         }
     }
 }

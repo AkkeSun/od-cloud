@@ -44,6 +44,15 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
+    public long countByOwnerEmail(String ownerEmail) {
+        long count = groupDatabase.stream()
+            .filter(group -> group.getOwnerEmail().equals(ownerEmail))
+            .count();
+        log.info("FakeGroupStoragePort countByOwnerEmail: ownerEmail={}, count={}", ownerEmail, count);
+        return count;
+    }
+
+    @Override
     public List<Group> findAll() {
         return new ArrayList<>(groupDatabase);
     }

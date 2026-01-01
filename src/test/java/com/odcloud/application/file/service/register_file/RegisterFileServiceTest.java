@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import com.odcloud.domain.model.FolderInfo;
+import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.List;
@@ -22,6 +24,7 @@ class RegisterFileServiceTest {
     private FakeFilePort fakeFilePort;
     private FakeFileStoragePort fakeFileStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
+    private FakeGroupStoragePort fakeGroupStoragePort;
     private RegisterFileService registerFileService;
 
     @BeforeEach
@@ -29,10 +32,12 @@ class RegisterFileServiceTest {
         fakeFilePort = new FakeFilePort();
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
+        fakeGroupStoragePort = new FakeGroupStoragePort();
         registerFileService = new RegisterFileService(
             fakeFilePort,
             fakeFileStoragePort,
-            fakeFolderStoragePort
+            fakeFolderStoragePort,
+            fakeGroupStoragePort
         );
     }
 
@@ -44,6 +49,14 @@ class RegisterFileServiceTest {
         @DisplayName("[success] 정상적으로 파일을 등록한다")
         void success() {
             // given
+            Group group = Group.builder()
+                .id("test-group")
+                .name("Test Group")
+                .storageUsed(0L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
@@ -73,12 +86,23 @@ class RegisterFileServiceTest {
             assertThat(fakeFileStoragePort.database.get(0).getFileName()).isEqualTo("test.txt");
             assertThat(fakeFileStoragePort.database.get(0).getFolderId()).isEqualTo(1L);
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(1);
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(file.getSize());
         }
 
         @Test
         @DisplayName("[success] 여러 파일을 한번에 등록한다")
         void success_multipleFiles() {
             // given
+            Group group = Group.builder()
+                .id("test-group")
+                .name("Test Group")
+                .storageUsed(0L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .groupId("test-group")
@@ -113,6 +137,8 @@ class RegisterFileServiceTest {
                 .files(List.of(file1, file2, file3))
                 .build();
 
+            long totalSize = file1.getSize() + file2.getSize() + file3.getSize();
+
             // when
             RegisterFileServiceResponse response = registerFileService.register(command);
 
@@ -123,6 +149,9 @@ class RegisterFileServiceTest {
             assertThat(fakeFileStoragePort.database.get(1).getFileName()).isEqualTo("test2.pdf");
             assertThat(fakeFileStoragePort.database.get(2).getFileName()).isEqualTo("test3.jpg");
             assertThat(fakeFilePort.uploadFileCallCount).isEqualTo(3);
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(totalSize);
         }
 
         @Test
@@ -148,6 +177,90 @@ class RegisterFileServiceTest {
 
             assertThat(fakeFileStoragePort.database).isEmpty();
             assertThat(fakeFilePort.uploadFileCallCount).isZero();
+        }
+
+        @Test
+        @DisplayName("[failure] 스토리지 용량 초과 시 예외가 발생한다")
+        void failure_storageLimitExceeded() {
+            // given
+            Group group = Group.builder()
+                .id("test-group")
+                .name("Test Group")
+                .storageUsed(3221225400L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .groupId("test-group")
+                .name("Test Folder")
+                .path("/test-group/folder1")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "large-file.txt",
+                "text/plain",
+                new byte[100]
+            );
+
+            RegisterFileCommand command = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(file))
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> registerFileService.register(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_STORAGE_LIMIT_EXCEEDED);
+
+            assertThat(fakeFileStoragePort.database).isEmpty();
+            assertThat(fakeFilePort.uploadFileCallCount).isZero();
+        }
+
+        @Test
+        @DisplayName("[success] 스토리지 용량 여유가 있으면 파일 등록이 성공한다")
+        void success_withEnoughStorage() {
+            // given
+            Group group = Group.builder()
+                .id("test-group")
+                .name("Test Group")
+                .storageUsed(1000L)
+                .storageTotal(3221225472L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .groupId("test-group")
+                .name("Test Folder")
+                .path("/test-group/folder1")
+                .build();
+            fakeFolderStoragePort.database.add(folder);
+
+            MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "content".getBytes()
+            );
+
+            RegisterFileCommand command = RegisterFileCommand.builder()
+                .folderId(1L)
+                .files(List.of(file))
+                .build();
+
+            // when
+            RegisterFileServiceResponse response = registerFileService.register(command);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(fakeFileStoragePort.database).hasSize(1);
+
+            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
+            assertThat(updatedGroup.getStorageUsed()).isEqualTo(1000L + file.getSize());
         }
     }
 }

@@ -20,16 +20,18 @@ public class FileInfo {
     private Long folderId;
     private String fileName;
     private String fileLoc;
+    private Long fileSize;
     private MultipartFile multipartFile;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public FileInfo(Long id, Long folderId, String fileName, String fileLoc, LocalDateTime modDt,
-        LocalDateTime regDt) {
+    public FileInfo(Long id, Long folderId, String fileName, String fileLoc, Long fileSize,
+        LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.folderId = folderId;
         this.fileName = fileName;
         this.fileLoc = fileLoc;
+        this.fileSize = fileSize;
         this.modDt = modDt;
         this.regDt = regDt;
     }
@@ -51,6 +53,7 @@ public class FileInfo {
             .folderId(folder.getId())
             .fileName(originalFileName)
             .fileLoc(folder.getPath() + "/" + serverFileName)
+            .fileSize(multipartFile.getSize())
             .multipartFile(multipartFile)
             .regDt(LocalDateTime.now())
             .build();

@@ -52,6 +52,15 @@ class GroupRepository {
             .fetchOne() != null;
     }
 
+    long countByOwnerEmail(String ownerEmail) {
+        Long count = queryFactory
+            .select(groupEntity.count())
+            .from(groupEntity)
+            .where(groupEntity.ownerEmail.eq(ownerEmail))
+            .fetchOne();
+        return count != null ? count : 0;
+    }
+
     Optional<Group> findById(String id) {
         Group group = queryFactory
             .select(Projections.constructor(

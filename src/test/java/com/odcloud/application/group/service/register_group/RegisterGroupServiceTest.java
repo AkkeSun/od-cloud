@@ -114,5 +114,74 @@ class RegisterGroupServiceTest {
             assertThat(fakeFolderStoragePort.database).isEmpty();
             assertThat(fakeFileUploadPort.createdFolders).isEmpty();
         }
+
+        @Test
+        @DisplayName("[failure] 사용자가 이미 3개의 그룹을 소유한 경우 예외가 발생한다")
+        void failure_groupLimitExceeded() {
+            // given
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .name("오너")
+                .groups(new ArrayList<>())
+                .build();
+            fakeAccountStoragePort.database.add(owner);
+
+            for (int i = 1; i <= 3; i++) {
+                Group existingGroup = Group.builder()
+                    .id("group-" + i)
+                    .ownerEmail("owner@example.com")
+                    .name("Group " + i)
+                    .build();
+                fakeGroupStoragePort.groupDatabase.add(existingGroup);
+            }
+
+            RegisterGroupCommand command = RegisterGroupCommand.builder()
+                .ownerEmail("owner@example.com")
+                .name("Fourth Group")
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> registerGroupService.register(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GROUP_LIMIT_EXCEEDED);
+
+            assertThat(fakeGroupStoragePort.groupDatabase).hasSize(3);
+        }
+
+        @Test
+        @DisplayName("[success] 사용자가 2개의 그룹을 소유한 경우 3번째 그룹 등록이 성공한다")
+        void success_twoExistingGroups() {
+            // given
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .name("오너")
+                .groups(new ArrayList<>())
+                .build();
+            fakeAccountStoragePort.database.add(owner);
+
+            for (int i = 1; i <= 2; i++) {
+                Group existingGroup = Group.builder()
+                    .id("group-" + i)
+                    .ownerEmail("owner@example.com")
+                    .name("Group " + i)
+                    .build();
+                fakeGroupStoragePort.groupDatabase.add(existingGroup);
+            }
+
+            RegisterGroupCommand command = RegisterGroupCommand.builder()
+                .ownerEmail("owner@example.com")
+                .name("Third Group")
+                .build();
+
+            // when
+            registerGroupService.register(command);
+
+            // then
+            assertThat(fakeGroupStoragePort.groupDatabase).hasSize(3);
+        }
     }
 }

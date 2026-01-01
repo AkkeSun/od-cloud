@@ -12,6 +12,8 @@ public interface GroupStoragePort {
 
     boolean existsByName(String name);
 
+    long countByOwnerEmail(String ownerEmail);
+
     List<Group> findAll();
 
     List<Group> findByKeyword(String keyword);

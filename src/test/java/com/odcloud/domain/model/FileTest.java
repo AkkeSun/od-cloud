@@ -27,6 +27,7 @@ class FileTest {
 
             MultipartFile multipartFile = mock(MultipartFile.class);
             when(multipartFile.getOriginalFilename()).thenReturn("test.txt");
+            when(multipartFile.getSize()).thenReturn(1024L);
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
@@ -41,6 +42,7 @@ class FileTest {
             assertThat(file.getFileName()).isEqualTo("test.txt");
             assertThat(file.getFileLoc()).startsWith("/group-123/");
             assertThat(file.getFileLoc()).endsWith(".txt");
+            assertThat(file.getFileSize()).isEqualTo(1024L);
             assertThat(file.getMultipartFile()).isEqualTo(multipartFile);
             assertThat(file.getRegDt()).isAfter(before);
             assertThat(file.getRegDt()).isBefore(after);
@@ -196,6 +198,21 @@ class FileTest {
         }
 
         @Test
+        @DisplayName("[success] getFileSize()로 fileSize를 조회한다")
+        void success_getFileSize() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileSize(2048L)
+                .build();
+
+            // when
+            Long fileSize = file.getFileSize();
+
+            // then
+            assertThat(fileSize).isEqualTo(2048L);
+        }
+
+        @Test
         @DisplayName("[success] getMultipartFile()로 multipartFile을 조회한다")
         void success_getMultipartFile() {
             // given
@@ -276,6 +293,7 @@ class FileTest {
                 100L,
                 "test.txt",
                 "/path/to/test.txt",
+                1024L,
                 multipartFile,
                 now,
                 now
@@ -287,6 +305,7 @@ class FileTest {
             assertThat(file.getFolderId()).isEqualTo(100L);
             assertThat(file.getFileName()).isEqualTo("test.txt");
             assertThat(file.getFileLoc()).isEqualTo("/path/to/test.txt");
+            assertThat(file.getFileSize()).isEqualTo(1024L);
             assertThat(file.getMultipartFile()).isEqualTo(multipartFile);
             assertThat(file.getModDt()).isEqualTo(now);
             assertThat(file.getRegDt()).isEqualTo(now);
