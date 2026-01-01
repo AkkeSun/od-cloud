@@ -27,9 +27,7 @@ public record FindGroupSelfServiceResponse(
         String id,
         String name,
         MemberInfo manager,
-        int activeMemberCount,
-        Long storageUsed,
-        Long storageTotal
+        int activeMemberCount
     ) {
 
         public static ActiveGroupInfo of(Group group) {
@@ -43,8 +41,6 @@ public record FindGroupSelfServiceResponse(
                 .activeMemberCount((int) group.getGroupMembers().stream()
                     .filter(member -> "ACTIVE".equals(member.getStatus()))
                     .count())
-                .storageUsed(group.getStorageUsed())
-                .storageTotal(group.getStorageTotal())
                 .build();
         }
     }

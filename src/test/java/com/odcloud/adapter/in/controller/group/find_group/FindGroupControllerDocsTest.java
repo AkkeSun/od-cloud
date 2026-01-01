@@ -110,6 +110,8 @@ class FindGroupControllerDocsTest {
                 .manager(manager)
                 .members(List.of(member1, member2))
                 .activeMemberCount(3)
+                .storageUsed(1024000L)
+                .storageTotal(3221225472L)
                 .notices(List.of(notice1, notice2))
                 .build();
 
@@ -141,6 +143,10 @@ class FindGroupControllerDocsTest {
                     .type(JsonFieldType.STRING).description("그룹원 이메일"),
                 fieldWithPath("data.activeMemberCount")
                     .type(JsonFieldType.NUMBER).description("활성 멤버 수 (그룹장 포함)"),
+                fieldWithPath("data.storageUsed")
+                    .type(JsonFieldType.NUMBER).description("스토리지 사용량 (Byte)"),
+                fieldWithPath("data.storageTotal")
+                    .type(JsonFieldType.NUMBER).description("전체 스토리지 용량 (Byte)"),
                 fieldWithPath("data.notices")
                     .type(JsonFieldType.ARRAY).description("최근 공지사항 목록 (최대 5개)"),
                 fieldWithPath("data.notices[].id")

@@ -30,9 +30,7 @@ record FindGroupSelfResponse(
         String id,
         String name,
         MemberInfo manager,
-        int activeMemberCount,
-        Long storageUsed,
-        Long storageTotal
+        int activeMemberCount
     ) {
 
         public static ActiveGroupInfo of(FindGroupSelfServiceResponse.ActiveGroupInfo item) {
@@ -41,8 +39,6 @@ record FindGroupSelfResponse(
                 .name(item.name())
                 .manager(MemberInfo.of(item.manager()))
                 .activeMemberCount(item.activeMemberCount())
-                .storageUsed(item.storageUsed())
-                .storageTotal(item.storageTotal())
                 .build();
         }
     }

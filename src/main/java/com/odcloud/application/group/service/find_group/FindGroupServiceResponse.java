@@ -13,6 +13,8 @@ public record FindGroupServiceResponse(
     MemberInfo manager,
     List<MemberInfo> members,
     int activeMemberCount,
+    Long storageUsed,
+    Long storageTotal,
     List<NoticeInfo> notices
 ) {
 
@@ -43,6 +45,8 @@ public record FindGroupServiceResponse(
             .manager(managerInfo)
             .members(memberInfos)
             .activeMemberCount(activeCount)
+            .storageUsed(group.getStorageUsed())
+            .storageTotal(group.getStorageTotal())
             .notices(noticeInfos)
             .build();
     }

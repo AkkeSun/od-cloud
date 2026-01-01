@@ -11,6 +11,8 @@ record FindGroupResponse(
     MemberInfo manager,
     List<MemberInfo> members,
     int activeMemberCount,
+    Long storageUsed,
+    Long storageTotal,
     List<NoticeInfo> notices
 ) {
 
@@ -23,6 +25,8 @@ record FindGroupResponse(
                 .map(MemberInfo::of)
                 .toList())
             .activeMemberCount(serviceResponse.activeMemberCount())
+            .storageUsed(serviceResponse.storageUsed())
+            .storageTotal(serviceResponse.storageTotal())
             .notices(serviceResponse.notices().stream()
                 .map(NoticeInfo::of)
                 .toList())
