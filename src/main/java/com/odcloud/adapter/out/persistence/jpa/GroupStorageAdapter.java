@@ -76,4 +76,14 @@ class GroupStorageAdapter implements GroupStoragePort {
             accountId).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP_ACCOUNT));
     }
+
+    @Override
+    public void delete(Group group) {
+        queryDsl.delete(group);
+    }
+
+    @Override
+    public void deleteGroupAccountsByGroupId(String groupId) {
+        queryDsl.deleteGroupAccountsByGroupId(groupId);
+    }
 }

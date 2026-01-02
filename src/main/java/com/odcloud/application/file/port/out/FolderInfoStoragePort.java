@@ -19,4 +19,6 @@ public interface FolderInfoStoragePort {
     void delete(FolderInfo folder);
 
     FolderInfo findRootFolderByGroupId(String groupId);
+
+    List<FolderInfo> findByGroupId(String groupId);
 }

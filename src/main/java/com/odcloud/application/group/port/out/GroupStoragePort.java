@@ -27,4 +27,8 @@ public interface GroupStoragePort {
     Group findById(String id);
 
     GroupAccount findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId);
+
+    void delete(Group group);
+
+    void deleteGroupAccountsByGroupId(String groupId);
 }

@@ -156,4 +156,12 @@ class FolderInfoRepository {
                 .and(folderInfoEntity.parentId.isNull()))
             .fetchOne());
     }
+
+    List<FolderInfo> findByGroupId(String groupId) {
+        return queryFactory
+            .select(constructor)
+            .from(folderInfoEntity)
+            .where(folderInfoEntity.groupId.eq(groupId))
+            .fetch();
+    }
 }

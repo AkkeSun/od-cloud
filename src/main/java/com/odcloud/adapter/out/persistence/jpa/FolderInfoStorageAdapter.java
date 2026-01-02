@@ -52,4 +52,9 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
         return folderRepository.findRootFolderByGroupId(groupId).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_FOLDER));
     }
+
+    @Override
+    public List<FolderInfo> findByGroupId(String groupId) {
+        return folderRepository.findByGroupId(groupId);
+    }
 }

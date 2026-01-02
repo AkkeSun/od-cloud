@@ -107,4 +107,16 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(ga -> "PENDING".equals(ga.getStatus()))
             .toList();
     }
+
+    @Override
+    public void delete(Group group) {
+        groupDatabase.removeIf(g -> g.getId().equals(group.getId()));
+        log.info("FakeGroupStoragePort deleted group: id={}", group.getId());
+    }
+
+    @Override
+    public void deleteGroupAccountsByGroupId(String groupId) {
+        groupAccountDatabase.removeIf(ga -> ga.getGroupId().equals(groupId));
+        log.info("FakeGroupStoragePort deleted all groupAccounts for groupId={}", groupId);
+    }
 }

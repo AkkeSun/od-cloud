@@ -261,4 +261,24 @@ class GroupRepository {
         groupAccount.updateName(aesUtil.decryptText(groupAccount.getName()));
         return Optional.of(groupAccount);
     }
+
+    @Transactional
+    void delete(Group group) {
+        GroupEntity entity = queryFactory
+            .selectFrom(groupEntity)
+            .where(groupEntity.id.eq(group.getId()))
+            .fetchOne();
+
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
+    }
+
+    @Transactional
+    void deleteGroupAccountsByGroupId(String groupId) {
+        queryFactory
+            .delete(groupAccountEntity)
+            .where(groupAccountEntity.groupId.eq(groupId))
+            .execute();
+    }
 }
