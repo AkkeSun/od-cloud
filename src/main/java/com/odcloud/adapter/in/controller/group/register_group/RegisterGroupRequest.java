@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.register_group;
 
-import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;

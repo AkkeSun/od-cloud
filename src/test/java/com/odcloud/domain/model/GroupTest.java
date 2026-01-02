@@ -2,7 +2,7 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;

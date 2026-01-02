@@ -1,6 +1,6 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import com.odcloud.infrastructure.util.StringUtil;
 import java.time.LocalDateTime;
 import java.util.List;

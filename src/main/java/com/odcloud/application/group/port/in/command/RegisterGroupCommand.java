@@ -1,4 +1,4 @@
-package com.odcloud.application.port.in.command;
+package com.odcloud.application.group.port.in.command;
 
 import lombok.Builder;
 
