@@ -31,6 +31,16 @@ public class Group {
         this.regDt = regDt;
     }
 
+    public Group(String id, String ownerEmail, String name, Long storageUsed, Long storageTotal,
+        LocalDateTime regDt) {
+        this.id = id;
+        this.ownerEmail = ownerEmail;
+        this.name = name;
+        this.storageUsed = storageUsed;
+        this.storageTotal = storageTotal;
+        this.regDt = regDt;
+    }
+
     public static Group of(RegisterGroupCommand command) {
         return Group.builder()
             .id(StringUtil.generateRandomString(6))

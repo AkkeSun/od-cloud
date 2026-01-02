@@ -68,6 +68,8 @@ class GroupRepository {
                 groupEntity.id,
                 groupEntity.ownerEmail,
                 groupEntity.name,
+                groupEntity.storageUsed,
+                groupEntity.storageTotal,
                 groupEntity.regDt
             ))
             .from(groupEntity)
