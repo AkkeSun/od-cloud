@@ -7,6 +7,7 @@ import com.odcloud.application.group.port.in.command.UpdateGroupCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
@@ -56,9 +57,16 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account notOwner = Account.builder()
+                .id(99L)
+                .email("notowner@example.com")
+                .nickname("Not Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("notowner@example.com")
+                .currentOwnerEmail(notOwner.getEmail())
                 .name("Updated Name")
                 .build();
 
@@ -82,9 +90,16 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .newOwnerEmail("nonexistent@example.com")
                 .build();
 
@@ -108,6 +123,13 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             Account newOwner = Account.builder()
                 .id(2L)
                 .email("newowner@example.com")
@@ -129,7 +151,7 @@ class UpdateGroupServiceTest {
 
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .newOwnerEmail("newowner@example.com")
                 .build();
 
@@ -153,6 +175,13 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             Account newOwner = Account.builder()
                 .id(2L)
                 .email("newowner@example.com")
@@ -164,7 +193,7 @@ class UpdateGroupServiceTest {
 
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .newOwnerEmail("newowner@example.com")
                 .build();
 
@@ -179,6 +208,75 @@ class UpdateGroupServiceTest {
             Group updatedGroup = fakeGroupStoragePort.findById("group-1");
             assertThat(updatedGroup.getOwnerEmail()).isEqualTo("newowner@example.com");
             assertThat(updatedGroup.getModDt()).isNotNull();
+
+            // 새로운 소유자가 GroupAccount에 추가되었는지 확인
+            assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getGroupId()).isEqualTo(
+                "group-1");
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getAccountId()).isEqualTo(
+                2L);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
+                "ACTIVE");
+        }
+
+        @Test
+        @DisplayName("[success] ownerEmail 변경 시 새 소유자가 이미 GroupAccount에 있으면 중복 추가하지 않는다")
+        void success_updateOwnerEmail_alreadyInGroupAccount() {
+            // given
+            Group group = Group.builder()
+                .id("group-1")
+                .name("Test Group")
+                .ownerEmail("owner@example.com")
+                .storageUsed(0L)
+                .storageTotal(3221225472L)
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
+            Account newOwner = Account.builder()
+                .id(2L)
+                .email("newowner@example.com")
+                .nickname("New Owner")
+                .name("새 오너")
+                .groups(new ArrayList<>())
+                .build();
+            fakeAccountStoragePort.database.add(newOwner);
+
+            // 새로운 소유자가 이미 GroupAccount에 있는 경우
+            GroupAccount existingGroupAccount = GroupAccount.builder()
+                .id(1L)
+                .groupId("group-1")
+                .accountId(2L)
+                .status("PENDING")
+                .showYn("Y")
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeGroupStoragePort.groupAccountDatabase.add(existingGroupAccount);
+
+            UpdateGroupCommand command = UpdateGroupCommand.builder()
+                .groupId("group-1")
+                .currentOwnerEmail(owner.getEmail())
+                .newOwnerEmail("newowner@example.com")
+                .build();
+
+            // when
+            UpdateGroupServiceResponse response = updateGroupService.update(command);
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(response.ownerEmail()).isEqualTo("newowner@example.com");
+
+            // GroupAccount가 중복으로 추가되지 않았는지 확인 (기존 1개만 유지)
+            assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getAccountId()).isEqualTo(
+                2L);
         }
 
         @Test
@@ -195,6 +293,13 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             Group existingGroup = Group.builder()
                 .id("group-2")
                 .name("Existing Group")
@@ -204,7 +309,7 @@ class UpdateGroupServiceTest {
 
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .name("Existing Group")
                 .build();
 
@@ -228,6 +333,13 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             FolderInfo rootFolder = FolderInfo.builder()
                 .id(1L)
                 .groupId("group-1")
@@ -241,7 +353,7 @@ class UpdateGroupServiceTest {
 
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .name("New Group Name")
                 .build();
 
@@ -276,6 +388,13 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             Account newOwner = Account.builder()
                 .id(2L)
                 .email("newowner@example.com")
@@ -298,7 +417,7 @@ class UpdateGroupServiceTest {
 
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .newOwnerEmail("newowner@example.com")
                 .name("New Group Name")
                 .build();
@@ -319,6 +438,13 @@ class UpdateGroupServiceTest {
             FolderInfo updatedRootFolder = fakeFolderStoragePort.findRootFolderByGroupId("group-1");
             assertThat(updatedRootFolder.getName()).isEqualTo("New Group Name");
             assertThat(updatedRootFolder.getModDt()).isNotNull();
+
+            // 새로운 소유자가 GroupAccount에 추가되었는지 확인
+            assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getAccountId()).isEqualTo(
+                2L);
+            assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
+                "ACTIVE");
         }
 
         @Test
@@ -335,9 +461,16 @@ class UpdateGroupServiceTest {
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            Account owner = Account.builder()
+                .id(1L)
+                .email("owner@example.com")
+                .nickname("Owner")
+                .groups(new ArrayList<>())
+                .build();
+
             UpdateGroupCommand command = UpdateGroupCommand.builder()
                 .groupId("group-1")
-                .currentOwnerEmail("owner@example.com")
+                .currentOwnerEmail(owner.getEmail())
                 .build();
 
             // when
