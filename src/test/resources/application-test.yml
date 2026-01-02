@@ -20,7 +20,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6379
+      port: 6377
       timeout: 3000
   mail:
     host: localhost
