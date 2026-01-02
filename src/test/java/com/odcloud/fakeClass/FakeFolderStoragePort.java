@@ -103,6 +103,16 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
             folder.getName());
     }
 
+    @Override
+    public FolderInfo findRootFolderByGroupId(String groupId) {
+        return database.stream()
+            .filter(folder -> folder.getGroupId().equals(groupId))
+            .filter(folder -> folder.getParentId() == null || folder.getParentId() == 0)
+            .findFirst()
+            .orElseThrow(
+                () -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_FOLDER));
+    }
+
     public void reset() {
         database.clear();
         id = 0L;

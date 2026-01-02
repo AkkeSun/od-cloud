@@ -147,4 +147,13 @@ class FolderInfoRepository {
             .where(folderInfoEntity.id.eq(folder.getId()))
             .execute();
     }
+
+    Optional<FolderInfo> findRootFolderByGroupId(String groupId) {
+        return Optional.ofNullable(queryFactory
+            .select(constructor)
+            .from(folderInfoEntity)
+            .where(folderInfoEntity.groupId.eq(groupId)
+                .and(folderInfoEntity.parentId.isNull()))
+            .fetchOne());
+    }
 }

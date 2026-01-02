@@ -46,4 +46,10 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
     public void delete(FolderInfo folder) {
         folderRepository.delete(folder);
     }
+
+    @Override
+    public FolderInfo findRootFolderByGroupId(String groupId) {
+        return folderRepository.findRootFolderByGroupId(groupId).orElseThrow(
+            () -> new CustomBusinessException(Business_DoesNotExists_FOLDER));
+    }
 }

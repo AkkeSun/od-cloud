@@ -2328,6 +2328,186 @@ paths:
                         } ]
                       }
                     }
+    patch:
+      tags:
+      - Group
+      summary: 그룹 정보 수정 API
+      description: "그룹의 소유자(ownerEmail) 또는 그룹명(name)을 수정하는 API입니다. 두 값 모두 선택적(optional)이\
+        며, 변경하고자 하는 값만 전달하면 됩니다."
+      operationId: "[그룹 수정 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 수정할 그룹 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 그룹 수정 API"
+            examples:
+              '[그룹 수정 API] ownerEmail과 name 모두 변경 성공':
+                value: |-
+                  {
+                    "ownerEmail" : "newowner@example.com",
+                    "name" : "New Group Name"
+                  }
+              '[그룹 수정 API] 그룹 개수 제한 초과':
+                value: |-
+                  {
+                    "ownerEmail" : "newowner@example.com",
+                    "name" : null
+                  }
+              '[그룹 수정 API] 그룹 소유자가 아님':
+                value: |-
+                  {
+                    "ownerEmail" : null,
+                    "name" : "New Group Name"
+                  }
+              '[그룹 수정 API] name만 변경 성공':
+                value: |-
+                  {
+                    "ownerEmail" : null,
+                    "name" : "New Group Name"
+                  }
+              '[그룹 수정 API] 이미 존재하는 그룹명':
+                value: |-
+                  {
+                    "ownerEmail" : null,
+                    "name" : "Existing Group"
+                  }
+              '[그룹 수정 API] 존재하지 않는 이메일':
+                value: |-
+                  {
+                    "ownerEmail" : "nonexistent@example.com",
+                    "name" : null
+                  }
+              '[그룹 수정 API] ownerEmail만 변경 성공':
+                value: |-
+                  {
+                    "ownerEmail" : "newowner@example.com",
+                    "name" : null
+                  }
+              '[그룹 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                value: |-
+                  {
+                    "ownerEmail" : null,
+                    "name" : "New Group Name"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[그룹 수정 API] ownerEmail과 name 모두 변경 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true,
+                        "ownerEmail" : "newowner@example.com",
+                        "name" : "New Group Name"
+                      }
+                    }
+                '[그룹 수정 API] name만 변경 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true,
+                        "ownerEmail" : "owner@example.com",
+                        "name" : "New Group Name"
+                      }
+                    }
+                '[그룹 수정 API] ownerEmail만 변경 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true,
+                        "ownerEmail" : "newowner@example.com",
+                        "name" : "Test Group"
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 수정 API] 그룹 개수 제한 초과':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4025,
+                        "errorMessage" : "사용자당 최대 3개의 그룹만 생성할 수 있습니다"
+                      }
+                    }
+                '[그룹 수정 API] 그룹 소유자가 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4014,
+                        "errorMessage" : "그룹 소유자만 처리할 수 있습니다"
+                      }
+                    }
+                '[그룹 수정 API] 이미 존재하는 그룹명':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4007,
+                        "errorMessage" : "등록된 그룹 정보 입니다"
+                      }
+                    }
+                '[그룹 수정 API] 존재하지 않는 이메일':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4003,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
   /groups/{groupId}/accounts:
     get:
       tags:
@@ -3321,14 +3501,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-01-01T23:53:31.876306"
+                          "notificationDt" : "2026-01-02T11:12:37.270885"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-01-01T23:53:31.876321"
+                          "notificationDt" : "2026-01-02T11:12:37.2709"
                         } ]
                       }
                     }
@@ -3829,80 +4009,20 @@ components:
       properties:
         data:
           required:
-          - activeGroups
-          - deniedGroups
-          - pendingGroups
+          - name
+          - ownerEmail
+          - result
           type: object
           properties:
-            activeGroups:
-              type: array
-              description: 가입된 그룹 목록
-              items:
-                required:
-                - activeMemberCount
-                - id
-                - name
-                type: object
-                properties:
-                  manager:
-                    type: object
-                    properties:
-                      nickname:
-                        type: string
-                        description: 매니저 닉네임
-                        nullable: true
-                      email:
-                        type: string
-                        description: 매니저 이메일
-                        nullable: true
-                    description: 매니저 정보
-                  name:
-                    type: string
-                    description: 그룹명
-                  id:
-                    type: string
-                    description: 그룹 아이디
-                  activeMemberCount:
-                    type: number
-                    description: 활성 사용자 수
-            deniedGroups:
-              type: array
-              description: 가입 거부된 그룹 목록
-              items:
-                required:
-                - deniedCause
-                - id
-                - name
-                type: object
-                properties:
-                  deniedCause:
-                    type: string
-                    description: 거부 사유
-                  name:
-                    type: string
-                    description: 그룹명
-                  id:
-                    type: string
-                    description: 그룹 아이디
-            pendingGroups:
-              type: array
-              description: 가입 대기중인 그룹 목록
-              items:
-                required:
-                - activeMemberCount
-                - id
-                - name
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 그룹명
-                  id:
-                    type: string
-                    description: 그룹 아이디
-                  activeMemberCount:
-                    type: number
-                    description: 활성 사용자 수
+            result:
+              type: boolean
+              description: 수정 성공 여부
+            name:
+              type: string
+              description: 그룹명
+            ownerEmail:
+              type: string
+              description: 변경된 소유자 이메일
           description: 응답 데이터
         httpStatus:
           type: number
@@ -4416,6 +4536,22 @@ components:
           type: string
           description: 디바이스 고유 ID
           nullable: true
+    '[request] 그룹 수정 API':
+      title: "[request] 그룹 수정 API"
+      type: object
+      properties:
+        name:
+          description: 변경할 그룹명 (선택)
+          nullable: true
+          oneOf:
+          - type: string
+          - null
+        ownerEmail:
+          description: 변경할 소유자 이메일 (선택)
+          nullable: true
+          oneOf:
+          - null
+          - type: string
     FindQuestionsResponse:
       title: FindQuestionsResponse
       required:

@@ -96,4 +96,22 @@ public class Group {
         long totalStorage = this.storageTotal != null ? this.storageTotal : 3221225472L;
         return (currentUsed + fileSize) <= totalStorage;
     }
+
+    public void updateOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public boolean needsOwnerEmailUpdate(String newOwnerEmail) {
+        return newOwnerEmail != null && !newOwnerEmail.equals(ownerEmail);
+    }
+
+    public boolean needsNameUpdate(String newName) {
+        return newName != null && !newName.equals(name);
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+        this.modDt = LocalDateTime.now();
+    }
 }
