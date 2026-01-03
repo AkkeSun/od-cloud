@@ -95,6 +95,27 @@ class AccountDeviceRepository {
             .execute();
     }
 
+    public List<AccountDevice> findByAccountId(Long accountId) {
+        return queryFactory.select(Projections.constructor(AccountDevice.class,
+                accountDeviceEntity.id,
+                accountDeviceEntity.accountId,
+                accountDeviceEntity.osType,
+                accountDeviceEntity.deviceId,
+                accountDeviceEntity.fcmToken,
+                accountDeviceEntity.appVersion
+            ))
+            .from(accountDeviceEntity)
+            .where(accountDeviceEntity.accountId.eq(accountId))
+            .fetch();
+    }
+
+    @Transactional
+    public void deleteByAccountId(Long accountId) {
+        queryFactory.delete(accountDeviceEntity)
+            .where(accountDeviceEntity.accountId.eq(accountId))
+            .execute();
+    }
+
     private AccountDeviceEntity toEntity(AccountDevice device) {
         return AccountDeviceEntity.builder()
             .id(device.getId())

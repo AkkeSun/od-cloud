@@ -18,4 +18,8 @@ public interface AccountDeviceStoragePort {
 
     void updateFcmToken(List<AccountDevice> invalidDevices);
 
+    List<AccountDevice> findByAccountId(Long accountId);
+
+    void deleteByAccountId(Long accountId);
+
 }

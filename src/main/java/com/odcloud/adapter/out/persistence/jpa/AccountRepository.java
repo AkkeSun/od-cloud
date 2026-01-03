@@ -73,6 +73,18 @@ class AccountRepository {
         return Optional.of(account);
     }
 
+    @Transactional
+    public void delete(Account account) {
+        AccountEntity entity = queryFactory
+            .selectFrom(accountEntity)
+            .where(accountEntity.id.eq(account.getId()))
+            .fetchOne();
+
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
+    }
+
     private AccountEntity toEntity(Account account) {
         return AccountEntity.builder()
             .id(account.getId())

@@ -18,4 +18,8 @@ public interface ScheduleStoragePort {
     List<Schedule> findSchedulesForNotification(LocalDateTime currentTime);
 
     void updateNotificationYn(List<Long> scheduleIds);
+
+    List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail);
+
+    List<Schedule> findByGroupId(String groupId);
 }

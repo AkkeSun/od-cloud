@@ -39,4 +39,14 @@ class AccountDeviceStorageAdapter implements AccountDeviceStoragePort {
     public void updateFcmToken(List<AccountDevice> accountDevices) {
         repository.updateFcmToken(accountDevices);
     }
+
+    @Override
+    public List<AccountDevice> findByAccountId(Long accountId) {
+        return repository.findByAccountId(accountId);
+    }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        repository.deleteByAccountId(accountId);
+    }
 }

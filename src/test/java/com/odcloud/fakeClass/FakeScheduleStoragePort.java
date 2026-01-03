@@ -111,4 +111,19 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
         // 그 외의 경우 특정 그룹명으로 간주하여 해당 그룹 일정만 조회
         return filterType.equals(schedule.getGroupId());
     }
+
+    @Override
+    public List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
+        return database.stream()
+            .filter(s -> s.getWriterEmail().equals(writerEmail))
+            .filter(s -> s.getGroupId() == null)
+            .toList();
+    }
+
+    @Override
+    public List<Schedule> findByGroupId(String groupId) {
+        return database.stream()
+            .filter(s -> groupId.equals(s.getGroupId()))
+            .toList();
+    }
 }

@@ -281,4 +281,18 @@ class GroupRepository {
             .where(groupAccountEntity.groupId.eq(groupId))
             .execute();
     }
+
+    List<Group> findByOwnerEmail(String ownerEmail) {
+        return queryFactory
+            .select(Projections.constructor(
+                Group.class,
+                groupEntity.id,
+                groupEntity.ownerEmail,
+                groupEntity.name,
+                groupEntity.regDt
+            ))
+            .from(groupEntity)
+            .where(groupEntity.ownerEmail.eq(ownerEmail))
+            .fetch();
+    }
 }

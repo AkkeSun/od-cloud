@@ -119,4 +119,14 @@ public class FakeGroupStoragePort implements GroupStoragePort {
         groupAccountDatabase.removeIf(ga -> ga.getGroupId().equals(groupId));
         log.info("FakeGroupStoragePort deleted all groupAccounts for groupId={}", groupId);
     }
+
+    @Override
+    public List<Group> findByOwnerEmail(String ownerEmail) {
+        List<Group> result = groupDatabase.stream()
+            .filter(group -> group.getOwnerEmail().equals(ownerEmail))
+            .toList();
+        log.info("FakeGroupStoragePort findByOwnerEmail: ownerEmail={}, count={}", ownerEmail,
+            result.size());
+        return result;
+    }
 }

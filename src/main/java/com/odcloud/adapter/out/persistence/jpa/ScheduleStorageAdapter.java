@@ -56,4 +56,20 @@ class ScheduleStorageAdapter implements ScheduleStoragePort {
     public void updateNotificationYn(List<Long> scheduleIds) {
         repository.updateNotificationYn(scheduleIds);
     }
+
+    @Override
+    public List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
+        return repository.findByWriterEmailAndGroupIdIsNull(writerEmail)
+            .stream()
+            .map(ScheduleEntity::toDomain)
+            .toList();
+    }
+
+    @Override
+    public List<Schedule> findByGroupId(String groupId) {
+        return repository.findByGroupId(groupId)
+            .stream()
+            .map(ScheduleEntity::toDomain)
+            .toList();
+    }
 }

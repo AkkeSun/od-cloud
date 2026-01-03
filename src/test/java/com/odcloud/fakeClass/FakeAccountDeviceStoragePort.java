@@ -74,4 +74,23 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
         }
         log.info("FakeAccountDeviceStoragePort updateFcmToken: count={}", invalidDevices.size());
     }
+
+    @Override
+    public List<AccountDevice> findByAccountId(Long accountId) {
+        List<AccountDevice> result = database.stream()
+            .filter(d -> d.getAccountId().equals(accountId))
+            .toList();
+        log.info("FakeAccountDeviceStoragePort findByAccountId: accountId={}, count={}", accountId,
+            result.size());
+        return result;
+    }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        int removed = database.removeAll(database.stream()
+            .filter(d -> d.getAccountId().equals(accountId))
+            .toList()) ? 1 : 0;
+        log.info("FakeAccountDeviceStoragePort deleteByAccountId: accountId={}, removed={}", accountId,
+            removed);
+    }
 }

@@ -192,6 +192,71 @@ paths:
                         "errorMessage" : "유효한 구글 토큰이 아닙니다"
                       }
                     }
+    delete:
+      tags:
+      - Account
+      summary: 계정 삭제 API
+      description: "계정과 관련된 모든 디바이스, 개인 스케줄, 소유 그룹(파일/폴더/그룹 스케줄 포함)을 삭제하는 API입니다."
+      operationId: "[계정 삭제 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[계정 삭제 API] 계정 삭제 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[계정 삭제 API] 존재하지 않는 계정':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4003,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[계정 삭제 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 2099,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
     patch:
       tags:
       - Account
@@ -3582,14 +3647,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-01-02T17:06:16.897477"
+                          "notificationDt" : "2026-01-03T22:58:50.783109"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : "group-1",
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-01-02T17:06:16.897491"
+                          "notificationDt" : "2026-01-03T22:58:50.783123"
                         } ]
                       }
                     }

@@ -80,4 +80,10 @@ public class FakeAccountStoragePort implements AccountStoragePort {
         log.info("FakeAccountStoragePort updated: email={}", account.getEmail());
         return updatedAccount;
     }
+
+    @Override
+    public void delete(Account account) {
+        database.removeIf(a -> a.getId().equals(account.getId()));
+        log.info("FakeAccountStoragePort deleted: email={}", account.getEmail());
+    }
 }

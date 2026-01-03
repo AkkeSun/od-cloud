@@ -92,4 +92,21 @@ class ScheduleRepository {
             .where(scheduleEntity.id.in(scheduleIds))
             .execute();
     }
+
+    public List<ScheduleEntity> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
+        return queryFactory
+            .selectFrom(scheduleEntity)
+            .where(
+                scheduleEntity.writerEmail.eq(writerEmail)
+                    .and(scheduleEntity.groupId.isNull())
+            )
+            .fetch();
+    }
+
+    public List<ScheduleEntity> findByGroupId(String groupId) {
+        return queryFactory
+            .selectFrom(scheduleEntity)
+            .where(scheduleEntity.groupId.eq(groupId))
+            .fetch();
+    }
 }

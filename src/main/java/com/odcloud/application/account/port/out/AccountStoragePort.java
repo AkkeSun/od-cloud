@@ -9,4 +9,6 @@ public interface AccountStoragePort {
     boolean existsByEmail(String email);
 
     Account findByEmail(String email);
+
+    void delete(Account account);
 }

@@ -31,4 +31,9 @@ class AccountStorageAdapter implements AccountStoragePort {
         return repository.findByEmail(email).orElseThrow(
             () -> new CustomBusinessException(Business_NOT_FOUND_ACCOUNT));
     }
+
+    @Override
+    public void delete(Account account) {
+        repository.delete(account);
+    }
 }
