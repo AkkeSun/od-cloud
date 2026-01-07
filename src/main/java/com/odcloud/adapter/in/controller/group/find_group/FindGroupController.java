@@ -15,7 +15,7 @@ class FindGroupController {
     private final FindGroupUseCase useCase;
 
     @GetMapping("/groups/{groupId}")
-    ApiResponse<FindGroupResponse> findById(@PathVariable String groupId) {
+    ApiResponse<FindGroupResponse> findById(@PathVariable Long groupId) {
         FindGroupServiceResponse serviceResponse = useCase.findById(groupId);
         return ApiResponse.ok(FindGroupResponse.of(serviceResponse));
     }

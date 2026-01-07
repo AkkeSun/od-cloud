@@ -33,7 +33,7 @@ record FindGroupAccountListResponse(
     @Builder
     record GroupAccountInfo(
         Long id,
-        String groupId,
+        Long groupId,
         Long accountId,
         String name,
         String nickName,

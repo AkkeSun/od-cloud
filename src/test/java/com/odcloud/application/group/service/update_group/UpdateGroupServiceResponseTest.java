@@ -58,7 +58,7 @@ class UpdateGroupServiceResponseTest {
         void success() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
@@ -81,7 +81,7 @@ class UpdateGroupServiceResponseTest {
         void success_nullFields() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .build();
 
             // when

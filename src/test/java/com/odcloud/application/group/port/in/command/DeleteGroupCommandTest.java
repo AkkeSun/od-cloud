@@ -17,13 +17,13 @@ class DeleteGroupCommandTest {
         void success_allFields() {
             // when
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEqualTo("group-1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.currentOwnerEmail()).isEqualTo("owner@example.com");
         }
 
@@ -51,15 +51,15 @@ class DeleteGroupCommandTest {
         void success_groupId() {
             // given
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
             // when
-            String groupId = command.groupId();
+            Long groupId = command.groupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-1");
+            assertThat(groupId).isEqualTo(1L);
         }
 
         @Test
@@ -67,7 +67,7 @@ class DeleteGroupCommandTest {
         void success_currentOwnerEmail() {
             // given
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
@@ -88,11 +88,11 @@ class DeleteGroupCommandTest {
         void success() {
             // given
             DeleteGroupCommand command1 = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
             DeleteGroupCommand command2 = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
@@ -106,11 +106,11 @@ class DeleteGroupCommandTest {
         void success_notEqual() {
             // given
             DeleteGroupCommand command1 = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
             DeleteGroupCommand command2 = DeleteGroupCommand.builder()
-                .groupId("group-2")
+                .groupId(1L)
                 .currentOwnerEmail("other@example.com")
                 .build();
 
@@ -128,7 +128,7 @@ class DeleteGroupCommandTest {
         void success() {
             // given
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
@@ -138,7 +138,7 @@ class DeleteGroupCommandTest {
             // then
             assertThat(result).isNotNull();
             assertThat(result).contains("DeleteGroupCommand");
-            assertThat(result).contains("group-1");
+            assertThat(result).contains("1");
             assertThat(result).contains("owner@example.com");
         }
 

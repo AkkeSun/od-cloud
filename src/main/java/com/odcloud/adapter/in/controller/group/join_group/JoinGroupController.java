@@ -18,7 +18,7 @@ class JoinGroupController {
 
     @PostMapping("/groups/{groupId}/join")
     ApiResponse<JoinGroupResponse> join(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @LoginAccount Account account
     ) {
         JoinGroupServiceResponse serviceResponse = useCase.join(groupId, account);

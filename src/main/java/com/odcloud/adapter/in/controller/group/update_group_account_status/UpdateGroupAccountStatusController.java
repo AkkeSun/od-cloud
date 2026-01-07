@@ -21,7 +21,7 @@ class UpdateGroupAccountStatusController {
 
     @PatchMapping("/groups/{groupId}/accounts/{accountId}/status")
     ApiResponse<UpdateGroupAccountStatusResponse> updateStatus(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @PathVariable Long accountId,
         @LoginAccount Account account,
         @RequestBody @Validated(ValidationSequence.class) UpdateGroupAccountStatusRequest request

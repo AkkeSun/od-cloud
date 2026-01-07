@@ -27,7 +27,7 @@ record FindGroupSelfResponse(
 
     @Builder
     record ActiveGroupInfo(
-        String id,
+        Long id,
         String name,
         MemberInfo manager,
         int activeMemberCount
@@ -45,7 +45,7 @@ record FindGroupSelfResponse(
 
     @Builder
     record PendingGroupInfo(
-        String id,
+        Long id,
         String name,
         int activeMemberCount
     ) {
@@ -61,7 +61,7 @@ record FindGroupSelfResponse(
 
     @Builder
     record DeniedGroupInfo(
-        String id,
+        Long id,
         String name,
         String deniedCause
     ) {

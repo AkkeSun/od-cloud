@@ -85,7 +85,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .writerEmail("user@example.com")
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .regDt(now)
                 .build();
 
@@ -97,11 +97,11 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // then
             ScheduleEntity savedEntity = entityManager
                 .createQuery("SELECT s FROM ScheduleEntity s WHERE s.groupId = :groupId", ScheduleEntity.class)
-                .setParameter("groupId", "group-123")
+                .setParameter("groupId", 1L)
                 .getSingleResult();
 
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getGroupId()).isEqualTo("group-123");
+            assertThat(savedEntity.getGroupId()).isEqualTo(1L);
             assertThat(savedEntity.getContent()).isEqualTo("그룹 회의");
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
         }
@@ -228,7 +228,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
                 .content("전체 필드 회의")
                 .startDt(startDt)
                 .notificationDt(notificationDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .modDt(modDt)
                 .regDt(now)
                 .build();
@@ -249,7 +249,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedEntity.getContent()).isEqualTo("전체 필드 회의");
             assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
             assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
-            assertThat(savedEntity.getGroupId()).isEqualTo("group-123");
+            assertThat(savedEntity.getGroupId()).isEqualTo(1L);
         }
 
         @Test
@@ -328,7 +328,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             ScheduleEntity entity = ScheduleEntity.builder()
                 .writerEmail("user@example.com")
-                .groupId("group-123")
+                .groupId(1L)
                 .content("그룹 회의")
                 .startDt(startDt)
                 .notificationYn("N")
@@ -343,7 +343,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getGroupId()).isEqualTo("group-123");
+            assertThat(result.getGroupId()).isEqualTo(1L);
             assertThat(result.getContent()).isEqualTo("그룹 회의");
         }
 
@@ -454,7 +454,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
     class Describe_findSchedules {
 
         @Test
-        @DisplayName("[success] 월별 개인 일정을 조회한다 (filterType=PRIVATE)")
+        @DisplayName("[success] 월별 개인 일정을 조회한다 (groupId=0)")
         void success_findMonthlyPrivateSchedules() {
             // given
             LocalDateTime now = LocalDateTime.now();
@@ -479,7 +479,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // 그룹 일정 (조회되지 않아야 함)
             ScheduleEntity groupSchedule = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-1")
+                .groupId(1L)
                 .content("그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
                 .notificationYn("N")
@@ -510,7 +510,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
+                .groupId(0L)
                 .build();
 
             // when
@@ -530,7 +530,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             ScheduleEntity groupSchedule1 = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-1")
+                .groupId(1L)
                 .content("그룹1 회의 1")
                 .startDt(LocalDateTime.of(2025, 1, 5, 10, 0))
                 .notificationYn("N")
@@ -539,7 +539,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             ScheduleEntity groupSchedule2 = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-1")
+                .groupId(1L)
                 .content("그룹1 회의 2")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
                 .notificationYn("N")
@@ -549,7 +549,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // 다른 그룹 일정 (조회되지 않아야 함)
             ScheduleEntity otherGroupSchedule = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-2")
+                .groupId(2L)
                 .content("그룹2 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
                 .notificationYn("N")
@@ -570,7 +570,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("group-1")
+                .groupId(1L)
                 .build();
 
             // when
@@ -578,12 +578,12 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).hasSize(2);
-            assertThat(result.get(0).getGroupId()).isEqualTo("group-1");
-            assertThat(result.get(1).getGroupId()).isEqualTo("group-1");
+            assertThat(result.get(0).getGroupId()).isEqualTo(1L);
+            assertThat(result.get(1).getGroupId()).isEqualTo(1L);
         }
 
         @Test
-        @DisplayName("[success] 전체 일정을 조회한다 (filterType=null)")
+        @DisplayName("[success] 전체 일정을 조회한다 (groupId=null)")
         void success_findAllSchedules() {
             // given
             LocalDateTime now = LocalDateTime.now();
@@ -600,7 +600,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // 속한 그룹의 일정
             ScheduleEntity groupSchedule = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-1")
+                .groupId(1L)
                 .content("그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
                 .notificationYn("N")
@@ -610,7 +610,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // 속하지 않은 그룹의 일정 (조회되지 않아야 함)
             ScheduleEntity otherGroupSchedule = ScheduleEntity.builder()
                 .writerEmail("owner@example.com")
-                .groupId("group-999")
+                .groupId(2L)
                 .content("다른 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 10, 10, 0))
                 .notificationYn("N")
@@ -625,13 +625,13 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             Account account = Account.builder()
                 .email("user@example.com")
-                .groups(Arrays.asList(Group.of("group-1")))
+                .groups(Arrays.asList(Group.of(1L)))
                 .build();
 
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType(null)  // 전체 조회
+                .groupId(null)  // 전체 조회
                 .build();
 
             // when
@@ -654,7 +654,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
+                .groupId(0L)
                 .build();
 
             // when
@@ -709,7 +709,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
+                .groupId(0L)
                 .build();
 
             // when

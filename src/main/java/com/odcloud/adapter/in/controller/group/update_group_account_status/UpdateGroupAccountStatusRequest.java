@@ -23,7 +23,7 @@ record UpdateGroupAccountStatusRequest(
     String memo
 ) {
 
-    UpdateGroupAccountStatusCommand toCommand(String groupId, Long accountId, Account account) {
+    UpdateGroupAccountStatusCommand toCommand(Long groupId, Long accountId, Account account) {
         return UpdateGroupAccountStatusCommand.builder()
             .groupId(groupId)
             .accountId(accountId)

@@ -35,7 +35,7 @@ class FindSchedulesResponseTest {
             Schedule schedule2 = Schedule.builder()
                 .id(2L)
                 .writerEmail("user@example.com")
-                .groupId("group-1")
+                .groupId(1L)
                 .content("회의 2")
                 .startDt(LocalDateTime.of(2025, 1, 15, 14, 0))
                 .notificationDt(null)
@@ -57,7 +57,7 @@ class FindSchedulesResponseTest {
             assertThat(response.schedules().get(0).content()).isEqualTo("회의 1");
             assertThat(response.schedules().get(1).id()).isEqualTo(2L);
             assertThat(response.schedules().get(1).content()).isEqualTo("회의 2");
-            assertThat(response.schedules().get(1).groupId()).isEqualTo("group-1");
+            assertThat(response.schedules().get(1).groupId()).isEqualTo(1L);
         }
     }
 }

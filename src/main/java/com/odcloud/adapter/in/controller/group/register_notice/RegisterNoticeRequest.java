@@ -18,7 +18,7 @@ record RegisterNoticeRequest(
     String content
 ) {
 
-    RegisterNoticeCommand toCommand(String groupId, Account account) {
+    RegisterNoticeCommand toCommand(Long groupId, Account account) {
         return RegisterNoticeCommand.builder()
             .groupId(groupId)
             .account(account)

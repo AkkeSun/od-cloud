@@ -21,7 +21,7 @@ record RegisterScheduleRequest(
     @DateTimePattern(message = "유효하지 않은 사직알시 형식 입니다", groups = CustomGroups.class)
     String startDt,
 
-    String groupId,
+    Long groupId,
 
     String notificationDt
 ) {

@@ -40,7 +40,7 @@ class UpdateNoticeServiceTest {
         @DisplayName("[success] 그룹장이 공지사항을 수정한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             LocalDateTime now = LocalDateTime.now();
 
@@ -102,7 +102,7 @@ class UpdateNoticeServiceTest {
         @DisplayName("[error] 그룹장이 아닌 사용자가 수정을 시도하면 예외가 발생한다")
         void error_notGroupOwner() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             String memberEmail = "member@example.com";
             LocalDateTime now = LocalDateTime.now();
@@ -161,7 +161,7 @@ class UpdateNoticeServiceTest {
         @DisplayName("[error] 존재하지 않는 공지사항 ID인 경우 예외가 발생한다")
         void error_noticeNotFound() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             LocalDateTime now = LocalDateTime.now();
 
@@ -206,8 +206,8 @@ class UpdateNoticeServiceTest {
         @DisplayName("[error] 다른 그룹의 공지사항을 수정하려고 하면 예외가 발생한다")
         void error_noticeFromDifferentGroup() {
             // given
-            String groupId = "test-group";
-            String otherGroupId = "other-group";
+            Long groupId = 1L;
+            Long otherGroupId = 3L;
             String ownerEmail = "owner@example.com";
             LocalDateTime now = LocalDateTime.now();
 
@@ -265,7 +265,7 @@ class UpdateNoticeServiceTest {
         @DisplayName("[error] 존재하지 않는 그룹 ID인 경우 예외가 발생한다")
         void error_groupNotFound() {
             // given
-            String nonExistentGroupId = "non-existent-group";
+            Long nonExistentGroupId = 12L;
             String ownerEmail = "owner@example.com";
 
             Account account = Account.builder()

@@ -17,7 +17,7 @@ class UpdateGroupRequest {
     private String ownerEmail;
     private String name;
 
-    UpdateGroupCommand toCommand(String groupId, Account account) {
+    UpdateGroupCommand toCommand(Long groupId, Account account) {
         return UpdateGroupCommand.builder()
             .groupId(groupId)
             .currentOwnerEmail(account.getEmail())

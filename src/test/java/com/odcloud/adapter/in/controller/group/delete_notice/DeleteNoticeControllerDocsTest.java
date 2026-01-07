@@ -46,7 +46,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 그룹장이 공지사항을 삭제한다")
         void success() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 1L;
 
             DeleteNoticeServiceResponse response = DeleteNoticeServiceResponse.ofSuccess();
@@ -69,7 +69,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 그룹장이 아닌 사용자가 삭제를 시도하면 500 에러를 반환한다")
         void error_notGroupOwner() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 1L;
 
             given(useCase.delete(any()))
@@ -84,7 +84,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 존재하지 않는 공지사항 ID인 경우 500 에러를 반환한다")
         void error_noticeNotFound() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 999L;
 
             given(useCase.delete(any()))
@@ -97,7 +97,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         Long noticeId,
         String docIdentifier,
         String responseSchema,
@@ -128,7 +128,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         Long noticeId,
         String identifier,
         ResultMatcher status

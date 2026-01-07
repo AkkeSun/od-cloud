@@ -32,7 +32,7 @@ record FindPendingGroupAccountsResponse(
     }
 
     record GroupPendingAccounts(
-        String groupId,
+        Long groupId,
         String groupName,
         List<PendingAccountInfo> pendingAccounts
     ) {

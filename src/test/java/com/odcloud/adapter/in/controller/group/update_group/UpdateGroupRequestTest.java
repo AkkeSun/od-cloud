@@ -28,11 +28,11 @@ class UpdateGroupRequestTest {
             given(account.getEmail()).willReturn("owner@example.com");
 
             // when
-            UpdateGroupCommand command = request.toCommand("group-1", account);
+            UpdateGroupCommand command = request.toCommand(1L, account);
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEqualTo("group-1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.currentOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(command.newOwnerEmail()).isEqualTo("newowner@example.com");
             assertThat(command.name()).isNull();
@@ -50,11 +50,11 @@ class UpdateGroupRequestTest {
             given(account.getEmail()).willReturn("owner@example.com");
 
             // when
-            UpdateGroupCommand command = request.toCommand("group-1", account);
+            UpdateGroupCommand command = request.toCommand(1L, account);
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEqualTo("group-1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.currentOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(command.newOwnerEmail()).isNull();
             assertThat(command.name()).isEqualTo("New Group Name");
@@ -73,11 +73,11 @@ class UpdateGroupRequestTest {
             given(account.getEmail()).willReturn("owner@example.com");
 
             // when
-            UpdateGroupCommand command = request.toCommand("group-1", account);
+            UpdateGroupCommand command = request.toCommand(1L, account);
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEqualTo("group-1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.currentOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(command.newOwnerEmail()).isEqualTo("newowner@example.com");
             assertThat(command.name()).isEqualTo("New Group Name");
@@ -94,11 +94,11 @@ class UpdateGroupRequestTest {
             given(account.getEmail()).willReturn("owner@example.com");
 
             // when
-            UpdateGroupCommand command = request.toCommand("group-1", account);
+            UpdateGroupCommand command = request.toCommand(1L, account);
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEqualTo("group-1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.currentOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(command.newOwnerEmail()).isNull();
             assertThat(command.name()).isNull();
@@ -117,11 +117,11 @@ class UpdateGroupRequestTest {
             given(account.getEmail()).willReturn("");
 
             // when
-            UpdateGroupCommand command = request.toCommand("", account);
+            UpdateGroupCommand command = request.toCommand(0L, account);
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEmpty();
+            assertThat(command.groupId()).isEqualTo(0L);
             assertThat(command.currentOwnerEmail()).isEmpty();
             assertThat(command.newOwnerEmail()).isEmpty();
             assertThat(command.name()).isEmpty();

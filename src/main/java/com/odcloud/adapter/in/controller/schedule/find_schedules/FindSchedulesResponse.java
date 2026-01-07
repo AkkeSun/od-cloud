@@ -23,7 +23,7 @@ record FindSchedulesResponse(
     record ScheduleInfo(
         Long id,
         String writerEmail,
-        String groupId,
+        Long groupId,
         String content,
         LocalDateTime startDt,
         LocalDateTime notificationDt

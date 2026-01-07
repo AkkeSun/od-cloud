@@ -20,7 +20,7 @@ class UpdateGroupController {
 
     @PatchMapping("/groups/{groupId}")
     ApiResponse<UpdateGroupResponse> update(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @RequestBody @Valid UpdateGroupRequest request,
         @LoginAccount Account account
     ) {

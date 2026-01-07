@@ -21,13 +21,13 @@ class FindSchedulesRequest {
     @DatePattern(message = "기준일은 yyyy-MM-dd 형식만 입력 가능합니다", groups = CustomGroups.class)
     private String baseDate;
 
-    private String filterType;
+    private Long groupId;
 
     FindSchedulesCommand toCommand(Account account) {
         return FindSchedulesCommand.builder()
             .account(account)
             .baseDate(baseDate == null ? LocalDate.now() : DateUtil.parseDate(baseDate))
-            .filterType(filterType)
+            .groupId(groupId)
             .build();
     }
 

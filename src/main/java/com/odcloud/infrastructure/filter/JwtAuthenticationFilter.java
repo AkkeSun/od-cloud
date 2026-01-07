@@ -1,15 +1,12 @@
 package com.odcloud.infrastructure.filter;
 
 import com.odcloud.infrastructure.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,13 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private Authentication makeAuthToken(String token) {
-        Claims claims = jwtUtil.getClaims(token);
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        List<Map<String, String>> groups = claims.get("groups", List.class);
-        for (Map<String, String> group : groups) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + group.get("id")));
-        }
-        return new UsernamePasswordAuthenticationToken(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(jwtUtil.getClaims(token).getSubject(), "",
+            List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }
 

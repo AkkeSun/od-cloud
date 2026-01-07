@@ -42,7 +42,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         // 1. PUBLIC 폴더 (group1) 생성
         FolderInfoEntity publicFolder = FolderInfoEntity.builder()
             .parentId(null)
-            .groupId("group1")
+            .groupId(1L)
             .name("Public Folder")
             .owner("admin@example.com")
             .path("/group1/public")
@@ -53,7 +53,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
 
         FolderInfoEntity noAccessPublicFolder = FolderInfoEntity.builder()
             .parentId(null)
-            .groupId("group2")
+            .groupId(2L)
             .name("No Access Public Folder")
             .owner("admin@example.com")
             .path("/group2/public")
@@ -89,7 +89,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         Account account = Account.builder()
             .id(1L)
             .email("user@example.com")
-            .groups(List.of(Group.of("group1")))
+            .groups(List.of(Group.of(1L)))
             .build();
 
         FindFilesCommand command = FindFilesCommand.builder()
@@ -117,7 +117,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
 
         FolderInfoEntity folder = FolderInfoEntity.builder()
             .parentId(null)
-            .groupId("group1")
+            .groupId(1L)
             .name("Test Folder")
             .owner("user@example.com")
             .path("/group1/test")
@@ -143,7 +143,7 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
         Account account = Account.builder()
             .id(1L)
             .email("user@example.com")
-            .groups(List.of(Group.of("group1")))
+            .groups(List.of(Group.of(1L)))
             .build();
 
         // keyword가 빈 문자열일 때는 folderId가 필요

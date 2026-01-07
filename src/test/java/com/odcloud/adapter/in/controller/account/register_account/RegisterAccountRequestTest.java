@@ -19,7 +19,7 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             String googleAuthorization = "Bearer google-token-123";
@@ -31,7 +31,7 @@ class RegisterAccountRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.googleAuthorization()).isEqualTo(googleAuthorization);
             assertThat(command.name()).isEqualTo("홍길동");
-            assertThat(command.groupId()).isEqualTo("group-123");
+            assertThat(command.groupId()).isEqualTo(1L);
         }
 
         @Test
@@ -61,7 +61,7 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("")
-                .groupId("")
+                .groupId(1L)
                 .build();
 
             String googleAuthorization = "";
@@ -73,7 +73,6 @@ class RegisterAccountRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.googleAuthorization()).isEmpty();
             assertThat(command.name()).isEmpty();
-            assertThat(command.groupId()).isEmpty();
         }
     }
 
@@ -87,13 +86,13 @@ class RegisterAccountRequestTest {
             // when
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // then
             assertThat(request).isNotNull();
             assertThat(request.name()).isEqualTo("홍길동");
-            assertThat(request.groupId()).isEqualTo("group-123");
+            assertThat(request.groupId()).isEqualTo(1L);
         }
 
         @Test
@@ -121,12 +120,12 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request1 = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             RegisterAccountRequest request2 = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when & then
@@ -140,12 +139,12 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request1 = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             RegisterAccountRequest request2 = RegisterAccountRequest.builder()
                 .name("김철수")
-                .groupId("group-456")
+                .groupId(1L)
                 .build();
 
             // when & then
@@ -163,7 +162,7 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
@@ -179,14 +178,14 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
-            String groupId = request.groupId();
+            Long groupId = request.groupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-123");
+            assertThat(groupId).isEqualTo(1L);
         }
     }
 
@@ -200,7 +199,7 @@ class RegisterAccountRequestTest {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when

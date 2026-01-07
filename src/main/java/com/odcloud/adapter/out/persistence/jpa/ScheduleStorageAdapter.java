@@ -66,7 +66,7 @@ class ScheduleStorageAdapter implements ScheduleStoragePort {
     }
 
     @Override
-    public List<Schedule> findByGroupId(String groupId) {
+    public List<Schedule> findByGroupId(Long groupId) {
         return repository.findByGroupId(groupId)
             .stream()
             .map(ScheduleEntity::toDomain)

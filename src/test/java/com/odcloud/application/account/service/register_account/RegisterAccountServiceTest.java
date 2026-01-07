@@ -51,7 +51,7 @@ class RegisterAccountServiceTest {
         @DisplayName("[success] 정상적으로 계정을 등록한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
@@ -99,7 +99,7 @@ class RegisterAccountServiceTest {
                     .build()
             );
 
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
@@ -129,7 +129,7 @@ class RegisterAccountServiceTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer test-token")
                 .name("홍길동")
-                .groupId("non-existent-group")
+                .groupId(1L)
                 .build();
 
             // when & then
@@ -148,7 +148,7 @@ class RegisterAccountServiceTest {
             // given
             fakeGoogleOAuth2Port.shouldThrowExceptionOnGetUserInfo = true;
 
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
@@ -185,7 +185,7 @@ class RegisterAccountServiceTest {
                 .build();
             fakeGoogleOAuth2Port.mockUserInfoResponse = customUserInfo;
 
-            String groupId = "custom-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
@@ -215,7 +215,7 @@ class RegisterAccountServiceTest {
         @DisplayName("[success] 빈 이름으로도 계정을 등록할 수 있다")
         void success_emptyName() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")
@@ -243,13 +243,14 @@ class RegisterAccountServiceTest {
             // given
             String existingGroupName = "기존 그룹";
             Group existingGroup = Group.builder()
-                .id("existing-group-id")
+                .id(1L)
                 .name(existingGroupName)
                 .ownerEmail("existing@example.com")
                 .build();
             fakeGroupStoragePort.groupDatabase.add(existingGroup);
 
             RegisterAccountCommand command = RegisterAccountCommand.builder()
+                .groupId(1L)
                 .googleAuthorization("Bearer test-token")
                 .name("홍길동")
                 .newGroupName(existingGroupName)

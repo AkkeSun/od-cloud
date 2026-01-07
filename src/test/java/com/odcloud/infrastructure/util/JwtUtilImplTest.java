@@ -59,9 +59,14 @@ class JwtUtilImplTest {
                 .id(1L)
                 .email("test@example.com")
                 .groups(List.of(
-                    Group.ofIdAndName("group1", "그룹1"),
-                    Group.ofIdAndName("group2", "그룹2")
-                ))
+                    Group.builder()
+                        .id(1L)
+                        .name("그룹1")
+                        .build(),
+                    Group.builder()
+                        .id(2L)
+                        .name("그룹2")
+                        .build()))
                 .build();
 
             // when
@@ -79,11 +84,11 @@ class JwtUtilImplTest {
 
             assertThat(claims.getSubject()).isEqualTo("test@example.com");
             assertThat(claims.get("id", Long.class)).isEqualTo(1L);
-            List<java.util.Map<String, String>> groups = claims.get("groups", List.class);
+            List<java.util.Map<String, Object>> groups = claims.get("groups", List.class);
             assertThat(groups).hasSize(2);
-            assertThat(groups.get(0).get("id")).isEqualTo("group1");
+            assertThat(((Number) groups.get(0).get("id")).longValue()).isEqualTo(1L);
             assertThat(groups.get(0).get("name")).isEqualTo("그룹1");
-            assertThat(groups.get(1).get("id")).isEqualTo("group2");
+            assertThat(((Number) groups.get(1).get("id")).longValue()).isEqualTo(2L);
             assertThat(groups.get(1).get("name")).isEqualTo("그룹2");
         }
 
@@ -158,7 +163,10 @@ class JwtUtilImplTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .groups(List.of(Group.ofIdAndName("group1", "그룹1")))
+                .groups(List.of(Group.builder()
+                    .id(1L)
+                    .name("그룹1")
+                    .build()))
                 .build();
             String token = jwtUtil.createAccessToken(account);
 
@@ -193,7 +201,10 @@ class JwtUtilImplTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .groups(List.of(Group.ofIdAndName("group1", "그룹1")))
+                .groups(List.of(Group.builder()
+                    .id(1L)
+                    .name("그룹1")
+                    .build()))
                 .build();
             String token = jwtUtil.createAccessToken(account);
 
@@ -239,7 +250,10 @@ class JwtUtilImplTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .groups(List.of(Group.ofIdAndName("group1", "그룹1")))
+                .groups(List.of(Group.builder()
+                    .id(1L)
+                    .name("그룹1")
+                    .build()))
                 .build();
             String token = jwtUtil.createAccessToken(account);
 
@@ -249,9 +263,9 @@ class JwtUtilImplTest {
             // then
             assertThat(claims.getSubject()).isEqualTo("test@example.com");
             assertThat(claims.get("id", Long.class)).isEqualTo(1L);
-            List<java.util.Map<String, String>> groups = claims.get("groups", List.class);
+            List<java.util.Map<String, Object>> groups = claims.get("groups", List.class);
             assertThat(groups).hasSize(1);
-            assertThat(groups.get(0).get("id")).isEqualTo("group1");
+            assertThat(((Number) groups.get(0).get("id")).longValue()).isEqualTo(1L);
             assertThat(groups.get(0).get("name")).isEqualTo("그룹1");
         }
 
@@ -262,7 +276,10 @@ class JwtUtilImplTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .groups(List.of(Group.ofIdAndName("group1", "그룹1")))
+                .groups(List.of(Group.builder()
+                    .id(1L)
+                    .name("그룹1")
+                    .build()))
                 .build();
             String tokenWithBearer = jwtUtil.createAccessToken(account);
             String tokenWithoutBearer = tokenWithBearer.replace("Bearer ", "");
@@ -298,7 +315,10 @@ class JwtUtilImplTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .groups(List.of(Group.ofIdAndName("group1", "그룹1")))
+                .groups(List.of(Group.builder()
+                    .id(1L)
+                    .name("그룹1")
+                    .build()))
                 .build();
             String token = jwtUtil.createAccessToken(account);
 

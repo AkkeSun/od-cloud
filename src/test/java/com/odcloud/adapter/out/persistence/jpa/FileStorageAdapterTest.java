@@ -45,7 +45,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -89,7 +89,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -141,7 +141,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -201,7 +201,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -262,7 +262,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 1 생성
             FolderInfoEntity folder1 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("폴더 1")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -274,7 +274,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 2 생성
             FolderInfoEntity folder2 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-2")
+                .groupId(1L)
                 .name("폴더 2")
                 .owner("owner@example.com")
                 .path("/group-2")
@@ -335,7 +335,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -378,7 +378,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/very/long/nested/folder/path")
@@ -421,7 +421,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -468,7 +468,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -502,7 +502,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -529,7 +529,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -572,7 +572,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -599,7 +599,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더 생성
             FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Public Folder")
                 .owner("other@example.com")
                 .path("/group1/public")
@@ -611,7 +611,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PRIVATE 폴더 생성 (다른 소유자)
             FolderInfoEntity privateFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Private Folder")
                 .owner("other@example.com")
                 .path("/group1/private")
@@ -646,7 +646,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -672,7 +672,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더 생성
             FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Public Folder")
                 .owner("owner@example.com")
                 .path("/group1/public")
@@ -684,7 +684,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PRIVATE 폴더 생성 (동일 소유자)
             FolderInfoEntity privateFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
                 .path("/group1/private")
@@ -719,7 +719,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("owner@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -745,7 +745,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -788,7 +788,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -815,7 +815,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더 생성 (group1)
             FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Public Folder")
                 .owner("owner@example.com")
                 .path("/group1/public")
@@ -841,7 +841,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -868,7 +868,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더 생성
             FolderInfoEntity publicFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Public Folder")
                 .owner("owner@example.com")
                 .path("/group1/public")
@@ -880,7 +880,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 자신의 PRIVATE 폴더 생성
             FolderInfoEntity myPrivateFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("My Private Folder")
                 .owner("user@example.com")
                 .path("/group1/my-private")
@@ -915,7 +915,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()

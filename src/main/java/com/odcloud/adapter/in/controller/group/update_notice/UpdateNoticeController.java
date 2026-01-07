@@ -21,7 +21,7 @@ class UpdateNoticeController {
 
     @PutMapping("/groups/{groupId}/notices/{noticeId}")
     ApiResponse<UpdateNoticeResponse> update(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @PathVariable Long noticeId,
         @LoginAccount Account account,
         @RequestBody @Valid UpdateNoticeRequest request

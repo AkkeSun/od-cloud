@@ -58,7 +58,7 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when then
-            performErrorDocument("testGroup", request, authorization, status().isUnauthorized(),
+            performErrorDocument(1L, request, authorization, status().isUnauthorized(),
                 "인증 토큰 미입력 혹은 만료된 토큰 입력");
         }
 
@@ -77,7 +77,7 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
             given(useCase.register(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("testGroup", request, "Bearer test", status().isOk(), "success",
+            performDocument(1L, request, "Bearer test", status().isOk(), "success",
                 "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -105,7 +105,7 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
             given(useCase.register(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("testGroup", request, "Bearer test", status().isOk(),
+            performDocument(1L, request, "Bearer test", status().isOk(),
                 "제목 자동 생성 성공", "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -128,7 +128,7 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
                 .build();
 
             // when & then
-            performErrorDocument("testGroup", request, "Bearer test", status().isBadRequest(),
+            performErrorDocument(1L, request, "Bearer test", status().isBadRequest(),
                 "내용 미입력");
         }
 
@@ -145,14 +145,14 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER));
 
             // when & then
-            performErrorDocument("testGroup", request, "Bearer test",
+            performErrorDocument(1L, request, "Bearer test",
                 status().isInternalServerError(),
                 "그룹 소유자가 아님");
         }
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         RegisterNoticeRequest request,
         String authorization,
         ResultMatcher status,
@@ -198,7 +198,7 @@ class RegisterNoticeControllerDocsTest extends RestDocsSupport {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         RegisterNoticeRequest request,
         String authorization,
         ResultMatcher status,

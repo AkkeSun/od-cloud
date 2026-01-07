@@ -19,7 +19,7 @@ public record FindGroupsServiceResponse(
 
     @Builder
     public record GroupResponseItem(
-        String id,
+        Long id,
         String name,
         String ownerEmail,
         String regDt

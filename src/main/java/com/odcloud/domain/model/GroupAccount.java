@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class GroupAccount {
 
     private Long id;
-    private String groupId;
+    private Long groupId;
     private Long accountId;
     private String groupName;
     private String name;
@@ -26,7 +26,7 @@ public class GroupAccount {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public GroupAccount(Long id, String groupId, Long accountId, String name, String nickName,
+    public GroupAccount(Long id, Long groupId, Long accountId, String name, String nickName,
         String email, String status, String memo, LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;

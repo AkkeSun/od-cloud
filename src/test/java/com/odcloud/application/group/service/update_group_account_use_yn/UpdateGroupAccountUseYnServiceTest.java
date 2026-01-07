@@ -35,7 +35,7 @@ class UpdateGroupAccountUseYnServiceTest {
         @DisplayName("[success] Y로 정상적으로 노출 여부를 업데이트한다")
         void success_Y() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long accountId = 1L;
 
             GroupAccount groupAccount = GroupAccount.builder()
@@ -74,7 +74,7 @@ class UpdateGroupAccountUseYnServiceTest {
         @DisplayName("[success] N으로 정상적으로 노출 여부를 업데이트한다")
         void success_N() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long accountId = 1L;
 
             GroupAccount groupAccount = GroupAccount.builder()
@@ -113,7 +113,7 @@ class UpdateGroupAccountUseYnServiceTest {
         @DisplayName("[failure] 존재하지 않는 GroupAccount 노출 여부 변경 시도하면 예외가 발생한다")
         void failure_nonExistentGroupAccount() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long accountId = 999L;
 
             Account account = Account.builder()

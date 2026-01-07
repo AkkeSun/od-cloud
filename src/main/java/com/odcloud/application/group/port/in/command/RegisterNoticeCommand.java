@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record RegisterNoticeCommand(
-    String groupId,
+    Long groupId,
     Account account,
     String title,
     String content

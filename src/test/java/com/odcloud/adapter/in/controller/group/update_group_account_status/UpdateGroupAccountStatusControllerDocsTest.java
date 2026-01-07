@@ -49,7 +49,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 권한 정보가 없는 사용자가 API 를 호출한 경우 401 코드와 에러 메시지를 응답한다.")
         void error() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
                 .memo(null)
@@ -66,7 +66,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 상태값(ACTIVE)으로 변경한다")
         void success_active() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
@@ -96,7 +96,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 상태값(DENIED)으로 변경하고 메모를 입력한다")
         void success_denied() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("DENIED")
@@ -126,7 +126,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 상태값(BLOCK)으로 변경하고 메모를 입력한다")
         void success_block() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("BLOCK")
@@ -156,7 +156,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] status 를 입력핮 않은 경우 400 에러를 반환한다")
         void error_statusIsBlank() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .memo(null)
@@ -171,7 +171,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] status가 유효하지 않은 값(INVALID)인 경우 400 에러를 반환한다")
         void error_statusIsInvalid() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("INVALID")
@@ -187,7 +187,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 등록되지 않은 그룹 사용자인 경우 500 에러를 반환한다")
         void error_groupAccountDoesNotExist() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
@@ -207,7 +207,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 그룹 소유자의 요청이 아닌경우 500 에러를 반환한다")
         void error2() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 999L;
             UpdateGroupAccountStatusRequest request = UpdateGroupAccountStatusRequest.builder()
                 .status("ACTIVE")
@@ -226,7 +226,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
 
     private void performDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         Long accountId,
         UpdateGroupAccountStatusRequest request,
         ResultMatcher status,
@@ -275,7 +275,7 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
 
     private void performErrorDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         Long accountId,
         UpdateGroupAccountStatusRequest request,
         ResultMatcher status,

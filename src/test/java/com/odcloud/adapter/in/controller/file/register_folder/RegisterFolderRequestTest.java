@@ -22,7 +22,7 @@ class RegisterFolderRequestTest {
             // given
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("name")
                 .build();
 
@@ -35,7 +35,7 @@ class RegisterFolderRequestTest {
             // then
             assertThat(command).isNotNull();
             assertThat(command.parentId()).isEqualTo(1L);
-            assertThat(command.groupId()).isEqualTo("group-123");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.name()).isEqualTo("name");
             assertThat(command.owner()).isEqualTo("test@example.com");
         }
@@ -70,7 +70,7 @@ class RegisterFolderRequestTest {
             // given
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(0L)
-                .groupId("")
+                .groupId(1L)
                 .name("")
                 .build();
 
@@ -83,7 +83,7 @@ class RegisterFolderRequestTest {
             // then
             assertThat(command).isNotNull();
             assertThat(command.parentId()).isEqualTo(0L);
-            assertThat(command.groupId()).isEmpty();
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.name()).isEmpty();
             assertThat(command.owner()).isEmpty();
         }

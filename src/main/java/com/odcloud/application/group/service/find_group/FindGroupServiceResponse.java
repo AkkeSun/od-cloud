@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record FindGroupServiceResponse(
-    String id,
+    Long id,
     String name,
     MemberInfo manager,
     List<MemberInfo> members,

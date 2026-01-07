@@ -17,7 +17,7 @@ record UpdateGroupAccountShowYnRequest(
     String showYn
 ) {
 
-    public UpdateGroupAccountUseYnCommand toCommand(String groupId, Account account) {
+    public UpdateGroupAccountUseYnCommand toCommand(Long groupId, Account account) {
         return UpdateGroupAccountUseYnCommand.builder()
             .groupId(groupId)
             .account(account)

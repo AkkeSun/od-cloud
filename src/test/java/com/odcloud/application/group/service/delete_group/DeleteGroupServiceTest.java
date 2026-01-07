@@ -12,6 +12,8 @@ import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeNoticeStoragePort;
+import com.odcloud.fakeClass.FakeScheduleStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
@@ -27,6 +29,8 @@ class DeleteGroupServiceTest {
     private FakeFolderStoragePort folderInfoStoragePort;
     private FakeFileStoragePort fileInfoStoragePort;
     private FakeFilePort filePort;
+    private FakeScheduleStoragePort scheduleStoragePort;
+    private FakeNoticeStoragePort noticeStoragePort;
 
     @BeforeEach
     void setUp() {
@@ -34,11 +38,15 @@ class DeleteGroupServiceTest {
         folderInfoStoragePort = new FakeFolderStoragePort();
         fileInfoStoragePort = new FakeFileStoragePort();
         filePort = new FakeFilePort();
+        scheduleStoragePort = new FakeScheduleStoragePort();
+        noticeStoragePort = new FakeNoticeStoragePort();
         service = new DeleteGroupService(
             groupStoragePort,
             folderInfoStoragePort,
             fileInfoStoragePort,
-            filePort
+            filePort,
+            scheduleStoragePort,
+            noticeStoragePort
         );
     }
 
@@ -51,7 +59,7 @@ class DeleteGroupServiceTest {
         void failure_notGroupOwner() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
@@ -61,7 +69,7 @@ class DeleteGroupServiceTest {
             groupStoragePort.save(group);
 
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("other@example.com")
                 .build();
 
@@ -76,7 +84,7 @@ class DeleteGroupServiceTest {
         void success_deleteGroup() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
@@ -88,7 +96,7 @@ class DeleteGroupServiceTest {
             // 루트 폴더 생성
             FolderInfo rootFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -100,7 +108,7 @@ class DeleteGroupServiceTest {
             // 서브 폴더 생성
             FolderInfo subFolder = FolderInfo.builder()
                 .id(2L)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("Sub Folder")
                 .owner("owner@example.com")
                 .path("/group-1/sub")
@@ -133,7 +141,7 @@ class DeleteGroupServiceTest {
             // GroupAccount 생성
             GroupAccount groupAccount = GroupAccount.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .accountId(100L)
                 .status("ACTIVE")
                 .regDt(LocalDateTime.now())
@@ -141,7 +149,7 @@ class DeleteGroupServiceTest {
             groupStoragePort.save(groupAccount);
 
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
@@ -178,7 +186,7 @@ class DeleteGroupServiceTest {
         void success_deleteGroupWithoutFiles() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
@@ -190,7 +198,7 @@ class DeleteGroupServiceTest {
             // 루트 폴더만 생성
             FolderInfo rootFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -200,7 +208,7 @@ class DeleteGroupServiceTest {
             folderInfoStoragePort.save(rootFolder);
 
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 
@@ -224,7 +232,7 @@ class DeleteGroupServiceTest {
         void success_deleteGroupWithoutGroupAccounts() {
             // given
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
@@ -236,7 +244,7 @@ class DeleteGroupServiceTest {
             // 루트 폴더만 생성
             FolderInfo rootFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -246,7 +254,7 @@ class DeleteGroupServiceTest {
             folderInfoStoragePort.save(rootFolder);
 
             DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId("group-1")
+                .groupId(1L)
                 .currentOwnerEmail("owner@example.com")
                 .build();
 

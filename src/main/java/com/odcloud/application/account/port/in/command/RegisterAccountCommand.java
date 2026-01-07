@@ -9,7 +9,7 @@ public record RegisterAccountCommand(
 
     String name,
 
-    String groupId,
+    Long groupId,
 
     String newGroupName
 ) {

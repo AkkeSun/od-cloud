@@ -1,7 +1,6 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
-import com.odcloud.infrastructure.util.StringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Group {
 
-    private String id;
+    private Long id;
     private String name;
     private String ownerEmail;
     private Long storageUsed;
@@ -24,14 +23,14 @@ public class Group {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public Group(String id, String ownerEmail, String name, LocalDateTime regDt) {
+    public Group(Long id, String ownerEmail, String name, LocalDateTime regDt) {
         this.id = id;
         this.ownerEmail = ownerEmail;
         this.name = name;
         this.regDt = regDt;
     }
 
-    public Group(String id, String ownerEmail, String name, Long storageUsed, Long storageTotal,
+    public Group(Long id, String ownerEmail, String name, Long storageUsed, Long storageTotal,
         LocalDateTime regDt) {
         this.id = id;
         this.ownerEmail = ownerEmail;
@@ -43,7 +42,6 @@ public class Group {
 
     public static Group of(RegisterGroupCommand command) {
         return Group.builder()
-            .id(StringUtil.generateRandomString(6))
             .name(command.name())
             .ownerEmail(command.ownerEmail())
             .storageUsed(0L)
@@ -54,7 +52,6 @@ public class Group {
 
     public static Group of(String name, String ownerEmail) {
         return Group.builder()
-            .id(StringUtil.generateRandomString(6))
             .name(name)
             .ownerEmail(ownerEmail)
             .storageUsed(0L)
@@ -63,16 +60,9 @@ public class Group {
             .build();
     }
 
-    public static Group of(String id) {
+    public static Group of(Long id) {
         return Group.builder()
             .id(id)
-            .build();
-    }
-
-    public static Group ofIdAndName(String id, String name) {
-        return Group.builder()
-            .id(id)
-            .name(name)
             .build();
     }
 

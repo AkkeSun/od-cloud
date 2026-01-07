@@ -19,7 +19,7 @@ class DeleteNoticeController {
 
     @DeleteMapping("/groups/{groupId}/notices/{noticeId}")
     ApiResponse<DeleteNoticeResponse> delete(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @PathVariable Long noticeId,
         @LoginAccount Account account
     ) {

@@ -16,7 +16,7 @@ public class Schedule {
 
     private Long id;
     private String writerEmail;
-    private String groupId;
+    private Long groupId;
     private String content;
     private LocalDateTime notificationDt;
     private String notificationYn;

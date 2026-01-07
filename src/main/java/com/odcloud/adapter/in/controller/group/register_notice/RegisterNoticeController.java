@@ -20,7 +20,7 @@ class RegisterNoticeController {
 
     @PostMapping("/groups/{groupId}/notices")
     ApiResponse<RegisterNoticeResponse> register(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @LoginAccount Account account,
         @RequestBody @Valid RegisterNoticeRequest request
     ) {

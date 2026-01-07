@@ -322,14 +322,12 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
 
             // 그룹 생성
             GroupEntity group1 = GroupEntity.builder()
-                .id("group-1")
                 .ownerEmail("owner@example.com")
                 .name("그룹 1")
                 .regDt(now)
                 .build();
 
             GroupEntity group2 = GroupEntity.builder()
-                .id("group-2")
                 .ownerEmail("owner@example.com")
                 .name("그룹 2")
                 .regDt(now)
@@ -337,6 +335,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
 
             entityManager.persist(group1);
             entityManager.persist(group2);
+            entityManager.flush();
 
             // 계정 생성
             AccountEntity account = AccountEntity.builder()
@@ -348,10 +347,11 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
                 .modDt(now)
                 .build();
             entityManager.persist(account);
+            entityManager.flush();
 
             // 그룹-계정 연결 (ACTIVE 상태만 조회됨)
             GroupAccountEntity ga1 = GroupAccountEntity.builder()
-                .groupId("group-1")
+                .groupId(group1.getId())
                 .accountId(account.getId())
                 .status("ACTIVE")
                 .regDt(now)
@@ -359,7 +359,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
                 .build();
 
             GroupAccountEntity ga2 = GroupAccountEntity.builder()
-                .groupId("group-2")
+                .groupId(group2.getId())
                 .accountId(account.getId())
                 .status("ACTIVE")
                 .regDt(now)
@@ -380,7 +380,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getGroups()).hasSize(2);
             assertThat(result.getGroups())
                 .extracting(com.odcloud.domain.model.Group::getId)
-                .containsExactlyInAnyOrder("group-1", "group-2");
+                .containsExactlyInAnyOrder(group1.getId(), group2.getId());
         }
 
         @Test
@@ -391,14 +391,12 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
 
             // 그룹 생성
             GroupEntity activeGroup = GroupEntity.builder()
-                .id("active-group")
                 .ownerEmail("owner@example.com")
                 .name("활성 그룹")
                 .regDt(now)
                 .build();
 
             GroupEntity pendingGroup = GroupEntity.builder()
-                .id("pending-group")
                 .ownerEmail("owner@example.com")
                 .name("대기 그룹")
                 .regDt(now)
@@ -406,6 +404,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
 
             entityManager.persist(activeGroup);
             entityManager.persist(pendingGroup);
+            entityManager.flush();
 
             // 계정 생성
             AccountEntity account = AccountEntity.builder()
@@ -417,10 +416,11 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
                 .modDt(now)
                 .build();
             entityManager.persist(account);
+            entityManager.flush();
 
             // 그룹-계정 연결
             entityManager.persist(GroupAccountEntity.builder()
-                .groupId("active-group")
+                .groupId(activeGroup.getId())
                 .accountId(account.getId())
                 .status("ACTIVE")
                 .regDt(now)
@@ -428,7 +428,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
                 .build());
 
             entityManager.persist(GroupAccountEntity.builder()
-                .groupId("pending-group")
+                .groupId(pendingGroup.getId())
                 .accountId(account.getId())
                 .status("PENDING")
                 .regDt(now)
@@ -444,7 +444,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getGroups()).hasSize(1);
-            assertThat(result.getGroups().get(0).getId()).isEqualTo("active-group");
+            assertThat(result.getGroups().get(0).getId()).isEqualTo(activeGroup.getId());
         }
 
         @Test

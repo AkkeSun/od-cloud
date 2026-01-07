@@ -66,7 +66,7 @@ class IssueTokenServiceTest {
             fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
 
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .build();
 
             Account account = Account.builder()
@@ -164,7 +164,7 @@ class IssueTokenServiceTest {
             fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
 
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .build();
 
             Account account = Account.builder()
@@ -201,9 +201,9 @@ class IssueTokenServiceTest {
                 .build();
             fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
 
-            Group group1 = Group.builder().id("group1").build();
-            Group group2 = Group.builder().id("group2").build();
-            Group group3 = Group.builder().id("group3").build();
+            Group group1 = Group.builder().id(1L).build();
+            Group group2 = Group.builder().id(2L).build();
+            Group group3 = Group.builder().id(3L).build();
 
             Account account = Account.builder()
                 .id(1L)

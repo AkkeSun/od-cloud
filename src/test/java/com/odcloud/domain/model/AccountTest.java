@@ -28,8 +28,8 @@ class AccountTest {
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1L);
             when(claims.get("groups")).thenReturn(Arrays.asList(
-                java.util.Map.of("id", "group-1", "name", "그룹1"),
-                java.util.Map.of("id", "group-2", "name", "그룹2")
+                java.util.Map.of("id", 1L, "name", "그룹1"),
+                java.util.Map.of("id", 2L, "name", "그룹2")
             ));
             when(claims.get("nickname")).thenReturn("nickname");
             when(claims.get("picture")).thenReturn("picture");
@@ -42,9 +42,9 @@ class AccountTest {
             assertThat(account.getEmail()).isEqualTo("test@example.com");
             assertThat(account.getId()).isEqualTo(1L);
             assertThat(account.getGroups()).hasSize(2);
-            assertThat(account.getGroups().get(0).getId()).isEqualTo("group-1");
+            assertThat(account.getGroups().get(0).getId()).isEqualTo(1L);
             assertThat(account.getGroups().get(0).getName()).isEqualTo("그룹1");
-            assertThat(account.getGroups().get(1).getId()).isEqualTo("group-2");
+            assertThat(account.getGroups().get(1).getId()).isEqualTo(2L);
             assertThat(account.getGroups().get(1).getName()).isEqualTo("그룹2");
         }
 
@@ -56,7 +56,7 @@ class AccountTest {
             when(claims.getSubject()).thenReturn("test@example.com");
             when(claims.get("id")).thenReturn(1);
             when(claims.get("groups")).thenReturn(Arrays.asList(
-                java.util.Map.of("id", "group-1", "name", "그룹1")
+                java.util.Map.of("id", 1, "name", "그룹1")
             ));
             when(claims.get("nickname")).thenReturn("nickname");
             when(claims.get("picture")).thenReturn("picture");
@@ -105,7 +105,7 @@ class AccountTest {
             RegisterAccountCommand command = new RegisterAccountCommand(
                 "Bearer google-token",
                 "홍길동",
-                "group-123",
+                1L,
                 null
             );
 
@@ -123,7 +123,7 @@ class AccountTest {
             assertThat(account.getName()).isEqualTo("홍길동");
             assertThat(account.getPicture()).isEqualTo("https://example.com/picture.jpg");
             assertThat(account.getGroups()).hasSize(1);
-            assertThat(account.getGroups().get(0).getId()).isEqualTo("group-123");
+            assertThat(account.getGroups().get(0).getId()).isEqualTo(1L);
             assertThat(account.getRegDt()).isAfter(before);
             assertThat(account.getRegDt()).isBefore(after);
         }
@@ -138,20 +138,20 @@ class AccountTest {
         void success() {
             // given
             List<Group> groups = Arrays.asList(
-                Group.builder().id("group-1").build(),
-                Group.builder().id("group-2").build(),
-                Group.builder().id("group-3").build()
+                Group.builder().id(1L).build(),
+                Group.builder().id(2L).build(),
+                Group.builder().id(3L).build()
             );
             Account account = Account.builder()
                 .groups(groups)
                 .build();
 
             // when
-            List<String> groupIds = account.getGroupIds();
+            List<Long> groupIds = account.getGroupIds();
 
             // then
             assertThat(groupIds).hasSize(3);
-            assertThat(groupIds).containsExactly("group-1", "group-2", "group-3");
+            assertThat(groupIds).containsExactly(1L, 2L, 3L);
         }
 
         @Test
@@ -163,7 +163,7 @@ class AccountTest {
                 .build();
 
             // when
-            List<String> groupIds = account.getGroupIds();
+            List<Long> groupIds = account.getGroupIds();
 
             // then
             assertThat(groupIds).isEmpty();
@@ -175,7 +175,7 @@ class AccountTest {
             // given
             List<Group> groups = Arrays.asList(
                 Group.builder().id(null).build(),
-                Group.builder().id("group-2").build(),
+                Group.builder().id(2L).build(),
                 Group.builder().id(null).build()
             );
             Account account = Account.builder()
@@ -183,11 +183,11 @@ class AccountTest {
                 .build();
 
             // when
-            List<String> groupIds = account.getGroupIds();
+            List<Long> groupIds = account.getGroupIds();
 
             // then
             assertThat(groupIds).hasSize(3);
-            assertThat(groupIds).containsExactly(null, "group-2", null);
+            assertThat(groupIds).containsExactly(null, 2L, null);
         }
     }
 
@@ -200,15 +200,15 @@ class AccountTest {
         void success() {
             // given
             List<Group> initialGroups = Arrays.asList(
-                Group.builder().id("group-1").build()
+                Group.builder().id(1L).build()
             );
             Account account = Account.builder()
                 .groups(initialGroups)
                 .build();
 
             List<Group> newGroups = Arrays.asList(
-                Group.builder().id("group-2").build(),
-                Group.builder().id("group-3").build()
+                Group.builder().id(2L).build(),
+                Group.builder().id(3L).build()
             );
 
             // when
@@ -216,8 +216,8 @@ class AccountTest {
 
             // then
             assertThat(account.getGroups()).hasSize(2);
-            assertThat(account.getGroups().get(0).getId()).isEqualTo("group-2");
-            assertThat(account.getGroups().get(1).getId()).isEqualTo("group-3");
+            assertThat(account.getGroups().get(0).getId()).isEqualTo(2L);
+            assertThat(account.getGroups().get(1).getId()).isEqualTo(3L);
         }
 
         @Test
@@ -225,8 +225,8 @@ class AccountTest {
         void success_emptyList() {
             // given
             List<Group> initialGroups = Arrays.asList(
-                Group.builder().id("group-1").build(),
-                Group.builder().id("group-2").build()
+                Group.builder().id(1L).build(),
+                Group.builder().id(2L).build()
             );
             Account account = Account.builder()
                 .groups(initialGroups)
@@ -244,7 +244,7 @@ class AccountTest {
         void success_null() {
             // given
             List<Group> initialGroups = Arrays.asList(
-                Group.builder().id("group-1").build()
+                Group.builder().id(1L).build()
             );
             Account account = Account.builder()
                 .groups(initialGroups)
@@ -342,7 +342,7 @@ class AccountTest {
         void success_getGroups() {
             // given
             List<Group> groups = Arrays.asList(
-                Group.builder().id("group-1").build()
+                Group.builder().id(1L).build()
             );
             Account account = Account.builder()
                 .groups(groups)
@@ -353,7 +353,7 @@ class AccountTest {
 
             // then
             assertThat(result).hasSize(1);
-            assertThat(result.get(0).getId()).isEqualTo("group-1");
+            assertThat(result.get(0).getId()).isEqualTo(1L);
         }
 
         @Test
@@ -414,7 +414,7 @@ class AccountTest {
             // given
             LocalDateTime now = LocalDateTime.now();
             List<Group> groups = Arrays.asList(
-                Group.builder().id("group-1").build()
+                Group.builder().id(2L).build()
             );
 
             // when

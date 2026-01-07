@@ -48,7 +48,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-abc123")
+                .groupId(1L)
                 .build();
 
             RegisterAccountServiceResponse serviceResponse =
@@ -105,7 +105,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name(null)
-                .groupId("group-abc123")
+                .groupId(1L)
                 .build();
 
             // when & then
@@ -119,7 +119,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer invalid-token";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-abc123")
+                .groupId(1L)
                 .build();
 
             given(useCase.register(any()))
@@ -138,7 +138,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-abc123")
+                .groupId(1L)
                 .build();
 
             given(useCase.register(any()))
@@ -157,7 +157,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("non-existent-group")
+                .groupId(1L)
                 .build();
 
             given(useCase.register(any()))
@@ -176,7 +176,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
                 .name("홍길동")
-                .groupId("group-abc123")
+                .groupId(1L)
                 .build();
 
             given(useCase.register(any()))
@@ -220,7 +220,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
         JsonFieldType nameType = request.name() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType groupIdType = request.groupId() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
+            JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType groupNameType = request.newGroupName() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
 

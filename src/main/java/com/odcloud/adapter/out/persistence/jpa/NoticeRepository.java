@@ -28,7 +28,7 @@ class NoticeRepository {
         return java.util.Optional.ofNullable(entity);
     }
 
-    List<NoticeEntity> findByGroupId(String groupId, int limit) {
+    List<NoticeEntity> findByGroupId(Long groupId, int limit) {
         return queryFactory
             .selectFrom(noticeEntity)
             .where(noticeEntity.groupId.eq(groupId))

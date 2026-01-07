@@ -38,7 +38,7 @@ class FindFilesResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(11L)
                     .name("Folder 1")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -46,7 +46,7 @@ class FindFilesResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(12L)
                     .name("Folder 2")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-02 00:00:00")
                     .build();
 
@@ -77,7 +77,7 @@ class FindFilesResponseTest {
             // Folder 검증
             assertThat(response.folders().get(0).id()).isEqualTo(11L);
             assertThat(response.folders().get(0).name()).isEqualTo("Folder 1");
-            assertThat(response.folders().get(0).groupId()).isEqualTo("group1");
+            assertThat(response.folders().get(0).groupId()).isEqualTo(1L);
             assertThat(response.folders().get(0).regDt()).isEqualTo("2024-01-01 00:00:00");
 
             assertThat(response.folders().get(1).id()).isEqualTo(12L);
@@ -159,7 +159,7 @@ class FindFilesResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(11L)
                     .name("Test Folder")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -191,7 +191,7 @@ class FindFilesResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(1L)
                     .name("Test Folder")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
@@ -203,7 +203,7 @@ class FindFilesResponseTest {
             assertThat(response).isNotNull();
             assertThat(response.id()).isEqualTo(1L);
             assertThat(response.name()).isEqualTo("Test Folder");
-            assertThat(response.groupId()).isEqualTo("group1");
+            assertThat(response.groupId()).isEqualTo(1L);
             assertThat(response.regDt()).isEqualTo("2024-01-01 00:00:00");
         }
 
@@ -215,7 +215,7 @@ class FindFilesResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(2L)
                     .name("Private Folder")
-                    .groupId("group2")
+                    .groupId(1L)
                     .regDt("2024-01-02 00:00:00")
                     .build();
 
@@ -226,7 +226,7 @@ class FindFilesResponseTest {
             // then
             assertThat(response.id()).isEqualTo(2L);
             assertThat(response.name()).isEqualTo("Private Folder");
-            assertThat(response.groupId()).isEqualTo("group2");
+            assertThat(response.groupId()).isEqualTo(1L);
         }
     }
 
@@ -313,7 +313,7 @@ class FindFilesResponseTest {
                 FindFilesResponse.FolderResponse.builder()
                     .id(2L)
                     .name("Test Folder")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 00:00:00")
                     .build();
 

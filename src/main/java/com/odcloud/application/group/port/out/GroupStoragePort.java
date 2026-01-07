@@ -18,19 +18,19 @@ public interface GroupStoragePort {
 
     List<Group> findByKeyword(String keyword);
 
-    List<GroupAccount> findGroupAccountsByGroupId(String groupId);
+    List<GroupAccount> findGroupAccountsByGroupId(Long groupId);
 
     List<GroupAccount> findGroupAccountsByAccountId(Long accountId);
 
     List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail);
 
-    Group findById(String id);
+    Group findById(Long id);
 
-    GroupAccount findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId);
+    GroupAccount findGroupAccountByGroupIdAndAccountId(Long groupId, Long accountId);
 
     void delete(Group group);
 
-    void deleteGroupAccountsByGroupId(String groupId);
+    void deleteGroupAccountsByGroupId(Long groupId);
 
     List<Group> findByOwnerEmail(String ownerEmail);
 }

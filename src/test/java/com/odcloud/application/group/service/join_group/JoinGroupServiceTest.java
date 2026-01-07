@@ -43,7 +43,7 @@ class JoinGroupServiceTest {
         @DisplayName("[success] 정상적으로 그룹 가입 요청을 생성한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
@@ -78,7 +78,7 @@ class JoinGroupServiceTest {
         @DisplayName("[failure] 존재하지 않는 그룹에 가입 요청하면 예외가 발생한다")
         void failure_nonExistentGroup() {
             // given
-            String nonExistentGroupId = "non-existent-group";
+            Long nonExistentGroupId = 12L;
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
@@ -99,7 +99,7 @@ class JoinGroupServiceTest {
         @DisplayName("[success] 여러 사용자가 동일한 그룹에 가입 요청할 수 있다")
         void success_multipleUsersJoinSameGroup() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .ownerEmail("owner@example.com")

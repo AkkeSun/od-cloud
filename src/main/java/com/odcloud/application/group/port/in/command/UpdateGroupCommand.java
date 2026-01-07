@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record UpdateGroupCommand(
-    String groupId,
+    Long groupId,
     String currentOwnerEmail,
     String newOwnerEmail,
     String name

@@ -23,7 +23,7 @@ class FindSchedulesRequestTest {
             // given
             FindSchedulesRequest request = FindSchedulesRequest.builder()
                 .baseDate("2025-01-15")
-                .filterType("PRIVATE")
+                .groupId(1L)
                 .build();
 
             Account account = mock(Account.class);
@@ -36,7 +36,7 @@ class FindSchedulesRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.baseDate()).isEqualTo(LocalDate.of(2025, 1, 15));
-            assertThat(command.filterType()).isEqualTo("PRIVATE");
+            assertThat(command.groupId()).isEqualTo(1L);
         }
     }
 }

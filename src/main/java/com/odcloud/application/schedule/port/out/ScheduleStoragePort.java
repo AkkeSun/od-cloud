@@ -21,5 +21,5 @@ public interface ScheduleStoragePort {
 
     List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail);
 
-    List<Schedule> findByGroupId(String groupId);
+    List<Schedule> findByGroupId(Long groupId);
 }

@@ -3,6 +3,8 @@ package com.odcloud.adapter.out.persistence.jpa;
 import com.odcloud.domain.model.Group;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -20,8 +22,9 @@ import lombok.NoArgsConstructor;
 class GroupEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private String id;
+    private Long id;
 
     @Column(name = "NAME")
     private String name;

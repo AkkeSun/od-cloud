@@ -52,7 +52,7 @@ class FindSchedulesServiceTest {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
+                .groupId(null)
                 .build();
 
             // when
@@ -68,18 +68,18 @@ class FindSchedulesServiceTest {
         @DisplayName("[success] 특정 그룹 일정만 조회한다 (filterType=그룹명)")
         void success_getSpecificGroupSchedules() {
             // given
-            Group group1 = Group.builder().id("group-1").build();
-            Group group2 = Group.builder().id("group-2").build();
+            Group group1 = Group.builder().id(1L).build();
+            Group group2 = Group.builder().id(2L).build();
             Account account = createAccount("user@example.com", Arrays.asList(group1, group2));
 
             fakeScheduleStoragePort.database.add(createGroupSchedule(1L, "owner@example.com",
-                "group-1", "그룹1 회의", LocalDateTime.of(2025, 1, 15, 10, 0)));
+                1L, "그룹1 회의", LocalDateTime.of(2025, 1, 15, 10, 0)));
             fakeScheduleStoragePort.database.add(createGroupSchedule(2L, "owner@example.com",
-                "group-2", "그룹2 회의", LocalDateTime.of(2025, 1, 15, 14, 0)));
+                2L, "그룹2 회의", LocalDateTime.of(2025, 1, 15, 14, 0)));
 
             // 속하지 않은 그룹의 일정
             fakeScheduleStoragePort.database.add(createGroupSchedule(3L, "owner@example.com",
-                "group-3", "그룹3 회의", LocalDateTime.of(2025, 1, 15, 16, 0)));
+                3L, "그룹3 회의", LocalDateTime.of(2025, 1, 15, 16, 0)));
 
             // 개인 일정
             fakeScheduleStoragePort.database.add(createPersonalSchedule(4L, "user@example.com",
@@ -88,7 +88,7 @@ class FindSchedulesServiceTest {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("group-1")
+                .groupId(1L)
                 .build();
 
             // when
@@ -103,17 +103,17 @@ class FindSchedulesServiceTest {
         @DisplayName("[success] 개인 + 그룹 일정을 모두 조회한다 (filterType=null)")
         void success_getAllSchedules() {
             // given
-            Group group = Group.builder().id("group-1").build();
+            Group group = Group.builder().id(1L).build();
             Account account = createAccount("user@example.com", Arrays.asList(group));
 
             fakeScheduleStoragePort.database.add(createPersonalSchedule(1L, "user@example.com",
                 "개인 회의 1", LocalDateTime.of(2025, 1, 15, 9, 0)));
             fakeScheduleStoragePort.database.add(createGroupSchedule(2L, "owner@example.com",
-                "group-1", "그룹 회의 1", LocalDateTime.of(2025, 1, 15, 10, 0)));
+                1L, "그룹 회의 1", LocalDateTime.of(2025, 1, 15, 10, 0)));
             fakeScheduleStoragePort.database.add(createPersonalSchedule(3L, "user@example.com",
                 "개인 회의 2", LocalDateTime.of(2025, 1, 15, 14, 0)));
             fakeScheduleStoragePort.database.add(createGroupSchedule(4L, "owner@example.com",
-                "group-1", "그룹 회의 2", LocalDateTime.of(2025, 1, 15, 16, 0)));
+                1L, "그룹 회의 2", LocalDateTime.of(2025, 1, 15, 16, 0)));
 
             // 다른 사용자의 개인 일정
             fakeScheduleStoragePort.database.add(createPersonalSchedule(5L, "other@example.com",
@@ -122,7 +122,7 @@ class FindSchedulesServiceTest {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType(null)  // null이면 전체 조회
+                .groupId(null)  // null이면 전체 조회
                 .build();
 
             // when
@@ -145,7 +145,7 @@ class FindSchedulesServiceTest {
             FindSchedulesCommand command = FindSchedulesCommand.builder()
                 .account(account)
                 .baseDate(LocalDate.of(2025, 1, 15))
-                .filterType("PRIVATE")
+                .groupId(null)
                 .build();
 
             // when
@@ -179,7 +179,7 @@ class FindSchedulesServiceTest {
             .build();
     }
 
-    private Schedule createGroupSchedule(Long id, String email, String groupId, String content,
+    private Schedule createGroupSchedule(Long id, String email, Long groupId, String content,
         LocalDateTime startDt) {
         return Schedule.builder()
             .id(id)

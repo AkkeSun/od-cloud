@@ -96,7 +96,7 @@ class DeleteFileServiceTest {
         @DisplayName("[success] PUBLIC 폴더에 접근 가능한 사용자가 파일을 삭제한다")
         void success_publicFolder_hasAccess() {
             // given
-            String groupId = "group-1";
+            Long groupId = 1L;
             FolderInfo publicFolder = FolderInfo.builder()
                 .id(1L)
                 .groupId(groupId)
@@ -138,7 +138,7 @@ class DeleteFileServiceTest {
         @DisplayName("[failure] PUBLIC 폴더에 접근 권한이 없는 사용자가 파일 삭제 시도하면 실패한다")
         void failure_publicFolder_noAccess() {
             // given
-            String groupId = "group-1";
+            Long groupId = 1L;
             FolderInfo publicFolder = FolderInfo.builder()
                 .id(1L)
                 .groupId(groupId)
@@ -158,7 +158,7 @@ class DeleteFileServiceTest {
 
             Account userWithoutAccess = Account.builder()
                 .email("user@test.com")
-                .groups(List.of(Group.of("group-2")))
+                .groups(List.of(Group.of(2L)))
                 .build();
 
             DeleteFileCommand command = DeleteFileCommand.builder()
@@ -203,7 +203,7 @@ class DeleteFileServiceTest {
         @DisplayName("[success] 파일 삭제 시 그룹 스토리지 용량이 감소한다")
         void success_storageDecreased() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .name("Test Group")
@@ -255,7 +255,7 @@ class DeleteFileServiceTest {
         @DisplayName("[success] 여러 파일 삭제 시 그룹 스토리지 용량이 각각 감소한다")
         void success_multipleFilesStorageDecreased() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .name("Test Group")
@@ -314,7 +314,7 @@ class DeleteFileServiceTest {
         @DisplayName("[success] 파일 크기가 null인 경우에도 삭제가 성공한다")
         void success_fileSizeNull() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Group group = Group.builder()
                 .id(groupId)
                 .name("Test Group")

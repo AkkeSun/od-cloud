@@ -39,7 +39,7 @@ public class FakeNoticeStoragePort implements NoticeStoragePort {
     }
 
     @Override
-    public List<Notice> findByGroupId(String groupId, int limit) {
+    public List<Notice> findByGroupId(Long groupId, int limit) {
         return database.stream()
             .filter(notice -> notice.getGroupId().equals(groupId))
             .sorted(Comparator.comparing(Notice::getRegDt).reversed())

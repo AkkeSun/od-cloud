@@ -86,7 +86,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(11L)
                     .name("Documents")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 12:00:00")
                     .build();
 
@@ -94,7 +94,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(12L)
                     .name("Private")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-02 12:00:00")
                     .build();
 
@@ -124,7 +124,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.folders[].name")
                     .type(JsonFieldType.STRING).description("폴더 이름"),
                 fieldWithPath("data.folders[].groupId")
-                    .type(JsonFieldType.STRING).description("그룹 ID"),
+                    .type(JsonFieldType.NUMBER).description("그룹 ID"),
                 fieldWithPath("data.folders[].regDt")
                     .type(JsonFieldType.STRING).description("등록일시"),
                 fieldWithPath("data.files")
@@ -159,7 +159,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
         String responseSchema,
         String authorization,
         Long folderId,
-        String groupId,
+        Long groupId,
         String keyword,
         String sortType,
         ResultMatcher status,
@@ -172,7 +172,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
             requestBuilder.param("folderId", folderId.toString());
         }
         if (groupId != null) {
-            requestBuilder.param("groupId", groupId);
+            requestBuilder.param("groupId", groupId.toString());
         }
         if (keyword != null) {
             requestBuilder.param("keyword", keyword);
@@ -222,7 +222,7 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
         String identifier,
         String authorization,
         Long folderId,
-        String groupId,
+        Long groupId,
         String keyword,
         String sortType,
         ResultMatcher status

@@ -10,7 +10,7 @@ record RegisterAccountRequest(
     @NotBlank(message = "이름은 필수값 입니다")
     String name,
 
-    String groupId,
+    Long groupId,
 
     String newGroupName
 ) {

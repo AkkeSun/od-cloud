@@ -39,7 +39,7 @@ class RegisterFolderServiceTest {
         void success() {
             // given
             FolderInfo parentFolder = FolderInfo.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Parent Folder")
                 .path("/test-group")
                 .build();
@@ -47,7 +47,7 @@ class RegisterFolderServiceTest {
 
             RegisterFolderCommand command = RegisterFolderCommand.builder()
                 .parentId(0L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("New Folder")
                 .owner("owner@example.com")
                 .build();
@@ -70,7 +70,7 @@ class RegisterFolderServiceTest {
             // given
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Parent Folder")
                 .path("/test-group")
                 .build();
@@ -79,7 +79,7 @@ class RegisterFolderServiceTest {
             FolderInfo existingFolder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Existing Folder")
                 .path("/test-group/existing")
                 .build();
@@ -87,7 +87,7 @@ class RegisterFolderServiceTest {
 
             RegisterFolderCommand command = RegisterFolderCommand.builder()
                 .parentId(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Existing Folder")
                 .owner("owner@example.com")
                 .build();

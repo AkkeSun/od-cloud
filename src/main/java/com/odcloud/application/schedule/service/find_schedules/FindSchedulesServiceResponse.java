@@ -22,7 +22,7 @@ public record FindSchedulesServiceResponse(
     public record FindSchedulesServiceResponseItem(
         Long id,
         String writerEmail,
-        String groupId,
+        Long groupId,
         String content,
         LocalDateTime startDt,
         LocalDateTime notificationDt

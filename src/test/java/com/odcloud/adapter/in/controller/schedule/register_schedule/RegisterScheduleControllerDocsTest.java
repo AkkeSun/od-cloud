@@ -133,7 +133,7 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 10:00:00")
-                .groupId("other-group")
+                .groupId(1L)
                 .build();
 
             given(useCase.register(any()))
@@ -158,7 +158,7 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
         JsonFieldType startDtType = request.startDt() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType groupIdType = request.groupId() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
+            JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType notificationDtType = request.notificationDt() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
 

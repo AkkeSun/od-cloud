@@ -27,7 +27,7 @@ class GroupAccountEntity {
     private Long id;
 
     @Column(name = "GROUP_ID")
-    private String groupId;
+    private Long groupId;
 
     @Column(name = "ACCOUNT_ID")
     private Long accountId;

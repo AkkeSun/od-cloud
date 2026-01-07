@@ -47,7 +47,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
@@ -92,7 +92,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo sourceFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
@@ -101,7 +101,7 @@ class UpdateFileServiceTest {
 
             FolderInfo targetFolder = FolderInfo.builder()
                 .id(2L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
@@ -145,7 +145,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo sourceFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
@@ -154,7 +154,7 @@ class UpdateFileServiceTest {
 
             FolderInfo targetFolder = FolderInfo.builder()
                 .id(2L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
@@ -219,7 +219,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
@@ -266,7 +266,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo sourceFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")
@@ -275,7 +275,7 @@ class UpdateFileServiceTest {
 
             FolderInfo targetFolder = FolderInfo.builder()
                 .id(2L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder2")
@@ -322,7 +322,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo sourceFolder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Source Folder")
                 .owner("owner@example.com")
                 .path("/test-group/folder1")
@@ -331,7 +331,7 @@ class UpdateFileServiceTest {
 
             FolderInfo targetFolder = FolderInfo.builder()
                 .id(2L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
                 .path("/test-group/folder2")
@@ -372,7 +372,7 @@ class UpdateFileServiceTest {
             // given
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
                 .path("/test-group/folder1")

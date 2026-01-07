@@ -101,14 +101,14 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
 
             FindPendingGroupAccountsServiceResponse.GroupPendingAccounts group1 =
                 FindPendingGroupAccountsServiceResponse.GroupPendingAccounts.builder()
-                    .groupId("group-1")
+                    .groupId(1L)
                     .groupName("Test Group 1")
                     .pendingAccounts(List.of(pending1, pending2))
                     .build();
 
             FindPendingGroupAccountsServiceResponse.GroupPendingAccounts group2 =
                 FindPendingGroupAccountsServiceResponse.GroupPendingAccounts.builder()
-                    .groupId("group-2")
+                    .groupId(1L)
                     .groupName("Test Group 2")
                     .pendingAccounts(List.of(pending3))
                     .build();
@@ -128,7 +128,7 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                     .description("응답 데이터"),
                 fieldWithPath("data.groups").type(JsonFieldType.ARRAY)
                     .description("PENDING 상태 사용자가 있는 그룹 목록"),
-                fieldWithPath("data.groups[].groupId").type(JsonFieldType.STRING)
+                fieldWithPath("data.groups[].groupId").type(JsonFieldType.NUMBER)
                     .description("그룹 ID"),
                 fieldWithPath("data.groups[].groupName").type(JsonFieldType.STRING)
                     .description("그룹명"),

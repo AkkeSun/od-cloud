@@ -93,7 +93,7 @@ class RegisterGroupServiceTest {
             fakeAccountStoragePort.database.add(owner);
 
             Group existingGroup = Group.builder()
-                .id("existing-group")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("Existing Group")
                 .build();
@@ -130,7 +130,7 @@ class RegisterGroupServiceTest {
 
             for (int i = 1; i <= 3; i++) {
                 Group existingGroup = Group.builder()
-                    .id("group-" + i)
+                    .id((long) i)
                     .ownerEmail("owner@example.com")
                     .name("Group " + i)
                     .build();
@@ -165,7 +165,7 @@ class RegisterGroupServiceTest {
 
             for (int i = 1; i <= 2; i++) {
                 Group existingGroup = Group.builder()
-                    .id("group-" + i)
+                    .id((long) i)
                     .ownerEmail("owner@example.com")
                     .name("Group " + i)
                     .build();

@@ -25,7 +25,7 @@ public record PushFcmCommand(
         LocalDateTime startDt) {
         Map<String, String> data = new HashMap<>();
         data.put("type", "schedule");
-        data.put("groupId", group.getId());
+        data.put("groupId", String.valueOf(group.getId()));
         data.put("regDt", startDt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         return PushFcmCommand.builder()
@@ -40,7 +40,8 @@ public record PushFcmCommand(
         List<AccountDevice> devices, String title) {
         Map<String, String> data = new HashMap<>();
         data.put("type", "schedule");
-        data.put("groupId", schedule.isGroupSchedule() ? schedule.getGroupId() : "PRIVATE");
+        data.put("groupId",
+            schedule.isGroupSchedule() ? String.valueOf(schedule.getGroupId()) : "PRIVATE");
         data.put("regDt", schedule.getStartDt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         boolean isToday = schedule.getStartDt().toLocalDate().equals(LocalDate.now());
@@ -95,7 +96,7 @@ public record PushFcmCommand(
         Notice notice) {
         Map<String, String> data = new HashMap<>();
         data.put("type", "notice");
-        data.put("groupId", group.getId());
+        data.put("groupId", String.valueOf(group.getId()));
         data.put("noticeId", String.valueOf(notice.getId()));
 
         return PushFcmCommand.builder()

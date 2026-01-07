@@ -70,7 +70,7 @@ class FindGroupControllerDocsTest {
         @DisplayName("[success] 그룹 ID로 그룹 상세 정보를 조회한다")
         void success() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
 
             FindGroupServiceResponse.MemberInfo manager =
                 FindGroupServiceResponse.MemberInfo.builder()
@@ -126,7 +126,7 @@ class FindGroupControllerDocsTest {
                 fieldWithPath("data")
                     .type(JsonFieldType.OBJECT).description("응답 데이터"),
                 fieldWithPath("data.id")
-                    .type(JsonFieldType.STRING).description("그룹 ID"),
+                    .type(JsonFieldType.NUMBER).description("그룹 ID"),
                 fieldWithPath("data.name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.manager")
@@ -162,7 +162,7 @@ class FindGroupControllerDocsTest {
         @DisplayName("[error] 존재하지 않는 그룹 ID인 경우 500 에러를 반환한다")
         void error_groupNotFound() throws Exception {
             // given
-            String groupId = "non-existent-group";
+            Long groupId = 1L;
 
             given(useCase.findById(any()))
                 .willThrow(new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP));
@@ -173,7 +173,7 @@ class FindGroupControllerDocsTest {
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         String docIdentifier,
         String responseSchema,
         ResultMatcher status,
@@ -201,7 +201,7 @@ class FindGroupControllerDocsTest {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         String identifier,
         ResultMatcher status
     ) throws Exception {

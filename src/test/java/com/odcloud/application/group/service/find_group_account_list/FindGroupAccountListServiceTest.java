@@ -28,7 +28,7 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] 정상적으로 그룹 계정 목록을 조회한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
 
             GroupAccount account1 = GroupAccount.builder()
                 .id(1L)
@@ -68,7 +68,7 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] 그룹에 계정이 없으면 빈 리스트를 반환한다")
         void success_emptyList() {
             // given
-            String groupId = "empty-group";
+            Long groupId = 1L;
 
             // when
             FindGroupAccountListServiceResponse response = findGroupAccountListService
@@ -83,8 +83,8 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] 특정 그룹의 계정만 조회한다")
         void success_specificGroup() {
             // given
-            String targetGroupId = "target-group";
-            String otherGroupId = "other-group";
+            Long targetGroupId = 1L;
+            Long otherGroupId = 2L;
 
             GroupAccount targetAccount1 = GroupAccount.builder()
                 .id(1L)
@@ -130,7 +130,7 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] 여러 상태의 계정을 모두 조회한다")
         void success_multipleStatuses() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
 
             GroupAccount activeAccount = GroupAccount.builder()
                 .id(1L)
@@ -176,7 +176,7 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] 대량의 계정 목록을 조회할 수 있다")
         void success_largeList() {
             // given
-            String groupId = "large-group";
+            Long groupId = 1L;
 
             for (int i = 1; i <= 100; i++) {
                 GroupAccount account = GroupAccount.builder()
@@ -202,11 +202,11 @@ class FindGroupAccountListServiceTest {
         @DisplayName("[success] null이 아닌 빈 문자열 그룹 ID로 조회하면 빈 리스트를 반환한다")
         void success_emptyStringGroupId() {
             // given
-            String groupId = "";
+            Long groupId = 1L;
 
             GroupAccount account = GroupAccount.builder()
                 .id(1L)
-                .groupId("actual-group")
+                .groupId(2L)
                 .accountId(1L)
                 .email("user@example.com")
                 .status("ACTIVE")

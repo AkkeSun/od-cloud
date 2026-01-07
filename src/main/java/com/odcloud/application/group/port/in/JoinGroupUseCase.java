@@ -5,5 +5,5 @@ import com.odcloud.domain.model.Account;
 
 public interface JoinGroupUseCase {
 
-    JoinGroupServiceResponse join(String groupId, Account account);
+    JoinGroupServiceResponse join(Long groupId, Account account);
 }

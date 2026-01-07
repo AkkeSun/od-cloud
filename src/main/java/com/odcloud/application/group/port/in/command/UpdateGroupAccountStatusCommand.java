@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record UpdateGroupAccountStatusCommand(
-    String groupId,
+    Long groupId,
     Long accountId,
     String groupOwnerEmail,
     String status,

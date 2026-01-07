@@ -119,7 +119,7 @@ class RegisterScheduleServiceTest {
         void success_groupSchedule() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -138,7 +138,7 @@ class RegisterScheduleServiceTest {
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
@@ -147,7 +147,7 @@ class RegisterScheduleServiceTest {
             // then
             assertThat(response.result()).isTrue();
             assertThat(fakeScheduleStoragePort.database).hasSize(1);
-            assertThat(fakeScheduleStoragePort.database.get(0).getGroupId()).isEqualTo("group-123");
+            assertThat(fakeScheduleStoragePort.database.get(0).getGroupId()).isEqualTo(1L);
             assertThat(fakeScheduleStoragePort.database.get(0).getContent()).isEqualTo("그룹 회의");
             assertThat(fakeScheduleStoragePort.database.get(0).getNotificationYn()).isEqualTo("N");
         }
@@ -157,7 +157,7 @@ class RegisterScheduleServiceTest {
         void failure_accessDenied() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -176,7 +176,7 @@ class RegisterScheduleServiceTest {
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("other-group")
+                .groupId(2L)
                 .build();
 
             // when & then
@@ -205,7 +205,7 @@ class RegisterScheduleServiceTest {
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when & then

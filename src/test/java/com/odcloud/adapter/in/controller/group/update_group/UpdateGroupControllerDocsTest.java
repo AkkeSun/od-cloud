@@ -58,7 +58,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when & then
-            performErrorDocument("group-1", request, authorization, status().isUnauthorized(),
+            performErrorDocument(1L, request, authorization, status().isUnauthorized(),
                 "인증 토큰 미입력 혹은 만료된 토큰 입력");
         }
 
@@ -79,7 +79,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
             given(useCase.update(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("group-1", request, "Bearer test", status().isOk(),
+            performDocument(1L, request, "Bearer test", status().isOk(),
                 "ownerEmail만 변경 성공", "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -113,7 +113,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
             given(useCase.update(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("group-1", request, "Bearer test", status().isOk(),
+            performDocument(1L, request, "Bearer test", status().isOk(),
                 "name만 변경 성공", "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -148,7 +148,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
             given(useCase.update(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("group-1", request, "Bearer test", status().isOk(),
+            performDocument(1L, request, "Bearer test", status().isOk(),
                 "ownerEmail과 name 모두 변경 성공", "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -177,7 +177,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER));
 
             // when & then
-            performErrorDocument("group-1", request, "Bearer test",
+            performErrorDocument(1L, request, "Bearer test",
                 status().isInternalServerError(), "그룹 소유자가 아님");
         }
 
@@ -193,7 +193,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_NOT_FOUND_ACCOUNT));
 
             // when & then
-            performErrorDocument("group-1", request, "Bearer test",
+            performErrorDocument(1L, request, "Bearer test",
                 status().isInternalServerError(), "존재하지 않는 이메일");
         }
 
@@ -209,7 +209,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_GROUP_LIMIT_EXCEEDED));
 
             // when & then
-            performErrorDocument("group-1", request, "Bearer test",
+            performErrorDocument(1L, request, "Bearer test",
                 status().isInternalServerError(), "그룹 개수 제한 초과");
         }
 
@@ -225,13 +225,13 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_SAVED_GROUP));
 
             // when & then
-            performErrorDocument("group-1", request, "Bearer test",
+            performErrorDocument(1L, request, "Bearer test",
                 status().isInternalServerError(), "이미 존재하는 그룹명");
         }
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         UpdateGroupRequest request,
         String authorization,
         ResultMatcher status,
@@ -277,7 +277,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         UpdateGroupRequest request,
         String authorization,
         ResultMatcher status,

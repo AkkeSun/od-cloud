@@ -30,7 +30,7 @@ class FolderInfoEntity {
     private Long parentId;
 
     @Column(name = "GROUP_ID")
-    private String groupId;
+    private Long groupId;
 
     @Column(name = "NAME")
     private String name;

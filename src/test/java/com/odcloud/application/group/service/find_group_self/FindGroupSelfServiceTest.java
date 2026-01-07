@@ -37,7 +37,7 @@ class FindGroupSelfServiceTest {
 
             // ACTIVE 그룹 설정
             Group activeGroup = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .ownerEmail("manager1@example.com")
                 .name("Development Team")
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -45,7 +45,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount userActiveAccount = GroupAccount.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .groupName("Development Team")
                 .accountId(userId)
                 .nickName("User1")
@@ -56,7 +56,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount otherActiveMember = GroupAccount.builder()
                 .id(2L)
-                .groupId("group-1")
+                .groupId(1L)
                 .accountId(2L)
                 .nickName("User2")
                 .email("user2@example.com")
@@ -65,7 +65,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount ownerActiveMember = GroupAccount.builder()
                 .id(3L)
-                .groupId("group-1")
+                .groupId(1L)
                 .accountId(2L)
                 .nickName("User2")
                 .email("manager1@example.com")
@@ -77,7 +77,7 @@ class FindGroupSelfServiceTest {
 
             // PENDING 그룹 설정
             Group pendingGroup = Group.builder()
-                .id("group-2")
+                .id(2L)
                 .ownerEmail("manager2@example.com")
                 .name("Marketing Team")
                 .regDt(LocalDateTime.of(2024, 1, 2, 12, 0))
@@ -85,7 +85,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount userPendingAccount = GroupAccount.builder()
                 .id(3L)
-                .groupId("group-2")
+                .groupId(2L)
                 .groupName("Marketing Team")
                 .accountId(userId)
                 .nickName("User1")
@@ -96,7 +96,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount managerMember = GroupAccount.builder()
                 .id(4L)
-                .groupId("group-2")
+                .groupId(2L)
                 .accountId(3L)
                 .nickName("Manager2")
                 .email("manager2@example.com")
@@ -163,7 +163,7 @@ class FindGroupSelfServiceTest {
 
             // ACTIVE 그룹 설정
             Group activeGroup = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .ownerEmail("manager1@example.com")
                 .name("Development Team")
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -171,7 +171,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount userActiveAccount = GroupAccount.builder()
                 .id(1L)
-                .groupId("group-1")
+                .groupId(1L)
                 .groupName("Development Team")
                 .accountId(userId)
                 .nickName("User1")
@@ -182,7 +182,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount managerMember = GroupAccount.builder()
                 .id(2L)
-                .groupId("group-1")
+                .groupId(1L)
                 .accountId(2L)
                 .nickName("Manager1")
                 .email("manager1@example.com")
@@ -193,7 +193,7 @@ class FindGroupSelfServiceTest {
 
             // DENIED 그룹 설정
             Group deniedGroup = Group.builder()
-                .id("group-2")
+                .id(2L)
                 .ownerEmail("manager2@example.com")
                 .name("Marketing Team")
                 .regDt(LocalDateTime.of(2024, 1, 2, 12, 0))
@@ -201,7 +201,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount userDeniedAccount = GroupAccount.builder()
                 .id(3L)
-                .groupId("group-2")
+                .groupId(2L)
                 .groupName("Marketing Team")
                 .accountId(userId)
                 .nickName("User1")
@@ -213,7 +213,7 @@ class FindGroupSelfServiceTest {
 
             GroupAccount managerMember2 = GroupAccount.builder()
                 .id(4L)
-                .groupId("group-2")
+                .groupId(2L)
                 .accountId(3L)
                 .nickName("Manager2")
                 .email("manager2@example.com")
@@ -246,7 +246,7 @@ class FindGroupSelfServiceTest {
 
             FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroupInfo = response.deniedGroups()
                 .get(0);
-            assertThat(deniedGroupInfo.id()).isEqualTo("group-2");
+            assertThat(deniedGroupInfo.id()).isEqualTo(2L);
             assertThat(deniedGroupInfo.name()).isEqualTo("Marketing Team");
             assertThat(deniedGroupInfo.deniedCause()).isEqualTo("요청이 거부되었습니다");
         }

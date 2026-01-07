@@ -38,7 +38,7 @@ class FindGroupServiceTest {
         @DisplayName("[success] 그룹 상세 정보를 정상적으로 조회한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             Group group = Group.builder()
@@ -125,7 +125,7 @@ class FindGroupServiceTest {
         @DisplayName("[success] 멤버가 그룹장만 있는 경우 빈 members 리스트를 반환한다")
         void success_onlyManager() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             Group group = Group.builder()
@@ -160,7 +160,7 @@ class FindGroupServiceTest {
         @DisplayName("[success] 공지사항이 없는 경우 빈 notices 리스트를 반환한다")
         void success_noNotices() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             Group group = Group.builder()
@@ -193,7 +193,7 @@ class FindGroupServiceTest {
         @DisplayName("[success] 공지사항이 5개를 초과하는 경우 최근 5개만 반환한다")
         void success_limitNotices() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             Group group = Group.builder()
@@ -239,7 +239,7 @@ class FindGroupServiceTest {
         @DisplayName("[success] PENDING 상태의 멤버는 members에서 제외되지만 activeMemberCount에는 포함되지 않는다")
         void success_excludePendingMembers() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             Group group = Group.builder()
@@ -292,7 +292,7 @@ class FindGroupServiceTest {
         @DisplayName("[error] 존재하지 않는 그룹 ID인 경우 예외를 발생시킨다")
         void error_groupNotFound() {
             // given
-            String nonExistentGroupId = "non-existent-group";
+            Long nonExistentGroupId = 999L;
 
             // when & then
             assertThrows(CustomBusinessException.class,

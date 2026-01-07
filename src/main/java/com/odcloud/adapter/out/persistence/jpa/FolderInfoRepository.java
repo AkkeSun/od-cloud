@@ -148,7 +148,7 @@ class FolderInfoRepository {
             .execute();
     }
 
-    Optional<FolderInfo> findRootFolderByGroupId(String groupId) {
+    Optional<FolderInfo> findRootFolderByGroupId(Long groupId) {
         return Optional.ofNullable(queryFactory
             .select(constructor)
             .from(folderInfoEntity)
@@ -157,7 +157,7 @@ class FolderInfoRepository {
             .fetchOne());
     }
 
-    List<FolderInfo> findByGroupId(String groupId) {
+    List<FolderInfo> findByGroupId(Long groupId) {
         return queryFactory
             .select(constructor)
             .from(folderInfoEntity)

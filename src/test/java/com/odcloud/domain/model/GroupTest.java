@@ -80,35 +80,25 @@ class GroupTest {
     }
 
     @Nested
-    @DisplayName("[of] String id로부터 Group을 생성하는 정적 팩토리 메서드")
+    @DisplayName("[of] Long id로부터 Group을 생성하는 정적 팩토리 메서드")
     class Describe_of_fromId {
 
         @Test
-        @DisplayName("[success] String id로부터 Group을 생성한다")
+        @DisplayName("[success] Long id로부터 Group을 생성한다")
         void success() {
             // given
-            String id = "group-123";
+            Long id = 123L;
 
             // when
             Group group = Group.of(id);
 
             // then
             assertThat(group).isNotNull();
+            assertThat(group.getId()).isEqualTo(123L);
             assertThat(group.getOwnerEmail()).isNull();
             assertThat(group.getName()).isNull();
             assertThat(group.getGroupMembers()).isNull();
             assertThat(group.getRegDt()).isNull();
-        }
-        
-        @Test
-        @DisplayName("[success] 빈 문자열 id로부터 Group을 생성한다")
-        void success_emptyId() {
-            // when
-            Group group = Group.of("");
-
-            // then
-            assertThat(group).isNotNull();
-            assertThat(group.getId()).isEmpty();
         }
     }
 
@@ -124,7 +114,7 @@ class GroupTest {
                 GroupAccount.builder().id(1L).build()
             );
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .groupMembers(initialMembers)
                 .build();
 
@@ -151,7 +141,7 @@ class GroupTest {
                 GroupAccount.builder().id(2L).build()
             );
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .groupMembers(initialMembers)
                 .build();
 
@@ -170,7 +160,7 @@ class GroupTest {
                 GroupAccount.builder().id(1L).build()
             );
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .groupMembers(initialMembers)
                 .build();
 
@@ -191,14 +181,14 @@ class GroupTest {
         void success_getId() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .build();
 
             // when
-            String id = group.getId();
+            Long id = group.getId();
 
             // then
-            assertThat(id).isEqualTo("group-123");
+            assertThat(id).isEqualTo(123L);
         }
 
         @Test
@@ -294,7 +284,7 @@ class GroupTest {
 
             // when
             Group group = new Group(
-                "group-123",
+                123L,
                 "owner@example.com",
                 "테스트 그룹",
                 now
@@ -302,7 +292,7 @@ class GroupTest {
 
             // then
             assertThat(group).isNotNull();
-            assertThat(group.getId()).isEqualTo("group-123");
+            assertThat(group.getId()).isEqualTo(123L);
             assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(group.getName()).isEqualTo("테스트 그룹");
             assertThat(group.getRegDt()).isEqualTo(now);
@@ -333,7 +323,7 @@ class GroupTest {
         void success() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(100L)
                 .build();
 
@@ -354,7 +344,7 @@ class GroupTest {
         void success_nullStorageUsed() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(null)
                 .build();
 
@@ -375,7 +365,7 @@ class GroupTest {
         void success() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(100L)
                 .build();
 
@@ -396,7 +386,7 @@ class GroupTest {
         void success_negativeResult() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(50L)
                 .build();
 
@@ -412,7 +402,7 @@ class GroupTest {
         void success_nullStorageUsed() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(null)
                 .build();
 
@@ -433,7 +423,7 @@ class GroupTest {
         void success_canUpload() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(1000L)
                 .storageTotal(3221225472L)
                 .build();
@@ -450,7 +440,7 @@ class GroupTest {
         void success_cannotUpload() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(3221225000L)
                 .storageTotal(3221225472L)
                 .build();
@@ -467,7 +457,7 @@ class GroupTest {
         void success_exactMatch() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(3221225000L)
                 .storageTotal(3221225472L)
                 .build();
@@ -484,7 +474,7 @@ class GroupTest {
         void success_nullStorageUsed() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(null)
                 .storageTotal(3221225472L)
                 .build();
@@ -501,7 +491,7 @@ class GroupTest {
         void success_nullStorageTotal() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .storageUsed(1000L)
                 .storageTotal(null)
                 .build();

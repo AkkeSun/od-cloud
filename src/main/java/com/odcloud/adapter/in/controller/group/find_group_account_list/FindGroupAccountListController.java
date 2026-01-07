@@ -16,7 +16,7 @@ class FindGroupAccountListController {
 
     @GetMapping("/groups/{groupId}/accounts")
     ApiResponse<FindGroupAccountListResponse> findGroupAccountList(
-        @PathVariable String groupId
+        @PathVariable Long groupId
     ) {
         FindGroupAccountListServiceResponse serviceResponse = useCase.findGroupAccountList(groupId);
         return ApiResponse.ok(FindGroupAccountListResponse.of(serviceResponse));

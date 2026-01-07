@@ -13,7 +13,7 @@ public record RegisterScheduleCommand(
 
     Account account,
 
-    String groupId,
+    Long groupId,
 
     LocalDateTime notificationDt
 ) {

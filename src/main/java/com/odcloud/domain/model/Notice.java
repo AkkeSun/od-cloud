@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Notice {
 
     private Long id;
-    private String groupId;
+    private Long groupId;
     private String title;
     private String content;
     private String writerEmail;

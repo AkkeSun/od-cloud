@@ -108,7 +108,7 @@ class DeleteAccountServiceTest {
 
             // Create owned group
             Group group = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Test Group")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)
@@ -194,7 +194,7 @@ class DeleteAccountServiceTest {
 
             // Create two groups
             Group group1 = Group.builder()
-                .id("group-1")
+                .id(1L)
                 .name("Group 1")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)
@@ -204,7 +204,7 @@ class DeleteAccountServiceTest {
             groupStoragePort.save(group1);
 
             Group group2 = Group.builder()
-                .id("group-2")
+                .id(2L)
                 .name("Group 2")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)

@@ -45,13 +45,13 @@ class FindFilesServiceTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Parent Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -62,7 +62,7 @@ class FindFilesServiceTest {
             FolderInfo childFolder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Child Folder")
                 .owner("user@example.com")
                 .path("/group1/child")
@@ -114,13 +114,13 @@ class FindFilesServiceTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -178,13 +178,13 @@ class FindFilesServiceTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1"), Group.of("group2")))
+                .groups(List.of(Group.of(1L), Group.of(2L)))
                 .build();
 
             FolderInfo folder1 = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Group1 Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -195,7 +195,7 @@ class FindFilesServiceTest {
             FolderInfo folder2 = FolderInfo.builder()
                 .id(2L)
                 .parentId(0L)
-                .groupId("group2")
+                .groupId(2L)
                 .name("Group2 Folder")
                 .owner("user@example.com")
                 .path("/group2")
@@ -206,7 +206,7 @@ class FindFilesServiceTest {
             FolderInfo childFolder1 = FolderInfo.builder()
                 .id(3L)
                 .parentId(1L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Child of Group1")
                 .owner("user@example.com")
                 .path("/group1/child")
@@ -217,7 +217,7 @@ class FindFilesServiceTest {
             FolderInfo childFolder2 = FolderInfo.builder()
                 .id(4L)
                 .parentId(1L)
-                .groupId("group2")
+                .groupId(2L)
                 .name("Child of Group2")
                 .owner("user@example.com")
                 .path("/group1/child2")
@@ -228,7 +228,7 @@ class FindFilesServiceTest {
             FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(1L)
-                .groupId("group1")
+                .groupId(1L)
                 .sortType("NAME_ASC")
                 .build();
 
@@ -239,7 +239,7 @@ class FindFilesServiceTest {
             assertThat(response).isNotNull();
             assertThat(response.folders()).hasSize(1);
             assertThat(response.folders().get(0).name()).isEqualTo("Child of Group1");
-            assertThat(response.folders().get(0).groupId()).isEqualTo("group1");
+            assertThat(response.folders().get(0).groupId()).isEqualTo(1L);
         }
 
         // Note: 권한 체크 로직(PUBLIC/PRIVATE)은 Repository 계층에서 처리되므로
@@ -252,13 +252,13 @@ class FindFilesServiceTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -287,7 +287,7 @@ class FindFilesServiceTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()

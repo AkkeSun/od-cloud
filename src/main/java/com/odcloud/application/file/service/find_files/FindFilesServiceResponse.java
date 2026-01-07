@@ -32,7 +32,7 @@ public record FindFilesServiceResponse(
     public record FolderResponseItem(
         Long id,
         String name,
-        String groupId,
+        Long groupId,
         String regDt
     ) {
 

@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record UpdateNoticeCommand(
-    String groupId,
+    Long groupId,
     Long noticeId,
     Account account,
     String title,

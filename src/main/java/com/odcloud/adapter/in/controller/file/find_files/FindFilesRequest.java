@@ -22,7 +22,7 @@ public class FindFilesRequest {
 
     private Long folderId;
 
-    private String groupId;
+    private Long groupId;
 
     private String keyword;
 

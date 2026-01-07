@@ -27,7 +27,7 @@ record FindFilesResponse(
     record FolderResponse(
         Long id,
         String name,
-        String groupId,
+        Long groupId,
         String regDt
     ) {
 

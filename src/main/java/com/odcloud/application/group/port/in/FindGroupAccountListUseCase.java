@@ -4,5 +4,5 @@ import com.odcloud.application.group.service.find_group_account_list.FindGroupAc
 
 public interface FindGroupAccountListUseCase {
 
-    FindGroupAccountListServiceResponse findGroupAccountList(String groupId);
+    FindGroupAccountListServiceResponse findGroupAccountList(Long groupId);
 }

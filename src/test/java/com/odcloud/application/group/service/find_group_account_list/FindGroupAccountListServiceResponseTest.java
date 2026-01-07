@@ -107,8 +107,8 @@ class FindGroupAccountListServiceResponseTest {
         void success() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
-            groupAccounts.add(GroupAccount.builder().id(1L).groupId("group-1").build());
-            groupAccounts.add(GroupAccount.builder().id(2L).groupId("group-2").build());
+            groupAccounts.add(GroupAccount.builder().id(1L).groupId(1L).build());
+            groupAccounts.add(GroupAccount.builder().id(2L).groupId(1L).build());
 
             // when
             FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.of(
@@ -118,9 +118,9 @@ class FindGroupAccountListServiceResponseTest {
             assertThat(response).isNotNull();
             assertThat(response.groupAccounts()).hasSize(2);
             assertThat(response.groupAccounts().get(0).getId()).isEqualTo(1L);
-            assertThat(response.groupAccounts().get(0).getGroupId()).isEqualTo("group-1");
+            assertThat(response.groupAccounts().get(0).getGroupId()).isEqualTo(1L);
             assertThat(response.groupAccounts().get(1).getId()).isEqualTo(2L);
-            assertThat(response.groupAccounts().get(1).getGroupId()).isEqualTo("group-2");
+            assertThat(response.groupAccounts().get(1).getGroupId()).isEqualTo(1L);
         }
 
         @Test

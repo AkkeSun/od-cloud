@@ -14,13 +14,13 @@ public record FindPendingGroupAccountsServiceResponse(
     public static FindPendingGroupAccountsServiceResponse of(
         List<GroupAccount> groupAccounts
     ) {
-        Map<String, List<GroupAccount>> accountsByGroup = groupAccounts.stream()
+        Map<Long, List<GroupAccount>> accountsByGroup = groupAccounts.stream()
             .collect(Collectors.groupingBy(GroupAccount::getGroupId));
 
         List<GroupPendingAccounts> groupPendingAccountsList = accountsByGroup.entrySet()
             .stream()
             .map(entry -> {
-                String groupId = entry.getKey();
+                Long groupId = entry.getKey();
                 List<GroupAccount> pendingAccounts = entry.getValue();
                 String groupName = pendingAccounts.getFirst().getGroupName();
 
@@ -41,7 +41,7 @@ public record FindPendingGroupAccountsServiceResponse(
 
     @Builder
     public record GroupPendingAccounts(
-        String groupId,
+        Long groupId,
         String groupName,
         List<PendingAccountInfo> pendingAccounts
     ) {

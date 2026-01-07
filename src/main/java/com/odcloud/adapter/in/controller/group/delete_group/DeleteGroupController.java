@@ -19,15 +19,13 @@ class DeleteGroupController {
 
     @DeleteMapping("/groups/{groupId}")
     ApiResponse<DeleteGroupResponse> delete(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @LoginAccount Account account
     ) {
-        DeleteGroupCommand command = DeleteGroupCommand.builder()
+        DeleteGroupServiceResponse response = deleteGroupUseCase.delete(DeleteGroupCommand.builder()
             .groupId(groupId)
             .currentOwnerEmail(account.getEmail())
-            .build();
-
-        DeleteGroupServiceResponse response = deleteGroupUseCase.delete(command);
+            .build());
 
         return ApiResponse.ok(DeleteGroupResponse.of(response));
     }

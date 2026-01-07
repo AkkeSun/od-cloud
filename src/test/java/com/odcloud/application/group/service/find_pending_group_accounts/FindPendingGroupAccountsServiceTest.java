@@ -42,19 +42,19 @@ class FindPendingGroupAccountsServiceTest {
                 .build();
 
             Group ownerGroup1 = Group.builder()
-                .id("owner-group-1")
+                .id(1L)
                 .name("Owner Group 1")
                 .ownerEmail(ownerEmail)
                 .build();
 
             Group ownerGroup2 = Group.builder()
-                .id("owner-group-2")
+                .id(2L)
                 .name("Owner Group 2")
                 .ownerEmail(ownerEmail)
                 .build();
 
             Group otherGroup = Group.builder()
-                .id("other-group")
+                .id(3L)
                 .name("Other Group")
                 .ownerEmail("other@example.com")
                 .build();
@@ -69,7 +69,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount pending1 = GroupAccount.builder()
                 .id(1L)
-                .groupId("owner-group-1")
+                .groupId(1L)
                 .groupName("Owner Group 1")
                 .accountId(10L)
                 .nickName("User1")
@@ -79,7 +79,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount pending2 = GroupAccount.builder()
                 .id(2L)
-                .groupId("owner-group-1")
+                .groupId(1L)
                 .groupName("Owner Group 1")
                 .accountId(11L)
                 .nickName("User2")
@@ -89,7 +89,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount active1 = GroupAccount.builder()
                 .id(3L)
-                .groupId("owner-group-1")
+                .groupId(1L)
                 .groupName("Owner Group 1")
                 .accountId(12L)
                 .nickName("User3")
@@ -99,7 +99,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount pending3 = GroupAccount.builder()
                 .id(4L)
-                .groupId("owner-group-2")
+                .groupId(2L)
                 .groupName("Owner Group 2")
                 .accountId(13L)
                 .nickName("User4")
@@ -109,7 +109,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount pendingOther = GroupAccount.builder()
                 .id(5L)
-                .groupId("other-group")
+                .groupId(3L)
                 .groupName("Other Group")
                 .accountId(14L)
                 .nickName("User5")
@@ -130,7 +130,7 @@ class FindPendingGroupAccountsServiceTest {
             assertThat(response).isNotNull();
             assertThat(response.groups()).hasSize(2);
 
-            assertThat(response.groups().get(0).groupId()).isEqualTo("owner-group-1");
+            assertThat(response.groups().get(0).groupId()).isEqualTo(1L);
             assertThat(response.groups().get(0).groupName()).isEqualTo("Owner Group 1");
             assertThat(response.groups().get(0).pendingAccounts()).hasSize(2);
             assertThat(response.groups().get(0).pendingAccounts().get(0).accountId()).isEqualTo(
@@ -142,7 +142,7 @@ class FindPendingGroupAccountsServiceTest {
             assertThat(response.groups().get(0).pendingAccounts().get(1).accountId()).isEqualTo(
                 11L);
 
-            assertThat(response.groups().get(1).groupId()).isEqualTo("owner-group-2");
+            assertThat(response.groups().get(1).groupId()).isEqualTo(2L);
             assertThat(response.groups().get(1).groupName()).isEqualTo("Owner Group 2");
             assertThat(response.groups().get(1).pendingAccounts()).hasSize(1);
             assertThat(response.groups().get(1).pendingAccounts().get(0).accountId()).isEqualTo(
@@ -167,7 +167,7 @@ class FindPendingGroupAccountsServiceTest {
                 .build();
 
             Group ownerGroup = Group.builder()
-                .id("owner-group")
+                .id(3L)
                 .name("Owner Group")
                 .ownerEmail(ownerEmail)
                 .build();
@@ -176,7 +176,7 @@ class FindPendingGroupAccountsServiceTest {
 
             GroupAccount active1 = GroupAccount.builder()
                 .id(1L)
-                .groupId("owner-group")
+                .groupId(1L)
                 .accountId(10L)
                 .nickName("User1")
                 .status("ACTIVE")
@@ -207,7 +207,7 @@ class FindPendingGroupAccountsServiceTest {
                 .build();
 
             Group otherGroup = Group.builder()
-                .id("other-group")
+                .id(3L)
                 .name("Other Group")
                 .ownerEmail("other@example.com")
                 .build();

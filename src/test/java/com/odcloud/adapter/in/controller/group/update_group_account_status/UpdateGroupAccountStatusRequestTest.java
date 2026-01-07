@@ -24,7 +24,7 @@ class UpdateGroupAccountStatusRequestTest {
                 .status("APPROVED")
                 .build();
 
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Long accountId = 1L;
             Account account = mock(Account.class);
             given(account.getEmail()).willReturn("owner@example.com");
@@ -49,7 +49,7 @@ class UpdateGroupAccountStatusRequestTest {
                 .status(null)
                 .build();
 
-            String groupId = null;
+            Long groupId = null;
             Long accountId = null;
             Account account = mock(Account.class);
             given(account.getEmail()).willReturn(null);
@@ -74,7 +74,7 @@ class UpdateGroupAccountStatusRequestTest {
                 .status("")
                 .build();
 
-            String groupId = "";
+            Long groupId = 1L;
             Long accountId = 1L;
             Account account = mock(Account.class);
             given(account.getEmail()).willReturn("");
@@ -85,7 +85,7 @@ class UpdateGroupAccountStatusRequestTest {
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEmpty();
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.accountId()).isEqualTo(1L);
             assertThat(command.groupOwnerEmail()).isEmpty();
             assertThat(command.status()).isEmpty();

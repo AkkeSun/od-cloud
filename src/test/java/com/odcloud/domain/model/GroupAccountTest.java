@@ -19,7 +19,7 @@ class GroupAccountTest {
         void success() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(123L)
                 .build();
             Account account = Account.builder()
                 .id(100L)
@@ -34,7 +34,7 @@ class GroupAccountTest {
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
             assertThat(groupAccount).isNotNull();
-            assertThat(groupAccount.getGroupId()).isEqualTo("group-123");
+            assertThat(groupAccount.getGroupId()).isEqualTo(123L);
             assertThat(groupAccount.getAccountId()).isEqualTo(100L);
             assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
             assertThat(groupAccount.getModDt()).isAfter(before);
@@ -235,14 +235,14 @@ class GroupAccountTest {
         void success_getGroupId() {
             // given
             GroupAccount groupAccount = GroupAccount.builder()
-                .groupId("group-123")
+                .groupId(123L)
                 .build();
 
             // when
-            String groupId = groupAccount.getGroupId();
+            Long groupId = groupAccount.getGroupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-123");
+            assertThat(groupId).isEqualTo(123L);
         }
 
         @Test
@@ -396,7 +396,7 @@ class GroupAccountTest {
             // when
             GroupAccount groupAccount = new GroupAccount(
                 1L,
-                "group-123",
+                123L,
                 100L,
                 "홍길동",
                 "테스터",
@@ -410,7 +410,7 @@ class GroupAccountTest {
             // then
             assertThat(groupAccount).isNotNull();
             assertThat(groupAccount.getId()).isEqualTo(1L);
-            assertThat(groupAccount.getGroupId()).isEqualTo("group-123");
+            assertThat(groupAccount.getGroupId()).isEqualTo(123L);
             assertThat(groupAccount.getAccountId()).isEqualTo(100L);
             assertThat(groupAccount.getName()).isEqualTo("홍길동");
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");

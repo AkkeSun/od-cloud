@@ -12,7 +12,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -56,21 +55,20 @@ class ScheduleRepository {
     }
 
     private BooleanExpression buildFilterCondition(FindSchedulesCommand command) {
-        String filterType = command.filterType();
+        Long groupId = command.groupId();
         String email = command.account().getEmail();
-        List<String> groupIds = command.account().getGroupIds();
+        List<Long> groupIds = command.account().getGroupIds();
 
-        if (!StringUtils.hasText(command.filterType())) {
-            return scheduleEntity.writerEmail.eq(email).and(scheduleEntity.groupId.isNull())
-                .or(scheduleEntity.groupId.in(groupIds));
+        if (groupId == null) {
+            return scheduleEntity.writerEmail.eq(email)
+                .and(scheduleEntity.groupId.isNull()).or(scheduleEntity.groupId.in(groupIds));
         }
 
-        if ("PRIVATE".equalsIgnoreCase(filterType)) {
+        if (groupId == 0L) {
             return scheduleEntity.writerEmail.eq(command.account().getEmail())
                 .and(scheduleEntity.groupId.isNull());
         }
-
-        return scheduleEntity.groupId.eq(filterType);
+        return scheduleEntity.groupId.eq(groupId);
     }
 
     public List<ScheduleEntity> findSchedulesForNotification(LocalDateTime currentTime) {
@@ -103,7 +101,7 @@ class ScheduleRepository {
             .fetch();
     }
 
-    public List<ScheduleEntity> findByGroupId(String groupId) {
+    public List<ScheduleEntity> findByGroupId(Long groupId) {
         return queryFactory
             .selectFrom(scheduleEntity)
             .where(scheduleEntity.groupId.eq(groupId))

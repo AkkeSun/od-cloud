@@ -48,7 +48,7 @@ class AccountDeviceRepository {
         return Optional.ofNullable(entity).map(this::toDomain);
     }
 
-    public List<AccountDevice> findByGroupIdForPush(String groupId) {
+    public List<AccountDevice> findByGroupIdForPush(Long groupId) {
         return queryFactory.select(Projections.constructor(AccountDevice.class,
                 accountDeviceEntity.id,
                 accountDeviceEntity.accountId,

@@ -47,7 +47,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
             // given
             FindGroupsServiceResponse.GroupResponseItem group1 =
                 FindGroupsServiceResponse.GroupResponseItem.builder()
-                    .id("group-1")
+                    .id(1L)
                     .ownerEmail("owner1@example.com")
                     .name("Development Team")
                     .regDt("2024-01-01T12:00:00")
@@ -55,7 +55,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
 
             FindGroupsServiceResponse.GroupResponseItem group2 =
                 FindGroupsServiceResponse.GroupResponseItem.builder()
-                    .id("group-2")
+                    .id(2L)
                     .ownerEmail("owner2@example.com")
                     .name("Marketing Team")
                     .regDt("2024-01-02T12:00:00")
@@ -63,7 +63,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
 
             FindGroupsServiceResponse.GroupResponseItem group3 =
                 FindGroupsServiceResponse.GroupResponseItem.builder()
-                    .id("group-3")
+                    .id(3L)
                     .ownerEmail("owner3@example.com")
                     .name("Sales Team")
                     .regDt("2024-01-03T12:00:00")
@@ -87,7 +87,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.groups")
                     .type(JsonFieldType.ARRAY).description("그룹 목록"),
                 fieldWithPath("data.groups[].id")
-                    .type(JsonFieldType.STRING).description("그룹 ID"),
+                    .type(JsonFieldType.NUMBER).description("그룹 ID"),
                 fieldWithPath("data.groups[].ownerEmail")
                     .type(JsonFieldType.STRING).description("그룹 소유자 이메일"),
                 fieldWithPath("data.groups[].name")
@@ -103,7 +103,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
             // given
             FindGroupsServiceResponse.GroupResponseItem group1 =
                 FindGroupsServiceResponse.GroupResponseItem.builder()
-                    .id("group-1")
+                    .id(1L)
                     .ownerEmail("owner1@example.com")
                     .name("개발팀")
                     .regDt("2024-01-01T12:00:00")
@@ -111,7 +111,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
 
             FindGroupsServiceResponse.GroupResponseItem group2 =
                 FindGroupsServiceResponse.GroupResponseItem.builder()
-                    .id("group-3")
+                    .id(3L)
                     .ownerEmail("owner3@example.com")
                     .name("개발 지원팀")
                     .regDt("2024-01-03T12:00:00")
@@ -135,7 +135,7 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.groups")
                     .type(JsonFieldType.ARRAY).description("그룹 목록"),
                 fieldWithPath("data.groups[].id")
-                    .type(JsonFieldType.STRING).description("그룹 ID"),
+                    .type(JsonFieldType.NUMBER).description("그룹 ID"),
                 fieldWithPath("data.groups[].ownerEmail")
                     .type(JsonFieldType.STRING).description("그룹 소유자 이메일"),
                 fieldWithPath("data.groups[].name")

@@ -24,7 +24,7 @@ class FindGroupAccountListResponseTest {
             List<GroupAccount> groupAccounts = List.of(
                 GroupAccount.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -49,7 +49,7 @@ class FindGroupAccountListResponseTest {
             FindGroupAccountListResponse.GroupAccountInfo accountInfo = response.groupAccounts()
                 .get(0);
             assertThat(accountInfo.id()).isEqualTo(1L);
-            assertThat(accountInfo.groupId()).isEqualTo("group-123");
+            assertThat(accountInfo.groupId()).isEqualTo(1L);
             assertThat(accountInfo.accountId()).isEqualTo(100L);
             assertThat(accountInfo.name()).isEqualTo("홍길동");
             assertThat(accountInfo.nickName()).isEqualTo("gildong");
@@ -83,7 +83,7 @@ class FindGroupAccountListResponseTest {
             List<GroupAccount> groupAccounts = List.of(
                 GroupAccount.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -94,7 +94,7 @@ class FindGroupAccountListResponseTest {
                     .build(),
                 GroupAccount.builder()
                     .id(2L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(200L)
                     .name("김철수")
                     .nickName("chulsoo")
@@ -137,7 +137,7 @@ class FindGroupAccountListResponseTest {
             List<GroupAccount> groupAccounts = List.of(
                 GroupAccount.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name(null)
                     .nickName(null)
@@ -179,7 +179,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -228,7 +228,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -262,7 +262,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts1 = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -276,7 +276,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts2 = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(2L)
-                    .groupId("group-456")
+                    .groupId(1L)
                     .accountId(200L)
                     .name("김철수")
                     .nickName("chulsoo")
@@ -314,7 +314,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -351,7 +351,7 @@ class FindGroupAccountListResponseTest {
             List<FindGroupAccountListResponse.GroupAccountInfo> groupAccounts = List.of(
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -391,7 +391,7 @@ class FindGroupAccountListResponseTest {
             FindGroupAccountListResponse.GroupAccountInfo accountInfo =
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -404,7 +404,7 @@ class FindGroupAccountListResponseTest {
             // then
             assertThat(accountInfo).isNotNull();
             assertThat(accountInfo.id()).isEqualTo(1L);
-            assertThat(accountInfo.groupId()).isEqualTo("group-123");
+            assertThat(accountInfo.groupId()).isEqualTo(1L);
             assertThat(accountInfo.accountId()).isEqualTo(100L);
             assertThat(accountInfo.name()).isEqualTo("홍길동");
             assertThat(accountInfo.nickName()).isEqualTo("gildong");
@@ -423,7 +423,7 @@ class FindGroupAccountListResponseTest {
             FindGroupAccountListResponse.GroupAccountInfo accountInfo1 =
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -436,7 +436,7 @@ class FindGroupAccountListResponseTest {
             FindGroupAccountListResponse.GroupAccountInfo accountInfo2 =
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -460,7 +460,7 @@ class FindGroupAccountListResponseTest {
             FindGroupAccountListResponse.GroupAccountInfo accountInfo =
                 FindGroupAccountListResponse.GroupAccountInfo.builder()
                     .id(1L)
-                    .groupId("group-123")
+                    .groupId(1L)
                     .accountId(100L)
                     .name("홍길동")
                     .nickName("gildong")
@@ -477,7 +477,6 @@ class FindGroupAccountListResponseTest {
             assertThat(result).isNotNull();
             assertThat(result).contains("GroupAccountInfo");
             assertThat(result).contains("홍길동");
-            assertThat(result).contains("group-123");
         }
     }
 }

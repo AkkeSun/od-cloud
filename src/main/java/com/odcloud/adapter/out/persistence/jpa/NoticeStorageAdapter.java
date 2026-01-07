@@ -27,7 +27,7 @@ class NoticeStorageAdapter implements NoticeStoragePort {
     }
 
     @Override
-    public List<Notice> findByGroupId(String groupId, int limit) {
+    public List<Notice> findByGroupId(Long groupId, int limit) {
         return repository.findByGroupId(groupId, limit).stream()
             .map(NoticeEntity::toDomain)
             .toList();

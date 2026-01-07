@@ -43,7 +43,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
             FolderInfo folder = FolderInfo.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("루트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -59,12 +59,12 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             var savedFolders = entityManager
                 .createQuery("SELECT f FROM FolderInfoEntity f WHERE f.groupId = :groupId",
                     FolderInfoEntity.class)
-                .setParameter("groupId", "test-group")
+                .setParameter("groupId", 1L)
                 .getResultList();
 
             assertThat(savedFolders).hasSize(1);
             assertThat(savedFolders.get(0).getParentId()).isNull();
-            assertThat(savedFolders.get(0).getGroupId()).isEqualTo("test-group");
+            assertThat(savedFolders.get(0).getGroupId()).isEqualTo(1L);
             assertThat(savedFolders.get(0).getName()).isEqualTo("루트 폴더");
             assertThat(savedFolders.get(0).getOwner()).isEqualTo("owner@example.com");
             assertThat(savedFolders.get(0).getPath()).isEqualTo("/test-group");
@@ -79,7 +79,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -91,7 +91,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfo subFolder = FolderInfo.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("서브 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/subfolder")
@@ -123,7 +123,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
             FolderInfoEntity existingFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("기존 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -137,7 +137,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             FolderInfo updatedFolder = FolderInfo.builder()
                 .id(existingFolder.getId())
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("업데이트된 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -166,7 +166,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -178,7 +178,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfo subFolder1 = FolderInfo.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("서브 폴더 1")
                 .owner("owner@example.com")
                 .path("/test-group/sub1")
@@ -187,7 +187,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfo subFolder2 = FolderInfo.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("서브 폴더 2")
                 .owner("owner@example.com")
                 .path("/test-group/sub2")
@@ -196,7 +196,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfo subFolder3 = FolderInfo.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("서브 폴더 3")
                 .owner("owner@example.com")
                 .path("/test-group/sub3")
@@ -231,7 +231,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
             FolderInfo folder = FolderInfo.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -248,7 +248,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             var savedFolders = entityManager
                 .createQuery("SELECT f FROM FolderInfoEntity f WHERE f.groupId = :groupId",
                     FolderInfoEntity.class)
-                .setParameter("groupId", "test-group")
+                .setParameter("groupId", 1L)
                 .getResultList();
 
             assertThat(savedFolders).hasSize(1);
@@ -267,7 +267,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             LocalDateTime now = LocalDateTime.now();
             FolderInfoEntity folder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -284,7 +284,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(folder.getId());
-            assertThat(result.getGroupId()).isEqualTo("test-group");
+            assertThat(result.getGroupId()).isEqualTo(1L);
             assertThat(result.getName()).isEqualTo("테스트 폴더");
             assertThat(result.getOwner()).isEqualTo("owner@example.com");
             assertThat(result.getPath()).isEqualTo("/test-group");
@@ -299,7 +299,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -311,7 +311,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 서브 폴더 생성
             FolderInfoEntity subFolder = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("서브 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/subfolder")
@@ -351,7 +351,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfoEntity folder1 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("폴더 1")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -362,7 +362,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfoEntity folder2 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-2")
+                .groupId(1L)
                 .name("폴더 2")
                 .owner("owner@example.com")
                 .path("/group-2")
@@ -380,7 +380,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(folder1.getId());
-            assertThat(result.getGroupId()).isEqualTo("group-1");
+            assertThat(result.getGroupId()).isEqualTo(1L);
             assertThat(result.getName()).isEqualTo("폴더 1");
         }
     }
@@ -398,7 +398,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -410,7 +410,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 서브 폴더 생성
             FolderInfoEntity subFolder = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("기존 폴더")
                 .owner("owner@example.com")
                 .path("/test-group/existing")
@@ -437,7 +437,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -464,7 +464,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 1 생성
             FolderInfoEntity parentFolder1 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-1")
+                .groupId(1L)
                 .name("부모 폴더 1")
                 .owner("owner@example.com")
                 .path("/group-1")
@@ -476,7 +476,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 2 생성
             FolderInfoEntity parentFolder2 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group-2")
+                .groupId(1L)
                 .name("부모 폴더 2")
                 .owner("owner@example.com")
                 .path("/group-2")
@@ -488,7 +488,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 1 아래 서브 폴더 생성
             FolderInfoEntity subFolder = FolderInfoEntity.builder()
                 .parentId(parentFolder1.getId())
-                .groupId("group-1")
+                .groupId(1L)
                 .name("공통 이름")
                 .owner("owner@example.com")
                 .path("/group-1/common")
@@ -515,7 +515,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -527,7 +527,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 여러 서브 폴더 생성
             entityManager.persist(FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("폴더 A")
                 .owner("owner@example.com")
                 .path("/test-group/a")
@@ -537,7 +537,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             entityManager.persist(FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("폴더 B")
                 .owner("owner@example.com")
                 .path("/test-group/b")
@@ -547,7 +547,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             entityManager.persist(FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("폴더 C")
                 .owner("owner@example.com")
                 .path("/test-group/c")
@@ -574,7 +574,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
                 .path("/test-group")
@@ -586,7 +586,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 서브 폴더 생성
             FolderInfoEntity subFolder = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .name("TestFolder")
                 .owner("owner@example.com")
                 .path("/test-group/test")
@@ -617,7 +617,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Parent Folder")
                 .owner("user@example.com")
                 .path("/group1")
@@ -629,7 +629,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 하위 폴더 생성
             FolderInfoEntity child1 = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("group1")
+                .groupId(1L)
                 .name("Child 1")
                 .owner("user@example.com")
                 .path("/group1/child1")
@@ -640,7 +640,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfoEntity child2 = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("group1")
+                .groupId(1L)
                 .name("Child 2")
                 .owner("user@example.com")
                 .path("/group1/child2")
@@ -655,7 +655,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -682,7 +682,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 폴더 생성
             FolderInfoEntity folder1 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Project A")
                 .owner("user@example.com")
                 .path("/group1/projectA")
@@ -693,7 +693,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfoEntity folder2 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Documents")
                 .owner("user@example.com")
                 .path("/group1/documents")
@@ -704,7 +704,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
 
             FolderInfoEntity folder3 = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Project B")
                 .owner("user@example.com")
                 .path("/group1/projectB")
@@ -719,7 +719,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
@@ -746,7 +746,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // 부모 폴더 생성
             FolderInfoEntity parentFolder = FolderInfoEntity.builder()
                 .parentId(null)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Parent")
                 .owner("user@example.com")
                 .path("/group1")
@@ -758,7 +758,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // group1 하위 폴더
             FolderInfoEntity child1 = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("group1")
+                .groupId(1L)
                 .name("Child of Group1")
                 .owner("user@example.com")
                 .path("/group1/child1")
@@ -770,7 +770,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // group2 하위 폴더
             FolderInfoEntity child2 = FolderInfoEntity.builder()
                 .parentId(parentFolder.getId())
-                .groupId("group2")
+                .groupId(1L)
                 .name("Child of Group2")
                 .owner("user@example.com")
                 .path("/group1/child2")
@@ -785,14 +785,14 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of("group1"),
-                    com.odcloud.domain.model.Group.of("group2")))
+                .groups(List.of(com.odcloud.domain.model.Group.of(1L),
+                    com.odcloud.domain.model.Group.of(2L)))
                 .build();
 
             FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(parentFolder.getId())
-                .groupId("group1")
+                .groupId(1L)
                 .sortType("NAME_ASC")
                 .build();
 
@@ -802,7 +802,7 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).hasSize(2);
             assertThat(result.get(0).getName()).isEqualTo("Child of Group1");
-            assertThat(result.get(0).getGroupId()).isEqualTo("group1");
+            assertThat(result.get(0).getGroupId()).isEqualTo(1L);
         }
     }
 }

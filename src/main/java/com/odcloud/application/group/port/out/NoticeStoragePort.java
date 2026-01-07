@@ -9,7 +9,7 @@ public interface NoticeStoragePort {
 
     Notice findById(Long noticeId);
 
-    List<Notice> findByGroupId(String groupId, int limit);
+    List<Notice> findByGroupId(Long groupId, int limit);
 
     void delete(Notice notice);
 

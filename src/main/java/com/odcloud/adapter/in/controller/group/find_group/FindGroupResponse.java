@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 record FindGroupResponse(
-    String id,
+    Long id,
     String name,
     MemberInfo manager,
     List<MemberInfo> members,

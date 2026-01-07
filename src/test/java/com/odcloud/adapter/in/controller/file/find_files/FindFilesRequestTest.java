@@ -23,13 +23,13 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(10L)
-                .groupId("group1")
+                .groupId(1L)
                 .keyword("test")
                 .build();
 
@@ -41,7 +41,7 @@ class FindFilesRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.sortType()).isEqualTo("NAME_ASC");
             assertThat(command.folderId()).isEqualTo(10L);
-            assertThat(command.groupId()).isEqualTo("group1");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.keyword()).isEqualTo("test");
         }
 
@@ -52,7 +52,7 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FindFilesRequest request = FindFilesRequest.builder()
@@ -78,7 +78,7 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FindFilesRequest request = FindFilesRequest.builder()
@@ -104,13 +104,13 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1"), Group.of("group2")))
+                .groups(List.of(Group.of(1L), Group.of(2L)))
                 .build();
 
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(0L)
-                .groupId("group2")
+                .groupId(1L)
                 .build();
 
             // when
@@ -119,7 +119,7 @@ class FindFilesRequestTest {
             // then
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.folderId()).isEqualTo(0L);
-            assertThat(command.groupId()).isEqualTo("group2");
+            assertThat(command.groupId()).isEqualTo(1L);
         }
 
         @Test
@@ -129,7 +129,7 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             List<String> sortTypes = List.of("NAME_ASC", "NAME_DESC", "REG_DT_ASC", "REG_DT_DESC");
@@ -155,7 +155,7 @@ class FindFilesRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             FindFilesRequest request = FindFilesRequest.builder()
@@ -208,7 +208,7 @@ class FindFilesRequestTest {
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(10L)
-                .groupId("group1")
+                .groupId(1L)
                 .keyword("test")
                 .build();
 
@@ -216,7 +216,7 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isEqualTo("NAME_ASC");
             assertThat(request.getFolderId()).isEqualTo(10L);
-            assertThat(request.getGroupId()).isEqualTo("group1");
+            assertThat(request.getGroupId()).isEqualTo(1L);
             assertThat(request.getKeyword()).isEqualTo("test");
         }
 
@@ -256,7 +256,7 @@ class FindFilesRequestTest {
             FindFilesRequest request = new FindFilesRequest(
                 "NAME_ASC",
                 10L,
-                "group1",
+                1L,
                 "test"
             );
 
@@ -264,7 +264,7 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isEqualTo("NAME_ASC");
             assertThat(request.getFolderId()).isEqualTo(10L);
-            assertThat(request.getGroupId()).isEqualTo("group1");
+            assertThat(request.getGroupId()).isEqualTo(1L);
             assertThat(request.getKeyword()).isEqualTo("test");
         }
     }

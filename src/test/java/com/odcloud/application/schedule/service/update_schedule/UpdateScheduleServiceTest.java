@@ -130,7 +130,7 @@ class UpdateScheduleServiceTest {
         void success_groupSchedule() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -146,7 +146,7 @@ class UpdateScheduleServiceTest {
             Schedule schedule = Schedule.builder()
                 .id(1L)
                 .writerEmail("owner@example.com")
-                .groupId("group-123")
+                .groupId(1L)
                 .content("기존 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
                 .notificationYn("N")
@@ -172,7 +172,7 @@ class UpdateScheduleServiceTest {
             Schedule updatedSchedule = fakeScheduleStoragePort.database.get(1);
             assertThat(updatedSchedule.getId()).isEqualTo(1L);
             assertThat(updatedSchedule.getContent()).isEqualTo("수정된 그룹 회의");
-            assertThat(updatedSchedule.getGroupId()).isEqualTo("group-123");
+            assertThat(updatedSchedule.getGroupId()).isEqualTo(1L);
         }
 
         @Test
@@ -180,7 +180,7 @@ class UpdateScheduleServiceTest {
         void failure_accessDeniedForGroup() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -196,7 +196,7 @@ class UpdateScheduleServiceTest {
             Schedule schedule = Schedule.builder()
                 .id(1L)
                 .writerEmail("owner@example.com")
-                .groupId("other-group")
+                .groupId(2L)
                 .content("다른 그룹 회의")
                 .startDt(LocalDateTime.of(2025, 1, 1, 10, 0))
                 .notificationYn("N")

@@ -40,7 +40,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Notice notice = Notice.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("테스트 공지사항")
                 .content("공지사항 내용입니다.")
                 .writerEmail("writer@example.com")
@@ -58,7 +58,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             NoticeEntity entity = entityManager.find(NoticeEntity.class, savedNotice.getId());
             assertThat(entity).isNotNull();
-            assertThat(entity.getGroupId()).isEqualTo("test-group");
+            assertThat(entity.getGroupId()).isEqualTo(1L);
             assertThat(entity.getTitle()).isEqualTo("테스트 공지사항");
             assertThat(entity.getContent()).isEqualTo("공지사항 내용입니다.");
             assertThat(entity.getWriterEmail()).isEqualTo("writer@example.com");
@@ -70,7 +70,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Notice notice = Notice.builder()
-                .groupId("group-123")
+                .groupId(1L)
                 .title("완전한 공지사항")
                 .content("모든 필드가 포함된 내용")
                 .writerEmail("admin@example.com")
@@ -84,7 +84,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             NoticeEntity entity = entityManager.find(NoticeEntity.class, savedNotice.getId());
-            assertThat(entity.getGroupId()).isEqualTo("group-123");
+            assertThat(entity.getGroupId()).isEqualTo(1L);
             assertThat(entity.getTitle()).isEqualTo("완전한 공지사항");
             assertThat(entity.getContent()).isEqualTo("모든 필드가 포함된 내용");
             assertThat(entity.getWriterEmail()).isEqualTo("admin@example.com");
@@ -100,7 +100,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 그룹 ID로 공지사항을 조회한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             NoticeEntity notice1 = NoticeEntity.builder()
@@ -138,7 +138,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 최신 등록일 순으로 정렬된다")
         void success_orderedByRegDtDesc() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             for (int i = 1; i <= 5; i++) {
@@ -170,7 +170,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] limit 파라미터가 적용된다")
         void success_limit() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             for (int i = 1; i <= 10; i++) {
@@ -199,8 +199,8 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 다른 그룹의 공지사항은 조회되지 않는다")
         void success_filterByGroupId() {
             // given
-            String targetGroupId = "target-group";
-            String otherGroupId = "other-group";
+            Long targetGroupId = 1L;
+            Long otherGroupId = 2L;
             LocalDateTime now = LocalDateTime.now();
 
             NoticeEntity targetNotice = NoticeEntity.builder()
@@ -236,7 +236,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 공지사항이 없는 경우 빈 리스트를 반환한다")
         void success_emptyList() {
             // given
-            String groupId = "empty-group";
+            Long groupId = 1L;
 
             // when
             List<Notice> result = adapter.findByGroupId(groupId, 10);
@@ -249,7 +249,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] limit이 1인 경우 1개만 반환한다")
         void success_limitOne() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             NoticeEntity notice1 = NoticeEntity.builder()
@@ -285,7 +285,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] Domain 객체로 올바르게 변환된다")
         void success_toDomain() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.now();
 
             NoticeEntity entity = NoticeEntity.builder()
@@ -324,7 +324,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             NoticeEntity entity = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("테스트 공지")
                 .content("테스트 내용")
                 .writerEmail("test@example.com")
@@ -340,7 +340,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(entity.getId());
-            assertThat(result.getGroupId()).isEqualTo("test-group");
+            assertThat(result.getGroupId()).isEqualTo(1L);
             assertThat(result.getTitle()).isEqualTo("테스트 공지");
             assertThat(result.getContent()).isEqualTo("테스트 내용");
             assertThat(result.getWriterEmail()).isEqualTo("test@example.com");
@@ -367,7 +367,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success() {
             // given
             NoticeEntity entity = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("삭제될 공지")
                 .content("내용")
                 .writerEmail("test@example.com")
@@ -380,7 +380,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             Long noticeId = entity.getId();
             Notice notice = Notice.builder()
                 .id(noticeId)
-                .groupId("test-group")
+                .groupId(1L)
                 .build();
 
             // when
@@ -399,7 +399,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             // given
             Notice notice = Notice.builder()
                 .id(999L)
-                .groupId("test-group")
+                .groupId(1L)
                 .build();
 
             // when & then
@@ -413,7 +413,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success_otherNoticesRemain() {
             // given
             NoticeEntity entity1 = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("삭제될 공지")
                 .content("내용 1")
                 .writerEmail("test@example.com")
@@ -421,7 +421,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
                 .build();
 
             NoticeEntity entity2 = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("남을 공지")
                 .content("내용 2")
                 .writerEmail("test@example.com")
@@ -435,7 +435,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             Notice notice = Notice.builder()
                 .id(entity1.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .build();
 
             // when
@@ -463,7 +463,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success() {
             // given
             NoticeEntity entity = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("원본 제목")
                 .content("원본 내용")
                 .writerEmail("test@example.com")
@@ -475,7 +475,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             Notice notice = Notice.builder()
                 .id(entity.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .title("수정된 제목")
                 .content("수정된 내용")
                 .writerEmail("test@example.com")
@@ -492,7 +492,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
             assertThat(updatedEntity).isNotNull();
             assertThat(updatedEntity.getTitle()).isEqualTo("수정된 제목");
             assertThat(updatedEntity.getContent()).isEqualTo("수정된 내용");
-            assertThat(updatedEntity.getGroupId()).isEqualTo("test-group");
+            assertThat(updatedEntity.getGroupId()).isEqualTo(1L);
             assertThat(updatedEntity.getWriterEmail()).isEqualTo("test@example.com");
         }
 
@@ -501,7 +501,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success_titleOnly() {
             // given
             NoticeEntity entity = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("원본 제목")
                 .content("원본 내용")
                 .writerEmail("test@example.com")
@@ -513,7 +513,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             Notice notice = Notice.builder()
                 .id(entity.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .title("수정된 제목")
                 .content("원본 내용")
                 .writerEmail("test@example.com")
@@ -537,7 +537,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success_contentOnly() {
             // given
             NoticeEntity entity = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("원본 제목")
                 .content("원본 내용")
                 .writerEmail("test@example.com")
@@ -549,7 +549,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             Notice notice = Notice.builder()
                 .id(entity.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .title("원본 제목")
                 .content("수정된 내용")
                 .writerEmail("test@example.com")
@@ -573,7 +573,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
         void success_otherNoticesUnaffected() {
             // given
             NoticeEntity entity1 = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("수정될 공지")
                 .content("내용 1")
                 .writerEmail("test@example.com")
@@ -581,7 +581,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
                 .build();
 
             NoticeEntity entity2 = NoticeEntity.builder()
-                .groupId("test-group")
+                .groupId(1L)
                 .title("원본 공지")
                 .content("내용 2")
                 .writerEmail("test@example.com")
@@ -595,7 +595,7 @@ class NoticeStorageAdapterTest extends IntegrationTestSupport {
 
             Notice notice = Notice.builder()
                 .id(entity1.getId())
-                .groupId("test-group")
+                .groupId(1L)
                 .title("수정된 제목")
                 .content("수정된 내용")
                 .writerEmail("test@example.com")

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 
 import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ class ScheduleTest {
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
@@ -74,7 +73,7 @@ class ScheduleTest {
 
             // then
             assertThat(schedule).isNotNull();
-            assertThat(schedule.getGroupId()).isEqualTo("group-123");
+            assertThat(schedule.getGroupId()).isEqualTo(1L);
             assertThat(schedule.getContent()).isEqualTo("그룹 회의");
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
         }
@@ -173,14 +172,14 @@ class ScheduleTest {
         void success_getGroupId() {
             // given
             Schedule schedule = Schedule.builder()
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
-            String groupId = schedule.getGroupId();
+            Long groupId = schedule.getGroupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-123");
+            assertThat(groupId).isEqualTo(1L);
         }
 
         @Test
@@ -295,7 +294,7 @@ class ScheduleTest {
             Schedule schedule = Schedule.builder()
                 .id(1L)
                 .writerEmail("user@example.com")
-                .groupId("group-123")
+                .groupId(1L)
                 .content("회의")
                 .notificationDt(notificationDt)
                 .notificationYn("N")
@@ -308,7 +307,7 @@ class ScheduleTest {
             assertThat(schedule).isNotNull();
             assertThat(schedule.getId()).isEqualTo(1L);
             assertThat(schedule.getWriterEmail()).isEqualTo("user@example.com");
-            assertThat(schedule.getGroupId()).isEqualTo("group-123");
+            assertThat(schedule.getGroupId()).isEqualTo(1L);
             assertThat(schedule.getContent()).isEqualTo("회의");
             assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(schedule.getNotificationYn()).isEqualTo("N");
@@ -373,13 +372,13 @@ class ScheduleTest {
             // when
             Schedule schedule = Schedule.builder()
                 .writerEmail("user@example.com")
-                .groupId("group-123")
+                .groupId(1L)
                 .content("그룹 회의")
                 .startDt(startDt)
                 .build();
 
             // then
-            assertThat(schedule.getGroupId()).isEqualTo("group-123");
+            assertThat(schedule.getGroupId()).isEqualTo(1L);
         }
     }
 
@@ -414,7 +413,7 @@ class ScheduleTest {
             Schedule schedule = new Schedule(
                 1L,
                 "user@example.com",
-                "group-123",
+                1L,
                 "회의",
                 notificationDt,
                 "N",
@@ -427,7 +426,7 @@ class ScheduleTest {
             assertThat(schedule).isNotNull();
             assertThat(schedule.getId()).isEqualTo(1L);
             assertThat(schedule.getWriterEmail()).isEqualTo("user@example.com");
-            assertThat(schedule.getGroupId()).isEqualTo("group-123");
+            assertThat(schedule.getGroupId()).isEqualTo(1L);
             assertThat(schedule.getContent()).isEqualTo("회의");
             assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(schedule.getNotificationYn()).isEqualTo("N");

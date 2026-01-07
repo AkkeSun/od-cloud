@@ -50,7 +50,7 @@ class RegisterFileServiceTest {
         void success() {
             // given
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .name("Test Group")
                 .storageUsed(0L)
                 .storageTotal(3221225472L)
@@ -59,7 +59,7 @@ class RegisterFileServiceTest {
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .path("/test-group/folder1")
                 .build();
@@ -96,7 +96,7 @@ class RegisterFileServiceTest {
         void success_multipleFiles() {
             // given
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .name("Test Group")
                 .storageUsed(0L)
                 .storageTotal(3221225472L)
@@ -105,7 +105,7 @@ class RegisterFileServiceTest {
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .path("/test-group/folder1")
                 .build();
@@ -184,7 +184,7 @@ class RegisterFileServiceTest {
         void failure_storageLimitExceeded() {
             // given
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .name("Test Group")
                 .storageUsed(3221225400L)
                 .storageTotal(3221225472L)
@@ -193,7 +193,7 @@ class RegisterFileServiceTest {
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .path("/test-group/folder1")
                 .build();
@@ -225,7 +225,7 @@ class RegisterFileServiceTest {
         void success_withEnoughStorage() {
             // given
             Group group = Group.builder()
-                .id("test-group")
+                .id(1L)
                 .name("Test Group")
                 .storageUsed(1000L)
                 .storageTotal(3221225472L)
@@ -234,7 +234,7 @@ class RegisterFileServiceTest {
 
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .groupId("test-group")
+                .groupId(1L)
                 .name("Test Folder")
                 .path("/test-group/folder1")
                 .build();

@@ -94,22 +94,19 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
 
     private boolean matchesFilterType(Schedule schedule, FindSchedulesCommand command) {
         String email = command.account().getEmail();
-        List<String> groupIds = command.account().getGroupIds();
-        String filterType = command.filterType();
+        List<Long> groupIds = command.account().getGroupIds();
+        Long groupId = command.groupId();
 
-        // filterType이 null이거나 빈 문자열이면 전체 조회 (개인 + 모든 그룹)
-        if (filterType == null || filterType.isBlank()) {
+        if (groupId == null) {
             return (schedule.getGroupId() == null && email.equals(schedule.getWriterEmail()))
                 || (schedule.getGroupId() != null && groupIds.contains(schedule.getGroupId()));
         }
 
-        // "PRIVATE"이면 개인 일정만 조회
-        if ("PRIVATE".equalsIgnoreCase(filterType)) {
+        if (groupId == 0L) {
             return schedule.getGroupId() == null && email.equals(schedule.getWriterEmail());
         }
 
-        // 그 외의 경우 특정 그룹명으로 간주하여 해당 그룹 일정만 조회
-        return filterType.equals(schedule.getGroupId());
+        return groupId.equals(schedule.getGroupId());
     }
 
     @Override
@@ -121,7 +118,7 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
     }
 
     @Override
-    public List<Schedule> findByGroupId(String groupId) {
+    public List<Schedule> findByGroupId(Long groupId) {
         return database.stream()
             .filter(s -> groupId.equals(s.getGroupId()))
             .toList();

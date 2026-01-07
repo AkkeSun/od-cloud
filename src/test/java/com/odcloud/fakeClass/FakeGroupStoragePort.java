@@ -65,7 +65,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
+    public List<GroupAccount> findGroupAccountsByGroupId(Long groupId) {
         return groupAccountDatabase.stream()
             .filter(ga -> ga.getGroupId().equals(groupId))
             .toList();
@@ -79,7 +79,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public Group findById(String id) {
+    public Group findById(Long id) {
         return groupDatabase.stream()
             .filter(group -> group.getId().equals(id))
             .findFirst()
@@ -87,7 +87,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public GroupAccount findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId) {
+    public GroupAccount findGroupAccountByGroupIdAndAccountId(Long groupId, Long accountId) {
         return groupAccountDatabase.stream()
             .filter(ga -> ga.getGroupId().equals(groupId))
             .filter(ga -> ga.getAccountId().equals(accountId))
@@ -97,7 +97,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
 
     @Override
     public List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
-        List<String> ownerGroupIds = groupDatabase.stream()
+        List<Long> ownerGroupIds = groupDatabase.stream()
             .filter(group -> group.getOwnerEmail().equals(ownerEmail))
             .map(Group::getId)
             .toList();
@@ -115,7 +115,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public void deleteGroupAccountsByGroupId(String groupId) {
+    public void deleteGroupAccountsByGroupId(Long groupId) {
         groupAccountDatabase.removeIf(ga -> ga.getGroupId().equals(groupId));
         log.info("FakeGroupStoragePort deleted all groupAccounts for groupId={}", groupId);
     }

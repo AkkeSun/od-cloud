@@ -47,7 +47,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 그룹장이 공지사항을 수정한다")
         void success() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 1L;
             String requestBody = """
                 {
@@ -77,7 +77,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 그룹장이 아닌 사용자가 수정을 시도하면 500 에러를 반환한다")
         void error_notGroupOwner() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 1L;
             String requestBody = """
                 {
@@ -98,7 +98,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 존재하지 않는 공지사항 ID인 경우 500 에러를 반환한다")
         void error_noticeNotFound() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             Long noticeId = 999L;
             String requestBody = """
                 {
@@ -117,7 +117,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         Long noticeId,
         String requestBody,
         String docIdentifier,
@@ -157,7 +157,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         Long noticeId,
         String requestBody,
         String identifier,

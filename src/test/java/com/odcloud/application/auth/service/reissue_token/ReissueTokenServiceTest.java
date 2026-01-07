@@ -55,7 +55,7 @@ class ReissueTokenServiceTest {
             String email = "user@example.com";
             String refreshToken = "fake-refresh-token-" + email;
 
-            Group group = Group.builder().id("test-group").build();
+            Group group = Group.builder().id(1L).build();
             Account account = Account.builder()
                 .id(1L)
                 .email(email)
@@ -133,7 +133,7 @@ class ReissueTokenServiceTest {
             String email = "user@example.com";
             String oldRefreshToken = "fake-refresh-token-" + email;
 
-            Group group = Group.builder().id("test-group").build();
+            Group group = Group.builder().id(1L).build();
             Account account = Account.builder()
                 .id(1L)
                 .email(email)
@@ -165,7 +165,7 @@ class ReissueTokenServiceTest {
             String email = "user@example.com";
             String refreshToken = "fake-refresh-token-" + email;
 
-            Group group = Group.builder().id("test-group").build();
+            Group group = Group.builder().id(1L).build();
             Account account = Account.builder()
                 .id(1L)
                 .email(email)
@@ -197,7 +197,7 @@ class ReissueTokenServiceTest {
             String email = "user@example.com";
             String refreshToken1 = "fake-refresh-token-" + email;
 
-            Group group = Group.builder().id("test-group").build();
+            Group group = Group.builder().id(1L).build();
             Account account = Account.builder()
                 .id(1L)
                 .email(email)

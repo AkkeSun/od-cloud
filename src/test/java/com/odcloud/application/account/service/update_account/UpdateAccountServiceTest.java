@@ -54,7 +54,7 @@ class UpdateAccountServiceTest {
                 .nickname("oldNickname")
                 .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
                 .build();
 
@@ -104,7 +104,7 @@ class UpdateAccountServiceTest {
                 .nickname("oldNickname")
                 .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
                 .build();
 
@@ -144,7 +144,7 @@ class UpdateAccountServiceTest {
                 .nickname("myNickname")
                 .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
                 .build();
 
@@ -191,7 +191,7 @@ class UpdateAccountServiceTest {
                 .nickname("nickname")
                 .name("사용자")
                 .picture("https://example.com/external-profile.jpg")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
                 .build();
 
@@ -236,7 +236,7 @@ class UpdateAccountServiceTest {
                 .nickname("oldNickname")
                 .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
-                .groups(List.of(Group.of("group1")))
+                .groups(List.of(Group.of(1L)))
                 .regDt(originalRegDt)
                 .modDt(null)
                 .build();

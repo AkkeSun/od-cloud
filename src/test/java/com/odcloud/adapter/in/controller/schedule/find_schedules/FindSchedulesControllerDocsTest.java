@@ -54,7 +54,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when then
-            performErrorDocument("2025-01-15", "PRIVATE", authorization,
+            performErrorDocument("2025-01-15", "0", authorization,
                 status().isUnauthorized(), "인증 토큰 미입력 혹은 만료된 토큰 입력");
         }
 
@@ -64,7 +64,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
             // given
             Schedule schedule1 = createSchedule(1L, "user@example.com", null, "개인 회의",
                 LocalDateTime.of(2025, 1, 5, 10, 0));
-            Schedule schedule2 = createSchedule(2L, "owner@example.com", "group-1", "그룹 회의",
+            Schedule schedule2 = createSchedule(2L, "owner@example.com", 1L, "그룹 회의",
                 LocalDateTime.of(2025, 1, 15, 14, 0));
 
             FindSchedulesServiceResponse serviceResponse = FindSchedulesServiceResponse.of(
@@ -81,12 +81,12 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 유효하지 않은 날짜 형식인 경우 400 에러를 반환한다")
         void error_invalidDateFormat() throws Exception {
             // when & then
-            performErrorDocument("2025/01/15", "PRIVATE", "Bearer test",
+            performErrorDocument("2025/01/15", "0", "Bearer test",
                 status().isBadRequest(), "유효하지 않은 날짜 형식");
         }
     }
 
-    private Schedule createSchedule(Long id, String email, String groupId, String content,
+    private Schedule createSchedule(Long id, String email, Long groupId, String content,
         LocalDateTime startDt) {
         return Schedule.builder()
             .id(id)
@@ -103,7 +103,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
 
     private void performDocument(
         String baseDate,
-        String filterType,
+        String groupId,
         String authorization,
         ResultMatcher status,
         String docIdentifier,
@@ -112,7 +112,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
 
         mockMvc.perform(get("/schedules")
                 .param("baseDate", baseDate)
-                .param("filterType", filterType)
+                .param("groupId", groupId)
                 .header("Authorization", authorization))
             .andDo(print())
             .andExpect(status)
@@ -123,12 +123,12 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
                     .tag("Schedule")
                     .summary("스케줄 조회 API")
                     .description(
-                        "월별 일정을 조회하는 API입니다. filterType으로 개인/그룹 일정을 필터링할 수 있습니다.")
+                        "월별 일정을 조회하는 API입니다. groupId 로 개인/그룹 일정을 필터링할 수 있습니다.")
                     .queryParameters(
                         parameterWithName("baseDate").description("기준일 (yyyy-MM-dd) : 미입력 시 현재 날짜")
                             .optional(),
-                        parameterWithName("filterType").description(
-                            "필터 타입 (PRIVATE: 개인일정, 그룹명: 해당 그룹 일정, null/빈값: 전체 일정)").optional()
+                        parameterWithName("groupId").description(
+                            "그룹 아이디 (0: 개인일정 / null: 전체 일정 / 그 외: 특정 그룹 일정)").optional()
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(
@@ -144,8 +144,8 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
                             .description("일정 ID"),
                         fieldWithPath("data.schedules[].writerEmail").type(JsonFieldType.STRING)
                             .description("작성자 이메일"),
-                        fieldWithPath("data.schedules[].groupId").type(JsonFieldType.STRING)
-                            .description("그룹 ID (개인일정인 경우 null)").optional(),
+                        fieldWithPath("data.schedules[].groupId").type(JsonFieldType.NUMBER)
+                            .description("그룹 ID (0인 경우 개인일정)").optional(),
                         fieldWithPath("data.schedules[].content").type(JsonFieldType.STRING)
                             .description("일정 내용"),
                         fieldWithPath("data.schedules[].startDt").type(JsonFieldType.STRING)
@@ -162,14 +162,14 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
 
     private void performErrorDocument(
         String baseDate,
-        String filterType,
+        String groupId,
         String authorization,
         ResultMatcher status,
         String identifier
     ) throws Exception {
         mockMvc.perform(get("/schedules")
                 .param("baseDate", baseDate)
-                .param("filterType", filterType)
+                .param("groupId", groupId)
                 .header("Authorization", authorization))
             .andDo(print())
             .andExpect(status)
@@ -182,7 +182,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
                     .description("월별 일정을 조회하는 API입니다")
                     .queryParameters(
                         parameterWithName("baseDate").description("기준일").optional(),
-                        parameterWithName("filterType").description("필터 타입").optional()
+                        parameterWithName("groupId").description("그룹 ID").optional()
                     )
                     .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                     .responseFields(

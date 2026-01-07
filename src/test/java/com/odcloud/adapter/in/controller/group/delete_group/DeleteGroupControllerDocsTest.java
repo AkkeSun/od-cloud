@@ -54,7 +54,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when & then
-            performErrorDocument("group-1", authorization, status().isUnauthorized(),
+            performErrorDocument(1L, authorization, status().isUnauthorized(),
                 "인증 토큰 미입력 혹은 만료된 토큰 입력");
         }
 
@@ -66,7 +66,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
             given(useCase.delete(any())).willReturn(serviceResponse);
 
             // when & then
-            performDocument("group-1", "Bearer test", status().isOk(),
+            performDocument(1L, "Bearer test", status().isOk(),
                 "그룹 삭제 성공", "success",
                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                     .description("상태 코드"),
@@ -87,7 +87,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER));
 
             // when & then
-            performErrorDocument("group-1", "Bearer test",
+            performErrorDocument(1L, "Bearer test",
                 status().isInternalServerError(), "그룹 소유자가 아님");
         }
 
@@ -99,13 +99,13 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
                 .willThrow(new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP));
 
             // when & then
-            performErrorDocument("nonexistent-group", "Bearer test",
+            performErrorDocument(999L, "Bearer test",
                 status().isInternalServerError(), "존재하지 않는 그룹");
         }
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         String authorization,
         ResultMatcher status,
         String docIdentifier,
@@ -135,7 +135,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
     }
 
     private void performErrorDocument(
-        String groupId,
+        Long groupId,
         String authorization,
         ResultMatcher status,
         String identifier

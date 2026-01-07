@@ -54,7 +54,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when then
-            performErrorDocument("Bearer test", "TEST", status().isUnauthorized(),
+            performErrorDocument("Bearer test", 1L, status().isUnauthorized(),
                 "인증 토큰 미입력 혹은 만료된 토큰 입력");
         }
 
@@ -62,7 +62,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 그룹 ID로 계정 목록을 조회한다")
         void success() throws Exception {
             // given
-            String groupId = "group-123";
+            Long groupId = 1L;
             LocalDateTime now = LocalDateTime.of(2025, 11, 14, 10, 0);
 
             List<GroupAccount> groupAccounts = List.of(
@@ -107,7 +107,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .description("그룹 계정 목록"),
                 fieldWithPath("data.groupAccounts[].id").type(JsonFieldType.NUMBER)
                     .description("그룹 계정 ID"),
-                fieldWithPath("data.groupAccounts[].groupId").type(JsonFieldType.STRING)
+                fieldWithPath("data.groupAccounts[].groupId").type(JsonFieldType.NUMBER)
                     .description("그룹 ID"),
                 fieldWithPath("data.groupAccounts[].accountId").type(JsonFieldType.NUMBER)
                     .description("계정 ID"),
@@ -129,7 +129,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
 
     private void performDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         ResultMatcher status,
         String docIdentifier,
         String responseSchema,
@@ -161,7 +161,7 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
 
     private void performErrorDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         ResultMatcher status,
         String docIdentifier
     ) throws Exception {

@@ -4,5 +4,5 @@ import com.odcloud.application.group.service.find_group.FindGroupServiceResponse
 
 public interface FindGroupUseCase {
 
-    FindGroupServiceResponse findById(String groupId);
+    FindGroupServiceResponse findById(Long groupId);
 }

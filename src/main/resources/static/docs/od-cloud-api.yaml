@@ -40,42 +40,42 @@ paths:
                 value: |-
                   {
                     "name" : "홍길동",
-                    "groupId" : "group-abc123",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 이름 미입력':
                 value: |-
                   {
                     "name" : null,
-                    "groupId" : "group-abc123",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 구글 사용자 정보 조회 오류':
                 value: |-
                   {
                     "name" : "홍길동",
-                    "groupId" : "group-abc123",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 등록되지 않은 그룹명 입력':
                 value: |-
                   {
                     "name" : "홍길동",
-                    "groupId" : "non-existent-group",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 이미 등록된 사용자 정보 입력':
                 value: |-
                   {
                     "name" : "홍길동",
-                    "groupId" : "group-abc123",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 유효하지 않은 구글 토큰 입력':
                 value: |-
                   {
                     "name" : "홍길동",
-                    "groupId" : "group-abc123",
+                    "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] success_with_new_group':
@@ -971,12 +971,12 @@ paths:
                         "folders" : [ {
                           "id" : 11,
                           "name" : "Documents",
-                          "groupId" : "group1",
+                          "groupId" : 1,
                           "regDt" : "2024-01-01 12:00:00"
                         }, {
                           "id" : 12,
                           "name" : "Private",
-                          "groupId" : "group1",
+                          "groupId" : 1,
                           "regDt" : "2024-01-02 12:00:00"
                         } ],
                         "files" : [ {
@@ -1484,28 +1484,28 @@ paths:
                 value: |-
                   {
                     "parentId" : 1,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : "새 폴더"
                   }
               '[폴더 등록 API] 중복된 폴더명':
                 value: |-
                   {
                     "parentId" : 1,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : "중복 폴더"
                   }
               '[폴더 등록 API] 부모 폴더 아이디 미입력':
                 value: |-
                   {
                     "parentId" : null,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : "새 폴더"
                   }
               '[폴더 등록 API] success':
                 value: |-
                   {
                     "parentId" : 1,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : "새 폴더"
                   }
               '[폴더 등록 API] 그룹 아이디 미입력':
@@ -1519,14 +1519,14 @@ paths:
                 value: |-
                   {
                     "parentId" : 999,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : "새 폴더"
                   }
               '[폴더 등록 API] 이름 미입력':
                 value: |-
                   {
                     "parentId" : 1,
-                    "groupId" : "group-123",
+                    "groupId" : 1,
                     "name" : null
                   }
       responses:
@@ -2028,17 +2028,17 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "groups" : [ {
-                          "id" : "group-1",
+                          "id" : 1,
                           "name" : "Development Team",
                           "ownerEmail" : "owner1@example.com",
                           "regDt" : "2024-01-01T12:00:00"
                         }, {
-                          "id" : "group-2",
+                          "id" : 2,
                           "name" : "Marketing Team",
                           "ownerEmail" : "owner2@example.com",
                           "regDt" : "2024-01-02T12:00:00"
                         }, {
-                          "id" : "group-3",
+                          "id" : 3,
                           "name" : "Sales Team",
                           "ownerEmail" : "owner3@example.com",
                           "regDt" : "2024-01-03T12:00:00"
@@ -2052,12 +2052,12 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "groups" : [ {
-                          "id" : "group-1",
+                          "id" : 1,
                           "name" : "개발팀",
                           "ownerEmail" : "owner1@example.com",
                           "regDt" : "2024-01-01T12:00:00"
                         }, {
-                          "id" : "group-3",
+                          "id" : 3,
                           "name" : "개발 지원팀",
                           "ownerEmail" : "owner3@example.com",
                           "regDt" : "2024-01-03T12:00:00"
@@ -2230,7 +2230,7 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "groups" : [ {
-                          "groupId" : "group-1",
+                          "groupId" : 1,
                           "groupName" : "Test Group 1",
                           "pendingAccounts" : [ {
                             "accountId" : 10,
@@ -2246,7 +2246,7 @@ paths:
                             "requestDate" : "2025-01-02T11:00:00"
                           } ]
                         }, {
-                          "groupId" : "group-2",
+                          "groupId" : 1,
                           "groupName" : "Test Group 2",
                           "pendingAccounts" : [ {
                             "accountId" : 12,
@@ -2293,7 +2293,7 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "activeGroups" : [ {
-                          "id" : "activeGroup-1",
+                          "id" : 1,
                           "name" : "My Team",
                           "manager" : {
                             "nickname" : "Manager",
@@ -2301,7 +2301,7 @@ paths:
                           },
                           "activeMemberCount" : 3
                         }, {
-                          "id" : "activeGroup-2",
+                          "id" : 2,
                           "name" : "Development Team",
                           "manager" : {
                             "nickname" : "OtherManager",
@@ -2310,12 +2310,12 @@ paths:
                           "activeMemberCount" : 2
                         } ],
                         "pendingGroups" : [ {
-                          "id" : "pendingGroup",
+                          "id" : 3,
                           "name" : "Marketing Team",
                           "activeMemberCount" : 1
                         } ],
                         "deniedGroups" : [ {
-                          "id" : "deniedGroup",
+                          "id" : 4,
                           "name" : "Sales Team",
                           "deniedCause" : "요청이 거부되었습니다"
                         } ]
@@ -2366,7 +2366,7 @@ paths:
                       "httpStatus" : 200,
                       "message" : "OK",
                       "data" : {
-                        "id" : "test-group",
+                        "id" : 1,
                         "name" : "My Team",
                         "manager" : {
                           "nickname" : "Manager",
@@ -2691,7 +2691,7 @@ paths:
                       "data" : {
                         "groupAccounts" : [ {
                           "id" : 1,
-                          "groupId" : "group-123",
+                          "groupId" : 1,
                           "accountId" : 100,
                           "name" : "홍길동",
                           "nickName" : "gildong",
@@ -2701,7 +2701,7 @@ paths:
                           "regDt" : "2025-11-09T10:00:00"
                         }, {
                           "id" : 2,
-                          "groupId" : "group-123",
+                          "groupId" : 1,
                           "accountId" : 200,
                           "name" : "김철수",
                           "nickName" : "chulsoo",
@@ -3605,7 +3605,7 @@ paths:
       tags:
       - Schedule
       summary: 스케줄 조회 API
-      description: 월별 일정을 조회하는 API입니다. filterType으로 개인/그룹 일정을 필터링할 수 있습니다.
+      description: 월별 일정을 조회하는 API입니다. groupId 로 개인/그룹 일정을 필터링할 수 있습니다.
       operationId: "[스케줄 조회 API] "
       parameters:
       - name: baseDate
@@ -3614,9 +3614,9 @@ paths:
         required: false
         schema:
           type: string
-      - name: filterType
+      - name: groupId
         in: query
-        description: "필터 타입 (PRIVATE: 개인일정, 그룹명: 해당 그룹 일정, null/빈값: 전체 일정)"
+        description: "그룹 아이디 (0: 개인일정 / null: 전체 일정 / 그 외: 특정 그룹 일정)"
         required: false
         schema:
           type: string
@@ -3647,14 +3647,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-01-03T22:58:50.783109"
+                          "notificationDt" : "2026-01-08T08:52:26.120918"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
-                          "groupId" : "group-1",
+                          "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-01-03T22:58:50.783123"
+                          "notificationDt" : "2026-01-08T08:52:26.120948"
                         } ]
                       }
                     }
@@ -3741,7 +3741,7 @@ paths:
                   {
                     "content" : "그룹 회의",
                     "startDt" : "2025-01-01 10:00:00",
-                    "groupId" : "other-group",
+                    "groupId" : 1,
                     "notificationDt" : null
                   }
               '[스케줄 등록 API] 스케줄 내용 미입력':
@@ -4145,6 +4145,29 @@ paths:
                     }
 components:
   schemas:
+    '[request] 폴더 등록 API':
+      title: "[request] 폴더 등록 API"
+      required:
+      - groupId
+      - name
+      - parentId
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID
+          oneOf:
+          - type: number
+          - null
+        name:
+          description: 폴더명
+          oneOf:
+          - null
+          - type: string
+        parentId:
+          description: 부모 폴더 ID
+          oneOf:
+          - type: number
+          - null
     '[response] success':
       title: "[response] success"
       required:
@@ -4193,6 +4216,29 @@ components:
           oneOf:
           - type: number
           - null
+    '[request] 계정 등록 API':
+      title: "[request] 계정 등록 API"
+      required:
+      - groupId
+      - name
+      - newGroupName
+      type: object
+      properties:
+        newGroupName:
+          description: 신규 그룹 이름
+          oneOf:
+          - type: string
+          - null
+        groupId:
+          description: 그룹 ID
+          oneOf:
+          - null
+          - type: number
+        name:
+          description: 사용자 이름
+          oneOf:
+          - type: string
+          - null
     '[request] 스케줄 수정 API':
       title: "[request] 스케줄 수정 API"
       required:
@@ -4216,29 +4262,6 @@ components:
           oneOf:
           - type: string
           - null
-    '[request] 계정 등록 API':
-      title: "[request] 계정 등록 API"
-      required:
-      - groupId
-      - name
-      - newGroupName
-      type: object
-      properties:
-        newGroupName:
-          description: 신규 그룹 이름
-          oneOf:
-          - type: string
-          - null
-        groupId:
-          description: 그룹 ID
-          oneOf:
-          - null
-          - type: string
-        name:
-          description: 사용자 이름
-          oneOf:
-          - type: string
-          - null
     '[request] 그룹 등록 API':
       title: "[request] 그룹 등록 API"
       required:
@@ -4250,8 +4273,8 @@ components:
           oneOf:
           - null
           - type: string
-    '[response] success-by-folderId':
-      title: "[response] success-by-folderId"
+    '[response] success_all':
+      title: "[response] success_all"
       required:
       - data
       - httpStatus
@@ -4260,60 +4283,32 @@ components:
       properties:
         data:
           required:
-          - files
-          - folders
-          - parentFolderId
+          - groups
           type: object
           properties:
-            folders:
+            groups:
               type: array
-              description: 폴더 목록
+              description: 그룹 목록
               items:
                 required:
-                - groupId
                 - id
                 - name
+                - ownerEmail
                 - regDt
                 type: object
                 properties:
                   regDt:
                     type: string
                     description: 등록일시
-                  groupId:
+                  name:
                     type: string
+                    description: 그룹명
+                  id:
+                    type: number
                     description: 그룹 ID
-                  name:
+                  ownerEmail:
                     type: string
-                    description: 폴더 이름
-                  id:
-                    type: number
-                    description: 폴더 ID
-            parentFolderId:
-              type: number
-              description: 부모 폴더 ID
-            files:
-              type: array
-              description: 파일 목록
-              items:
-                required:
-                - fileLoc
-                - id
-                - name
-                - regDt
-                type: object
-                properties:
-                  regDt:
-                    type: string
-                    description: 등록일시
-                  name:
-                    type: string
-                    description: 파일 이름
-                  id:
-                    type: number
-                    description: 파일 ID
-                  fileLoc:
-                    type: string
-                    description: 파일 경로
+                    description: 그룹 소유자 이메일
           description: 응답 데이터
         httpStatus:
           type: number
@@ -4321,58 +4316,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[request] 스케줄 등록 API':
-      title: "[request] 스케줄 등록 API"
-      required:
-      - content
-      - groupId
-      - notificationDt
-      - startDt
-      type: object
-      properties:
-        groupId:
-          description: 그룹 ID (선택)
-          oneOf:
-          - null
-          - type: string
-        notificationDt:
-          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
-          oneOf:
-          - null
-          - type: string
-        startDt:
-          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - null
-          - type: string
-        content:
-          description: 스케줄 내용
-          oneOf:
-          - type: string
-          - null
-    '[request] 폴더 등록 API':
-      title: "[request] 폴더 등록 API"
-      required:
-      - groupId
-      - name
-      - parentId
-      type: object
-      properties:
-        groupId:
-          description: 그룹 ID
-          oneOf:
-          - type: string
-          - null
-        name:
-          description: 폴더명
-          oneOf:
-          - null
-          - type: string
-        parentId:
-          description: 부모 폴더 ID
-          oneOf:
-          - type: number
-          - null
     '[response] success-empty':
       title: "[response] success-empty"
       required:
@@ -4427,7 +4370,7 @@ components:
                     type: string
                     description: 그룹명
                   groupId:
-                    type: string
+                    type: number
                     description: 그룹 ID
           description: 응답 데이터
         httpStatus:
@@ -4436,6 +4379,35 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 스케줄 등록 API':
+      title: "[request] 스케줄 등록 API"
+      required:
+      - content
+      - groupId
+      - notificationDt
+      - startDt
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID (선택)
+          oneOf:
+          - null
+          - type: number
+        notificationDt:
+          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
+          oneOf:
+          - null
+          - type: string
+        startDt:
+          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - null
+          - type: string
+        content:
+          description: 스케줄 내용
+          oneOf:
+          - type: string
+          - null
     '[request] 파일 정보 수정 API':
       title: "[request] 파일 정보 수정 API"
       type: object
@@ -4448,6 +4420,77 @@ components:
           type: number
           description: 이동할 폴더 ID (옵션)
           nullable: true
+    '[response] success-by-folderId':
+      title: "[response] success-by-folderId"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - files
+          - folders
+          - parentFolderId
+          type: object
+          properties:
+            folders:
+              type: array
+              description: 폴더 목록
+              items:
+                required:
+                - groupId
+                - id
+                - name
+                - regDt
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  groupId:
+                    type: number
+                    description: 그룹 ID
+                  name:
+                    type: string
+                    description: 폴더 이름
+                  id:
+                    type: number
+                    description: 폴더 ID
+            parentFolderId:
+              type: number
+              description: 부모 폴더 ID
+            files:
+              type: array
+              description: 파일 목록
+              items:
+                required:
+                - fileLoc
+                - id
+                - name
+                - regDt
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  name:
+                    type: string
+                    description: 파일 이름
+                  id:
+                    type: number
+                    description: 파일 ID
+                  fileLoc:
+                    type: string
+                    description: 파일 경로
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     '[response] error':
       title: "[response] error"
       required:
@@ -4787,49 +4830,6 @@ components:
           oneOf:
           - type: string
           - null
-    '[response] success_all':
-      title: "[response] success_all"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - groups
-          type: object
-          properties:
-            groups:
-              type: array
-              description: 그룹 목록
-              items:
-                required:
-                - id
-                - name
-                - ownerEmail
-                - regDt
-                type: object
-                properties:
-                  regDt:
-                    type: string
-                    description: 등록일시
-                  name:
-                    type: string
-                    description: 그룹명
-                  id:
-                    type: string
-                    description: 그룹 ID
-                  ownerEmail:
-                    type: string
-                    description: 그룹 소유자 이메일
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
     '[request] 그룹 공지사항 등록 API':
       title: "[request] 그룹 공지사항 등록 API"
       required:

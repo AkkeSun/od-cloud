@@ -43,7 +43,7 @@ class UpdateGroupAccountStatusServiceTest {
         @DisplayName("[success] 정상적으로 상태를 업데이트한다")
         void success() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             Long accountId = 1L;
 
@@ -85,7 +85,7 @@ class UpdateGroupAccountStatusServiceTest {
         @DisplayName("[failure] 그룹 소유자가 아닌 사람이 상태 변경 시도하면 예외가 발생한다")
         void failure_notGroupOwner() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             String notOwnerEmail = "notowner@example.com";
             Long accountId = 1L;
@@ -128,7 +128,7 @@ class UpdateGroupAccountStatusServiceTest {
         @DisplayName("[failure] 존재하지 않는 GroupAccount 상태 변경 시도하면 예외가 발생한다")
         void failure_nonExistentGroupAccount() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
 
             Group group = Group.builder()
@@ -158,7 +158,7 @@ class UpdateGroupAccountStatusServiceTest {
         @DisplayName("[success] DENIED 상태로 변경하면서 메모를 저장한다")
         void success_deniedWithMemo() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             Long accountId = 1L;
             String memo = "그룹 가입 요건을 충족하지 못했습니다.";
@@ -204,7 +204,7 @@ class UpdateGroupAccountStatusServiceTest {
         @DisplayName("[success] BLOCK 상태로 변경하면서 메모를 저장한다")
         void success_blockWithMemo() {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String ownerEmail = "owner@example.com";
             Long accountId = 1L;
             String memo = "부적절한 행동으로 차단되었습니다.";

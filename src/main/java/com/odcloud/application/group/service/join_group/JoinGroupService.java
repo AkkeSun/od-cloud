@@ -22,7 +22,7 @@ class JoinGroupService implements JoinGroupUseCase {
 
     @Override
     @Transactional
-    public JoinGroupServiceResponse join(String groupId, Account account) {
+    public JoinGroupServiceResponse join(Long groupId, Account account) {
         Group group = groupStoragePort.findById(groupId);
         groupStoragePort.save(GroupAccount.ofPending(group, account));
 

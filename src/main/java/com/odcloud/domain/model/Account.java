@@ -28,15 +28,18 @@ public class Account {
     private LocalDateTime regDt;
 
     public static Account of(Claims claims) {
-        List<Map<String, String>> groupsInfo =
-            (List<Map<String, String>>) claims.get("groups");
+        List<Map<String, Object>> groupsInfo =
+            (List<Map<String, Object>>) claims.get("groups");
         return Account.builder()
             .email(claims.getSubject())
             .id(((Number) claims.get("id")).longValue())
             .nickname(claims.get("nickname").toString())
             .picture(claims.get("picture").toString())
             .groups(groupsInfo.stream()
-                .map(groupInfo -> Group.ofIdAndName(groupInfo.get("id"), groupInfo.get("name")))
+                .map(groupInfo -> Group.builder()
+                    .id(((Number) groupInfo.get("id")).longValue())
+                    .name(groupInfo.get("name").toString())
+                    .build())
                 .collect(Collectors.toList()))
             .build();
     }
@@ -47,21 +50,21 @@ public class Account {
             .nickname(userInfo.name())
             .name(command.name())
             .picture(userInfo.picture())
-            .groups(List.of(Group.of(command.groupId())))
+            .groups(List.of(Group.of(Long.valueOf(command.groupId()))))
             .regDt(LocalDateTime.now())
             .build();
     }
 
-    public List<String> getGroupIds() {
+    public List<Long> getGroupIds() {
         return groups.stream()
             .map(Group::getId)
             .collect(Collectors.toList());
     }
 
-    public List<java.util.Map<String, String>> getGroupsInfo() {
+    public List<java.util.Map<String, Object>> getGroupsInfo() {
         return groups.stream()
             .map(group -> {
-                java.util.Map<String, String> groupInfo = new java.util.HashMap<>();
+                java.util.Map<String, Object> groupInfo = new java.util.HashMap<>();
                 groupInfo.put("id", group.getId());
                 groupInfo.put("name", group.getName());
                 return groupInfo;

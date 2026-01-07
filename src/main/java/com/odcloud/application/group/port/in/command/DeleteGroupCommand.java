@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record DeleteGroupCommand(
-    String groupId,
+    Long groupId,
     String currentOwnerEmail
 ) {
 

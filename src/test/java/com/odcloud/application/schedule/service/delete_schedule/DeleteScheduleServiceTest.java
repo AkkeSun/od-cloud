@@ -71,7 +71,7 @@ class DeleteScheduleServiceTest {
         void success_deleteGroupSchedule() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -90,7 +90,7 @@ class DeleteScheduleServiceTest {
                 .account(account)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             Schedule schedule = Schedule.of(registerCommand);
@@ -149,7 +149,7 @@ class DeleteScheduleServiceTest {
         void failure_deleteGroupScheduleByNonMember() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -174,7 +174,7 @@ class DeleteScheduleServiceTest {
                 .account(member)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             Schedule schedule = Schedule.of(registerCommand);
@@ -210,7 +210,7 @@ class DeleteScheduleServiceTest {
         void success_deleteGroupScheduleByDifferentMember() {
             // given
             Group group = Group.builder()
-                .id("group-123")
+                .id(1L)
                 .ownerEmail("owner@example.com")
                 .name("테스트 그룹")
                 .build();
@@ -235,7 +235,7 @@ class DeleteScheduleServiceTest {
                 .account(creator)
                 .content("그룹 회의")
                 .startDt(startDt)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             Schedule schedule = Schedule.of(registerCommand);

@@ -61,7 +61,7 @@ class GroupRepository {
         return count != null ? count : 0;
     }
 
-    Optional<Group> findById(String id) {
+    Optional<Group> findById(Long id) {
         Group group = queryFactory
             .select(Projections.constructor(
                 Group.class,
@@ -137,7 +137,7 @@ class GroupRepository {
             .fetch();
     }
 
-    List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
+    List<GroupAccount> findGroupAccountsByGroupId(Long groupId) {
         List<GroupAccount> groupAccounts = queryFactory
             .select(Projections.constructor(
                 GroupAccount.class,
@@ -228,7 +228,7 @@ class GroupRepository {
         return groupAccounts;
     }
 
-    Optional<GroupAccount> findGroupAccountByGroupIdAndAccountId(String groupId, Long accountId) {
+    Optional<GroupAccount> findGroupAccountByGroupIdAndAccountId(Long groupId, Long accountId) {
         GroupAccount groupAccount = queryFactory
             .select(Projections.constructor(
                 GroupAccount.class,
@@ -275,7 +275,7 @@ class GroupRepository {
     }
 
     @Transactional
-    void deleteGroupAccountsByGroupId(String groupId) {
+    void deleteGroupAccountsByGroupId(Long groupId) {
         queryFactory
             .delete(groupAccountEntity)
             .where(groupAccountEntity.groupId.eq(groupId))

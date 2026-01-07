@@ -21,7 +21,7 @@ class UpdateGroupAccountShowYnController {
 
     @PatchMapping("/groups/{groupId}/useYn")
     ApiResponse<UpdateGroupAccountUseYnResponse> update(
-        @PathVariable String groupId,
+        @PathVariable Long groupId,
         @LoginAccount Account account,
         @RequestBody @Validated(ValidationSequence.class) UpdateGroupAccountShowYnRequest request) {
 

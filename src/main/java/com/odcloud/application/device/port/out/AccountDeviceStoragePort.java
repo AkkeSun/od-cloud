@@ -12,7 +12,7 @@ public interface AccountDeviceStoragePort {
         Long accountId, String osType, String deviceId
     );
 
-    List<AccountDevice> findByGroupIdForPush(String groupId);
+    List<AccountDevice> findByGroupIdForPush(Long groupId);
 
     List<AccountDevice> findByAccountEmailForPush(String ownerEmail);
 

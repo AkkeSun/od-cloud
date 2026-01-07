@@ -70,7 +70,7 @@ class FolderTest {
             // given
             RegisterFolderCommand command = new RegisterFolderCommand(
                 1L,
-                "group-123",
+                1L,
                 "서브 폴더",
                 "owner@example.com"
             );
@@ -86,7 +86,7 @@ class FolderTest {
 
             assertThat(folder).isNotNull();
             assertThat(folder.getParentId()).isEqualTo(1L);
-            assertThat(folder.getGroupId()).isEqualTo("group-123");
+            assertThat(folder.getGroupId()).isEqualTo(1L);
             assertThat(folder.getName()).isEqualTo("서브 폴더");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
             assertThat(folder.getPath()).startsWith("/group-123/");
@@ -101,7 +101,7 @@ class FolderTest {
             // given
             RegisterFolderCommand command = new RegisterFolderCommand(
                 1L,
-                "group-123",
+                1L,
                 "서브 폴더",
                 "owner@example.com");
             String parentPath = "/test";
@@ -121,7 +121,7 @@ class FolderTest {
             // given
             RegisterFolderCommand command = new RegisterFolderCommand(
                 3L,
-                "group-123",
+                1L,
                 "서브 폴더",
                 "owner@example.com");
             String parentPath = "/group-123/folder1/folder2";
@@ -198,14 +198,14 @@ class FolderTest {
         void success_getGroupId() {
             // given
             FolderInfo folder = FolderInfo.builder()
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
-            String groupId = folder.getGroupId();
+            Long groupId = folder.getGroupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-123");
+            assertThat(groupId).isEqualTo(1L);
         }
 
         @Test
@@ -315,7 +315,7 @@ class FolderTest {
             FolderInfo folder = new FolderInfo(
                 1L,
                 null,
-                "group-123",
+                1L,
                 "테스트 폴더",
                 "owner@example.com",
                 "/group-123",
@@ -327,7 +327,7 @@ class FolderTest {
             assertThat(folder).isNotNull();
             assertThat(folder.getId()).isEqualTo(1L);
             assertThat(folder.getParentId()).isNull();
-            assertThat(folder.getGroupId()).isEqualTo("group-123");
+            assertThat(folder.getGroupId()).isEqualTo(1L);
             assertThat(folder.getName()).isEqualTo("테스트 폴더");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
             assertThat(folder.getPath()).isEqualTo("/group-123");

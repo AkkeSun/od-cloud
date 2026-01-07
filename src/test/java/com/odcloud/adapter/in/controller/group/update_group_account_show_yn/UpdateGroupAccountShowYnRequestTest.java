@@ -24,7 +24,7 @@ class UpdateGroupAccountShowYnRequestTest {
                 .showYn("Y")
                 .build();
 
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Account account = mock(Account.class);
             given(account.getId()).willReturn(1L);
             given(account.getEmail()).willReturn("user@example.com");
@@ -47,7 +47,7 @@ class UpdateGroupAccountShowYnRequestTest {
                 .showYn("N")
                 .build();
 
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             Account account = mock(Account.class);
 
             // when
@@ -68,7 +68,7 @@ class UpdateGroupAccountShowYnRequestTest {
                 .showYn(null)
                 .build();
 
-            String groupId = null;
+            Long groupId = null;
             Account account = null;
 
             // when
@@ -89,7 +89,7 @@ class UpdateGroupAccountShowYnRequestTest {
                 .showYn("")
                 .build();
 
-            String groupId = "";
+            Long groupId = 1L;
             Account account = mock(Account.class);
 
             // when
@@ -97,7 +97,6 @@ class UpdateGroupAccountShowYnRequestTest {
 
             // then
             assertThat(command).isNotNull();
-            assertThat(command.groupId()).isEmpty();
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.showYn()).isEmpty();
         }

@@ -5,7 +5,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -48,9 +47,9 @@ class JoinGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 권한 정보가 없는 사용자가 API 를 호출한 경우 401 코드와 에러 메시지를 응답한다.")
         void error_unauthorized() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             String authorization = "error token";
-            given(useCase.join(anyString(), any())).willThrow(
+            given(useCase.join(any(), any())).willThrow(
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when then
@@ -73,9 +72,9 @@ class JoinGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 정보로 그룹 가입 요청을 생성한다")
         void success() throws Exception {
             // given
-            String groupId = "test-group";
+            Long groupId = 1L;
             JoinGroupServiceResponse serviceResponse = JoinGroupServiceResponse.ofSuccess();
-            given(useCase.join(anyString(), any())).willReturn(serviceResponse);
+            given(useCase.join(any(), any())).willReturn(serviceResponse);
 
             // when & then
             performDocument(groupId, "Bearer test", status().isOk(), "success", "success",
@@ -94,8 +93,8 @@ class JoinGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 존재하지 않는 그룹에 가입 요청하면 500 에러를 반환한다")
         void error_nonExistentGroup() throws Exception {
             // given
-            String groupId = "non-existent-group";
-            given(useCase.join(anyString(), any()))
+            Long groupId = 1L;
+            given(useCase.join(any(), any()))
                 .willThrow(new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP));
 
             // when & then
@@ -116,7 +115,7 @@ class JoinGroupControllerDocsTest extends RestDocsSupport {
     }
 
     private void performDocument(
-        String groupId,
+        Long groupId,
         String authorization,
         ResultMatcher status,
         String docIdentifier,

@@ -13,8 +13,8 @@ record RegisterFolderRequest(
     @NotNull(message = "상위 폴더 ID는 필수값 입니다", groups = NotBlankGroups.class)
     Long parentId,
 
-    @NotBlank(message = "그룹 ID는 필수값 입니다", groups = NotBlankGroups.class)
-    String groupId, // 위에서 받아오는걸로 수정
+    @NotNull(message = "그룹 ID는 필수값 입니다", groups = NotBlankGroups.class)
+    Long groupId, // 위에서 받아오는걸로 수정
 
     @NotBlank(message = "폴더명은 필수값 입니다", groups = NotBlankGroups.class)
     String name

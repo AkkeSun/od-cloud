@@ -49,7 +49,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 권한 정보가 없는 사용자가 API 를 호출한 경우 401 코드와 에러 메시지를 응답한다.")
         void error() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .showYn("Y")
                 .build();
@@ -65,7 +65,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 값(Y)으로 노출 여부를 변경한다")
         void success_Y() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .showYn("Y")
                 .build();
@@ -93,7 +93,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 유효한 값(N)으로 노출 여부를 변경한다")
         void success_N() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .showYn("N")
                 .build();
@@ -121,7 +121,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] showYn을 입력하지 않은 경우 400 에러를 반환한다")
         void error_showYnIsBlank() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .build();
 
@@ -134,7 +134,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] showYn이 유효하지 않은 값(INVALID)인 경우 400 에러를 반환한다")
         void error_showYnIsInvalid() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .showYn("INVALID")
                 .build();
@@ -148,7 +148,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 등록되지 않은 그룹 사용자인 경우 500 에러를 반환한다")
         void error_groupAccountDoesNotExist() throws Exception {
             // given
-            String groupId = "group-abc123";
+            Long groupId = 1L;
             UpdateGroupAccountShowYnRequest request = UpdateGroupAccountShowYnRequest.builder()
                 .showYn("Y")
                 .build();
@@ -165,7 +165,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
 
     private void performDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         UpdateGroupAccountShowYnRequest request,
         ResultMatcher status,
         String docIdentifier,
@@ -208,7 +208,7 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
 
     private void performErrorDocument(
         String authorization,
-        String groupId,
+        Long groupId,
         UpdateGroupAccountShowYnRequest request,
         ResultMatcher status,
         String identifier

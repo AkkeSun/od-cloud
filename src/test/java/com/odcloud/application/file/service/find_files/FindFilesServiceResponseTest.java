@@ -41,7 +41,7 @@ class FindFilesServiceResponseTest {
             FolderInfo folder1 = FolderInfo.builder()
                 .id(11L)
                 .parentId(10L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Folder 1")
                 .owner("owner@example.com")
                 .path("/group1/folder1")
@@ -51,7 +51,7 @@ class FindFilesServiceResponseTest {
             FolderInfo folder2 = FolderInfo.builder()
                 .id(12L)
                 .parentId(10L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Folder 2")
                 .owner("owner@example.com")
                 .path("/group1/folder2")
@@ -84,7 +84,7 @@ class FindFilesServiceResponseTest {
             // Folder 검증
             assertThat(response.folders().get(0).id()).isEqualTo(11L);
             assertThat(response.folders().get(0).name()).isEqualTo("Folder 1");
-            assertThat(response.folders().get(0).groupId()).isEqualTo("group1");
+            assertThat(response.folders().get(0).groupId()).isEqualTo(1L);
             assertThat(response.folders().get(0).regDt()).isNotNull();
 
             assertThat(response.folders().get(1).id()).isEqualTo(12L);
@@ -142,7 +142,7 @@ class FindFilesServiceResponseTest {
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(0L)
-                .groupId("group1")
+                .groupId(1L)
                 .name("Test Folder")
                 .owner("owner@example.com")
                 .path("/group1/test")
@@ -157,7 +157,7 @@ class FindFilesServiceResponseTest {
             assertThat(item).isNotNull();
             assertThat(item.id()).isEqualTo(1L);
             assertThat(item.name()).isEqualTo("Test Folder");
-            assertThat(item.groupId()).isEqualTo("group1");
+            assertThat(item.groupId()).isEqualTo(1L);
             assertThat(item.regDt()).isNotNull();
         }
 
@@ -169,7 +169,7 @@ class FindFilesServiceResponseTest {
             FolderInfo folder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
-                .groupId("group2")
+                .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
                 .path("/group2/private")
@@ -184,7 +184,7 @@ class FindFilesServiceResponseTest {
             assertThat(item).isNotNull();
             assertThat(item.id()).isEqualTo(2L);
             assertThat(item.name()).isEqualTo("Private Folder");
-            assertThat(item.groupId()).isEqualTo("group2");
+            assertThat(item.groupId()).isEqualTo(1L);
         }
     }
 
@@ -274,7 +274,7 @@ class FindFilesServiceResponseTest {
                 FindFilesServiceResponse.FolderResponseItem.builder()
                     .id(2L)
                     .name("Test Folder")
-                    .groupId("group1")
+                    .groupId(1L)
                     .regDt("2024-01-01 00:00:00")
                     .build();
 

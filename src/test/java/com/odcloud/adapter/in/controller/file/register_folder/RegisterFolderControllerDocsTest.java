@@ -49,7 +49,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             // given
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("새 폴더")
                 .build();
             String authorization = "error token";
@@ -67,7 +67,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             // given
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("새 폴더")
                 .build();
 
@@ -95,7 +95,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
             // given
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(null)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("새 폴더")
                 .build();
 
@@ -119,7 +119,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
         void error_nameIsBlank() throws Exception {
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             performErrorDocument(request, "Bearer token", status().isBadRequest(), "이름 미입력");
@@ -130,7 +130,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
         void error_folderDoesNotExist() throws Exception {
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(999L)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("새 폴더")
                 .build();
 
@@ -147,7 +147,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
         void error_folderNameAlreadyExists() throws Exception {
             RegisterFolderRequest request = RegisterFolderRequest.builder()
                 .parentId(1L)
-                .groupId("group-123")
+                .groupId(1L)
                 .name("중복 폴더")
                 .build();
 
@@ -172,7 +172,7 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
         JsonFieldType parentIdType = request.parentId() == null ?
             JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType groupIdType = request.groupId() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
+            JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType nameType = request.name() == null ?
             JsonFieldType.NULL : JsonFieldType.STRING;
 

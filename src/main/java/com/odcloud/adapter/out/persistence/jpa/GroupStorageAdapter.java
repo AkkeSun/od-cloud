@@ -48,7 +48,7 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
-    public List<GroupAccount> findGroupAccountsByGroupId(String groupId) {
+    public List<GroupAccount> findGroupAccountsByGroupId(Long groupId) {
         return queryDsl.findGroupAccountsByGroupId(groupId);
     }
 
@@ -58,7 +58,7 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
-    public Group findById(String id) {
+    public Group findById(Long id) {
         return queryDsl.findById(id).orElseThrow(
             () -> new CustomBusinessException(Business_DoesNotExists_GROUP));
     }
@@ -70,7 +70,7 @@ class GroupStorageAdapter implements GroupStoragePort {
 
     @Override
     public GroupAccount findGroupAccountByGroupIdAndAccountId(
-        String groupId, Long accountId
+        Long groupId, Long accountId
     ) {
         return queryDsl.findGroupAccountByGroupIdAndAccountId(groupId,
             accountId).orElseThrow(
@@ -83,7 +83,7 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
-    public void deleteGroupAccountsByGroupId(String groupId) {
+    public void deleteGroupAccountsByGroupId(Long groupId) {
         queryDsl.deleteGroupAccountsByGroupId(groupId);
     }
 

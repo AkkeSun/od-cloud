@@ -63,8 +63,8 @@ class FindGroupSelfControllerDocsTest {
             .id(1L)
             .email("test@example.com")
             .groups(List.of(
-                Group.builder().id("group-1").name("Test Group 1").build(),
-                Group.builder().id("group-2").name("Test Group 2").build()
+                Group.builder().id(1L).name("Test Group 1").build(),
+                Group.builder().id(1L).name("Test Group 2").build()
             ))
             .build();
 
@@ -75,8 +75,8 @@ class FindGroupSelfControllerDocsTest {
         given(mockClaims.get("nickname")).willReturn("Test User");
         given(mockClaims.get("picture")).willReturn("http://example.com/picture.jpg");
         given(mockClaims.get("groups")).willReturn(List.of(
-            java.util.Map.of("id", "group-1", "name", "Test Group 1"),
-            java.util.Map.of("id", "group-2", "name", "Test Group 2")
+            java.util.Map.of("id", 1, "name", "Test Group 1"),
+            java.util.Map.of("id", 2, "name", "Test Group 2")
         ));
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(new FindGroupSelfController(useCase))
@@ -103,7 +103,7 @@ class FindGroupSelfControllerDocsTest {
 
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup1 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
-                    .id("activeGroup-1")
+                    .id(1L)
                     .name("My Team")
                     .manager(manager1)
                     .activeMemberCount(3)
@@ -116,7 +116,7 @@ class FindGroupSelfControllerDocsTest {
                     .build();
             FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup2 =
                 FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
-                    .id("activeGroup-2")
+                    .id(2L)
                     .name("Development Team")
                     .manager(manager2)
                     .activeMemberCount(2)
@@ -124,14 +124,14 @@ class FindGroupSelfControllerDocsTest {
 
             FindGroupSelfServiceResponse.PendingGroupInfo pendingGroup =
                 FindGroupSelfServiceResponse.PendingGroupInfo.builder()
-                    .id("pendingGroup")
+                    .id(3L)
                     .name("Marketing Team")
                     .activeMemberCount(1)
                     .build();
 
             FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroup =
                 FindGroupSelfServiceResponse.DeniedGroupInfo.builder()
-                    .id("deniedGroup")
+                    .id(4L)
                     .name("Sales Team")
                     .deniedCause("요청이 거부되었습니다")
                     .build();
@@ -157,7 +157,7 @@ class FindGroupSelfControllerDocsTest {
                 fieldWithPath("data.activeGroups")
                     .type(JsonFieldType.ARRAY).description("가입된 그룹 목록"),
                 fieldWithPath("data.activeGroups[].id")
-                    .type(JsonFieldType.STRING).description("그룹 아이디"),
+                    .type(JsonFieldType.NUMBER).description("그룹 아이디"),
                 fieldWithPath("data.activeGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.activeGroups[].manager")
@@ -171,7 +171,7 @@ class FindGroupSelfControllerDocsTest {
                 fieldWithPath("data.pendingGroups")
                     .type(JsonFieldType.ARRAY).description("가입 대기중인 그룹 목록"),
                 fieldWithPath("data.pendingGroups[].id")
-                    .type(JsonFieldType.STRING).description("그룹 아이디"),
+                    .type(JsonFieldType.NUMBER).description("그룹 아이디"),
                 fieldWithPath("data.pendingGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.pendingGroups[].activeMemberCount")
@@ -179,7 +179,7 @@ class FindGroupSelfControllerDocsTest {
                 fieldWithPath("data.deniedGroups")
                     .type(JsonFieldType.ARRAY).description("가입 거부된 그룹 목록"),
                 fieldWithPath("data.deniedGroups[].id")
-                    .type(JsonFieldType.STRING).description("그룹 아이디"),
+                    .type(JsonFieldType.NUMBER).description("그룹 아이디"),
                 fieldWithPath("data.deniedGroups[].name")
                     .type(JsonFieldType.STRING).description("그룹명"),
                 fieldWithPath("data.deniedGroups[].deniedCause")

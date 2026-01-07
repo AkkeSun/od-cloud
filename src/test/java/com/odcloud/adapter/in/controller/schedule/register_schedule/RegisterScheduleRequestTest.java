@@ -49,7 +49,7 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 14:00:00")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             Account account = mock(Account.class);
@@ -62,7 +62,7 @@ class RegisterScheduleRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.content()).isEqualTo("그룹 회의");
-            assertThat(command.groupId()).isEqualTo("group-123");
+            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.notificationDt()).isNull();
         }
 
@@ -98,7 +98,7 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("개인 회의")
                 .startDt("2025-01-01 10:00:00")
-                .groupId("group-123")
+                .groupId(1L)
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
@@ -106,7 +106,7 @@ class RegisterScheduleRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.content()).isEqualTo("개인 회의");
             assertThat(request.startDt()).isEqualTo("2025-01-01 10:00:00");
-            assertThat(request.groupId()).isEqualTo("group-123");
+            assertThat(request.groupId()).isEqualTo(1L);
             assertThat(request.notificationDt()).isEqualTo("2025-01-01 09:50:00");
         }
 
@@ -215,14 +215,14 @@ class RegisterScheduleRequestTest {
             RegisterScheduleRequest request = RegisterScheduleRequest.builder()
                 .content("그룹 회의")
                 .startDt("2025-01-01 10:00:00")
-                .groupId("group-123")
+                .groupId(1L)
                 .build();
 
             // when
-            String groupId = request.groupId();
+            Long groupId = request.groupId();
 
             // then
-            assertThat(groupId).isEqualTo("group-123");
+            assertThat(groupId).isEqualTo(1L);
         }
 
         @Test

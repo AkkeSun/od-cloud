@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record RegisterFolderCommand(
     Long parentId,
-    String groupId,
+    Long groupId,
     String name,
     String owner
 ) {

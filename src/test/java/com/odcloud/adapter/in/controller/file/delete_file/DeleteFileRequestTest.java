@@ -23,7 +23,7 @@ class DeleteFileRequestTest {
             List<Long> fileIds = List.of(1L, 2L, 3L);
             Account account = Account.builder()
                 .email("test@test.com")
-                .groups(List.of(Group.of("group-1")))
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             DeleteFileRequest request = DeleteFileRequest.builder()

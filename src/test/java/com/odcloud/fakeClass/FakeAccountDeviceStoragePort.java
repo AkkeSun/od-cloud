@@ -51,7 +51,7 @@ public class FakeAccountDeviceStoragePort implements AccountDeviceStoragePort {
     }
 
     @Override
-    public List<AccountDevice> findByGroupIdForPush(String groupId) {
+    public List<AccountDevice> findByGroupIdForPush(Long groupId) {
         return List.of();
     }
 

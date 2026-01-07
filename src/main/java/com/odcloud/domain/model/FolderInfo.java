@@ -18,7 +18,7 @@ public class FolderInfo {
 
     private Long id;
     private Long parentId;
-    private String groupId;
+    private Long groupId;
     private String name;
     private String owner;
     private String path;

@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record UpdateGroupAccountUseYnCommand(
-    String groupId,
+    Long groupId,
     Account account,
     String showYn
 ) {
