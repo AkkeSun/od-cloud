@@ -2,11 +2,15 @@ package com.odcloud.application.account.service.delete_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.odcloud.application.group.port.in.DeleteGroupUseCase;
+import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
+import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.Notice;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
@@ -14,8 +18,10 @@ import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeNoticeStoragePort;
 import com.odcloud.fakeClass.FakeScheduleStoragePort;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,6 +37,7 @@ class DeleteAccountServiceTest {
     private FakeFolderStoragePort folderInfoStoragePort;
     private FakeFileStoragePort fileInfoStoragePort;
     private FakeFilePort filePort;
+    private FakeNoticeStoragePort noticeStoragePort;
 
     @BeforeEach
     void setUp() {
@@ -41,16 +48,81 @@ class DeleteAccountServiceTest {
         folderInfoStoragePort = new FakeFolderStoragePort();
         fileInfoStoragePort = new FakeFileStoragePort();
         filePort = new FakeFilePort();
+        noticeStoragePort = new FakeNoticeStoragePort();
+
+        DeleteGroupUseCase deleteGroupUseCase = new FakeDeleteGroupUseCase(
+            groupStoragePort,
+            folderInfoStoragePort,
+            fileInfoStoragePort,
+            filePort,
+            scheduleStoragePort,
+            noticeStoragePort
+        );
 
         service = new DeleteAccountService(
             accountStoragePort,
             accountDeviceStoragePort,
             scheduleStoragePort,
             groupStoragePort,
-            folderInfoStoragePort,
-            fileInfoStoragePort,
-            filePort
+            deleteGroupUseCase
         );
+    }
+
+    // Fake implementation of DeleteGroupUseCase for testing
+    private static class FakeDeleteGroupUseCase implements DeleteGroupUseCase {
+        private final FakeGroupStoragePort groupStoragePort;
+        private final FakeFolderStoragePort folderInfoStoragePort;
+        private final FakeFileStoragePort fileInfoStoragePort;
+        private final FakeFilePort filePort;
+        private final FakeScheduleStoragePort scheduleStoragePort;
+        private final FakeNoticeStoragePort noticeStoragePort;
+
+        public FakeDeleteGroupUseCase(
+            FakeGroupStoragePort groupStoragePort,
+            FakeFolderStoragePort folderInfoStoragePort,
+            FakeFileStoragePort fileInfoStoragePort,
+            FakeFilePort filePort,
+            FakeScheduleStoragePort scheduleStoragePort,
+            FakeNoticeStoragePort noticeStoragePort
+        ) {
+            this.groupStoragePort = groupStoragePort;
+            this.folderInfoStoragePort = folderInfoStoragePort;
+            this.fileInfoStoragePort = fileInfoStoragePort;
+            this.filePort = filePort;
+            this.scheduleStoragePort = scheduleStoragePort;
+            this.noticeStoragePort = noticeStoragePort;
+        }
+
+        @Override
+        public DeleteGroupServiceResponse delete(DeleteGroupCommand command) {
+            Group group = groupStoragePort.findById(command.groupId());
+
+            List<FolderInfo> folders = folderInfoStoragePort.findByGroupId(command.groupId());
+            for (FolderInfo folder : folders) {
+                List<FileInfo> files = fileInfoStoragePort.findByFolderId(folder.getId());
+                for (FileInfo file : files) {
+                    filePort.deleteFile(file.getFileLoc());
+                    fileInfoStoragePort.delete(file);
+                }
+                filePort.deleteFolder(folder.getPath());
+                folderInfoStoragePort.delete(folder);
+            }
+
+            List<Schedule> schedules = scheduleStoragePort.findByGroupId(command.groupId());
+            for (Schedule schedule : schedules) {
+                scheduleStoragePort.delete(schedule);
+            }
+
+            List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(), Integer.MAX_VALUE);
+            for (Notice notice : notices) {
+                noticeStoragePort.delete(notice);
+            }
+
+            groupStoragePort.deleteGroupAccountsByGroupId(command.groupId());
+            groupStoragePort.delete(group);
+
+            return DeleteGroupServiceResponse.ofSuccess();
+        }
     }
 
     @Nested
