@@ -38,9 +38,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
             throw new CustomBusinessException(Business_GROUP_LIMIT_EXCEEDED);
         }
 
-        Group group = Group.of(command);
-        groupStoragePort.save(group);
-
+        Group group = groupStoragePort.save(Group.of(command));
         Account account = accountStoragePort.findByEmail(command.ownerEmail());
         groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
 
