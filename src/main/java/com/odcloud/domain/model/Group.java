@@ -81,6 +81,11 @@ public class Group {
         this.modDt = LocalDateTime.now();
     }
 
+    public void increaseStorageTotal(long size) {
+        this.storageTotal = (this.storageTotal != null ? this.storageTotal : 0L) + size;
+        this.modDt = LocalDateTime.now();
+    }
+
     public boolean canUpload(long fileSize) {
         long currentUsed = this.storageUsed != null ? this.storageUsed : 0L;
         long totalStorage = this.storageTotal != null ? this.storageTotal : 3221225472L;

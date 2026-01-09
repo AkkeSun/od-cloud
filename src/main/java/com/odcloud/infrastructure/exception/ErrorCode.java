@@ -46,6 +46,8 @@ public enum ErrorCode {
     Business_NOT_FOUND_NOTICE(4024, "조회된 공지사항이 없습니다"),
     Business_GROUP_LIMIT_EXCEEDED(4025, "사용자당 최대 3개의 그룹만 생성할 수 있습니다"),
     Business_STORAGE_LIMIT_EXCEEDED(4026, "그룹 스토리지 용량이 부족합니다"),
+    Business_NOT_FOUND_PAYMENT(4027, "조회된 결제 정보가 없습니다"),
+    Business_NOT_FOUND_VOUCHER(4028, "조회된 바우처 정보가 없습니다"),
 
     ;
 

@@ -21,7 +21,19 @@ public class FakeGroupStoragePort implements GroupStoragePort {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
-        groupDatabase.add(group);
+        // Update if exists, otherwise add
+        boolean updated = false;
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            if (groupDatabase.get(i).getId() != null &&
+                groupDatabase.get(i).getId().equals(group.getId())) {
+                groupDatabase.set(i, group);
+                updated = true;
+                break;
+            }
+        }
+        if (!updated) {
+            groupDatabase.add(group);
+        }
         log.info("FakeGroupStoragePort saved group: id={}", group.getId());
         return group;
     }
