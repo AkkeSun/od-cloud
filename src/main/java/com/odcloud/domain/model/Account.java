@@ -50,7 +50,6 @@ public class Account {
             .nickname(userInfo.name())
             .name(command.name())
             .picture(userInfo.picture())
-            .groups(List.of(Group.of(Long.valueOf(command.groupId()))))
             .regDt(LocalDateTime.now())
             .build();
     }
