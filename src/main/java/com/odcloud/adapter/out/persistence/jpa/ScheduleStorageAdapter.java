@@ -58,8 +58,8 @@ class ScheduleStorageAdapter implements ScheduleStoragePort {
     }
 
     @Override
-    public List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
-        return repository.findByWriterEmailAndGroupIdIsNull(writerEmail)
+    public List<Schedule> findByPersonalSchedules(String writerEmail) {
+        return repository.findByPersonalSchedules(writerEmail)
             .stream()
             .map(ScheduleEntity::toDomain)
             .toList();

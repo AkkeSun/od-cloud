@@ -92,6 +92,14 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
         }
     }
 
+    @Override
+    public List<Schedule> findByPersonalSchedules(String writerEmail) {
+        return database.stream()
+            .filter(s -> s.getWriterEmail().equals(writerEmail))
+            .filter(s -> s.getGroupId() == null)
+            .toList();
+    }
+
     private boolean matchesFilterType(Schedule schedule, FindSchedulesCommand command) {
         String email = command.account().getEmail();
         List<Long> groupIds = command.account().getGroupIds();
@@ -107,14 +115,6 @@ public class FakeScheduleStoragePort implements ScheduleStoragePort {
         }
 
         return groupId.equals(schedule.getGroupId());
-    }
-
-    @Override
-    public List<Schedule> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
-        return database.stream()
-            .filter(s -> s.getWriterEmail().equals(writerEmail))
-            .filter(s -> s.getGroupId() == null)
-            .toList();
     }
 
     @Override

@@ -54,6 +54,7 @@ class FindGroupServiceTest {
                 .accountId(1L)
                 .nickName("Manager")
                 .email("manager@example.com")
+                .picture("https://example.com/manager.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -63,6 +64,7 @@ class FindGroupServiceTest {
                 .accountId(2L)
                 .nickName("Member1")
                 .email("member1@example.com")
+                .picture("https://example.com/member1.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -72,6 +74,7 @@ class FindGroupServiceTest {
                 .accountId(3L)
                 .nickName("Member2")
                 .email("member2@example.com")
+                .picture("https://example.com/member2.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -141,6 +144,7 @@ class FindGroupServiceTest {
                 .accountId(1L)
                 .nickName("Manager")
                 .email("manager@example.com")
+                .picture("https://example.com/manager.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -176,6 +180,7 @@ class FindGroupServiceTest {
                 .accountId(1L)
                 .nickName("Manager")
                 .email("manager@example.com")
+                .picture("https://example.com/manager.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -209,6 +214,7 @@ class FindGroupServiceTest {
                 .accountId(1L)
                 .nickName("Manager")
                 .email("manager@example.com")
+                .picture("https://example.com/manager.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -255,6 +261,7 @@ class FindGroupServiceTest {
                 .accountId(1L)
                 .nickName("Manager")
                 .email("manager@example.com")
+                .picture("https://example.com/manager.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -264,6 +271,7 @@ class FindGroupServiceTest {
                 .accountId(2L)
                 .nickName("ActiveMember")
                 .email("active@example.com")
+                .picture("https://example.com/active.jpg")
                 .status("ACTIVE")
                 .build();
 
@@ -273,6 +281,7 @@ class FindGroupServiceTest {
                 .accountId(3L)
                 .nickName("PendingMember")
                 .email("pending@example.com")
+                .picture("https://example.com/pending.jpg")
                 .status("PENDING")
                 .build();
 

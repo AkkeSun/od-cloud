@@ -10,6 +10,7 @@ import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
@@ -189,6 +190,20 @@ class DeleteAccountServiceTest {
                 .build();
             groupStoragePort.save(group);
 
+            // Create GroupAccount for the owner
+            GroupAccount groupAccount = GroupAccount.builder()
+                .id(1L)
+                .groupId(group.getId())
+                .accountId(account.getId())
+                .groupName(group.getName())
+                .groupOwner(group.getOwnerEmail())
+                .email(account.getEmail())
+                .status("ACTIVE")
+                .showYn("Y")
+                .regDt(LocalDateTime.now())
+                .build();
+            groupStoragePort.save(groupAccount);
+
             // Create folder for group
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
@@ -275,6 +290,20 @@ class DeleteAccountServiceTest {
                 .build();
             groupStoragePort.save(group1);
 
+            // Create GroupAccount for group1
+            GroupAccount groupAccount1 = GroupAccount.builder()
+                .id(1L)
+                .groupId(group1.getId())
+                .accountId(account.getId())
+                .groupName(group1.getName())
+                .groupOwner(group1.getOwnerEmail())
+                .email(account.getEmail())
+                .status("ACTIVE")
+                .showYn("Y")
+                .regDt(LocalDateTime.now())
+                .build();
+            groupStoragePort.save(groupAccount1);
+
             Group group2 = Group.builder()
                 .id(2L)
                 .name("Group 2")
@@ -284,6 +313,20 @@ class DeleteAccountServiceTest {
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group2);
+
+            // Create GroupAccount for group2
+            GroupAccount groupAccount2 = GroupAccount.builder()
+                .id(2L)
+                .groupId(group2.getId())
+                .accountId(account.getId())
+                .groupName(group2.getName())
+                .groupOwner(group2.getOwnerEmail())
+                .email(account.getEmail())
+                .status("ACTIVE")
+                .showYn("Y")
+                .regDt(LocalDateTime.now())
+                .build();
+            groupStoragePort.save(groupAccount2);
 
             // Create folders for each group
             FolderInfo folder1 = FolderInfo.builder()

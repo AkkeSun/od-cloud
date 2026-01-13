@@ -17,9 +17,11 @@ public class GroupAccount {
     private Long groupId;
     private Long accountId;
     private String groupName;
+    private String groupOwner;
     private String name;
     private String nickName;
     private String email;
+    private String picture;
     private String status;
     private String memo;
     private String showYn;
@@ -27,13 +29,15 @@ public class GroupAccount {
     private LocalDateTime regDt;
 
     public GroupAccount(Long id, Long groupId, Long accountId, String name, String nickName,
-        String email, String status, String memo, LocalDateTime modDt, LocalDateTime regDt) {
+        String email, String picture, String status, String memo, LocalDateTime modDt,
+        LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;
         this.accountId = accountId;
         this.name = name;
         this.nickName = nickName;
         this.email = email;
+        this.picture = picture;
         this.status = status;
         this.memo = memo;
         this.modDt = modDt;
@@ -82,5 +86,9 @@ public class GroupAccount {
 
     public boolean isActive() {
         return status.equals("ACTIVE");
+    }
+
+    public boolean isOwner(String email) {
+        return groupOwner.equals(email);
     }
 }

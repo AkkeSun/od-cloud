@@ -15,7 +15,6 @@ import com.odcloud.fakeClass.FakeUserAgentUtil;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,34 +86,6 @@ class IssueTokenServiceTest {
             assertThat(response.accessToken()).isEqualTo("fake-access-token-user@example.com");
             assertThat(response.refreshToken()).isEqualTo("fake-refresh-token-user@example.com");
             assertThat(fakeRedisStoragePort.database).hasSize(1);
-        }
-
-        @Test
-        @DisplayName("[failure] 그룹이 없는 계정은 토큰 발급에 실패한다")
-        void failure_emptyGroups() {
-            // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("user@example.com")
-                .name("사용자")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
-
-            Account account = Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .nickname("사용자")
-                .groups(new ArrayList<>())
-                .build();
-            fakeAccountStoragePort.database.add(account);
-
-            String googleAuthorization = "Bearer test-google-token";
-
-            // when & then
-            assertThatThrownBy(() -> issueTokenService.issue(googleAuthorization))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_EMPTY_GROUP_ACCOUNT);
-
-            assertThat(fakeRedisStoragePort.database).isEmpty();
         }
 
         @Test

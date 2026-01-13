@@ -32,5 +32,5 @@ public interface GroupStoragePort {
 
     void deleteGroupAccountsByGroupId(Long groupId);
 
-    List<Group> findByOwnerEmail(String ownerEmail);
+    void deleteGroupAccountById(Long id);
 }

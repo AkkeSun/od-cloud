@@ -321,6 +321,21 @@ class GroupAccountTest {
         }
 
         @Test
+        @DisplayName("[success] getPicture()로 picture를 조회한다")
+        void success_getPicture() {
+            // given
+            GroupAccount groupAccount = GroupAccount.builder()
+                .picture("https://example.com/profile.jpg")
+                .build();
+
+            // when
+            String picture = groupAccount.getPicture();
+
+            // then
+            assertThat(picture).isEqualTo("https://example.com/profile.jpg");
+        }
+
+        @Test
         @DisplayName("[success] getStatus()로 status를 조회한다")
         void success_getStatus() {
             // given
@@ -401,6 +416,7 @@ class GroupAccountTest {
                 "홍길동",
                 "테스터",
                 "test@example.com",
+                "https://example.com/test.jpg",
                 "ACTIVE",
                 null,
                 now,
@@ -415,6 +431,7 @@ class GroupAccountTest {
             assertThat(groupAccount.getName()).isEqualTo("홍길동");
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");
             assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
+            assertThat(groupAccount.getPicture()).isEqualTo("https://example.com/test.jpg");
             assertThat(groupAccount.getStatus()).isEqualTo("ACTIVE");
             assertThat(groupAccount.getMemo()).isNull();
             assertThat(groupAccount.getModDt()).isEqualTo(now);
@@ -426,7 +443,7 @@ class GroupAccountTest {
         void success_nullValues() {
             // when
             GroupAccount groupAccount = new GroupAccount(
-                null, null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null, null
             );
 
             // then
@@ -437,6 +454,7 @@ class GroupAccountTest {
             assertThat(groupAccount.getName()).isNull();
             assertThat(groupAccount.getNickName()).isNull();
             assertThat(groupAccount.getEmail()).isNull();
+            assertThat(groupAccount.getPicture()).isNull();
             assertThat(groupAccount.getStatus()).isNull();
             assertThat(groupAccount.getMemo()).isNull();
             assertThat(groupAccount.getModDt()).isNull();

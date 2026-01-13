@@ -54,13 +54,15 @@ public record FindGroupServiceResponse(
     @Builder
     public record MemberInfo(
         String nickname,
-        String email
+        String email,
+        String picture
     ) {
 
         public static MemberInfo of(GroupAccount groupAccount) {
             return MemberInfo.builder()
                 .nickname(groupAccount.getNickName())
                 .email(groupAccount.getEmail())
+                .picture(groupAccount.getPicture())
                 .build();
         }
     }

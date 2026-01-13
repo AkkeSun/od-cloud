@@ -100,7 +100,7 @@ openapi3 {
             { url = "https://cloud.odlab.kr" }
     ]
     title = "Cloud API"
-    description = "OD Cloud API 입니다."
+    description = "모이미즘 API 입니다."
     version = "0.0.1"
     format = "yaml"
     outputDirectory = "src/main/resources/static/docs"
@@ -110,12 +110,12 @@ openapi3 {
 tasks.register('copyOasToSwagger', DefaultTask) {
     doLast {
         def openapi3File = file("src/main/resources/static/docs/od-cloud-api.yaml")
-        def securitySchemesContent = "  securitySchemes:\n" +                                                             \
-                                                                                                 "    APIKey:\n" +                                                             \
-                                                                                                 "      type: apiKey\n" +                                                             \
-                                                                                                 "      name: Authorization\n" +                                                             \
-                                                                                                 "      in: header\n" +                                                            \
-                                                                                                 "security:\n" +
+        def securitySchemesContent = "  securitySchemes:\n" +                                                              \
+                                                                                                  "    APIKey:\n" +                                                              \
+                                                                                                  "      type: apiKey\n" +                                                              \
+                                                                                                  "      name: Authorization\n" +                                                              \
+                                                                                                  "      in: header\n" +                                                             \
+                                                                                                  "security:\n" +
                 "  - APIKey: []"
 
         if (openapi3File.exists()) {

@@ -87,9 +87,11 @@ class GroupRepository {
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
                 groupEntity.name,
+                groupEntity.ownerEmail,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
+                accountEntity.picture,
                 groupAccountEntity.status,
                 groupAccountEntity.memo,
                 groupAccountEntity.showYn,
@@ -145,9 +147,11 @@ class GroupRepository {
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
                 groupEntity.name,
+                groupEntity.ownerEmail,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
+                accountEntity.picture,
                 groupAccountEntity.status,
                 groupAccountEntity.memo,
                 groupAccountEntity.showYn,
@@ -175,9 +179,11 @@ class GroupRepository {
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
                 groupEntity.name,
+                groupEntity.ownerEmail,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
+                accountEntity.picture,
                 groupAccountEntity.status,
                 groupAccountEntity.memo,
                 groupAccountEntity.showYn,
@@ -205,9 +211,11 @@ class GroupRepository {
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
                 groupEntity.name,
+                groupEntity.ownerEmail,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
+                accountEntity.picture,
                 groupAccountEntity.status,
                 groupAccountEntity.memo,
                 groupAccountEntity.showYn,
@@ -236,9 +244,11 @@ class GroupRepository {
                 groupAccountEntity.groupId,
                 groupAccountEntity.accountId,
                 groupEntity.name,
+                groupEntity.ownerEmail,
                 accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
+                accountEntity.picture,
                 groupAccountEntity.status,
                 groupAccountEntity.memo,
                 groupAccountEntity.showYn,
@@ -294,5 +304,13 @@ class GroupRepository {
             .from(groupEntity)
             .where(groupEntity.ownerEmail.eq(ownerEmail))
             .fetch();
+    }
+
+    @Transactional
+    public void deleteGroupAccountById(Long id) {
+        queryFactory
+            .delete(groupAccountEntity)
+            .where(groupAccountEntity.id.eq(id))
+            .execute();
     }
 }

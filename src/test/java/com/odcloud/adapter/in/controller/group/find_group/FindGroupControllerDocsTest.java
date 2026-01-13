@@ -76,18 +76,21 @@ class FindGroupControllerDocsTest {
                 FindGroupServiceResponse.MemberInfo.builder()
                     .nickname("Manager")
                     .email("manager@example.com")
+                    .picture("https://example.com/manager.jpg")
                     .build();
 
             FindGroupServiceResponse.MemberInfo member1 =
                 FindGroupServiceResponse.MemberInfo.builder()
                     .nickname("Member1")
                     .email("member1@example.com")
+                    .picture("https://example.com/member1.jpg")
                     .build();
 
             FindGroupServiceResponse.MemberInfo member2 =
                 FindGroupServiceResponse.MemberInfo.builder()
                     .nickname("Member2")
                     .email("member2@example.com")
+                    .picture("https://example.com/member2.jpg")
                     .build();
 
             FindGroupServiceResponse.NoticeInfo notice1 =
@@ -135,12 +138,16 @@ class FindGroupControllerDocsTest {
                     .type(JsonFieldType.STRING).description("그룹장 닉네임"),
                 fieldWithPath("data.manager.email")
                     .type(JsonFieldType.STRING).description("그룹장 이메일"),
+                fieldWithPath("data.manager.picture")
+                    .type(JsonFieldType.STRING).description("그룹장 프로필 사진"),
                 fieldWithPath("data.members")
                     .type(JsonFieldType.ARRAY).description("그룹원 목록 (그룹장 제외)"),
                 fieldWithPath("data.members[].nickname")
                     .type(JsonFieldType.STRING).description("그룹원 닉네임"),
                 fieldWithPath("data.members[].email")
                     .type(JsonFieldType.STRING).description("그룹원 이메일"),
+                fieldWithPath("data.members[].picture")
+                    .type(JsonFieldType.STRING).description("그룹원 프로필 사진"),
                 fieldWithPath("data.activeMemberCount")
                     .type(JsonFieldType.NUMBER).description("활성 멤버 수 (그룹장 포함)"),
                 fieldWithPath("data.storageUsed")

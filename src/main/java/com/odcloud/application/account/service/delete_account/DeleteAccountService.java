@@ -8,10 +8,9 @@ import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.Group;
+import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.domain.model.Schedule;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,18 +28,22 @@ class DeleteAccountService implements DeleteAccountUseCase {
     @Transactional
     public DeleteAccountServiceResponse delete(Account account) {
         accountDeviceStoragePort.deleteByAccountId(account.getId());
-        List<Schedule> personalSchedules = scheduleStoragePort.findByWriterEmailAndGroupIdIsNull(
-            account.getEmail());
-        for (Schedule schedule : personalSchedules) {
+
+        for (Schedule schedule : scheduleStoragePort.findByPersonalSchedules(account.getEmail())) {
             scheduleStoragePort.delete(schedule);
         }
 
-        List<Group> ownedGroups = groupStoragePort.findByOwnerEmail(account.getEmail());
-        for (Group group : ownedGroups) {
-            deleteGroupUseCase.delete(DeleteGroupCommand.builder()
-                .groupId(group.getId())
-                .currentOwnerEmail(account.getEmail())
-                .build());
+        for (GroupAccount groupAccount : groupStoragePort.findGroupAccountsByAccountId(
+            account.getId())) {
+
+            if (groupAccount.isOwner(account.getEmail())) {
+                deleteGroupUseCase.delete(DeleteGroupCommand.builder()
+                    .groupId(groupAccount.getGroupId())
+                    .currentOwnerEmail(account.getEmail())
+                    .build());
+            } else {
+                groupStoragePort.deleteGroupAccountById(groupAccount.getId());
+            }
         }
 
         accountStoragePort.delete(account);

@@ -91,12 +91,11 @@ class ScheduleRepository {
             .execute();
     }
 
-    public List<ScheduleEntity> findByWriterEmailAndGroupIdIsNull(String writerEmail) {
+    public List<ScheduleEntity> findByPersonalSchedules(String writerEmail) {
         return queryFactory
             .selectFrom(scheduleEntity)
-            .where(
-                scheduleEntity.writerEmail.eq(writerEmail)
-                    .and(scheduleEntity.groupId.isNull())
+            .where(scheduleEntity.writerEmail.eq(writerEmail)
+                .and(scheduleEntity.groupId.isNull())
             )
             .fetch();
     }

@@ -60,7 +60,8 @@ public class FakeGroupStoragePort implements GroupStoragePort {
         long count = groupDatabase.stream()
             .filter(group -> group.getOwnerEmail().equals(ownerEmail))
             .count();
-        log.info("FakeGroupStoragePort countByOwnerEmail: ownerEmail={}, count={}", ownerEmail, count);
+        log.info("FakeGroupStoragePort countByOwnerEmail: ownerEmail={}, count={}", ownerEmail,
+            count);
         return count;
     }
 
@@ -104,7 +105,8 @@ public class FakeGroupStoragePort implements GroupStoragePort {
             .filter(ga -> ga.getGroupId().equals(groupId))
             .filter(ga -> ga.getAccountId().equals(accountId))
             .findFirst()
-            .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
+            .orElseThrow(
+                () -> new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT));
     }
 
     @Override
@@ -133,12 +135,7 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
-    public List<Group> findByOwnerEmail(String ownerEmail) {
-        List<Group> result = groupDatabase.stream()
-            .filter(group -> group.getOwnerEmail().equals(ownerEmail))
-            .toList();
-        log.info("FakeGroupStoragePort findByOwnerEmail: ownerEmail={}, count={}", ownerEmail,
-            result.size());
-        return result;
+    public void deleteGroupAccountById(Long id) {
+
     }
 }

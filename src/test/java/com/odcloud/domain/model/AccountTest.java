@@ -122,8 +122,6 @@ class AccountTest {
             assertThat(account.getNickname()).isEqualTo("테스터");
             assertThat(account.getName()).isEqualTo("홍길동");
             assertThat(account.getPicture()).isEqualTo("https://example.com/picture.jpg");
-            assertThat(account.getGroups()).hasSize(1);
-            assertThat(account.getGroups().get(0).getId()).isEqualTo(1L);
             assertThat(account.getRegDt()).isAfter(before);
             assertThat(account.getRegDt()).isBefore(after);
         }

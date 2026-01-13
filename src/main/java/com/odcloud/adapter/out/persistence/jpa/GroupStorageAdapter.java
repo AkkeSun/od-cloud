@@ -88,7 +88,7 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
-    public List<Group> findByOwnerEmail(String ownerEmail) {
-        return queryDsl.findByOwnerEmail(ownerEmail);
+    public void deleteGroupAccountById(Long id) {
+        queryDsl.deleteGroupAccountById(id);
     }
 }

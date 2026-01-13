@@ -36,13 +36,15 @@ record FindGroupResponse(
     @Builder
     record MemberInfo(
         String nickname,
-        String email
+        String email,
+        String picture
     ) {
 
         public static MemberInfo of(FindGroupServiceResponse.MemberInfo item) {
             return MemberInfo.builder()
                 .nickname(item.nickname())
                 .email(item.email())
+                .picture(item.picture())
                 .build();
         }
     }
