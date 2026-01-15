@@ -11,7 +11,9 @@ public enum VoucherType {
     STORAGE_PLUS(30, 300L * 1024 * 1024 * 1024),   // 30일, 300GB
     STORAGE_50(null, 50L * 1024 * 1024 * 1024),    // 무제한, 50GB
     STORAGE_100(null, 100L * 1024 * 1024 * 1024),  // 무제한, 100GB
-    ADVERTISE(30, 0L);                             // 30일, 스토리지 없음
+    ADVERTISE_30(30, 0L),
+    ADVERTISE_90(90, 0L),
+    ADVERTISE_365(365, 0L);
 
     private final Integer durationDays;
     private final Long storageSizeInBytes;
@@ -32,9 +34,5 @@ public enum VoucherType {
             || this == STORAGE_PLUS
             || this == STORAGE_50
             || this == STORAGE_100;
-    }
-
-    public boolean isSubscription() {
-        return this == STORAGE_BASIC || this == STORAGE_PLUS || this == ADVERTISE;
     }
 }
