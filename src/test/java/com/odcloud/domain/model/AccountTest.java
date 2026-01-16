@@ -423,6 +423,7 @@ class AccountTest {
                 "홍길동",
                 "https://example.com/picture.jpg",
                 groups,
+                null,
                 now,
                 now
             );

@@ -7,6 +7,7 @@ import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,19 @@ class VoucherRepository {
             .fetchOne();
 
         return Optional.ofNullable(entity).map(this::toDomain);
+    }
+
+    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
+        return queryFactory
+            .selectFrom(voucherEntity)
+            .where(
+                voucherEntity.status.eq(VoucherStatus.ACTIVE),
+                voucherEntity.accountId.eq(accountId).or(voucherEntity.groupId.in(groupIds))
+            )
+            .fetch()
+            .stream()
+            .map(this::toDomain)
+            .toList();
     }
 
     private VoucherEntity toEntity(Voucher voucher) {

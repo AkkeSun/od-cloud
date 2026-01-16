@@ -7,6 +7,7 @@ import com.odcloud.domain.model.Voucher;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,5 +40,10 @@ class VoucherStorageAdapter implements VoucherStoragePort {
         Long groupId, VoucherType voucherType, Long accountId
     ) {
         return repository.findForSubscription(groupId, voucherType, accountId);
+    }
+
+    @Override
+    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
+        return repository.findActiveByAccountIdOrGroupIds(accountId, groupIds);
     }
 }

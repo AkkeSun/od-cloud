@@ -67,4 +67,13 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
             .filter(v -> v.getStatus() == com.odcloud.domain.model.VoucherStatus.ACTIVE)
             .findFirst();
     }
+
+    @Override
+    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
+        return database.stream()
+            .filter(v -> v.getStatus() == com.odcloud.domain.model.VoucherStatus.ACTIVE)
+            .filter(v -> (v.getAccountId() != null && v.getAccountId().equals(accountId))
+                || (v.getGroupId() != null && groupIds.contains(v.getGroupId())))
+            .toList();
+    }
 }

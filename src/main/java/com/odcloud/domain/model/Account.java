@@ -24,6 +24,7 @@ public class Account {
     private String name;
     private String picture;
     private List<Group> groups;
+    private List<Voucher> vouchers;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
@@ -86,5 +87,18 @@ public class Account {
 
     public void updateModDt() {
         this.modDt = LocalDateTime.now();
+    }
+
+    public void updateVouchers(List<Voucher> vouchers) {
+        this.vouchers = vouchers;
+    }
+
+    public List<String> getVouchersInfo() {
+        if (vouchers == null) {
+            return List.of();
+        }
+        return vouchers.stream()
+            .map(voucher -> voucher.getVoucherType().name())
+            .collect(Collectors.toList());
     }
 }

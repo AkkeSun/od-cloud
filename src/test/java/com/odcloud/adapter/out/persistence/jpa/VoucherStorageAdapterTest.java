@@ -186,7 +186,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             Voucher voucher = Voucher.builder()
                 .id(5L)
                 .paymentId(500L)
-                .voucherType(VoucherType.ADVERTISE)
+                .voucherType(VoucherType.ADVERTISE_30)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(5L)
                 .groupId(null) // ADVERTISE는 groupId가 없을 수 있음
@@ -204,12 +204,12 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(5L);
-            assertThat(result.getVoucherType()).isEqualTo(VoucherType.ADVERTISE);
+            assertThat(result.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(result.getGroupId()).isNull();
 
             VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 5L);
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.ADVERTISE);
+            assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(savedEntity.getGroupId()).isNull();
         }
 

@@ -10,6 +10,7 @@ import com.odcloud.fakeClass.FakeJwtUtil;
 import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeUserAgentUtil;
+import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -26,6 +27,7 @@ class ReissueTokenServiceTest {
     private ProfileConstant profileConstant;
     private FakeRedisStoragePort fakeRedisStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
+    private FakeVoucherStoragePort fakeVoucherStoragePort;
     private ReissueTokenService reissueTokenService;
 
     @BeforeEach
@@ -35,12 +37,14 @@ class ReissueTokenServiceTest {
         profileConstant = FakeProfileConstant.create();
         fakeRedisStoragePort = new FakeRedisStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
+        fakeVoucherStoragePort = new FakeVoucherStoragePort();
         reissueTokenService = new ReissueTokenService(
             fakeJwtUtil,
             fakeUserAgentUtil,
             profileConstant,
             fakeRedisStoragePort,
-            fakeAccountStoragePort
+            fakeAccountStoragePort,
+            fakeVoucherStoragePort
         );
     }
 

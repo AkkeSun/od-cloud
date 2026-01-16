@@ -152,7 +152,7 @@ class CreateVoucherServiceTest {
                 .subscriptionKey("sub_advertise")
                 .orderTxId("APPLE_TX_ADVERTISE")
                 .storeProcessDt(now)
-                .voucherType(VoucherType.ADVERTISE)
+                .voucherType(VoucherType.ADVERTISE_30)
                 .groupId(null)
                 .memo("광고 제거")
                 .build();
@@ -167,7 +167,7 @@ class CreateVoucherServiceTest {
             // Verify voucher created
             assertThat(voucherStoragePort.database).hasSize(1);
             Voucher voucher = voucherStoragePort.database.get(0);
-            assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.ADVERTISE);
+            assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(voucher.getGroupId()).isNull();
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());

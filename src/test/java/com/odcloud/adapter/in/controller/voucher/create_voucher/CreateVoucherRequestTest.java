@@ -71,7 +71,7 @@ class CreateVoucherRequestTest {
                 .subscriptionKey("sub_google_456")
                 .orderTxId("GOOGLE_TX_67890")
                 .storeProcessDt("2026-01-09 11:00:00")
-                .voucherType(VoucherType.ADVERTISE)
+                .voucherType(VoucherType.ADVERTISE_30)
                 .groupId(null)
                 .memo("광고 제거")
                 .build();
@@ -85,7 +85,7 @@ class CreateVoucherRequestTest {
             // then
             assertThat(command).isNotNull();
             assertThat(command.accountId()).isEqualTo(2L);
-            assertThat(command.voucherType()).isEqualTo(VoucherType.ADVERTISE);
+            assertThat(command.voucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(command.groupId()).isNull();
         }
     }
@@ -124,7 +124,7 @@ class CreateVoucherRequestTest {
                 .subscriptionKey("sub_ad")
                 .orderTxId("GOOGLE_TX_AD")
                 .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.ADVERTISE)
+                .voucherType(VoucherType.ADVERTISE_30)
                 .groupId(null)
                 .memo("광고 제거")
                 .build();
