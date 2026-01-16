@@ -93,12 +93,17 @@ public class Account {
         this.vouchers = vouchers;
     }
 
-    public List<String> getVouchersInfo() {
+    public List<Map<String, Object>> getVouchersInfo() {
         if (vouchers == null) {
             return List.of();
         }
         return vouchers.stream()
-            .map(voucher -> voucher.getVoucherType().name())
+            .map(voucher -> {
+                Map<String, Object> voucherInfo = new java.util.HashMap<>();
+                voucherInfo.put("voucherType", voucher.getVoucherType().name());
+                voucherInfo.put("groupId", voucher.getGroupId());
+                return voucherInfo;
+            })
             .collect(Collectors.toList());
     }
 }
