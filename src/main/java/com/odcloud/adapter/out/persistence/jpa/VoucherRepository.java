@@ -24,7 +24,7 @@ class VoucherRepository {
     @Transactional
     public Voucher save(Voucher voucher) {
         VoucherEntity entity = toEntity(voucher);
-        entityManager.persist(toEntity(voucher));
+        entityManager.persist(entity);
         return toDomain(entity);
     }
 
