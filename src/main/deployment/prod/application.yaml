@@ -1,3 +1,76 @@
+server:
+  port: 8081
 spring:
   application:
     name: od-cloud
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  servlet:
+    multipart:
+      max-request-size: 500MB
+      max-file-size: 500MB
+
+  data:
+    redis:
+      host: ${PROD_REDIS_HOST}
+      port: ${PROD_REDIS_PORT}
+      password: ${PROD_REDIS_PASSWORD}
+      timeout: 3000
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connection:
+            timeout: 5000
+            write-timeout: 5000
+          ssl:
+            enable: false
+
+  datasource:
+    url: ${PROD_RDB_HOST}
+    username: ${PROD_RDB_USERNAME}
+    password: ${PROD_RDB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+service-constant:
+  jwt:
+    temp-token-ttl: 300000 # 5 min
+    access-token-ttl: 1800000 # 30 min
+    refresh-token-ttl: 7200000 # 2 hour
+    secretKey: ${PROD_JWT_SECRET}
+
+  google-oauth2:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    redirect-uri: https://moimism.odlab.kr/auth/google
+    token-api: https://oauth2.googleapis.com
+    user-info-api: https://www.googleapis.com
+
+  redis-key:
+    token: token::%s-%s
+
+  file-upload:
+    base-path: /Users/od/IdeaProjects/od-cloud # TODO: 수정 필요
+
+  web-server-host: https://data.odlab.kr
+
+  aes-secret-key: ${PROD_AES_SECRET}

@@ -19,8 +19,8 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: ${DEV_REDIS_HOST}
+      port: ${DEV_REDIS_PORT}
       timeout: 3000
 
   mail:
@@ -43,9 +43,9 @@ spring:
             enable: false
 
   datasource:
-    url: ${RDB_HOST}
-    username: ${RDB_USERNAME}
-    password: ${RDB_PASSWORD}
+    url: ${DEV_RDB_HOST}
+    username: ${DEV_RDB_USERNAME}
+    password: ${DEV_RDB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 service-constant:
@@ -53,7 +53,7 @@ service-constant:
     temp-token-ttl: 300000 # 5 min
     access-token-ttl: 1800000 # 30 min
     refresh-token-ttl: 7200000 # 2 hour
-    secretKey: ${JWT_SECRET}
+    secretKey: ${DEV_JWT_SECRET}
 
   google-oauth2:
     client-id: ${GOOGLE_CLIENT_ID}
@@ -64,11 +64,10 @@ service-constant:
 
   redis-key:
     token: token::%s-%s
-    group: group
 
   file-upload:
     base-path: /Users/od/IdeaProjects/od-cloud
 
   web-server-host: http://192.168.219.109:8080/uploads
 
-  aes-secret-key: ${AES_SECRET}
+  aes-secret-key: ${DEV_AES_SECRET}
