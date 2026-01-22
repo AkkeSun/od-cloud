@@ -21,43 +21,43 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "VOUCHER")
+@Table(name = "voucher")
 class VoucherEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "PAYMENT_ID")
+    @Column(name = "payment_id")
     private Long paymentId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "VOUCHER_TYPE")
+    @Column(name = "voucher_type")
     private VoucherType voucherType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private VoucherStatus status;
 
-    @Column(name = "ACCOUNT_ID")
+    @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "GROUP_ID")
+    @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name = "MEMO")
+    @Column(name = "memo")
     private String memo;
 
-    @Column(name = "START_AT")
+    @Column(name = "start_at")
     private LocalDateTime startAt;
 
-    @Column(name = "END_DT")
+    @Column(name = "end_dt")
     private LocalDateTime endDt;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 }

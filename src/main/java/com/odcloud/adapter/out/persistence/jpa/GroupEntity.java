@@ -18,30 +18,30 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "`GROUP`")
+@Table(name = "\"group\"")
 class GroupEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "OWNER_EMAIL")
+    @Column(name = "owner_email")
     private String ownerEmail;
 
-    @Column(name = "STORAGE_USED")
+    @Column(name = "storage_used")
     private Long storageUsed;
 
-    @Column(name = "STORAGE_TOTAL")
+    @Column(name = "storage_total")
     private Long storageTotal;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static GroupEntity of(Group group) {

@@ -17,38 +17,38 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ACCOUNT_DEVICE")
+@Table(name = "account_device")
 class AccountDeviceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "ACCOUNT_ID")
+    @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "OS_TYPE")
+    @Column(name = "os_type")
     private String osType;
 
-    @Column(name = "DEVICE_ID")
+    @Column(name = "device_id")
     private String deviceId;
 
-    @Column(name = "APP_VERSION")
+    @Column(name = "app_version")
     private String appVersion;
 
-    @Column(name = "FCM_TOKEN")
+    @Column(name = "fcm_token")
     private String fcmToken;
 
-    @Column(name = "PUSH_YN")
+    @Column(name = "push_yn")
     private String pushYn;
 
-    @Column(name = "LAST_LOGIN_DT")
+    @Column(name = "last_login_dt")
     private LocalDateTime lastLoginDt;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 }

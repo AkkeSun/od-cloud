@@ -21,34 +21,34 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "PAYMENT")
+@Table(name = "payment")
 class PaymentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "ACCOUNT_ID")
+    @Column(name = "account_id")
     private Long accountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STORE_TYPE")
+    @Column(name = "store_type")
     private StoreType storeType;
 
-    @Column(name = "SUBSCRIPTION_KEY")
+    @Column(name = "subscription_key")
     private String subscriptionKey;
 
-    @Column(name = "ORDER_TX_ID")
+    @Column(name = "order_tx_id")
     private String orderTxId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private PaymentStatus status;
 
-    @Column(name = "STORE_PROCESS_DT")
+    @Column(name = "store_process_dt")
     private LocalDateTime storeProcessDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 }

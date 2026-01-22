@@ -18,33 +18,33 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "GROUP_ACCOUNT")
+@Table(name = "group_account")
 class GroupAccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "GROUP_ID")
+    @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name = "ACCOUNT_ID")
+    @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "MEMO")
+    @Column(name = "memo")
     private String memo;
 
-    @Column(name = "SHOW_YN")
+    @Column(name = "show_yn")
     private String showYn;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static GroupAccountEntity of(GroupAccount groupAccount) {

@@ -18,33 +18,33 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FOLDER_INFO")
+@Table(name = "folder_info")
 class FolderInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "PARENT_ID")
+    @Column(name = "parent_id")
     private Long parentId;
 
-    @Column(name = "GROUP_ID")
+    @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "OWNER")
+    @Column(name = "owner")
     private String owner;
 
-    @Column(name = "PATH")
+    @Column(name = "path")
     private String path;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static FolderInfoEntity of(FolderInfo folder) {

@@ -19,34 +19,34 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FILE_INFO",
+@Table(name = "file_info",
     indexes = {
-        @Index(name = "idx_file_name_fulltext", columnList = "FILE_NAME")
+        @Index(name = "idx_file_name_fulltext", columnList = "file_name")
     }
 )
 class FileInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "FOLDER_ID")
+    @Column(name = "folder_id")
     private Long folderId;
 
-    @Column(name = "FILE_NAME")
+    @Column(name = "file_name")
     private String fileName;
 
-    @Column(name = "FILE_LOC")
+    @Column(name = "file_loc")
     private String fileLoc;
 
-    @Column(name = "FILE_SIZE")
+    @Column(name = "file_size")
     private Long fileSize;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static FileInfoEntity of(FileInfo file) {

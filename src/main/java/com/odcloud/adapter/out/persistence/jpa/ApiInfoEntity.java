@@ -17,21 +17,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "API_INFO")
+@Table(name = "api_info")
 class ApiInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "DOMAIN")
+    @Column(name = "domain")
     private String domain;
 
-    @Column(name = "HTTP_METHOD")
+    @Column(name = "http_method")
     private String httpMethod;
 
-    @Column(name = "URI_PATTERN")
+    @Column(name = "uri_pattern")
     private String uriPattern;
 
     static ApiInfoEntity of(ApiInfo domain) {

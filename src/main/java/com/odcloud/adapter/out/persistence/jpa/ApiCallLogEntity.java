@@ -18,36 +18,36 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "API_CALL_LOG")
+@Table(name = "api_call_log")
 class ApiCallLogEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "API_ID")
+    @Column(name = "api_id")
     private Long apiId;
 
-    @Column(name = "EMAIL")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "REQUEST_PATH_PARAM")
+    @Column(name = "request_path_param")
     private String requestPathParam;
 
-    @Column(name = "REQUEST_PARAM")
+    @Column(name = "request_param")
     private String requestParam;
 
-    @Column(name = "REQUEST_BODY")
+    @Column(name = "request_body")
     private String requestBody;
 
-    @Column(name = "HTTP_STATUS")
+    @Column(name = "http_status")
     private String httpStatus;
 
-    @Column(name = "ERROR_CODE")
+    @Column(name = "error_code")
     private String errorCode;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
 

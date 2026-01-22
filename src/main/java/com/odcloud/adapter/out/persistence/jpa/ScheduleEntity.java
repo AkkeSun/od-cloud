@@ -18,36 +18,36 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SCHEDULE")
+@Table(name = "schedule")
 class ScheduleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "WRITER_EMAIL")
+    @Column(name = "writer_email")
     private String writerEmail;
 
-    @Column(name = "GROUP_ID")
+    @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name = "CONTENT")
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "START_DT")
+    @Column(name = "start_dt")
     private LocalDateTime startDt;
 
-    @Column(name = "NOTIFICATION_DT")
+    @Column(name = "notification_dt")
     private LocalDateTime notificationDt;
 
-    @Column(name = "NOTIFICATION_YN")
+    @Column(name = "notification_yn")
     private String notificationYn;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static ScheduleEntity of(Schedule schedule) {

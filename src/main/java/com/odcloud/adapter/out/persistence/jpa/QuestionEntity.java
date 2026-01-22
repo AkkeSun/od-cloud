@@ -18,33 +18,33 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "QUESTION")
+@Table(name = "question")
 class QuestionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "WRITER_EMAIL")
+    @Column(name = "writer_email")
     private String writerEmail;
 
-    @Column(name = "WRITER_NICKNAME")
+    @Column(name = "writer_nickname")
     private String writerNickname;
 
-    @Column(name = "TITLE")
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "CONTENT", columnDefinition = "TEXT")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "ANSWERED")
+    @Column(name = "answered")
     private Boolean answered;
 
-    @Column(name = "MOD_DT")
+    @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-    @Column(name = "REG_DT")
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     static QuestionEntity of(Question question) {
