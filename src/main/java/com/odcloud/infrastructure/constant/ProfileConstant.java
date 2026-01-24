@@ -17,7 +17,9 @@ public record ProfileConstant(
     @NotBlank
     String webServerHost,
     @NotBlank
-    String aesSecretKey
+    String aesSecretKey,
+    @NotBlank
+    String profile
 ) {
 
     @Builder
@@ -61,7 +63,9 @@ public record ProfileConstant(
     @Builder
     public record FileUpload(
         @NotBlank
-        String basePath
+        String basePath,
+        @NotBlank
+        String diskPath
     ) {
 
     }
@@ -81,9 +85,4 @@ public record ProfileConstant(
     public String getJwtSecretKey() {
         return jwt().secretKey;
     }
-
-    public String getAccountProfileURI() {
-        return webServerHost + fileUpload().basePath;
-    }
-
 }

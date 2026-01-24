@@ -9,7 +9,6 @@ import com.odcloud.application.account.port.in.RegisterAccountUseCase;
 import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
-import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.util.port.out.MailPort;
@@ -28,7 +27,6 @@ import org.springframework.util.StringUtils;
 class RegisterAccountService implements RegisterAccountUseCase {
 
     private final MailPort mailPort;
-    private final FilePort filePort;
     private final GroupStoragePort groupStoragePort;
     private final GoogleOAuth2Port googleOAuth2Port;
     private final AccountStoragePort accountStoragePort;
@@ -52,7 +50,6 @@ class RegisterAccountService implements RegisterAccountUseCase {
 
             FolderInfo folder = FolderInfo.ofRootFolder(group);
             folderInfoStoragePort.save(folder);
-            filePort.createFolder(folder.getPath());
 
         } else {
             Group group = groupStoragePort.findById(command.groupId());

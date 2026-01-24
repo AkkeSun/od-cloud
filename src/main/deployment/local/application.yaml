@@ -66,8 +66,9 @@ service-constant:
     token: token::%s-%s
 
   file-upload:
-    base-path: /Users/od/IdeaProjects/od-cloud
+    base-path: /Users/od/IdeaProjects/od-cloud/data
+    disk-path: /disk1
 
-  web-server-host: http://192.168.219.109:8080/uploads
-
+  profile: dev
+  web-server-host: http://192.168.219.109:8080
   aes-secret-key: ${DEV_AES_SECRET}

@@ -38,9 +38,6 @@ class FolderInfoEntity {
     @Column(name = "owner")
     private String owner;
 
-    @Column(name = "path")
-    private String path;
-
     @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
@@ -54,7 +51,6 @@ class FolderInfoEntity {
             .groupId(folder.getGroupId())
             .name(folder.getName())
             .owner(folder.getOwner())
-            .path(folder.getPath())
             .modDt(folder.getModDt())
             .regDt(folder.getRegDt())
             .build();

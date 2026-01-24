@@ -25,7 +25,8 @@ class UpdateAccountService implements UpdateAccountUseCase {
     public UpdateAccountServiceResponse update(UpdateAccountCommand command) {
         Account account = accountStoragePort.findByEmail(command.account().getEmail());
         if (command.pictureFile() != null) {
-            FileInfo file = FileInfo.ofProfilePicture(command.pictureFile());
+            FileInfo file = FileInfo.ofProfilePicture(constant.fileUpload().diskPath(),
+                command.pictureFile());
             filePort.uploadFile(file);
 
             if (account.getPicture().startsWith(constant.webServerHost())) {

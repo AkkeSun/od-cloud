@@ -18,6 +18,7 @@ public class FileInfo {
 
     private Long id;
     private Long folderId;
+    private Long groupId;
     private String fileName;
     private String fileLoc;
     private Long fileSize;
@@ -25,10 +26,12 @@ public class FileInfo {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public FileInfo(Long id, Long folderId, String fileName, String fileLoc, Long fileSize,
+    public FileInfo(Long id, Long folderId, Long groupId, String fileName, String fileLoc,
+        Long fileSize,
         LocalDateTime modDt, LocalDateTime regDt) {
         this.id = id;
         this.folderId = folderId;
+        this.groupId = groupId;
         this.fileName = fileName;
         this.fileLoc = fileLoc;
         this.fileSize = fileSize;
@@ -36,7 +39,8 @@ public class FileInfo {
         this.regDt = regDt;
     }
 
-    public static FileInfo create(FolderInfo folder, MultipartFile multipartFile) {
+    public static FileInfo create(String diskPath, FolderInfo folderInfo,
+        MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         String extension = getFileExtension(originalFileName);
         String onlyFileName = originalFileName.replace(extension, "");
@@ -47,12 +51,12 @@ public class FileInfo {
 
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String serverFileName = uuid + "_" + date + extension;
 
         return FileInfo.builder()
-            .folderId(folder.getId())
+            .folderId(folderInfo.getId())
+            .groupId(folderInfo.getGroupId())
             .fileName(originalFileName)
-            .fileLoc(folder.getPath() + "/" + serverFileName)
+            .fileLoc(diskPath + "/" + folderInfo.getGroupId() + "_" + uuid + "_" + date + extension)
             .fileSize(multipartFile.getSize())
             .multipartFile(multipartFile)
             .regDt(LocalDateTime.now())
@@ -66,16 +70,12 @@ public class FileInfo {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    public static FileInfo ofProfilePicture(MultipartFile multipartFile) {
+    public static FileInfo ofProfilePicture(String diskPath, MultipartFile multipartFile) {
         String extension = getFileExtension(multipartFile.getOriginalFilename());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String serverFileName = uuid + "_" + date + extension;
-
         return FileInfo.builder()
-            .folderId(null)
-            .fileName(null)
-            .fileLoc("/pictures/" + serverFileName)
+            .fileLoc(diskPath + "/" + uuid + "_" + date + extension)
             .multipartFile(multipartFile)
             .regDt(LocalDateTime.now())
             .build();
@@ -84,8 +84,7 @@ public class FileInfo {
     public String getRegDtString() {
         return DateUtil.formatDateTime(regDt);
     }
-
-
+    
     public void updateFileName(String newFileName) {
         this.fileName = newFileName;
         this.modDt = LocalDateTime.now();
@@ -95,9 +94,8 @@ public class FileInfo {
         this.fileLoc = webServerHost + fileLoc;
     }
 
-    public void updateFolder(Long newFolderId, String newFileLoc) {
+    public void updateFolderId(Long newFolderId) {
         this.folderId = newFolderId;
-        this.fileLoc = newFileLoc;
         this.modDt = LocalDateTime.now();
     }
 

@@ -15,4 +15,11 @@ public record UpdateFolderCommand(
     Long parentId
 ) {
 
+    public boolean isFolderLocChange(Long parentId) {
+        return this.parentId != null && !this.parentId.equals(parentId);
+    }
+
+    public boolean isFolderNameChange(String folderName) {
+        return this.name != null && !this.name.equals(folderName);
+    }
 }

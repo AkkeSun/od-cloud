@@ -11,7 +11,6 @@ import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.FileInfo;
-import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.domain.model.Schedule;
@@ -40,25 +39,20 @@ class DeleteGroupService implements DeleteGroupUseCase {
             throw new CustomBusinessException(Business_INVALID_GROUP_OWNER);
         }
 
-        List<FolderInfo> folders = folderInfoStoragePort.findByGroupId(command.groupId());
-
-        for (FolderInfo folder : folders) {
-            List<FileInfo> files = fileInfoStoragePort.findByFolderId(folder.getId());
-            for (FileInfo file : files) {
-                filePort.deleteFile(file.getFileLoc());
-                fileInfoStoragePort.delete(file);
-            }
-
-            filePort.deleteFolder(folder.getPath());
-            folderInfoStoragePort.delete(folder);
+        List<FileInfo> files = fileInfoStoragePort.findByGroupId(command.groupId());
+        for (FileInfo file : files) {
+            filePort.deleteFile(file.getFileLoc());
         }
+        fileInfoStoragePort.deleteByGroupId(command.groupId());
+        folderInfoStoragePort.deleteByGroupId(command.groupId());
 
         List<Schedule> schedules = scheduleStoragePort.findByGroupId(command.groupId());
         for (Schedule schedule : schedules) {
             scheduleStoragePort.delete(schedule);
         }
 
-        List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(), Integer.MAX_VALUE);
+        List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(),
+            Integer.MAX_VALUE);
         for (Notice notice : notices) {
             noticeStoragePort.delete(notice);
         }

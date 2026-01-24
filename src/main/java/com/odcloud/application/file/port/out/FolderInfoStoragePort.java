@@ -14,6 +14,8 @@ public interface FolderInfoStoragePort {
 
     boolean existsSameFolderName(Long parentId, String name);
 
+    boolean existsById(Long id);
+
     List<FolderInfo> findByParentId(Long parentId);
 
     void delete(FolderInfo folder);
@@ -21,4 +23,6 @@ public interface FolderInfoStoragePort {
     FolderInfo findRootFolderByGroupId(Long groupId);
 
     List<FolderInfo> findByGroupId(Long groupId);
+
+    void deleteByGroupId(Long groupId);
 }

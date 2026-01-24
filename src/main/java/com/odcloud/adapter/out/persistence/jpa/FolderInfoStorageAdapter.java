@@ -38,6 +38,11 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return folderRepository.findById(id).isPresent();
+    }
+
+    @Override
     public List<FolderInfo> findByParentId(Long parentId) {
         return folderRepository.findByParentId(parentId);
     }
@@ -56,5 +61,10 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
     @Override
     public List<FolderInfo> findByGroupId(Long groupId) {
         return folderRepository.findByGroupId(groupId);
+    }
+
+    @Override
+    public void deleteByGroupId(Long groupId) {
+        folderRepository.deleteByGroupId(groupId);
     }
 }

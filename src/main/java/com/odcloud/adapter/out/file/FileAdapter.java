@@ -34,28 +34,11 @@ import org.springframework.stereotype.Component;
 class FileAdapter implements FilePort {
 
     private final Tika tika;
-    private String basePath;
+    private final String basePath;
 
     FileAdapter(ProfileConstant profileConstant) {
         this.tika = new Tika();
         this.basePath = profileConstant.fileUpload().basePath();
-    }
-
-    @Override
-    public void createFolder(String folderPath) {
-        try {
-            Path fullPath = Paths.get(basePath, folderPath);
-
-            if (Files.exists(fullPath)) {
-                log.info("[createFolder] 폴더가 이미 존재합니다: {}", fullPath);
-                return;
-            }
-
-            Files.createDirectories(fullPath);
-        } catch (IOException e) {
-            log.error("[createFolder] 폴더 생성 실패: {}, error: {}", folderPath, e.getMessage());
-            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-        }
     }
 
     @Override
@@ -75,13 +58,6 @@ class FileAdapter implements FilePort {
     }
 
     @Override
-    public void deleteFiles(List<String> filePaths) {
-        for (String filePath : filePaths) {
-            deleteFile(filePath);
-        }
-    }
-
-    @Override
     public void deleteFile(String filePath) {
         java.io.File file = new java.io.File(basePath + filePath);
         if (file.exists()) {
@@ -90,33 +66,6 @@ class FileAdapter implements FilePort {
                 log.warn("[deleteFile] 파일 삭제 실패: {}", filePath);
             }
         }
-    }
-
-    @Override
-    public void deleteFolder(String folderPath) {
-        try {
-            Path fullPath = Paths.get(basePath, folderPath);
-            if (Files.exists(fullPath)) {
-                deleteDirectoryRecursively(fullPath);
-            }
-        } catch (IOException e) {
-            log.error("[deleteFolder] 폴더 삭제 실패: {}, error: {}", folderPath, e.getMessage());
-        }
-    }
-
-    private void deleteDirectoryRecursively(Path path) throws IOException {
-        if (Files.isDirectory(path)) {
-            try (var stream = Files.list(path)) {
-                stream.forEach(child -> {
-                    try {
-                        deleteDirectoryRecursively(child);
-                    } catch (IOException e) {
-                        log.error("[deleteDirectoryRecursively] 하위 항목 삭제 실패: {}", child, e);
-                    }
-                });
-            }
-        }
-        Files.deleteIfExists(path);
     }
 
     @Override
@@ -201,50 +150,4 @@ class FileAdapter implements FilePort {
         return headers;
     }
 
-    @Override
-    public void moveFolder(String oldPath, String newPath) {
-        try {
-            Path sourcePath = Paths.get(basePath, oldPath);
-            Path targetPath = Paths.get(basePath, newPath);
-
-            if (!Files.exists(sourcePath)) {
-                log.error("[moveFolder] 원본 폴더가 존재하지 않습니다: {}", sourcePath);
-                throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-            }
-
-            Path targetParent = targetPath.getParent();
-            if (targetParent != null && !Files.exists(targetParent)) {
-                Files.createDirectories(targetParent);
-            }
-
-            Files.move(sourcePath, targetPath);
-        } catch (IOException e) {
-            log.error("[moveFolder] 폴더 이동 실패: {} -> {}, error: {}", oldPath, newPath,
-                e.getMessage());
-            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-        }
-    }
-
-    @Override
-    public void moveFile(String oldPath, String newPath) {
-        try {
-            Path oldFullPath = Paths.get(basePath, oldPath);
-            Path newFullPath = Paths.get(basePath, newPath);
-
-            if (!Files.exists(oldFullPath)) {
-                log.error("[moveFile] 이동할 파일이 존재하지 않습니다: {}", oldPath);
-                throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-            }
-
-            Path newParentDir = newFullPath.getParent();
-            if (newParentDir != null && !Files.exists(newParentDir)) {
-                Files.createDirectories(newParentDir);
-            }
-
-            Files.move(oldFullPath, newFullPath);
-        } catch (IOException e) {
-            log.error("[moveFile] 파일 이동 실패: {} -> {}, error: {}", oldPath, newPath, e.getMessage());
-            throw new CustomBusinessException(Business_FILE_UPLOAD_ERROR);
-        }
-    }
 }

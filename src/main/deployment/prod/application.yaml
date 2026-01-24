@@ -1,5 +1,3 @@
-server:
-  port: 8081
 spring:
   application:
     name: od-cloud
@@ -69,8 +67,9 @@ service-constant:
     token: token::%s-%s
 
   file-upload:
-    base-path: /Users/od/IdeaProjects/od-cloud # TODO: 수정 필요
+    base-path: /data
+    disk-path: /disk1
 
+  profile: prod
   web-server-host: https://data.odlab.kr
-
   aes-secret-key: ${PROD_AES_SECRET}

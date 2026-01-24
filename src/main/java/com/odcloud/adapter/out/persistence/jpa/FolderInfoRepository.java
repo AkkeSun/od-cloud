@@ -31,7 +31,6 @@ class FolderInfoRepository {
             folderInfoEntity.groupId,
             folderInfoEntity.name,
             folderInfoEntity.owner,
-            folderInfoEntity.path,
             folderInfoEntity.modDt,
             folderInfoEntity.regDt
         );
@@ -56,7 +55,7 @@ class FolderInfoRepository {
 
     public List<FolderInfo> findAll(FindFilesCommand command) {
         String sql = """
-            SELECT ID, PARENT_ID, GROUP_ID, NAME, PATH, OWNER, REG_DT, MOD_DT
+            SELECT ID, PARENT_ID, GROUP_ID, NAME, OWNER, REG_DT, MOD_DT
             FROM FOLDER_INFO
             WHERE GROUP_ID IN (:groupIds)
                   %s
@@ -163,5 +162,12 @@ class FolderInfoRepository {
             .from(folderInfoEntity)
             .where(folderInfoEntity.groupId.eq(groupId))
             .fetch();
+    }
+
+    @Transactional
+    public void deleteByGroupId(Long groupId) {
+        queryFactory.delete(folderInfoEntity)
+            .where(folderInfoEntity.groupId.eq(groupId))
+            .execute();
     }
 }

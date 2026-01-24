@@ -18,5 +18,9 @@ public interface FileInfoStoragePort {
 
     List<FileInfo> findByFolderId(Long folderId);
 
+    List<FileInfo> findByGroupId(Long groupId);
+
     void delete(FileInfo file);
+
+    void deleteByGroupId(Long groupId);
 }

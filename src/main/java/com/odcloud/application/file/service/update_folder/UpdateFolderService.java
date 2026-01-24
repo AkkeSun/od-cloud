@@ -6,15 +6,11 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FOLD
 
 import com.odcloud.application.file.port.in.UpdateFolderUseCase;
 import com.odcloud.application.file.port.in.command.UpdateFolderCommand;
-import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,23 +18,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class UpdateFolderService implements UpdateFolderUseCase {
 
-    private final FilePort filePort;
     private final FolderInfoStoragePort folderStoragePort;
 
     @Override
     @Transactional
     public UpdateFolderServiceResponse updateFolder(UpdateFolderCommand command) {
         FolderInfo folder = folderStoragePort.findById(command.folderId());
-        if (!folder.getOwner().equals(command.account().getEmail())) {
+        if (!command.account().getGroupIds().contains(folder.getGroupId())) {
             throw new CustomAuthorizationException(ACCESS_DENIED);
         }
 
-        if (command.parentId() != null && !command.parentId().equals(folder.getParentId())) {
+        if (command.isFolderLocChange(folder.getParentId())) {
             handleParentFolderChange(folder, command);
-        } else if (command.name() != null && !command.name().equals(folder.getName())) {
+        } else if (command.isFolderNameChange(folder.getName())) {
             handleNameChange(folder, command);
-        } else {
-            folder.update(command.name());
         }
 
         folderStoragePort.save(folder);
@@ -55,15 +48,6 @@ class UpdateFolderService implements UpdateFolderUseCase {
         if (folderStoragePort.existsSameFolderName(command.parentId(), newName)) {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
-
-        String uuid = UUID.randomUUID().toString().substring(0, 8);
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String folderName = uuid + "_" + date;
-        String newPath = newParentFolder.getPath() + "/" + folderName;
-
-        filePort.moveFolder(folder.getPath(), newPath);
-
-        folder.updateWithNewPath(newName, newPath);
         folder.updateParentId(command.parentId());
     }
 

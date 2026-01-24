@@ -48,7 +48,17 @@ class FileInfoStorageAdapter implements FileInfoStoragePort {
     }
 
     @Override
+    public List<FileInfo> findByGroupId(Long groupId) {
+        return fileRepository.findByGroupId(groupId);
+    }
+
+    @Override
     public void delete(FileInfo file) {
         fileRepository.delete(file);
+    }
+
+    @Override
+    public void deleteByGroupId(Long groupId) {
+        fileRepository.deleteByGroupId(groupId);
     }
 }

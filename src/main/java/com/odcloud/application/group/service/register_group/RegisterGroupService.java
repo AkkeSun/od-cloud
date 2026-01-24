@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_GROUP_LIMI
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROUP;
 
 import com.odcloud.application.account.port.out.AccountStoragePort;
-import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.RegisterGroupUseCase;
 import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class RegisterGroupService implements RegisterGroupUseCase {
 
-    private final FilePort fileUploadPort;
     private final GroupStoragePort groupStoragePort;
     private final FolderInfoStoragePort folderStoragePort;
     private final AccountStoragePort accountStoragePort;
@@ -44,7 +42,6 @@ class RegisterGroupService implements RegisterGroupUseCase {
 
         FolderInfo folder = FolderInfo.ofRootFolder(group);
         folderStoragePort.save(folder);
-        fileUploadPort.createFolder(folder.getPath());
 
         return RegisterGroupServiceResponse.ofSuccess();
     }

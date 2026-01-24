@@ -4,10 +4,8 @@ import com.odcloud.application.file.port.in.DeleteFileUseCase;
 import com.odcloud.application.file.port.in.command.DeleteFileCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
-import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.FileInfo;
-import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -23,7 +21,6 @@ class DeleteFileService implements DeleteFileUseCase {
 
     private final FilePort filePort;
     private final FileInfoStoragePort fileInfoStoragePort;
-    private final FolderInfoStoragePort folderInfoStoragePort;
     private final GroupStoragePort groupStoragePort;
 
     @Override
@@ -35,19 +32,16 @@ class DeleteFileService implements DeleteFileUseCase {
         for (Long fileId : command.fileIds()) {
             try {
                 FileInfo file = fileInfoStoragePort.findById(fileId);
-                FolderInfo folder = folderInfoStoragePort.findById(file.getFolderId());
-                if (!command.account().getGroupIds().contains(folder.getGroupId())) {
+                if (!command.account().getGroupIds().contains(file.getGroupId())) {
                     throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
                 }
 
                 filePort.deleteFile(file.getFileLoc());
                 fileInfoStoragePort.delete(file);
 
-                if (file.getFileSize() != null) {
-                    Group group = groupStoragePort.findById(folder.getGroupId());
-                    group.decreaseStorageUsed(file.getFileSize());
-                    groupStoragePort.save(group);
-                }
+                Group group = groupStoragePort.findById(file.getGroupId());
+                group.decreaseStorageUsed(file.getFileSize());
+                groupStoragePort.save(group);
 
                 logs.add(DeleteFileServiceResponseItem.ofSuccess(fileId));
             } catch (Exception e) {

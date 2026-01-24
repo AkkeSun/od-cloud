@@ -34,6 +34,9 @@ class FileInfoEntity {
     @Column(name = "folder_id")
     private Long folderId;
 
+    @Column(name = "group_id")
+    private Long groupId;
+
     @Column(name = "file_name")
     private String fileName;
 
@@ -53,6 +56,7 @@ class FileInfoEntity {
         return FileInfoEntity.builder()
             .id(file.getId())
             .folderId(file.getFolderId())
+            .groupId(file.getGroupId())
             .fileName(file.getFileName())
             .fileLoc(file.getFileLoc())
             .fileSize(file.getFileSize())
