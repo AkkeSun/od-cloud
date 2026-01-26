@@ -44,7 +44,6 @@ class FindFilesServiceResponseTest {
                 .groupId(1L)
                 .name("Folder 1")
                 .owner("owner@example.com")
-                .path("/group1/folder1")
                 .regDt(now)
                 .build();
 
@@ -54,7 +53,6 @@ class FindFilesServiceResponseTest {
                 .groupId(1L)
                 .name("Folder 2")
                 .owner("owner@example.com")
-                .path("/group1/folder2")
                 .regDt(now)
                 .build();
 
@@ -145,7 +143,6 @@ class FindFilesServiceResponseTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("owner@example.com")
-                .path("/group1/test")
                 .regDt(now)
                 .build();
 
@@ -172,7 +169,6 @@ class FindFilesServiceResponseTest {
                 .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
-                .path("/group2/private")
                 .regDt(now)
                 .build();
 

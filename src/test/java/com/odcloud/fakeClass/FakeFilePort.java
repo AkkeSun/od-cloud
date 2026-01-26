@@ -31,31 +31,12 @@ public class FakeFilePort implements FilePort {
     public String lastMovedNewPath;
 
     @Override
-    public void createFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        createFolderCallCount++;
-        log.info("FakeFilePort created folder: {}", folderPath);
-    }
-
-    @Override
     public void uploadFile(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }
         uploadFileCallCount++;
         log.info("FakeFilePort uploaded file: {}", file.getFileName());
-    }
-
-    @Override
-    public void deleteFiles(List<String> filePaths) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        deleteFilesCallCount++;
-        deletedFiles.addAll(filePaths);
-        log.info("FakeFilePort deleted files: {}", filePaths);
     }
 
     @Override
@@ -112,36 +93,6 @@ public class FakeFilePort implements FilePort {
             .resource(resource)
             .headers(headers)
             .build();
-    }
-
-    @Override
-    public void moveFolder(String oldPath, String newPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        moveFolderCallCount++;
-        lastMovedOldPath = oldPath;
-        lastMovedNewPath = newPath;
-        log.info("FakeFilePort moved folder: {} -> {}", oldPath, newPath);
-    }
-
-    @Override
-    public void deleteFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        deletedFolders.add(folderPath);
-        log.info("FakeFilePort deleted folder: {}", folderPath);
-    }
-
-    @Override
-    public void moveFile(String oldPath, String newPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        moveFileCallCount++;
-        movedFiles.add(oldPath + " -> " + newPath);
-        log.info("FakeFilePort moved file: {} -> {}", oldPath, newPath);
     }
 
     public void reset() {

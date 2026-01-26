@@ -28,7 +28,6 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
             .groupId(folder.getGroupId())
             .name(folder.getName())
             .owner(folder.getOwner())
-            .path(folder.getPath())
             .parentId(folder.getParentId() == null ? 0 : folder.getParentId())
             .regDt(folder.getRegDt())
             .modDt(folder.getModDt())
@@ -90,6 +89,11 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return false;
+    }
+
+    @Override
     public List<FolderInfo> findByParentId(Long parentId) {
         return database.stream()
             .filter(folder -> Objects.equals(folder.getParentId(), parentId))
@@ -118,6 +122,11 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
         return database.stream()
             .filter(folder -> folder.getGroupId().equals(groupId))
             .toList();
+    }
+
+    @Override
+    public void deleteByGroupId(Long groupId) {
+
     }
 
     public void reset() {

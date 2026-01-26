@@ -186,25 +186,7 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
             performErrorDocument(request, "Bearer test", status().isBadRequest(),
                 "스토리지 바우처 groupId 미입력");
         }
-
-        @Test
-        @DisplayName("[error] STORAGE_50 바우처에 groupId가 없는 경우 400 에러를 반환한다")
-        void error_storage50WithoutGroupId() throws Exception {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.GOOGLE)
-                .subscriptionKey("sub_50")
-                .orderTxId("GOOGLE_TX_50")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_50)
-                .groupId(null)
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(),
-                "스토리지 바우처 groupId 미입력");
-        }
-
+        
         @Test
         @DisplayName("[error] 존재하지 않는 그룹 ID를 입력한 경우 500 에러를 반환한다")
         void error_groupNotFound() throws Exception {

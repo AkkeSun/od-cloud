@@ -29,11 +29,9 @@ class UpdateFileServiceTest {
     void setUp() {
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
-        fakeFilePort = new FakeFilePort();
         updateFileService = new UpdateFileService(
             fakeFileStoragePort,
-            fakeFolderStoragePort,
-            fakeFilePort
+            fakeFolderStoragePort
         );
     }
 
@@ -50,7 +48,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -95,7 +92,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -104,7 +100,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -148,7 +143,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -157,7 +151,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -222,7 +215,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -269,7 +261,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -278,7 +269,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -325,7 +315,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("owner@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -334,7 +323,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -375,7 +363,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 

@@ -105,7 +105,6 @@ class DeleteAccountServiceTest {
                     filePort.deleteFile(file.getFileLoc());
                     fileInfoStoragePort.delete(file);
                 }
-                filePort.deleteFolder(folder.getPath());
                 folderInfoStoragePort.delete(folder);
             }
 
@@ -210,7 +209,6 @@ class DeleteAccountServiceTest {
                 .groupId(group.getId())
                 .name("Test Folder")
                 .owner(account.getEmail())
-                .path("/group-1")
                 .regDt(LocalDateTime.now())
                 .build();
             folderInfoStoragePort.save(folder);
@@ -333,7 +331,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .groupId(group1.getId())
                 .name("Folder 1")
-                .path("/group-1")
                 .regDt(LocalDateTime.now())
                 .build();
             folderInfoStoragePort.save(folder1);
@@ -342,7 +339,6 @@ class DeleteAccountServiceTest {
                 .id(2L)
                 .groupId(group2.getId())
                 .name("Folder 2")
-                .path("/group-2")
                 .regDt(LocalDateTime.now())
                 .build();
             folderInfoStoragePort.save(folder2);

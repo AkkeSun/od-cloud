@@ -86,6 +86,11 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
     }
 
     @Override
+    public List<FileInfo> findByGroupId(Long groupId) {
+        return List.of();
+    }
+
+    @Override
     public void delete(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
@@ -93,6 +98,11 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
         database.remove(file);
         log.info("FakeFileStoragePort deleted file: id={}, name={}", file.getId(),
             file.getFileName());
+    }
+
+    @Override
+    public void deleteByGroupId(Long groupId) {
+
     }
 
     public void reset() {

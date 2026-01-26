@@ -45,7 +45,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .groupId(1L)
             .name("Public Folder")
             .owner("admin@example.com")
-            .path("/group1/public")
             .regDt(now)
             .modDt(now)
             .build();
@@ -56,7 +55,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .groupId(2L)
             .name("No Access Public Folder")
             .owner("admin@example.com")
-            .path("/group2/public")
             .regDt(now)
             .modDt(now)
             .build();
@@ -120,7 +118,6 @@ class FileRepositoryKeywordSearchTest extends IntegrationTestSupport {
             .groupId(1L)
             .name("Test Folder")
             .owner("user@example.com")
-            .path("/group1/test")
             .regDt(now)
             .modDt(now)
             .build();

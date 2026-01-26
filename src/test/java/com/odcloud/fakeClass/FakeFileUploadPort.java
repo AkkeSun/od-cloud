@@ -15,15 +15,6 @@ public class FakeFileUploadPort implements FilePort {
     public boolean shouldThrowException = false;
 
     @Override
-    public void createFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Folder creation failure");
-        }
-        createdFolders.add(folderPath);
-        log.info("FakeFileUploadPort createFolder: folderPath={}", folderPath);
-    }
-
-    @Override
     public void uploadFile(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("File upload failure");
@@ -35,29 +26,12 @@ public class FakeFileUploadPort implements FilePort {
     public List<String> deletedFiles = new ArrayList<>();
 
     @Override
-    public void deleteFiles(List<String> filePaths) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File deletion failure");
-        }
-        deletedFiles.addAll(filePaths);
-        log.info("FakeFileUploadPort deleteFiles: filePaths={}", filePaths);
-    }
-
-    @Override
     public void deleteFile(String filePath) {
         if (shouldThrowException) {
             throw new RuntimeException("File deletion failure");
         }
         deletedFiles.add(filePath);
         log.info("FakeFileUploadPort deleteFile: filePath={}", filePath);
-    }
-
-    @Override
-    public void deleteFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Folder deletion failure");
-        }
-        log.info("FakeFileUploadPort deleteFolder: folderPath={}", folderPath);
     }
 
     @Override
@@ -70,18 +44,6 @@ public class FakeFileUploadPort implements FilePort {
         return null;
     }
 
-    @Override
-    public void moveFolder(String oldPath, String newPath) {
-
-    }
-
-    @Override
-    public void moveFile(String oldPath, String newPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File move failure");
-        }
-        log.info("FakeFileUploadPort moveFile: {} -> {}", oldPath, newPath);
-    }
     
     public void reset() {
         createdFolders.clear();
