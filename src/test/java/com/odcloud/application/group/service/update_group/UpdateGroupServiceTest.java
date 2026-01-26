@@ -345,7 +345,6 @@ class UpdateGroupServiceTest {
                 .groupId(1L)
                 .name("Old Group Name")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .parentId(null)
                 .regDt(LocalDateTime.now())
                 .build();
@@ -409,7 +408,6 @@ class UpdateGroupServiceTest {
                 .groupId(1L)
                 .name("Old Group Name")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .parentId(null)
                 .regDt(LocalDateTime.now())
                 .build();

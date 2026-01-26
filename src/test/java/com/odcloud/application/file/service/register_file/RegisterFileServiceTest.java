@@ -33,8 +33,15 @@ class RegisterFileServiceTest {
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeGroupStoragePort = new FakeGroupStoragePort();
+        com.odcloud.infrastructure.constant.ProfileConstant.FileUpload fileUpload =
+            new com.odcloud.infrastructure.constant.ProfileConstant.FileUpload("/base", "/data");
+        com.odcloud.infrastructure.constant.ProfileConstant profileConstant =
+            com.odcloud.infrastructure.constant.ProfileConstant.builder()
+                .fileUpload(fileUpload)
+                .build();
         registerFileService = new RegisterFileService(
             fakeFilePort,
+            profileConstant,
             fakeFileStoragePort,
             fakeFolderStoragePort,
             fakeGroupStoragePort
@@ -61,7 +68,6 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .groupId(1L)
                 .name("Test Folder")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -107,7 +113,6 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .groupId(1L)
                 .name("Test Folder")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -195,7 +200,6 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .groupId(1L)
                 .name("Test Folder")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -236,7 +240,6 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .groupId(1L)
                 .name("Test Folder")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 

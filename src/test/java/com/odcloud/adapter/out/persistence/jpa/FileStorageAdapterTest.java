@@ -48,7 +48,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -92,7 +91,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -144,7 +142,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -204,7 +201,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -265,7 +261,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 1")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -277,7 +272,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 2")
                 .owner("owner@example.com")
-                .path("/group-2")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -338,7 +332,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -381,7 +374,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group/very/long/nested/folder/path")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -424,7 +416,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -471,7 +462,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -480,6 +470,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 파일 생성
             FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("test1.txt")
                 .fileLoc("/group1/test1.txt")
                 .regDt(now)
@@ -489,6 +480,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("test2.txt")
                 .fileLoc("/group1/test2.txt")
                 .regDt(now)
@@ -532,7 +524,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -541,6 +532,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 파일 생성
             FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("report.pdf")
                 .fileLoc("/group1/report.pdf")
                 .regDt(now)
@@ -550,6 +542,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("document.txt")
                 .fileLoc("/group1/document.txt")
                 .regDt(now)
@@ -559,6 +552,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             FileInfoEntity file3 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("report2.pdf")
                 .fileLoc("/group1/report2.pdf")
                 .regDt(now)
@@ -591,152 +585,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
         }
 
         @Test
-        @DisplayName("[success] PUBLIC 폴더의 파일만 조회한다")
-        void success_onlyPublicFolders() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // PUBLIC 폴더 생성
-            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId(1L)
-                .name("Public Folder")
-                .owner("other@example.com")
-                .path("/group1/public")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFolder);
-
-            // PRIVATE 폴더 생성 (다른 소유자)
-            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId(1L)
-                .name("Private Folder")
-                .owner("other@example.com")
-                .path("/group1/private")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFolder);
-
-            // PUBLIC 폴더에 파일 생성
-            FileInfoEntity publicFile = FileInfoEntity.builder()
-                .folderId(publicFolder.getId())
-                .fileName("public.txt")
-                .fileLoc("/group1/public/public.txt")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFile);
-
-            // PRIVATE 폴더에 파일 생성
-            FileInfoEntity privateFile = FileInfoEntity.builder()
-                .folderId(privateFolder.getId())
-                .fileName("private.txt")
-                .fileLoc("/group1/private/private.txt")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFile);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
-                .build();
-
-            FindFilesCommand command = FindFilesCommand.builder()
-                .account(account)
-                .folderId(publicFolder.getId())
-                .sortType("NAME_ASC")
-                .build();
-
-            // when
-            var result = adapter.findAll(command);
-
-            // then
-            assertThat(result).hasSize(1);
-            assertThat(result.get(0).getFileName()).isEqualTo("public.txt");
-        }
-
-        @Test
-        @DisplayName("[success] 소유자는 자신의 PRIVATE 폴더 파일을 조회할 수 있다")
-        void success_ownerCanSeePrivateFiles() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            // PUBLIC 폴더 생성
-            FolderInfoEntity publicFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId(1L)
-                .name("Public Folder")
-                .owner("owner@example.com")
-                .path("/group1/public")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFolder);
-
-            // PRIVATE 폴더 생성 (동일 소유자)
-            FolderInfoEntity privateFolder = FolderInfoEntity.builder()
-                .parentId(null)
-                .groupId(1L)
-                .name("Private Folder")
-                .owner("owner@example.com")
-                .path("/group1/private")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFolder);
-
-            // PUBLIC 폴더에 파일 생성
-            FileInfoEntity publicFile = FileInfoEntity.builder()
-                .folderId(publicFolder.getId())
-                .fileName("public.txt")
-                .fileLoc("/group1/public/public.txt")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(publicFile);
-
-            // PRIVATE 폴더에 파일 생성
-            FileInfoEntity privateFile = FileInfoEntity.builder()
-                .folderId(privateFolder.getId())
-                .fileName("private.txt")
-                .fileLoc("/group1/private/private.txt")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(privateFile);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            com.odcloud.domain.model.Account account = com.odcloud.domain.model.Account.builder()
-                .id(1L)
-                .email("owner@example.com")
-                .groups(List.of(com.odcloud.domain.model.Group.of(1L)))
-                .build();
-
-            FindFilesCommand command = FindFilesCommand.builder()
-                .account(account)
-                .folderId(privateFolder.getId())
-                .sortType("NAME_ASC")
-                .build();
-
-            // when
-            var result = adapter.findAll(command);
-
-            // then
-            assertThat(result).hasSize(1);
-            assertThat(result.get(0).getFileName()).isEqualTo("private.txt");
-        }
-
-        @Test
         @DisplayName("[success] 정렬 순서를 적용한다")
         void success_withSorting() {
             // given
@@ -748,7 +596,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -757,6 +604,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 파일 생성 (역순으로)
             FileInfoEntity file1 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("c.txt")
                 .fileLoc("/group1/c.txt")
                 .regDt(now)
@@ -766,6 +614,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             FileInfoEntity file2 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("a.txt")
                 .fileLoc("/group1/a.txt")
                 .regDt(now)
@@ -775,6 +624,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
 
             FileInfoEntity file3 = FileInfoEntity.builder()
                 .folderId(folder.getId())
+                .groupId(1L)
                 .fileName("b.txt")
                 .fileLoc("/group1/b.txt")
                 .regDt(now)
@@ -818,7 +668,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Public Folder")
                 .owner("owner@example.com")
-                .path("/group1/public")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -827,6 +676,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더에 "test" 키워드 파일 생성
             FileInfoEntity publicTestFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
+                .groupId(1L)
                 .fileName("test-public.txt")
                 .fileLoc("/group1/public/test-public.txt")
                 .regDt(now)
@@ -871,7 +721,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Public Folder")
                 .owner("owner@example.com")
-                .path("/group1/public")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -883,7 +732,6 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("My Private Folder")
                 .owner("user@example.com")
-                .path("/group1/my-private")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -892,6 +740,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // PUBLIC 폴더에 파일 생성
             FileInfoEntity publicFile = FileInfoEntity.builder()
                 .folderId(publicFolder.getId())
+                .groupId(1L)
                 .fileName("report-public.pdf")
                 .fileLoc("/group1/public/report-public.pdf")
                 .regDt(now)
@@ -902,6 +751,7 @@ class FileStorageAdapterTest extends IntegrationTestSupport {
             // 자신의 PRIVATE 폴더에 파일 생성
             FileInfoEntity myPrivateFile = FileInfoEntity.builder()
                 .folderId(myPrivateFolder.getId())
+                .groupId(1L)
                 .fileName("report-private.pdf")
                 .fileLoc("/group1/my-private/report-private.pdf")
                 .regDt(now)

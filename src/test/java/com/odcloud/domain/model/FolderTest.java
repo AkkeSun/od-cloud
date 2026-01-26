@@ -79,7 +79,7 @@ class FolderTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -89,8 +89,6 @@ class FolderTest {
             assertThat(folder.getGroupId()).isEqualTo(1L);
             assertThat(folder.getName()).isEqualTo("서브 폴더");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
-            assertThat(folder.getPath()).startsWith("/group-123/");
-            assertThat(folder.getPath()).contains("_");
             assertThat(folder.getRegDt()).isAfter(before);
             assertThat(folder.getRegDt()).isBefore(after);
         }
@@ -107,12 +105,10 @@ class FolderTest {
             String parentPath = "/test";
 
             // when
-            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command);
 
             // then
             assertThat(folder).isNotNull();
-            assertThat(folder.getPath()).startsWith("/");
-            assertThat(folder.getPath().split("/")).hasSize(3);
         }
 
         @Test
@@ -127,11 +123,10 @@ class FolderTest {
             String parentPath = "/group-123/folder1/folder2";
 
             // when
-            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command);
 
             // then
             assertThat(folder).isNotNull();
-            assertThat(folder.getPath()).startsWith("/group-123/folder1/folder2/");
         }
 
         @Test
@@ -146,7 +141,7 @@ class FolderTest {
             String parentPath = "/group-123";
 
             // when
-            FolderInfo folder = FolderInfo.createSubFolder(command, parentPath);
+            FolderInfo folder = FolderInfo.createSubFolder(command);
 
             // then
             assertThat(folder).isNotNull();
@@ -154,7 +149,6 @@ class FolderTest {
             assertThat(folder.getGroupId()).isNull();
             assertThat(folder.getName()).isNull();
             assertThat(folder.getOwner()).isNull();
-            assertThat(folder.getPath()).startsWith("/group-123/");
         }
 
     }
@@ -239,21 +233,6 @@ class FolderTest {
         }
 
         @Test
-        @DisplayName("[success] getPath()로 path를 조회한다")
-        void success_getPath() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .path("/group-123")
-                .build();
-
-            // when
-            String path = folder.getPath();
-
-            // then
-            assertThat(path).isEqualTo("/group-123");
-        }
-
-        @Test
         @DisplayName("[success] getModDt()로 modDt를 조회한다")
         void success_getModDt() {
             // given
@@ -318,7 +297,6 @@ class FolderTest {
                 1L,
                 "테스트 폴더",
                 "owner@example.com",
-                "/group-123",
                 now,
                 now
             );
@@ -330,7 +308,6 @@ class FolderTest {
             assertThat(folder.getGroupId()).isEqualTo(1L);
             assertThat(folder.getName()).isEqualTo("테스트 폴더");
             assertThat(folder.getOwner()).isEqualTo("owner@example.com");
-            assertThat(folder.getPath()).isEqualTo("/group-123");
             assertThat(folder.getModDt()).isEqualTo(now);
             assertThat(folder.getRegDt()).isEqualTo(now);
         }

@@ -54,7 +54,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Parent Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(parentFolder);
@@ -65,7 +64,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Child Folder")
                 .owner("user@example.com")
-                .path("/group1/child")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder);
@@ -123,7 +121,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder);
@@ -187,7 +184,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Group1 Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder1);
@@ -198,7 +194,6 @@ class FindFilesServiceTest {
                 .groupId(2L)
                 .name("Group2 Folder")
                 .owner("user@example.com")
-                .path("/group2")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder2);
@@ -209,7 +204,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Child of Group1")
                 .owner("user@example.com")
-                .path("/group1/child")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder1);
@@ -220,7 +214,6 @@ class FindFilesServiceTest {
                 .groupId(2L)
                 .name("Child of Group2")
                 .owner("user@example.com")
-                .path("/group1/child2")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(childFolder2);
@@ -261,7 +254,6 @@ class FindFilesServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(LocalDateTime.now())
                 .build();
             fakeFolderStoragePort.database.add(folder);

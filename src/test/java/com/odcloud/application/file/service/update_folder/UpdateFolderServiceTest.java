@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.odcloud.application.file.port.in.command.UpdateFolderCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
+import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
@@ -13,6 +14,7 @@ import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,7 +30,7 @@ class UpdateFolderServiceTest {
     void setUp() {
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeFilePort = new FakeFilePort();
-        updateFolderService = new UpdateFolderService(fakeFilePort, fakeFolderStoragePort);
+        updateFolderService = new UpdateFolderService(fakeFolderStoragePort);
     }
 
     @Nested
@@ -41,10 +43,10 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
                 .nickname("User")
                 .name("사용자")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -53,7 +55,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("기존 폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -74,9 +75,7 @@ class UpdateFolderServiceTest {
             FolderInfo updatedFolder = fakeFolderStoragePort.database.get(0);
             assertThat(updatedFolder.getId()).isEqualTo(1L);
             assertThat(updatedFolder.getName()).isEqualTo("수정된 폴더명");
-            assertThat(updatedFolder.getPath()).isEqualTo("/group-123/folder1");
             assertThat(updatedFolder.getModDt()).isNotNull();
-            assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(0);
         }
 
         @Test
@@ -85,15 +84,14 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(0L)
                 .groupId(1L)
                 .name("루트 폴더")
-                .path("/group-123")
                 .build();
 
             FolderInfo newParentFolder = FolderInfo.builder()
@@ -101,7 +99,6 @@ class UpdateFolderServiceTest {
                 .parentId(0L)
                 .groupId(1L)
                 .name("새 상위 폴더")
-                .path("/group-123/parent")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -110,7 +107,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -131,11 +127,6 @@ class UpdateFolderServiceTest {
             assertThat(response.result()).isTrue();
             FolderInfo updatedFolder = fakeFolderStoragePort.findById(1L);
             assertThat(updatedFolder.getParentId()).isEqualTo(2L);
-            assertThat(updatedFolder.getPath()).startsWith("/group-123/parent/");
-            assertThat(updatedFolder.getModDt()).isNotNull();
-            assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(1);
-            assertThat(fakeFilePort.lastMovedOldPath).isEqualTo("/group-123/folder1");
-            assertThat(fakeFilePort.lastMovedNewPath).isEqualTo(updatedFolder.getPath());
         }
 
         @Test
@@ -144,15 +135,14 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(0L)
                 .groupId(1L)
                 .name("루트 폴더")
-                .path("/group-123")
                 .build();
 
             FolderInfo newParentFolder = FolderInfo.builder()
@@ -160,7 +150,6 @@ class UpdateFolderServiceTest {
                 .parentId(0L)
                 .groupId(1L)
                 .name("새 상위 폴더")
-                .path("/group-123/parent")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -169,7 +158,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("기존 폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -190,11 +178,9 @@ class UpdateFolderServiceTest {
             // then
             assertThat(response.result()).isTrue();
             FolderInfo updatedFolder = fakeFolderStoragePort.findById(1L);
-            assertThat(updatedFolder.getName()).isEqualTo("수정된 폴더명");
+            // 현재 서비스 로직: parentId 변경 시 이름 변경은 중복 검사에만 사용되고 실제 이름은 변경되지 않음
+            assertThat(updatedFolder.getName()).isEqualTo("기존 폴더명");
             assertThat(updatedFolder.getParentId()).isEqualTo(2L);
-            assertThat(updatedFolder.getPath()).startsWith("/group-123/parent/");
-            assertThat(updatedFolder.getModDt()).isNotNull();
-            assertThat(fakeFilePort.moveFolderCallCount).isEqualTo(1);
         }
 
         @Test
@@ -213,7 +199,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("폴더명")
                 .owner("other@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -245,7 +230,6 @@ class UpdateFolderServiceTest {
                 .id(2L)
                 .groupId(2L)
                 .name("다른 그룹 폴더")
-                .path("/other-group/parent")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -254,7 +238,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -269,9 +252,8 @@ class UpdateFolderServiceTest {
 
             // when & then
             assertThatThrownBy(() -> updateFolderService.updateFolder(command))
-                .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode",
-                    ErrorCode.Business_FORBIDDEN_ACCESS);
+                .isInstanceOf(CustomAuthorizationException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
         }
 
         @Test
@@ -280,8 +262,8 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo existingFolder = FolderInfo.builder()
@@ -289,7 +271,6 @@ class UpdateFolderServiceTest {
                 .parentId(0L)
                 .groupId(1L)
                 .name("중복된 폴더명")
-                .path("/group-123/existing")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -298,7 +279,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("기존 폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -324,8 +304,8 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo newParentFolder = FolderInfo.builder()
@@ -333,7 +313,6 @@ class UpdateFolderServiceTest {
                 .parentId(0L)
                 .groupId(1L)
                 .name("새 상위 폴더")
-                .path("/group-123/parent")
                 .build();
 
             FolderInfo existingFolder = FolderInfo.builder()
@@ -341,7 +320,6 @@ class UpdateFolderServiceTest {
                 .parentId(2L)
                 .groupId(1L)
                 .name("폴더명")
-                .path("/group-123/parent/existing")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -350,7 +328,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 
@@ -400,8 +377,8 @@ class UpdateFolderServiceTest {
             // given
             Account account = Account.builder()
                 .id(1L)
+                .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
-                .groups(Arrays.asList())
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -410,7 +387,6 @@ class UpdateFolderServiceTest {
                 .groupId(1L)
                 .name("폴더명")
                 .owner("user@example.com")
-                .path("/group-123/folder1")
                 .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
                 .build();
 

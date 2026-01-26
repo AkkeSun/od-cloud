@@ -99,7 +99,6 @@ class DeleteGroupServiceTest {
                 .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .parentId(null)
                 .regDt(LocalDateTime.now())
                 .build();
@@ -111,7 +110,6 @@ class DeleteGroupServiceTest {
                 .groupId(1L)
                 .name("Sub Folder")
                 .owner("owner@example.com")
-                .path("/group-1/sub")
                 .parentId(1L)
                 .regDt(LocalDateTime.now())
                 .build();
@@ -120,6 +118,7 @@ class DeleteGroupServiceTest {
             // 파일 생성
             FileInfo file1 = FileInfo.builder()
                 .id(1L)
+                .groupId(1L)
                 .folderId(1L)
                 .fileName("file1.txt")
                 .fileLoc("/group-1/file1.txt")
@@ -130,6 +129,7 @@ class DeleteGroupServiceTest {
 
             FileInfo file2 = FileInfo.builder()
                 .id(2L)
+                .groupId(1L)
                 .folderId(2L)
                 .fileName("file2.txt")
                 .fileLoc("/group-1/sub/file2.txt")
@@ -169,10 +169,6 @@ class DeleteGroupServiceTest {
 
             // 폴더가 삭제되었는지 확인
             assertThat(folderInfoStoragePort.database).isEmpty();
-            assertThat(filePort.deletedFolders).containsExactlyInAnyOrder(
-                "/group-1",
-                "/group-1/sub"
-            );
 
             // GroupAccount가 삭제되었는지 확인
             assertThat(groupStoragePort.groupAccountDatabase).isEmpty();
@@ -201,7 +197,6 @@ class DeleteGroupServiceTest {
                 .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .parentId(null)
                 .regDt(LocalDateTime.now())
                 .build();
@@ -221,7 +216,6 @@ class DeleteGroupServiceTest {
 
             // 폴더가 삭제되었는지 확인
             assertThat(folderInfoStoragePort.database).isEmpty();
-            assertThat(filePort.deletedFolders).containsExactly("/group-1");
 
             // 그룹이 삭제되었는지 확인
             assertThat(groupStoragePort.groupDatabase).isEmpty();
@@ -247,7 +241,6 @@ class DeleteGroupServiceTest {
                 .groupId(1L)
                 .name("Test Group")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .parentId(null)
                 .regDt(LocalDateTime.now())
                 .build();

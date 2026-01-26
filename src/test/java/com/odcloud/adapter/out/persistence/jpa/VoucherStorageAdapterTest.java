@@ -43,7 +43,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(1L)
                 .paymentId(100L)
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
@@ -62,7 +61,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(1L);
+            assertThat(result.getId()).isNotNull();
             assertThat(result.getPaymentId()).isEqualTo(100L);
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(result.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
@@ -72,7 +71,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getStartAt()).isNotNull();
             assertThat(result.getEndDt()).isNotNull();
 
-            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 1L);
+            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(savedEntity.getGroupId()).isEqualTo(10L);
@@ -84,7 +83,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(2L)
                 .paymentId(200L)
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
@@ -103,29 +101,28 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(2L);
+            assertThat(result.getId()).isNotNull();
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
             assertThat(result.getGroupId()).isEqualTo(20L);
 
-            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 2L);
+            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
         }
 
         @Test
-        @DisplayName("[success] 신규 STORAGE_50 바우처를 저장한다")
-        void success_storage50() {
+        @DisplayName("[success] 신규 STORAGE_BASIC 바우처를 저장한다")
+        void success_storage_basic() {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(3L)
                 .paymentId(300L)
-                .voucherType(VoucherType.STORAGE_50)
+                .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(3L)
                 .groupId(30L)
                 .startAt(now)
-                .endDt(null) // STORAGE_50은 무제한
+                .endDt(VoucherType.STORAGE_BASIC.calculateEndDt(now))
                 .regDt(now)
                 .build();
 
@@ -136,29 +133,26 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(3L);
-            assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_50);
-            assertThat(result.getEndDt()).isNull();
+            assertThat(result.getId()).isNotNull();
+            assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
 
-            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 3L);
+            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getEndDt()).isNull();
         }
 
         @Test
-        @DisplayName("[success] 신규 STORAGE_100 바우처를 저장한다")
-        void success_storage100() {
+        @DisplayName("[success] 신규 STORAGE_PLUS 바우처를 저장한다")
+        void success_storage_plus() {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(4L)
                 .paymentId(400L)
-                .voucherType(VoucherType.STORAGE_100)
+                .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(4L)
                 .groupId(40L)
                 .startAt(now)
-                .endDt(null) // STORAGE_100은 무제한
+                .endDt(VoucherType.STORAGE_PLUS.calculateEndDt(now))
                 .regDt(now)
                 .build();
 
@@ -169,13 +163,11 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(4L);
-            assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_100);
-            assertThat(result.getEndDt()).isNull();
+            assertThat(result.getId()).isNotNull();
+            assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
 
-            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 4L);
+            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getEndDt()).isNull();
         }
 
         @Test
@@ -184,7 +176,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(5L)
                 .paymentId(500L)
                 .voucherType(VoucherType.ADVERTISE_30)
                 .status(VoucherStatus.ACTIVE)
@@ -203,11 +194,11 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(5L);
+            assertThat(result.getId()).isNotNull();
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(result.getGroupId()).isNull();
 
-            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, 5L);
+            VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
             assertThat(savedEntity.getGroupId()).isNull();
@@ -219,7 +210,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher = Voucher.builder()
-                .id(6L)
                 .paymentId(600L)
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
@@ -249,7 +239,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             Voucher voucher1 = Voucher.builder()
-                .id(7L)
                 .paymentId(700L)
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
@@ -261,7 +250,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .build();
 
             Voucher voucher2 = Voucher.builder()
-                .id(8L)
                 .paymentId(800L)
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
@@ -280,12 +268,12 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result1).isNotNull();
-            assertThat(result1.getId()).isEqualTo(7L);
+            assertThat(result1.getId()).isNotNull();
             assertThat(result2).isNotNull();
-            assertThat(result2.getId()).isEqualTo(8L);
+            assertThat(result2.getId()).isNotNull();
 
-            VoucherEntity savedEntity1 = entityManager.find(VoucherEntity.class, 7L);
-            VoucherEntity savedEntity2 = entityManager.find(VoucherEntity.class, 8L);
+            VoucherEntity savedEntity1 = entityManager.find(VoucherEntity.class, result1.getId());
+            VoucherEntity savedEntity2 = entityManager.find(VoucherEntity.class, result2.getId());
             assertThat(savedEntity1).isNotNull();
             assertThat(savedEntity2).isNotNull();
         }
@@ -301,7 +289,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             VoucherEntity voucher = VoucherEntity.builder()
-                .id(1L)
                 .paymentId(100L)
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
@@ -317,11 +304,11 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // when
-            Voucher result = adapter.findById(1L);
+            Voucher result = adapter.findById(voucher.getId());
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(1L);
+            assertThat(result.getId()).isEqualTo(voucher.getId());
             assertThat(result.getPaymentId()).isEqualTo(100L);
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(result.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
@@ -335,8 +322,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
         void success_specificVoucher() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            entityManager.persist(VoucherEntity.builder()
-                .id(1L)
+            VoucherEntity voucher1 = VoucherEntity.builder()
                 .paymentId(100L)
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
@@ -345,10 +331,10 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
-                .build());
+                .build();
+            entityManager.persist(voucher1);
 
-            entityManager.persist(VoucherEntity.builder()
-                .id(2L)
+            VoucherEntity voucher2 = VoucherEntity.builder()
                 .paymentId(200L)
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
@@ -357,17 +343,18 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
-                .build());
+                .build();
+            entityManager.persist(voucher2);
 
             entityManager.flush();
             entityManager.clear();
 
             // when
-            Voucher result = adapter.findById(1L);
+            Voucher result = adapter.findById(voucher1.getId());
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getId()).isEqualTo(1L);
+            assertThat(result.getId()).isEqualTo(voucher1.getId());
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
             assertThat(result.getGroupId()).isEqualTo(10L);
         }
@@ -378,7 +365,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             VoucherEntity voucher = VoucherEntity.builder()
-                .id(1L)
                 .paymentId(100L)
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.EXPIRED)
@@ -393,7 +379,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // when
-            Voucher result = adapter.findById(1L);
+            Voucher result = adapter.findById(voucher.getId());
 
             // then
             assertThat(result).isNotNull();
@@ -406,7 +392,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             VoucherEntity voucher = VoucherEntity.builder()
-                .id(1L)
                 .paymentId(100L)
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.REVOKED)
@@ -422,7 +407,7 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // when
-            Voucher result = adapter.findById(1L);
+            Voucher result = adapter.findById(voucher.getId());
 
             // then
             assertThat(result).isNotNull();

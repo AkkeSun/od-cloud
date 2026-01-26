@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
+import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -20,14 +21,17 @@ class DeleteFolderServiceTest {
 
     private FakeFileStoragePort fakeFileStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
+    private com.odcloud.fakeClass.FakeGroupStoragePort fakeGroupStoragePort;
     private DeleteFolderService deleteFolderService;
 
     @BeforeEach
     void setUp() {
         fakeFileStoragePort = new FakeFileStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
+        fakeGroupStoragePort = new com.odcloud.fakeClass.FakeGroupStoragePort();
         deleteFolderService = new DeleteFolderService(
             new FakeFilePort(),
+            fakeGroupStoragePort,
             fakeFileStoragePort,
             fakeFolderStoragePort
         );
@@ -45,16 +49,15 @@ class DeleteFolderServiceTest {
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(null)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Empty Folder")
-                .path("/empty")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
             Account ownerAccount = Account.builder()
                 .email(ownerEmail)
-                .groups(List.of())
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             // when
@@ -71,13 +74,22 @@ class DeleteFolderServiceTest {
         void success_folderWithFiles() {
             // given
             String ownerEmail = "owner@test.com";
+
+            Group group = Group.builder()
+                .id(1L)
+                .name("Test Group")
+                .ownerEmail(ownerEmail)
+                .storageTotal(1000L)
+                .storageUsed(300L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(null)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Folder With Files")
-                .path("/folder")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -86,18 +98,20 @@ class DeleteFolderServiceTest {
                 .folderId(1L)
                 .fileName("test1.txt")
                 .fileLoc("/folder/test1.txt")
+                .fileSize(100L)
                 .build();
             FileInfo file2 = FileInfo.builder()
                 .id(2L)
                 .folderId(1L)
                 .fileName("test2.txt")
                 .fileLoc("/folder/test2.txt")
+                .fileSize(200L)
                 .build();
             fakeFileStoragePort.database.addAll(List.of(file1, file2));
 
             Account ownerAccount = Account.builder()
                 .email(ownerEmail)
-                .groups(List.of())
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             // when
@@ -119,37 +133,33 @@ class DeleteFolderServiceTest {
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
                 .parentId(null)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Parent Folder")
-                .path("/parent")
                 .build();
 
             FolderInfo childFolder1 = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Child Folder 1")
-                .path("/parent/child1")
                 .build();
 
             FolderInfo childFolder2 = FolderInfo.builder()
                 .id(3L)
                 .parentId(1L)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Child Folder 2")
-                .path("/parent/child2")
                 .build();
 
             FolderInfo grandChildFolder = FolderInfo.builder()
                 .id(4L)
                 .parentId(2L)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Grand Child Folder")
-                .path("/parent/child1/grandchild")
                 .build();
 
             fakeFolderStoragePort.database.addAll(
@@ -157,7 +167,7 @@ class DeleteFolderServiceTest {
 
             Account ownerAccount = Account.builder()
                 .email(ownerEmail)
-                .groups(List.of())
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             // when
@@ -175,22 +185,29 @@ class DeleteFolderServiceTest {
             // given
             String ownerEmail = "owner@test.com";
 
+            Group group = Group.builder()
+                .id(1L)
+                .name("Test Group")
+                .ownerEmail(ownerEmail)
+                .storageTotal(1000L)
+                .storageUsed(300L)
+                .build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
             FolderInfo parentFolder = FolderInfo.builder()
                 .id(1L)
                 .parentId(null)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Parent Folder")
-                .path("/parent")
                 .build();
 
             FolderInfo childFolder = FolderInfo.builder()
                 .id(2L)
                 .parentId(1L)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Child Folder")
-                .path("/parent/child")
                 .build();
 
             fakeFolderStoragePort.database.addAll(List.of(parentFolder, childFolder));
@@ -200,6 +217,7 @@ class DeleteFolderServiceTest {
                 .folderId(1L)
                 .fileName("parent.txt")
                 .fileLoc("/parent/parent.txt")
+                .fileSize(100L)
                 .build();
 
             FileInfo fileInChild = FileInfo.builder()
@@ -207,13 +225,14 @@ class DeleteFolderServiceTest {
                 .folderId(2L)
                 .fileName("child.txt")
                 .fileLoc("/parent/child/child.txt")
+                .fileSize(200L)
                 .build();
 
             fakeFileStoragePort.database.addAll(List.of(fileInParent, fileInChild));
 
             Account ownerAccount = Account.builder()
                 .email(ownerEmail)
-                .groups(List.of())
+                .groups(List.of(Group.of(1L)))
                 .build();
 
             // when
@@ -236,16 +255,15 @@ class DeleteFolderServiceTest {
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
                 .parentId(null)
-                .groupId(null)
+                .groupId(1L)
                 .owner(ownerEmail)
                 .name("Private Folder")
-                .path("/private")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
             Account otherAccount = Account.builder()
                 .email(otherUserEmail)
-                .groups(List.of())
+                .groups(List.of(Group.of(2L)))
                 .build();
 
             // when & then

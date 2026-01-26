@@ -17,27 +17,11 @@ import org.springframework.http.MediaType;
 public class FakeFilePort implements FilePort {
 
     public boolean shouldThrowException = false;
-    public int createFolderCallCount = 0;
     public int uploadFileCallCount = 0;
-    public int deleteFilesCallCount = 0;
+    public int deleteFileCallCount = 0;
     public int readFileCallCount = 0;
     public int readFilesCallCount = 0;
-    public int moveFolderCallCount = 0;
-    public int moveFileCallCount = 0;
     public List<String> deletedFiles = new ArrayList<>();
-    public List<String> deletedFolders = new ArrayList<>();
-    public List<String> movedFiles = new ArrayList<>();
-    public String lastMovedOldPath;
-    public String lastMovedNewPath;
-
-    @Override
-    public void createFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        createFolderCallCount++;
-        log.info("FakeFilePort created folder: {}", folderPath);
-    }
 
     @Override
     public void uploadFile(FileInfo file) {
@@ -49,20 +33,11 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
-    public void deleteFiles(List<String> filePaths) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        deleteFilesCallCount++;
-        deletedFiles.addAll(filePaths);
-        log.info("FakeFilePort deleted files: {}", filePaths);
-    }
-
-    @Override
     public void deleteFile(String filePath) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }
+        deleteFileCallCount++;
         deletedFiles.add(filePath);
         log.info("FakeFilePort deleted file: {}", filePath);
     }
@@ -114,49 +89,12 @@ public class FakeFilePort implements FilePort {
             .build();
     }
 
-    @Override
-    public void moveFolder(String oldPath, String newPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        moveFolderCallCount++;
-        lastMovedOldPath = oldPath;
-        lastMovedNewPath = newPath;
-        log.info("FakeFilePort moved folder: {} -> {}", oldPath, newPath);
-    }
-
-    @Override
-    public void deleteFolder(String folderPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        deletedFolders.add(folderPath);
-        log.info("FakeFilePort deleted folder: {}", folderPath);
-    }
-
-    @Override
-    public void moveFile(String oldPath, String newPath) {
-        if (shouldThrowException) {
-            throw new RuntimeException("File operation failure");
-        }
-        moveFileCallCount++;
-        movedFiles.add(oldPath + " -> " + newPath);
-        log.info("FakeFilePort moved file: {} -> {}", oldPath, newPath);
-    }
-
     public void reset() {
         shouldThrowException = false;
-        createFolderCallCount = 0;
         uploadFileCallCount = 0;
-        deleteFilesCallCount = 0;
+        deleteFileCallCount = 0;
         readFileCallCount = 0;
         readFilesCallCount = 0;
-        moveFolderCallCount = 0;
-        moveFileCallCount = 0;
         deletedFiles.clear();
-        deletedFolders.clear();
-        movedFiles.clear();
-        lastMovedOldPath = null;
-        lastMovedNewPath = null;
     }
 }

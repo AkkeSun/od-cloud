@@ -183,50 +183,6 @@ class CreateVoucherRequestTest {
         }
 
         @Test
-        @DisplayName("[error] STORAGE_50 바우처에 groupId가 없으면 검증에 실패한다")
-        void error_storage50WithoutGroupId() {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.GOOGLE)
-                .subscriptionKey("sub_50")
-                .orderTxId("GOOGLE_TX_50")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_50)
-                .groupId(null)
-                .build();
-
-            // when
-            Set<ConstraintViolation<CreateVoucherRequest>> violations = validator.validate(request);
-
-            // then
-            assertThat(violations).hasSize(1);
-            assertThat(violations.iterator().next().getMessage())
-                .isEqualTo("스토리지 바우처인 경우 groupId는 필수값 입니다");
-        }
-
-        @Test
-        @DisplayName("[error] STORAGE_100 바우처에 groupId가 없으면 검증에 실패한다")
-        void error_storage100WithoutGroupId() {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.GOOGLE)
-                .subscriptionKey("sub_100")
-                .orderTxId("GOOGLE_TX_100")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_100)
-                .groupId(null)
-                .build();
-
-            // when
-            Set<ConstraintViolation<CreateVoucherRequest>> violations = validator.validate(request);
-
-            // then
-            assertThat(violations).hasSize(1);
-            assertThat(violations.iterator().next().getMessage())
-                .isEqualTo("스토리지 바우처인 경우 groupId는 필수값 입니다");
-        }
-
-        @Test
         @DisplayName("[error] storeType이 null이면 검증에 실패한다")
         void error_nullStoreType() {
             // given

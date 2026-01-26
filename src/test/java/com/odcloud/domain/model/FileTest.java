@@ -17,73 +17,18 @@ class FileTest {
     class Describe_create {
 
         @Test
-        @DisplayName("[success] Folder와 MultipartFile로부터 File을 생성한다")
-        void success() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .path("/group-123")
-                .build();
-
-            MultipartFile multipartFile = mock(MultipartFile.class);
-            when(multipartFile.getOriginalFilename()).thenReturn("test.txt");
-            when(multipartFile.getSize()).thenReturn(1024L);
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(file).isNotNull();
-            assertThat(file.getFolderId()).isEqualTo(1L);
-            assertThat(file.getFileName()).isEqualTo("test.txt");
-            assertThat(file.getFileLoc()).startsWith("/group-123/");
-            assertThat(file.getFileLoc()).endsWith(".txt");
-            assertThat(file.getFileSize()).isEqualTo(1024L);
-            assertThat(file.getMultipartFile()).isEqualTo(multipartFile);
-            assertThat(file.getRegDt()).isAfter(before);
-            assertThat(file.getRegDt()).isBefore(after);
-        }
-
-        @Test
-        @DisplayName("[success] 확장자가 없는 파일로 File을 생성한다")
-        void success_noExtension() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .path("/group-123")
-                .build();
-
-            MultipartFile multipartFile = mock(MultipartFile.class);
-            when(multipartFile.getOriginalFilename()).thenReturn("testfile");
-
-            // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
-
-            // then
-            assertThat(file).isNotNull();
-            assertThat(file.getFileName()).isEqualTo("testfile");
-            assertThat(file.getFileLoc()).startsWith("/group-123/");
-            assertThat(file.getFileLoc()).doesNotContain(".");
-        }
-
-        @Test
         @DisplayName("[success] 여러 개의 점이 있는 파일명으로 File을 생성한다")
         void success_multipleExtensions() {
             // given
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .path("/group-123")
                 .build();
 
             MultipartFile multipartFile = mock(MultipartFile.class);
             when(multipartFile.getOriginalFilename()).thenReturn("test.backup.tar.gz");
 
             // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
@@ -97,39 +42,18 @@ class FileTest {
             // given
             FolderInfo folder = FolderInfo.builder()
                 .id(1L)
-                .path("/group-123")
                 .build();
 
             MultipartFile multipartFile = mock(MultipartFile.class);
             when(multipartFile.getOriginalFilename()).thenReturn("image.png");
 
             // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
 
             // then
             assertThat(file).isNotNull();
             assertThat(file.getFileName()).isEqualTo("image.png");
             assertThat(file.getFileLoc()).endsWith(".png");
-        }
-
-        @Test
-        @DisplayName("[success] 경로에 슬래시가 있는 폴더로 File을 생성한다")
-        void success_folderWithSlash() {
-            // given
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .path("/group-123/subfolder")
-                .build();
-
-            MultipartFile multipartFile = mock(MultipartFile.class);
-            when(multipartFile.getOriginalFilename()).thenReturn("test.txt");
-
-            // when
-            FileInfo file = FileInfo.create(folder, multipartFile);
-
-            // then
-            assertThat(file).isNotNull();
-            assertThat(file.getFileLoc()).startsWith("/group-123/subfolder/");
         }
     }
 
@@ -291,10 +215,10 @@ class FileTest {
             FileInfo file = new FileInfo(
                 1L,
                 100L,
+                1L,
                 "test.txt",
                 "/path/to/test.txt",
                 1024L,
-                multipartFile,
                 now,
                 now
             );
@@ -303,10 +227,10 @@ class FileTest {
             assertThat(file).isNotNull();
             assertThat(file.getId()).isEqualTo(1L);
             assertThat(file.getFolderId()).isEqualTo(100L);
+            assertThat(file.getGroupId()).isEqualTo(1L);
             assertThat(file.getFileName()).isEqualTo("test.txt");
             assertThat(file.getFileLoc()).isEqualTo("/path/to/test.txt");
             assertThat(file.getFileSize()).isEqualTo(1024L);
-            assertThat(file.getMultipartFile()).isEqualTo(multipartFile);
             assertThat(file.getModDt()).isEqualTo(now);
             assertThat(file.getRegDt()).isEqualTo(now);
         }

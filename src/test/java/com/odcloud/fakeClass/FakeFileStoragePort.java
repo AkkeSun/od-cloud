@@ -95,6 +95,19 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
             file.getFileName());
     }
 
+    @Override
+    public List<FileInfo> findByGroupId(Long groupId) {
+        return database.stream()
+            .filter(file -> file.getGroupId().equals(groupId))
+            .toList();
+    }
+
+    @Override
+    public void deleteByGroupId(Long groupId) {
+        database.removeIf(file -> file.getGroupId().equals(groupId));
+        log.info("FakeFileStoragePort deleted files by groupId: {}", groupId);
+    }
+
     public void reset() {
         database.clear();
         shouldThrowException = false;

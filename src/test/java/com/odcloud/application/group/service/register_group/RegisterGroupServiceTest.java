@@ -33,7 +33,6 @@ class RegisterGroupServiceTest {
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
         registerGroupService = new RegisterGroupService(
-            fakeFileUploadPort,
             fakeGroupStoragePort,
             fakeFolderStoragePort,
             fakeAccountStoragePort
@@ -77,7 +76,6 @@ class RegisterGroupServiceTest {
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "ACTIVE");
             assertThat(fakeFolderStoragePort.database).hasSize(1);
-            assertThat(fakeFileUploadPort.createdFolders).hasSize(1);
         }
 
         @Test
@@ -112,7 +110,6 @@ class RegisterGroupServiceTest {
             assertThat(fakeGroupStoragePort.groupDatabase).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase).isEmpty();
             assertThat(fakeFolderStoragePort.database).isEmpty();
-            assertThat(fakeFileUploadPort.createdFolders).isEmpty();
         }
 
         @Test

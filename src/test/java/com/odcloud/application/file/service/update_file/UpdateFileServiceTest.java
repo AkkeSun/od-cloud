@@ -32,8 +32,7 @@ class UpdateFileServiceTest {
         fakeFilePort = new FakeFilePort();
         updateFileService = new UpdateFileService(
             fakeFileStoragePort,
-            fakeFolderStoragePort,
-            fakeFilePort
+            fakeFolderStoragePort
         );
     }
 
@@ -50,7 +49,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -83,7 +81,6 @@ class UpdateFileServiceTest {
             assertThat(updatedFile.getFileLoc()).isEqualTo(
                 "/test-group/folder1/abc123_20241120.txt");
             assertThat(updatedFile.getFolderId()).isEqualTo(1L);
-            assertThat(fakeFilePort.moveFileCallCount).isZero();
         }
 
         @Test
@@ -95,7 +92,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -104,7 +100,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -135,8 +130,6 @@ class UpdateFileServiceTest {
             FileInfo updatedFile = fakeFileStoragePort.findById(1L);
             assertThat(updatedFile.getFileName()).isEqualTo("test.txt");
             assertThat(updatedFile.getFolderId()).isEqualTo(2L);
-            assertThat(updatedFile.getFileLoc()).startsWith("/test-group/folder2/");
-            assertThat(fakeFilePort.moveFileCallCount).isEqualTo(1);
         }
 
         @Test
@@ -148,7 +141,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -157,7 +149,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -189,8 +180,6 @@ class UpdateFileServiceTest {
             FileInfo updatedFile = fakeFileStoragePort.findById(1L);
             assertThat(updatedFile.getFileName()).isEqualTo("new-name.txt");
             assertThat(updatedFile.getFolderId()).isEqualTo(2L);
-            assertThat(updatedFile.getFileLoc()).startsWith("/test-group/folder2/");
-            assertThat(fakeFilePort.moveFileCallCount).isEqualTo(1);
         }
 
         @Test
@@ -222,7 +211,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -269,7 +257,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -278,7 +265,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Target Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -325,7 +311,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Source Folder")
                 .owner("owner@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(sourceFolder);
 
@@ -334,7 +319,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Private Folder")
                 .owner("owner@example.com")
-                .path("/test-group/folder2")
                 .build();
             fakeFolderStoragePort.database.add(targetFolder);
 
@@ -375,7 +359,6 @@ class UpdateFileServiceTest {
                 .groupId(1L)
                 .name("Test Folder")
                 .owner("test@example.com")
-                .path("/test-group/folder1")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 

@@ -7,6 +7,7 @@ import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
+import com.odcloud.infrastructure.util.AesUtil;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +28,9 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
     @Autowired
     EntityManager entityManager;
+
+    @Autowired
+    AesUtil aesUtil;
 
     @AfterEach
     void tearDown() {
@@ -68,7 +72,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
-            assertThat(savedEntity.getContent()).isEqualTo("개인 회의");
+            assertThat(savedEntity.getContent()).isEqualTo(aesUtil.encryptText("개인 회의"));
             assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
             assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(savedEntity.getGroupId()).isNull();
@@ -102,7 +106,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getGroupId()).isEqualTo(1L);
-            assertThat(savedEntity.getContent()).isEqualTo("그룹 회의");
+            assertThat(savedEntity.getContent()).isEqualTo(aesUtil.encryptText("그룹 회의"));
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
         }
 
@@ -173,7 +177,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             // then
             ScheduleEntity savedEntity = entityManager.find(ScheduleEntity.class, existingSchedule.getId());
             assertThat(savedEntity).isNotNull();
-            assertThat(savedEntity.getContent()).isEqualTo("수정된 회의");
+            assertThat(savedEntity.getContent()).isEqualTo(aesUtil.encryptText("수정된 회의"));
             assertThat(savedEntity.getStartDt()).isEqualTo(newStartDt);
         }
 
@@ -246,7 +250,7 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getWriterEmail()).isEqualTo("user@example.com");
-            assertThat(savedEntity.getContent()).isEqualTo("전체 필드 회의");
+            assertThat(savedEntity.getContent()).isEqualTo(aesUtil.encryptText("전체 필드 회의"));
             assertThat(savedEntity.getStartDt()).isEqualTo(startDt);
             assertThat(savedEntity.getNotificationDt()).isEqualTo(notificationDt);
             assertThat(savedEntity.getGroupId()).isEqualTo(1L);

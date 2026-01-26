@@ -35,7 +35,6 @@ class RegisterAccountServiceTest {
         fakeAccountStoragePort = new FakeAccountStoragePort();
         registerAccountService = new RegisterAccountService(
             fakeMailPort,
-            new FakeFilePort(),
             fakeGroupStoragePort,
             fakeGoogleOAuth2Port,
             fakeAccountStoragePort,

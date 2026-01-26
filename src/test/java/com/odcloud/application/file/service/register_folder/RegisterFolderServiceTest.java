@@ -25,8 +25,7 @@ class RegisterFolderServiceTest {
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeFileUploadPort = new FakeFileUploadPort();
         registerFolderService = new RegisterFolderService(
-            fakeFolderStoragePort,
-            fakeFileUploadPort
+            fakeFolderStoragePort
         );
     }
 
@@ -41,7 +40,6 @@ class RegisterFolderServiceTest {
             FolderInfo parentFolder = FolderInfo.builder()
                 .groupId(1L)
                 .name("Parent Folder")
-                .path("/test-group")
                 .build();
             fakeFolderStoragePort.save(parentFolder);
 
@@ -60,8 +58,6 @@ class RegisterFolderServiceTest {
             assertThat(fakeFolderStoragePort.database).hasSize(2);
             assertThat(fakeFolderStoragePort.database.get(1).getName()).isEqualTo("New Folder");
             assertThat(fakeFolderStoragePort.database.get(1).getParentId()).isEqualTo(0L);
-            assertThat(fakeFolderStoragePort.database.get(1).getPath()).startsWith("/test-group/");
-            assertThat(fakeFileUploadPort.createdFolders).hasSize(1);
         }
 
         @Test
@@ -72,7 +68,6 @@ class RegisterFolderServiceTest {
                 .id(1L)
                 .groupId(1L)
                 .name("Parent Folder")
-                .path("/test-group")
                 .build();
             fakeFolderStoragePort.database.add(parentFolder);
 
@@ -81,7 +76,6 @@ class RegisterFolderServiceTest {
                 .parentId(1L)
                 .groupId(1L)
                 .name("Existing Folder")
-                .path("/test-group/existing")
                 .build();
             fakeFolderStoragePort.database.add(existingFolder);
 
@@ -98,7 +92,6 @@ class RegisterFolderServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_SAVED_FOLDER_NAME);
 
             assertThat(fakeFolderStoragePort.database).hasSize(2);
-            assertThat(fakeFileUploadPort.createdFolders).isEmpty();
         }
 
     }

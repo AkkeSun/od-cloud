@@ -188,15 +188,15 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] STORAGE_50 바우처에 groupId가 없는 경우 400 에러를 반환한다")
-        void error_storage50WithoutGroupId() throws Exception {
+        @DisplayName("[error] STORAGE_PLUS 바우처에 groupId가 없는 경우 400 에러를 반환한다")
+        void error_storagePlusWithoutGroupId() throws Exception {
             // given
             CreateVoucherRequest request = CreateVoucherRequest.builder()
                 .storeType(StoreType.GOOGLE)
-                .subscriptionKey("sub_50")
-                .orderTxId("GOOGLE_TX_50")
+                .subscriptionKey("sub_plus")
+                .orderTxId("GOOGLE_TX_PLUS")
                 .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_50)
+                .voucherType(VoucherType.STORAGE_PLUS)
                 .groupId(null)
                 .build();
 
@@ -263,7 +263,7 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                     .tag("Voucher")
                     .summary("바우처 생성 API")
                     .description(
-                        "바우처를 생성하는 API 입니다. 스토리지 바우처(STORAGE_BASIC, STORAGE_PLUS, STORAGE_50, STORAGE_100)인 경우 groupId가 필수입니다.")
+                        "바우처를 생성하는 API 입니다. 스토리지 바우처(STORAGE_BASIC, STORAGE_PLUS)인 경우 groupId가 필수입니다.")
                     .requestFields(
                         fieldWithPath("storeType").type(storeTypeType)
                             .description("스토어 타입 (APPLE, GOOGLE)"),
@@ -275,7 +275,7 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                             .description("스토어 처리 일시 (yyyy-MM-dd HH:mm:ss)"),
                         fieldWithPath("voucherType").type(voucherTypeType)
                             .description(
-                                "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, STORAGE_50, STORAGE_100, ADVERTISE)"),
+                                "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, ADVERTISE_30, ADVERTISE_90, ADVERTISE_365)"),
                         fieldWithPath("groupId").type(groupIdType)
                             .description("그룹 ID (스토리지 바우처인 경우 필수)").optional(),
                         fieldWithPath("memo").type(memoType)

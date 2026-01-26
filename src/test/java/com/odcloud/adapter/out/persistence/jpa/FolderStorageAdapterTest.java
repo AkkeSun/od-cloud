@@ -46,7 +46,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("루트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .build();
 
@@ -67,7 +66,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedFolders.get(0).getGroupId()).isEqualTo(1L);
             assertThat(savedFolders.get(0).getName()).isEqualTo("루트 폴더");
             assertThat(savedFolders.get(0).getOwner()).isEqualTo("owner@example.com");
-            assertThat(savedFolders.get(0).getPath()).isEqualTo("/test-group");
         }
 
         @Test
@@ -82,7 +80,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -94,7 +91,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("서브 폴더")
                 .owner("owner@example.com")
-                .path("/test-group/subfolder")
                 .regDt(now)
                 .build();
 
@@ -113,7 +109,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(savedFolders).hasSize(1);
             assertThat(savedFolders.get(0).getParentId()).isEqualTo(parentFolder.getId());
             assertThat(savedFolders.get(0).getName()).isEqualTo("서브 폴더");
-            assertThat(savedFolders.get(0).getPath()).isEqualTo("/test-group/subfolder");
         }
 
         @Test
@@ -126,7 +121,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("기존 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -140,7 +134,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("업데이트된 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now.plusHours(1))
                 .build();
@@ -169,7 +162,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -181,7 +173,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("서브 폴더 1")
                 .owner("owner@example.com")
-                .path("/test-group/sub1")
                 .regDt(now)
                 .build();
 
@@ -190,7 +181,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("서브 폴더 2")
                 .owner("owner@example.com")
-                .path("/test-group/sub2")
                 .regDt(now)
                 .build();
 
@@ -199,7 +189,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("서브 폴더 3")
                 .owner("owner@example.com")
-                .path("/test-group/sub3")
                 .regDt(now)
                 .build();
 
@@ -234,7 +223,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(null)
                 .build();
@@ -270,7 +258,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("테스트 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -287,7 +274,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getGroupId()).isEqualTo(1L);
             assertThat(result.getName()).isEqualTo("테스트 폴더");
             assertThat(result.getOwner()).isEqualTo("owner@example.com");
-            assertThat(result.getPath()).isEqualTo("/test-group");
         }
 
         @Test
@@ -302,7 +288,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -314,7 +299,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("서브 폴더")
                 .owner("owner@example.com")
-                .path("/test-group/subfolder")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -330,7 +314,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getId()).isEqualTo(subFolder.getId());
             assertThat(result.getParentId()).isEqualTo(parentFolder.getId());
             assertThat(result.getName()).isEqualTo("서브 폴더");
-            assertThat(result.getPath()).isEqualTo("/test-group/subfolder");
         }
 
         @Test
@@ -354,7 +337,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 1")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -365,7 +347,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 2")
                 .owner("owner@example.com")
-                .path("/group-2")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -401,7 +382,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -413,7 +393,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("기존 폴더")
                 .owner("owner@example.com")
-                .path("/test-group/existing")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -440,7 +419,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -467,7 +445,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더 1")
                 .owner("owner@example.com")
-                .path("/group-1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -479,7 +456,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더 2")
                 .owner("owner@example.com")
-                .path("/group-2")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -491,7 +467,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("공통 이름")
                 .owner("owner@example.com")
-                .path("/group-1/common")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -518,7 +493,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -530,7 +504,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 A")
                 .owner("owner@example.com")
-                .path("/test-group/a")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -540,7 +513,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 B")
                 .owner("owner@example.com")
-                .path("/test-group/b")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -550,7 +522,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("폴더 C")
                 .owner("owner@example.com")
-                .path("/test-group/c")
                 .regDt(now)
                 .modDt(now)
                 .build());
@@ -577,7 +548,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("부모 폴더")
                 .owner("owner@example.com")
-                .path("/test-group")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -589,7 +559,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("TestFolder")
                 .owner("owner@example.com")
-                .path("/test-group/test")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -620,7 +589,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Parent Folder")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -632,7 +600,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Child 1")
                 .owner("user@example.com")
-                .path("/group1/child1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -643,7 +610,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Child 2")
                 .owner("user@example.com")
-                .path("/group1/child2")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -685,7 +651,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Project A")
                 .owner("user@example.com")
-                .path("/group1/projectA")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -696,7 +661,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Documents")
                 .owner("user@example.com")
-                .path("/group1/documents")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -707,7 +671,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Project B")
                 .owner("user@example.com")
-                .path("/group1/projectB")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -749,7 +712,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Parent")
                 .owner("user@example.com")
-                .path("/group1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -761,7 +723,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Child of Group1")
                 .owner("user@example.com")
-                .path("/group1/child1")
                 .regDt(now)
                 .modDt(now)
                 .build();
@@ -773,7 +734,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
                 .groupId(1L)
                 .name("Child of Group2")
                 .owner("user@example.com")
-                .path("/group1/child2")
                 .regDt(now)
                 .modDt(now)
                 .build();

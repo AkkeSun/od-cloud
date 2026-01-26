@@ -98,8 +98,8 @@ class CreateVoucherServiceTest {
         }
 
         @Test
-        @DisplayName("[success] STORAGE_100 바우처를 생성하고 endDt는 null이다")
-        void success_createStorage100Voucher() {
+        @DisplayName("[success] STORAGE_BASIC 바우처를 생성하고 endDt가 설정된다")
+        void success_createStorageBasicVoucher() {
             // given
             LocalDateTime now = LocalDateTime.now();
             Group group = Group.builder()
@@ -117,7 +117,7 @@ class CreateVoucherServiceTest {
                 .subscriptionKey("sub_google_456")
                 .orderTxId("GOOGLE_TX_67890")
                 .storeProcessDt(now)
-                .voucherType(VoucherType.STORAGE_100)
+                .voucherType(VoucherType.STORAGE_BASIC)
                 .groupId(20L)
                 .memo("100GB 플랜")
                 .build();
@@ -132,8 +132,8 @@ class CreateVoucherServiceTest {
             // Verify voucher created
             assertThat(voucherStoragePort.database).hasSize(1);
             Voucher voucher = voucherStoragePort.database.get(0);
-            assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_100);
-            assertThat(voucher.getEndDt()).isNull(); // STORAGE_100 is unlimited
+            assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
+            assertThat(voucher.getEndDt()).isNotNull(); // STORAGE_BASIC has 30 days duration
 
             // Verify group storage increased by 100GB
             Group updatedGroup = groupStoragePort.findById(20L);
@@ -174,8 +174,8 @@ class CreateVoucherServiceTest {
         }
 
         @Test
-        @DisplayName("[success] STORAGE_BASIC 바우처를 생성하고 그룹 스토리지를 100GB 증가시킨다")
-        void success_createStorageBasicVoucher() {
+        @DisplayName("[success] STORAGE_BASIC 바우처를 생성하고 그룹 스토리지를 100GB 증가시킨다 v2")
+        void success_createStorageBasicVoucher_v2() {
             // given
             LocalDateTime now = LocalDateTime.now();
             Group group = Group.builder()

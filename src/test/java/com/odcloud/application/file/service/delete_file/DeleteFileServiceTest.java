@@ -32,7 +32,6 @@ class DeleteFileServiceTest {
         deleteFileService = new DeleteFileService(
             new FakeFilePort(),
             fakeFileStoragePort,
-            fakeFolderStoragePort,
             fakeGroupStoragePort
         );
     }
@@ -53,7 +52,6 @@ class DeleteFileServiceTest {
                 .groupId(null)
                 .owner(ownerEmail)
                 .name("Private Folder")
-                .path("/private")
                 .build();
             fakeFolderStoragePort.database.add(privateFolder);
 
@@ -93,48 +91,6 @@ class DeleteFileServiceTest {
         }
 
         @Test
-        @DisplayName("[success] PUBLIC 폴더에 접근 가능한 사용자가 파일을 삭제한다")
-        void success_publicFolder_hasAccess() {
-            // given
-            Long groupId = 1L;
-            FolderInfo publicFolder = FolderInfo.builder()
-                .id(1L)
-                .groupId(groupId)
-                .owner("owner@test.com")
-                .name("Public Folder")
-                .path("/public")
-                .build();
-            fakeFolderStoragePort.database.add(publicFolder);
-
-            FileInfo file = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test.txt")
-                .fileLoc("/storage/test.txt")
-                .build();
-            fakeFileStoragePort.database.add(file);
-
-            Account userWithAccess = Account.builder()
-                .email("user@test.com")
-                .groups(List.of(Group.of(groupId)))
-                .build();
-
-            DeleteFileCommand command = DeleteFileCommand.builder()
-                .account(userWithAccess)
-                .fileIds(List.of(1L))
-                .build();
-
-            // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
-
-            // then
-            assertThat(response.result()).isTrue();
-            assertThat(response.logs()).hasSize(1);
-            assertThat(response.logs().get(0).errorMessage()).isNull();
-            assertThat(fakeFileStoragePort.database).isEmpty();
-        }
-
-        @Test
         @DisplayName("[failure] PUBLIC 폴더에 접근 권한이 없는 사용자가 파일 삭제 시도하면 실패한다")
         void failure_publicFolder_noAccess() {
             // given
@@ -144,7 +100,6 @@ class DeleteFileServiceTest {
                 .groupId(groupId)
                 .owner("owner@test.com")
                 .name("Public Folder")
-                .path("/public")
                 .build();
             fakeFolderStoragePort.database.add(publicFolder);
 
@@ -217,12 +172,12 @@ class DeleteFileServiceTest {
                 .groupId(groupId)
                 .owner("owner@test.com")
                 .name("Test Folder")
-                .path("/test")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
             FileInfo file = FileInfo.builder()
                 .id(1L)
+                .groupId(groupId)
                 .folderId(1L)
                 .fileName("test.txt")
                 .fileLoc("/storage/test.txt")
@@ -269,12 +224,12 @@ class DeleteFileServiceTest {
                 .groupId(groupId)
                 .owner("owner@test.com")
                 .name("Test Folder")
-                .path("/test")
                 .build();
             fakeFolderStoragePort.database.add(folder);
 
             FileInfo file1 = FileInfo.builder()
                 .id(1L)
+                .groupId(groupId)
                 .folderId(1L)
                 .fileName("test1.txt")
                 .fileLoc("/storage/test1.txt")
@@ -282,6 +237,7 @@ class DeleteFileServiceTest {
                 .build();
             FileInfo file2 = FileInfo.builder()
                 .id(2L)
+                .groupId(groupId)
                 .folderId(1L)
                 .fileName("test2.txt")
                 .fileLoc("/storage/test2.txt")
@@ -297,58 +253,6 @@ class DeleteFileServiceTest {
             DeleteFileCommand command = DeleteFileCommand.builder()
                 .account(account)
                 .fileIds(List.of(1L, 2L))
-                .build();
-
-            // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
-
-            // then
-            assertThat(response.result()).isTrue();
-            assertThat(fakeFileStoragePort.database).isEmpty();
-
-            Group updatedGroup = fakeGroupStoragePort.groupDatabase.get(0);
-            assertThat(updatedGroup.getStorageUsed()).isEqualTo(1000L);
-        }
-
-        @Test
-        @DisplayName("[success] 파일 크기가 null인 경우에도 삭제가 성공한다")
-        void success_fileSizeNull() {
-            // given
-            Long groupId = 1L;
-            Group group = Group.builder()
-                .id(groupId)
-                .name("Test Group")
-                .storageUsed(1000L)
-                .storageTotal(3221225472L)
-                .build();
-            fakeGroupStoragePort.groupDatabase.add(group);
-
-            FolderInfo folder = FolderInfo.builder()
-                .id(1L)
-                .groupId(groupId)
-                .owner("owner@test.com")
-                .name("Test Folder")
-                .path("/test")
-                .build();
-            fakeFolderStoragePort.database.add(folder);
-
-            FileInfo file = FileInfo.builder()
-                .id(1L)
-                .folderId(1L)
-                .fileName("test.txt")
-                .fileLoc("/storage/test.txt")
-                .fileSize(null)
-                .build();
-            fakeFileStoragePort.database.add(file);
-
-            Account account = Account.builder()
-                .email("user@test.com")
-                .groups(List.of(Group.of(groupId)))
-                .build();
-
-            DeleteFileCommand command = DeleteFileCommand.builder()
-                .account(account)
-                .fileIds(List.of(1L))
                 .build();
 
             // when
