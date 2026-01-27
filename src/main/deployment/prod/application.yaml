@@ -1,6 +1,13 @@
+server:
+  port: 8081
+  deploy-type: blue
+  shutdown: graceful
+
 spring:
   application:
     name: od-cloud
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
   jpa:
     hibernate:
       ddl-auto: none
@@ -25,9 +32,9 @@ spring:
       timeout: 3000
 
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
+    host: smtp.gmail.com
+    port: 587
+    username: akkessun@gmail.com
     password: ${MAIL_PASSWORD}
     protocol: smtp
     default-encoding: utf-8

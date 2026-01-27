@@ -24,9 +24,9 @@ spring:
       timeout: 3000
 
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
+    host: smtp.gmail.com
+    port: 587
+    username: akkessun@gmail.com
     password: ${MAIL_PASSWORD}
     protocol: smtp
     default-encoding: utf-8
