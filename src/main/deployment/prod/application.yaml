@@ -56,6 +56,15 @@ spring:
     password: ${PROD_RDB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 service-constant:
   jwt:
     temp-token-ttl: 300000 # 5 min
