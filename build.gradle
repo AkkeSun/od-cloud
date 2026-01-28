@@ -73,7 +73,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
-ext.profile = (!project.hasProperty('profile') || !profile) ? 'prod' : profile
+ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
 
 sourceSets {
     main {

@@ -86,6 +86,14 @@ service-constant:
     base-path: /data
     disk-path: /disk1
 
+  apple-payment:
+    verify-receipt-api: https://buy.itunes.apple.com
+    password: ${APPLE_SHARED_SECRET}
+
+  google-play-payment:
+    verify-purchase-api: https://androidpublisher.googleapis.com/androidpublisher/v3/applications
+    package-name: ${GOOGLE_PLAY_PACKAGE_NAME}
+
   profile: prod
   web-server-host: https://data.odlab.kr
   aes-secret-key: ${PROD_AES_SECRET}

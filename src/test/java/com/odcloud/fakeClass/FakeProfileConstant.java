@@ -24,8 +24,19 @@ public class FakeProfileConstant {
                 .build())
             .fileUpload(ProfileConstant.FileUpload.builder()
                 .basePath("/tmp/test-uploads")
+                .diskPath("/tmp/test-disk")
                 .build())
+            .applePayment(ProfileConstant.ApplePayment.builder()
+                .verifyReceiptApi("https://sandbox.itunes.apple.com")
+                .password("fake-apple-password")
+                .build())
+            .googlePlayPayment(ProfileConstant.GooglePlayPayment.builder()
+                .verifyPurchaseApi("https://androidpublisher.googleapis.com/androidpublisher/v3/applications")
+                .packageName("com.odcloud.test")
+                .build())
+            .webServerHost("http://localhost:8080")
             .aesSecretKey("fake-aes-secret-key-for-testing")
+            .profile("test")
             .build();
     }
 }

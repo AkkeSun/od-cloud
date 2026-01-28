@@ -14,6 +14,8 @@ public record ProfileConstant(
     GoogleOAuth2 googleOAuth2,
     RedisKey redisKey,
     FileUpload fileUpload,
+    ApplePayment applePayment,
+    GooglePlayPayment googlePlayPayment,
     @NotBlank
     String webServerHost,
     @NotBlank
@@ -66,6 +68,27 @@ public record ProfileConstant(
         String basePath,
         @NotBlank
         String diskPath
+    ) {
+
+    }
+
+
+    @Builder
+    public record ApplePayment(
+        @NotBlank
+        String verifyReceiptApi,
+        @NotBlank
+        String password
+    ) {
+
+    }
+
+    @Builder
+    public record GooglePlayPayment(
+        @NotBlank
+        String verifyPurchaseApi,
+        @NotBlank
+        String packageName
     ) {
 
     }

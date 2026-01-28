@@ -78,6 +78,14 @@ service-constant:
     base-path: /Users/od/IdeaProjects/od-cloud/data
     disk-path: /disk1
 
+  apple-payment:
+    verify-receipt-api: https://buy.itunes.apple.com
+    password: ${APPLE_SHARED_SECRET}
+
+  google-play-payment:
+    verify-purchase-api: https://androidpublisher.googleapis.com/androidpublisher/v3/applications
+    package-name: ${GOOGLE_PLAY_PACKAGE_NAME}
+
   profile: dev
   web-server-host: http://192.168.219.109:8080
   aes-secret-key: ${DEV_AES_SECRET}

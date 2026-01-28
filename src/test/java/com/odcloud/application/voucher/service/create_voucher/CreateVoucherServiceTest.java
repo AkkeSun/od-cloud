@@ -1,6 +1,7 @@
 package com.odcloud.application.voucher.service.create_voucher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
 import com.odcloud.domain.model.Group;
@@ -12,7 +13,10 @@ import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
+import com.odcloud.fakeClass.FakePaymentVerificationPort;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
+import com.odcloud.infrastructure.exception.CustomBusinessException;
+import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,16 +29,19 @@ class CreateVoucherServiceTest {
     private FakePaymentStoragePort paymentStoragePort;
     private FakeVoucherStoragePort voucherStoragePort;
     private FakeGroupStoragePort groupStoragePort;
+    private FakePaymentVerificationPort paymentVerificationPort;
 
     @BeforeEach
     void setUp() {
         paymentStoragePort = new FakePaymentStoragePort();
         voucherStoragePort = new FakeVoucherStoragePort();
         groupStoragePort = new FakeGroupStoragePort();
+        paymentVerificationPort = new FakePaymentVerificationPort();
         service = new CreateVoucherService(
             paymentStoragePort,
             voucherStoragePort,
-            groupStoragePort
+            groupStoragePort,
+            paymentVerificationPort
         );
     }
 
@@ -275,6 +282,68 @@ class CreateVoucherServiceTest {
             assertThat(response2.result()).isTrue();
             assertThat(paymentStoragePort.database).hasSize(2);
             assertThat(voucherStoragePort.database).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("[error] 결제 검증 실패시 예외가 발생한다")
+        void error_paymentVerificationFailed() {
+            // given
+            paymentVerificationPort.setVerificationResult(false);
+
+            LocalDateTime now = LocalDateTime.now();
+            CreateVoucherCommand command = CreateVoucherCommand.builder()
+                .accountId(1L)
+                .storeType(StoreType.APPLE)
+                .subscriptionKey("invalid_receipt")
+                .orderTxId("APPLE_TX_INVALID")
+                .storeProcessDt(now)
+                .voucherType(VoucherType.STORAGE_PLUS)
+                .groupId(10L)
+                .memo("결제 검증 실패 테스트")
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> service.create(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .satisfies(exception -> {
+                    CustomBusinessException e = (CustomBusinessException) exception;
+                    assertThat(e.getErrorCode()).isEqualTo(ErrorCode.PAYMENT_VERIFICATION_FAILED);
+                });
+
+            // Verify no payment or voucher created
+            assertThat(paymentStoragePort.database).isEmpty();
+            assertThat(voucherStoragePort.database).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[error] Google 결제 검증 실패시 예외가 발생한다")
+        void error_googlePaymentVerificationFailed() {
+            // given
+            paymentVerificationPort.setVerificationResult(false);
+
+            LocalDateTime now = LocalDateTime.now();
+            CreateVoucherCommand command = CreateVoucherCommand.builder()
+                .accountId(2L)
+                .storeType(StoreType.GOOGLE)
+                .subscriptionKey("invalid_purchase_token")
+                .orderTxId("GOOGLE_TX_INVALID")
+                .storeProcessDt(now)
+                .voucherType(VoucherType.STORAGE_BASIC)
+                .groupId(20L)
+                .memo("Google 결제 검증 실패 테스트")
+                .build();
+
+            // when & then
+            assertThatThrownBy(() -> service.create(command))
+                .isInstanceOf(CustomBusinessException.class)
+                .satisfies(exception -> {
+                    CustomBusinessException e = (CustomBusinessException) exception;
+                    assertThat(e.getErrorCode()).isEqualTo(ErrorCode.PAYMENT_VERIFICATION_FAILED);
+                });
+
+            // Verify no payment or voucher created
+            assertThat(paymentStoragePort.database).isEmpty();
+            assertThat(voucherStoragePort.database).isEmpty();
         }
     }
 }
