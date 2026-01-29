@@ -1,0 +1,97 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  SERVICE_PATH: /home/od/moimism/releases
+  JAR_NAME: moimism-api.jar
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug - Check secrets
+        run: |
+          echo "=== Checking Secrets ==="
+          echo "SSH_HOST length: ${#SSH_HOST}"
+          echo "SSH_USERNAME length: ${#SSH_USERNAME}"
+          echo "SSH_PORT length: ${#SSH_PORT}"
+          echo "SSH_PRIVATE_KEY length: ${#SSH_PRIVATE_KEY}"
+          echo "PROD_REDIS_HOST length: ${#PROD_REDIS_HOST}"
+          echo "PROD_REDIS_PORT length: ${#PROD_REDIS_PORT}"
+          echo "PROD_RDB_HOST length: ${#PROD_RDB_HOST}"
+          echo "PROD_RDB_USERNAME length: ${#PROD_RDB_USERNAME}"
+          echo "PROD_JWT_SECRET length: ${#PROD_JWT_SECRET}"
+          echo "PROD_AES_SECRET length: ${#PROD_AES_SECRET}"
+          echo "GOOGLE_CLIENT_ID length: ${#GOOGLE_CLIENT_ID}"
+          echo "FIREBASE_SERVICE_ACCOUNT length: ${#FIREBASE_SERVICE_ACCOUNT}"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          PROD_REDIS_HOST: ${{ secrets.PROD_REDIS_HOST }}
+          PROD_REDIS_PORT: ${{ secrets.PROD_REDIS_PORT }}
+          PROD_RDB_HOST: ${{ secrets.PROD_RDB_HOST }}
+          PROD_RDB_USERNAME: ${{ secrets.PROD_RDB_USERNAME }}
+          PROD_JWT_SECRET: ${{ secrets.PROD_JWT_SECRET }}
+          PROD_AES_SECRET: ${{ secrets.PROD_AES_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create Firebase service account file
+        run: printf '%s' '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > src/main/resources/firebase-service-account.json
+
+      - name: Build with Gradle
+        run: ./gradlew clean bootJar -x test -Pprofile=prod --no-daemon
+
+      - name: Copy JAR to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: build/libs/${{ env.JAR_NAME }}
+          target: ${{ env.SERVICE_PATH }}
+          strip_components: 2
+
+      - name: Execute deploy script
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          envs: SERVICE_PATH
+          script: |
+            export PROD_REDIS_HOST="${{ secrets.PROD_REDIS_HOST }}"
+            export PROD_REDIS_PORT="${{ secrets.PROD_REDIS_PORT }}"
+            export PROD_REDIS_PASSWORD="${{ secrets.PROD_REDIS_PASSWORD }}"
+            export MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}"
+            export PROD_RDB_HOST="${{ secrets.PROD_RDB_HOST }}"
+            export PROD_RDB_USERNAME="${{ secrets.PROD_RDB_USERNAME }}"
+            export PROD_RDB_PASSWORD="${{ secrets.PROD_RDB_PASSWORD }}"
+            export PROD_JWT_SECRET="${{ secrets.PROD_JWT_SECRET }}"
+            export GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}"
+            export GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}"
+            export PROD_AES_SECRET="${{ secrets.PROD_AES_SECRET }}"
+            cd ${{ env.SERVICE_PATH }}
+            /home/od/moimism/deploy.sh
