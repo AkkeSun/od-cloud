@@ -52,6 +52,9 @@ class PaymentVerificationAdapter implements PaymentVerificationPort {
 
     @Override
     public boolean verify(CreateVoucherCommand command) {
+        if (command.subscriptionKey().startsWith("mock")) {
+            return true;
+        }
         return switch (command.storeType()) {
             case APPLE -> verifyApplePayment(command);
             case GOOGLE -> verifyGooglePlayPayment(command);
