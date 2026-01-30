@@ -4,14 +4,15 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROU
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_USER;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.adapter.out.mail.MailRequest;
 import com.odcloud.application.account.port.in.RegisterAccountUseCase;
 import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
+import com.odcloud.application.device.port.in.PushFcmUseCase;
+import com.odcloud.application.device.port.in.command.PushFcmCommand;
+import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
-import com.odcloud.application.util.port.out.MailPort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
@@ -26,10 +27,11 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 class RegisterAccountService implements RegisterAccountUseCase {
 
-    private final MailPort mailPort;
+    private final PushFcmUseCase pushFcmUseCase;
     private final GroupStoragePort groupStoragePort;
     private final GoogleOAuth2Port googleOAuth2Port;
     private final AccountStoragePort accountStoragePort;
+    private final AccountDeviceStoragePort deviceStoragePort;
     private final FolderInfoStoragePort folderInfoStoragePort;
 
     @Override
@@ -54,7 +56,8 @@ class RegisterAccountService implements RegisterAccountUseCase {
         } else {
             Group group = groupStoragePort.findById(command.groupId());
             groupStoragePort.save(GroupAccount.ofPending(group, account));
-            mailPort.send(MailRequest.ofGroupJoinRequest(account, group));
+            pushFcmUseCase.pushAsync(PushFcmCommand.ofGroupPending(group,
+                deviceStoragePort.findByAccountEmailForPush(group.getOwnerEmail())));
         }
 
         return RegisterAccountServiceResponse.ofSuccess();
