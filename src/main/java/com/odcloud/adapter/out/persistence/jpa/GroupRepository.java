@@ -135,7 +135,7 @@ class GroupRepository {
                 groupEntity.regDt
             ))
             .from(groupEntity)
-            .where(groupEntity.name.like("%" + keyword + "%"))
+            .where(groupEntity.name.startsWith(keyword))
             .fetch();
     }
 
