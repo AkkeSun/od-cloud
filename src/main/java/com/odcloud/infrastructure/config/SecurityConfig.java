@@ -44,11 +44,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/docs/**").permitAll()
                     .requestMatchers("/actuator/health").permitAll()
-
-                    .requestMatchers("/**").permitAll() // for test
-
                     .requestMatchers("/favicon.ico").permitAll()
                     .requestMatchers("/accounts").permitAll()
+                    .requestMatchers("/policy").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/accounts/{username}/approval").hasRole("ADMIN")
                     .anyRequest().authenticated();
