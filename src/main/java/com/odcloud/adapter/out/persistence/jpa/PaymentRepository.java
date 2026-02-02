@@ -25,10 +25,37 @@ class PaymentRepository {
         return toDomain(entity);
     }
 
+    @Transactional
+    public void update(Payment payment) {
+        queryFactory.update(paymentEntity)
+            .set(paymentEntity.status, payment.getStatus())
+            .where(paymentEntity.id.eq(payment.getId()))
+            .execute();
+    }
+
     public Optional<Payment> findById(Long id) {
         PaymentEntity entity = queryFactory
             .selectFrom(paymentEntity)
             .where(paymentEntity.id.eq(id))
+            .fetchOne();
+
+        return Optional.ofNullable(entity).map(this::toDomain);
+    }
+
+    public Optional<Payment> findBySubscriptionKey(String subscriptionKey) {
+        PaymentEntity entity = queryFactory
+            .selectFrom(paymentEntity)
+            .where(paymentEntity.subscriptionKey.eq(subscriptionKey))
+            .orderBy(paymentEntity.id.desc())
+            .fetchFirst();
+
+        return Optional.ofNullable(entity).map(this::toDomain);
+    }
+
+    public Optional<Payment> findByOrderTxId(String orderTxId) {
+        PaymentEntity entity = queryFactory
+            .selectFrom(paymentEntity)
+            .where(paymentEntity.orderTxId.eq(orderTxId))
             .fetchOne();
 
         return Optional.ofNullable(entity).map(this::toDomain);

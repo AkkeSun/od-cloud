@@ -32,6 +32,7 @@ class VoucherRepository {
     public void update(Voucher voucher) {
         queryFactory.update(voucherEntity)
             .set(voucherEntity.paymentId, voucher.getPaymentId())
+            .set(voucherEntity.status, voucher.getStatus())
             .set(voucherEntity.endDt, voucher.getEndDt())
             .set(voucherEntity.modDt, voucher.getModDt())
             .where(voucherEntity.id.eq(voucher.getId()))
@@ -74,6 +75,15 @@ class VoucherRepository {
             .stream()
             .map(this::toDomain)
             .toList();
+    }
+
+    public Optional<Voucher> findByPaymentId(Long paymentId) {
+        VoucherEntity entity = queryFactory
+            .selectFrom(voucherEntity)
+            .where(voucherEntity.paymentId.eq(paymentId))
+            .fetchOne();
+
+        return Optional.ofNullable(entity).map(this::toDomain);
     }
 
     private VoucherEntity toEntity(Voucher voucher) {

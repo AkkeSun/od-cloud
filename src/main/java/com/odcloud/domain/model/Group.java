@@ -71,25 +71,27 @@ public class Group {
     }
 
     public void increaseStorageUsed(long size) {
-        this.storageUsed = (this.storageUsed != null ? this.storageUsed : 0L) + size;
+        this.storageUsed += size;
         this.modDt = LocalDateTime.now();
     }
 
     public void decreaseStorageUsed(long size) {
-        this.storageUsed = Math.max(0L,
-            (this.storageUsed != null ? this.storageUsed : 0L) - size);
+        this.storageUsed = Math.max(0L, this.storageUsed - size);
         this.modDt = LocalDateTime.now();
     }
 
     public void increaseStorageTotal(long size) {
-        this.storageTotal = (this.storageTotal != null ? this.storageTotal : 0L) + size;
+        this.storageTotal = this.storageTotal + size;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void decreaseStorageTotal(long size) {
+        this.storageTotal = Math.max(3221225472L, this.storageTotal - size);
         this.modDt = LocalDateTime.now();
     }
 
     public boolean canUpload(long fileSize) {
-        long currentUsed = this.storageUsed != null ? this.storageUsed : 0L;
-        long totalStorage = this.storageTotal != null ? this.storageTotal : 3221225472L;
-        return (currentUsed + fileSize) <= totalStorage;
+        return (storageUsed + fileSize) <= storageTotal;
     }
 
     public void updateOwnerEmail(String ownerEmail) {

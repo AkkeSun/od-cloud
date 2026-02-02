@@ -338,22 +338,6 @@ class GroupTest {
             assertThat(group.getModDt()).isAfter(before);
             assertThat(group.getModDt()).isBefore(after);
         }
-
-        @Test
-        @DisplayName("[success] storageUsed가 null일 때 스토리지 사용량을 증가시킨다")
-        void success_nullStorageUsed() {
-            // given
-            Group group = Group.builder()
-                .id(123L)
-                .storageUsed(null)
-                .build();
-
-            // when
-            group.increaseStorageUsed(50L);
-
-            // then
-            assertThat(group.getStorageUsed()).isEqualTo(50L);
-        }
     }
 
     @Nested
@@ -392,22 +376,6 @@ class GroupTest {
 
             // when
             group.decreaseStorageUsed(100L);
-
-            // then
-            assertThat(group.getStorageUsed()).isEqualTo(0L);
-        }
-
-        @Test
-        @DisplayName("[success] storageUsed가 null일 때 0으로 설정한다")
-        void success_nullStorageUsed() {
-            // given
-            Group group = Group.builder()
-                .id(123L)
-                .storageUsed(null)
-                .build();
-
-            // when
-            group.decreaseStorageUsed(50L);
 
             // then
             assertThat(group.getStorageUsed()).isEqualTo(0L);
@@ -464,40 +432,6 @@ class GroupTest {
 
             // when
             boolean result = group.canUpload(472L);
-
-            // then
-            assertThat(result).isTrue();
-        }
-
-        @Test
-        @DisplayName("[success] storageUsed가 null일 때 업로드 가능 여부를 확인한다")
-        void success_nullStorageUsed() {
-            // given
-            Group group = Group.builder()
-                .id(123L)
-                .storageUsed(null)
-                .storageTotal(3221225472L)
-                .build();
-
-            // when
-            boolean result = group.canUpload(1000L);
-
-            // then
-            assertThat(result).isTrue();
-        }
-
-        @Test
-        @DisplayName("[success] storageTotal이 null일 때 기본값으로 업로드 가능 여부를 확인한다")
-        void success_nullStorageTotal() {
-            // given
-            Group group = Group.builder()
-                .id(123L)
-                .storageUsed(1000L)
-                .storageTotal(null)
-                .build();
-
-            // when
-            boolean result = group.canUpload(500L);
 
             // then
             assertThat(result).isTrue();

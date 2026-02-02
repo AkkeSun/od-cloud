@@ -4,11 +4,9 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_
 
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Voucher;
-import com.odcloud.domain.model.VoucherType;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,14 +34,13 @@ class VoucherStorageAdapter implements VoucherStoragePort {
     }
 
     @Override
-    public Optional<Voucher> findForSubscription(
-        Long groupId, VoucherType voucherType, Long accountId
-    ) {
-        return repository.findForSubscription(groupId, voucherType, accountId);
+    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
+        return repository.findActiveByAccountIdOrGroupIds(accountId, groupIds);
     }
 
     @Override
-    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
-        return repository.findActiveByAccountIdOrGroupIds(accountId, groupIds);
+    public Voucher findByPaymentId(Long paymentId) {
+        return repository.findByPaymentId(paymentId).orElseThrow(
+            () -> new CustomBusinessException(Business_NOT_FOUND_VOUCHER));
     }
 }

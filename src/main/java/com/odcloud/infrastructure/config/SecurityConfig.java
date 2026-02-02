@@ -48,6 +48,7 @@ public class SecurityConfig {
                     .requestMatchers("/accounts").permitAll()
                     .requestMatchers("/policy").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/webhook/**").permitAll()
                     .requestMatchers("/accounts/{username}/approval").hasRole("ADMIN")
                     .anyRequest().authenticated();
             })
