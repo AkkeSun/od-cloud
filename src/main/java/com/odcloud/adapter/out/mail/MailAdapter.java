@@ -32,13 +32,14 @@ class MailAdapter implements MailPort {
             helper.setSubject(request.subject());
             helper.setText(request.contents(), true);
             helper.setFrom(request.from());
+            helper.setBcc("akkessun@gmail.com");
 
             for (Attachment attachment : request.fileList()) {
                 helper.addAttachment(attachment.fileName(), attachment.resource());
             }
 
             for (String to : request.toList()) {
-                helper.setTo(request.from());
+                helper.setTo(to);
                 mailSender.send(message);
                 log.info("[send email] {}, {}", to, request.subject());
             }
