@@ -1,17 +1,13 @@
 package com.odcloud.application.voucher.service.create_voucher;
 
-import static com.odcloud.infrastructure.exception.ErrorCode.PAYMENT_VERIFICATION_FAILED;
-
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.voucher.port.in.CreateVoucherUseCase;
 import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
 import com.odcloud.application.voucher.port.out.PaymentStoragePort;
-import com.odcloud.application.voucher.port.out.PaymentVerificationPort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Payment;
 import com.odcloud.domain.model.Voucher;
-import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,15 +19,10 @@ class CreateVoucherService implements CreateVoucherUseCase {
     private final PaymentStoragePort paymentStoragePort;
     private final VoucherStoragePort voucherStoragePort;
     private final GroupStoragePort groupStoragePort;
-    private final PaymentVerificationPort paymentVerificationPort;
 
     @Override
     @Transactional
     public CreateVoucherServiceResponse create(CreateVoucherCommand command) {
-        if (!paymentVerificationPort.verify(command)) {
-            throw new CustomBusinessException(PAYMENT_VERIFICATION_FAILED);
-        }
-
         Payment savedPayment = paymentStoragePort.save(Payment.create(command));
         voucherStoragePort.save(Voucher.create(savedPayment.getId(), command));
 

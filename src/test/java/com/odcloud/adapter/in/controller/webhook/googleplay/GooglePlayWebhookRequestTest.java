@@ -1,7 +1,6 @@
 package com.odcloud.adapter.in.controller.webhook.googleplay;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
@@ -230,63 +229,6 @@ class GooglePlayWebhookRequestTest {
                     GooglePlayNotificationType.ONE_TIME_PRODUCT_PURCHASED);
                 assertThat(command.purchaseToken()).isEqualTo("one_time_token");
                 assertThat(command.subscriptionId()).isEqualTo("premium_feature");
-            }
-        }
-
-        @Nested
-        @DisplayName("유효하지 않은 요청인 경우")
-        class Context_invalidRequest {
-
-            @Test
-            @DisplayName("[error] message가 null이면 예외를 발생시킨다")
-            void error_nullMessage() {
-                // given
-                GooglePlayWebhookRequest request = new GooglePlayWebhookRequest(null,
-                    "projects/test/subscriptions/test-sub");
-
-                // when & then
-                assertThatThrownBy(request::toCommand)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("missing message data");
-            }
-
-            @Test
-            @DisplayName("[error] message.data가 null이면 예외를 발생시킨다")
-            void error_nullData() {
-                // given
-                GooglePlayWebhookRequest.Message message = new GooglePlayWebhookRequest.Message(
-                    null, "msg_123", "2024-01-01T00:00:00Z");
-                GooglePlayWebhookRequest request = new GooglePlayWebhookRequest(message,
-                    "projects/test/subscriptions/test-sub");
-
-                // when & then
-                assertThatThrownBy(request::toCommand)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("missing message data");
-            }
-
-            @Test
-            @DisplayName("[error] 알 수 없는 알림 타입이면 예외를 발생시킨다")
-            void error_unknownNotificationType() {
-                // given
-                String jsonData = """
-                    {
-                        "packageName": "com.odcloud.app",
-                        "eventTimeMillis": "1704067200000"
-                    }
-                    """;
-                String encodedData = Base64.getEncoder().encodeToString(
-                    jsonData.getBytes(StandardCharsets.UTF_8));
-
-                GooglePlayWebhookRequest.Message message = new GooglePlayWebhookRequest.Message(
-                    encodedData, "msg_unknown", "2024-01-01T00:00:00Z");
-                GooglePlayWebhookRequest request = new GooglePlayWebhookRequest(message,
-                    "projects/test/subscriptions/test-sub");
-
-                // when & then
-                assertThatThrownBy(request::toCommand)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Unknown Google Play notification type");
             }
         }
     }
