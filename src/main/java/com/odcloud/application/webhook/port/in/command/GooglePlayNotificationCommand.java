@@ -4,7 +4,9 @@ import com.odcloud.domain.model.GooglePlayNotificationType;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import lombok.Builder;
 
+@Builder
 public record GooglePlayNotificationCommand(
     String packageName,
     Long eventTimeMillis,
@@ -16,10 +18,14 @@ public record GooglePlayNotificationCommand(
     boolean testNotification
 ) {
 
-    public LocalDateTime storeProcessDt (){
+    public LocalDateTime storeProcessDt() {
         return Instant
             .ofEpochMilli(eventTimeMillis)
             .atZone(ZoneId.of("Asia/Seoul"))
             .toLocalDateTime();
+    }
+
+    public boolean invalidRequest() {
+        return packageName == null;
     }
 }

@@ -29,13 +29,10 @@ public record GooglePlayWebhookRequest(
         @JsonProperty("publishTime")
         String publishTime
     ) {
+
     }
 
     GooglePlayNotificationCommand toCommand() {
-        if (message == null || message.data() == null) {
-            throw new IllegalArgumentException("Invalid Google Play webhook request: missing message data");
-        }
-
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(message.data());
             String jsonData = new String(decodedBytes, StandardCharsets.UTF_8);
@@ -98,11 +95,9 @@ public record GooglePlayWebhookRequest(
                 );
             }
 
-            throw new IllegalArgumentException("Unknown Google Play notification type");
-        } catch (IllegalArgumentException e) {
-            throw e;
+            throw new IllegalArgumentException();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to decode Google Play notification data", e);
+            return GooglePlayNotificationCommand.builder().build();
         }
     }
 
