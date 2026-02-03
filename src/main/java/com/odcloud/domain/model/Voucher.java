@@ -53,7 +53,13 @@ public class Voucher {
     public void updateSubscription(Long newPaymentId) {
         this.paymentId = newPaymentId;
         this.modDt = LocalDateTime.now();
-        this.endDt = this.endDt.plusDays(this.voucherType.getDurationDays());
+
+        if (this.endDt.isBefore(LocalDateTime.now())) {
+            this.status = VoucherStatus.ACTIVE;
+            this.endDt = LocalDateTime.now().plusDays(this.voucherType.getDurationDays());
+        } else {
+            this.endDt = this.endDt.plusDays(this.voucherType.getDurationDays());
+        }
     }
 }
 
