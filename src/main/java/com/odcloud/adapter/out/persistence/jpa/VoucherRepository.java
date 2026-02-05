@@ -7,6 +7,7 @@ import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,19 @@ class VoucherRepository {
             .fetchOne();
 
         return Optional.ofNullable(entity).map(this::toDomain);
+    }
+
+    public List<Voucher> findExpiredActiveVouchers() {
+        return queryFactory
+            .selectFrom(voucherEntity)
+            .where(
+                voucherEntity.endDt.before(LocalDateTime.now()),
+                voucherEntity.status.ne(VoucherStatus.EXPIRED)
+            )
+            .fetch()
+            .stream()
+            .map(this::toDomain)
+            .toList();
     }
 
     private VoucherEntity toEntity(Voucher voucher) {

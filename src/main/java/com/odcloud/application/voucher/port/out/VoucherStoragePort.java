@@ -14,4 +14,6 @@ public interface VoucherStoragePort {
     List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds);
 
     Voucher findByPaymentId(Long paymentId);
+
+    List<Voucher> findExpiredActiveVouchers();
 }

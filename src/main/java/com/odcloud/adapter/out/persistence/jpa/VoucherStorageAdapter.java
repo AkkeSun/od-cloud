@@ -43,4 +43,9 @@ class VoucherStorageAdapter implements VoucherStoragePort {
         return repository.findByPaymentId(paymentId).orElseThrow(
             () -> new CustomBusinessException(Business_NOT_FOUND_VOUCHER));
     }
+
+    @Override
+    public List<Voucher> findExpiredActiveVouchers() {
+        return repository.findExpiredActiveVouchers();
+    }
 }

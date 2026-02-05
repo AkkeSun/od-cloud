@@ -2,8 +2,10 @@ package com.odcloud.fakeClass;
 
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Voucher;
+import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +60,7 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
     @Override
     public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
         return database.stream()
-            .filter(v -> v.getStatus() == com.odcloud.domain.model.VoucherStatus.ACTIVE)
+            .filter(v -> v.getStatus() == VoucherStatus.ACTIVE)
             .filter(v -> (v.getAccountId() != null && v.getAccountId().equals(accountId))
                 || (v.getGroupId() != null && groupIds.contains(v.getGroupId())))
             .toList();
@@ -70,5 +72,14 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
             .filter(v -> v.getPaymentId() != null && v.getPaymentId().equals(paymentId))
             .findFirst()
             .orElseThrow(() -> new CustomBusinessException(ErrorCode.Business_NOT_FOUND_VOUCHER));
+    }
+
+    @Override
+    public List<Voucher> findExpiredActiveVouchers() {
+        LocalDateTime now = LocalDateTime.now();
+        return database.stream()
+            .filter(v -> v.getEndDt() != null && v.getEndDt().isBefore(now))
+            .filter(v -> v.getStatus() != VoucherStatus.EXPIRED)
+            .toList();
     }
 }
