@@ -14,7 +14,7 @@ class PushScheduler {
 
     private final SendScheduleNotificationUseCase sendScheduleNotificationUseCase;
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 30000) // 30초
     @SchedulerLock(name = "PushScheduler_sendScheduleNotifications", lockAtLeastFor = "5s", lockAtMostFor = "15s")
     public void sendScheduleNotifications() {
         sendScheduleNotificationUseCase.sendNotifications();
