@@ -48,6 +48,7 @@ public enum ErrorCode {
     Business_STORAGE_LIMIT_EXCEEDED(4026, "그룹 스토리지 용량이 부족합니다"),
     Business_NOT_FOUND_PAYMENT(4027, "조회된 결제 정보가 없습니다"),
     Business_NOT_FOUND_VOUCHER(4028, "조회된 바우처 정보가 없습니다"),
+    Business_LOCK_ACQUISITION_FAILED(4029, "분산락 획득에 실패했습니다");
 
     ;
 

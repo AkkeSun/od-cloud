@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 
     // FCM
     implementation 'com.google.firebase:firebase-admin:9.2.0'
