@@ -18,7 +18,6 @@ public class Voucher {
     private VoucherType voucherType;
     private VoucherStatus status;
     private Long accountId;
-    private Long groupId;
     private String memo;
     private LocalDateTime startAt;
     private LocalDateTime endDt;
@@ -32,7 +31,6 @@ public class Voucher {
             .voucherType(command.voucherType())
             .status(VoucherStatus.ACTIVE)
             .accountId(command.accountId())
-            .groupId(command.groupId())
             .memo(command.memo())
             .startAt(startAt)
             .endDt(command.voucherType().calculateEndDt(startAt))

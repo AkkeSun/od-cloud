@@ -47,7 +47,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .memo("프리미엄 플랜 구매")
                 .startAt(now)
                 .endDt(now.plusDays(30))
@@ -66,7 +65,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(result.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
             assertThat(result.getAccountId()).isEqualTo(1L);
-            assertThat(result.getGroupId()).isEqualTo(10L);
             assertThat(result.getMemo()).isEqualTo("프리미엄 플랜 구매");
             assertThat(result.getStartAt()).isNotNull();
             assertThat(result.getEndDt()).isNotNull();
@@ -74,7 +72,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
-            assertThat(savedEntity.getGroupId()).isEqualTo(10L);
         }
 
         @Test
@@ -87,7 +84,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(2L)
-                .groupId(20L)
                 .memo("베이직 플랜")
                 .startAt(now)
                 .endDt(now.plusDays(30))
@@ -103,7 +99,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isNotNull();
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
-            assertThat(result.getGroupId()).isEqualTo(20L);
 
             VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
@@ -120,7 +115,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(3L)
-                .groupId(30L)
                 .startAt(now)
                 .endDt(VoucherType.STORAGE_BASIC.calculateEndDt(now))
                 .regDt(now)
@@ -150,7 +144,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(4L)
-                .groupId(40L)
                 .startAt(now)
                 .endDt(VoucherType.STORAGE_PLUS.calculateEndDt(now))
                 .regDt(now)
@@ -180,7 +173,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.ADVERTISE_30)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(5L)
-                .groupId(null) // ADVERTISE는 groupId가 없을 수 있음
                 .memo("광고 제거")
                 .startAt(now)
                 .endDt(now.plusDays(30))
@@ -196,12 +188,10 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isNotNull();
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
-            assertThat(result.getGroupId()).isNull();
 
             VoucherEntity savedEntity = entityManager.find(VoucherEntity.class, result.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
-            assertThat(savedEntity.getGroupId()).isNull();
         }
 
         @Test
@@ -214,7 +204,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(6L)
-                .groupId(60L)
                 .memo(null)
                 .startAt(now)
                 .endDt(now.plusDays(30))
@@ -243,7 +232,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(7L)
-                .groupId(70L)
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
@@ -254,7 +242,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(8L)
-                .groupId(80L)
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
@@ -293,7 +280,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .memo("테스트 메모")
                 .startAt(now)
                 .endDt(now.plusDays(30))
@@ -313,7 +299,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(result.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
             assertThat(result.getAccountId()).isEqualTo(1L);
-            assertThat(result.getGroupId()).isEqualTo(10L);
             assertThat(result.getMemo()).isEqualTo("테스트 메모");
         }
 
@@ -327,7 +312,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
@@ -339,7 +323,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(2L)
-                .groupId(20L)
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .regDt(now)
@@ -356,7 +339,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(voucher1.getId());
             assertThat(result.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
-            assertThat(result.getGroupId()).isEqualTo(10L);
         }
 
         @Test
@@ -369,7 +351,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.EXPIRED)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(60))
                 .endDt(now.minusDays(30))
                 .regDt(now.minusDays(60))
@@ -396,7 +377,6 @@ class VoucherStorageAdapterTest extends IntegrationTestSupport {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.REVOKED)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now)
                 .endDt(now.plusDays(30))
                 .modDt(now)

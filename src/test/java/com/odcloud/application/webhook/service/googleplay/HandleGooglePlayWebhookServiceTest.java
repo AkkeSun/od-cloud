@@ -442,7 +442,6 @@ class HandleGooglePlayWebhookServiceTest {
             .voucherType(voucherType)
             .status(VoucherStatus.ACTIVE)
             .accountId(1L)
-            .groupId(groupId)
             .startAt(LocalDateTime.now())
             .endDt(LocalDateTime.now().plusDays(30))
             .regDt(LocalDateTime.now())

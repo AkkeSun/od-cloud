@@ -80,8 +80,8 @@ public class Group {
         this.modDt = LocalDateTime.now();
     }
 
-    public void increaseStorageTotal(long size) {
-        this.storageTotal = this.storageTotal + size;
+    public void updateStorageTotal(long size) {
+        this.storageTotal = size;
         this.modDt = LocalDateTime.now();
     }
 

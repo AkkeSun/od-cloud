@@ -43,9 +43,6 @@ class VoucherEntity {
     @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "group_id")
-    private Long groupId;
-
     @Column(name = "memo")
     private String memo;
 

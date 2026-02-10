@@ -23,7 +23,6 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
             .voucherType(voucher.getVoucherType())
             .status(voucher.getStatus())
             .accountId(voucher.getAccountId())
-            .groupId(voucher.getGroupId())
             .memo(voucher.getMemo())
             .startAt(voucher.getStartAt())
             .endDt(voucher.getEndDt())
@@ -58,15 +57,6 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
     }
 
     @Override
-    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
-        return database.stream()
-            .filter(v -> v.getStatus() == VoucherStatus.ACTIVE)
-            .filter(v -> (v.getAccountId() != null && v.getAccountId().equals(accountId))
-                || (v.getGroupId() != null && groupIds.contains(v.getGroupId())))
-            .toList();
-    }
-
-    @Override
     public Voucher findByPaymentId(Long paymentId) {
         return database.stream()
             .filter(v -> v.getPaymentId() != null && v.getPaymentId().equals(paymentId))
@@ -81,5 +71,10 @@ public class FakeVoucherStoragePort implements VoucherStoragePort {
             .filter(v -> v.getEndDt() != null && v.getEndDt().isBefore(now))
             .filter(v -> v.getStatus() != VoucherStatus.EXPIRED)
             .toList();
+    }
+
+    @Override
+    public List<Voucher> findActiveByAccountId(Long accountId) {
+        return List.of();
     }
 }

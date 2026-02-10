@@ -45,8 +45,7 @@ class ReissueTokenService implements ReissueTokenUseCase {
 
         Account account = accountStoragePort.findByEmail(email);
 
-        List<Voucher> vouchers = voucherStoragePort.findActiveByAccountIdOrGroupIds(
-            account.getId(), account.getGroupIds());
+        List<Voucher> vouchers = voucherStoragePort.findActiveByAccountId(account.getId());
         account.updateVouchers(vouchers);
 
         String newRefreshToken = jwtUtil.createRefreshToken(account);

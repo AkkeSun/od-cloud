@@ -87,7 +87,6 @@ class CreateVoucherServiceTest {
             Voucher voucher = voucherStoragePort.database.get(0);
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(voucher.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
-            assertThat(voucher.getGroupId()).isEqualTo(10L);
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());
 
@@ -168,7 +167,6 @@ class CreateVoucherServiceTest {
             assertThat(voucherStoragePort.database).hasSize(1);
             Voucher voucher = voucherStoragePort.database.get(0);
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
-            assertThat(voucher.getGroupId()).isNull();
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());
         }

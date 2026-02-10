@@ -34,11 +34,6 @@ class VoucherStorageAdapter implements VoucherStoragePort {
     }
 
     @Override
-    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
-        return repository.findActiveByAccountIdOrGroupIds(accountId, groupIds);
-    }
-
-    @Override
     public Voucher findByPaymentId(Long paymentId) {
         return repository.findByPaymentId(paymentId).orElseThrow(
             () -> new CustomBusinessException(Business_NOT_FOUND_VOUCHER));
@@ -47,5 +42,10 @@ class VoucherStorageAdapter implements VoucherStoragePort {
     @Override
     public List<Voucher> findExpiredActiveVouchers() {
         return repository.findExpiredActiveVouchers();
+    }
+
+    @Override
+    public List<Voucher> findActiveByAccountId(Long accountId) {
+        return repository.findActiveByAccountId(accountId);
     }
 }

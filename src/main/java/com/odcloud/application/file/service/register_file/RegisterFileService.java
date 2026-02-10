@@ -1,7 +1,9 @@
 package com.odcloud.application.file.service.register_file;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_STORAGE_LIMIT_EXCEEDED;
 
+import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.RegisterFileUseCase;
 import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
@@ -29,37 +31,46 @@ class RegisterFileService implements RegisterFileUseCase {
     private final FileInfoStoragePort fileStoragePort;
     private final FolderInfoStoragePort folderStoragePort;
     private final GroupStoragePort groupStoragePort;
+    private final RedisStoragePort redisStoragePort;
 
     @Override
     @Transactional
     public RegisterFileServiceResponse register(RegisterFileCommand command) {
         FolderInfo folder = folderStoragePort.findById(command.folderId());
 
-        long totalFileSize = 0;
-        for (MultipartFile multipartFile : command.files()) {
-            totalFileSize += multipartFile.getSize();
-        }
-
-        Group group = groupStoragePort.findById(folder.getGroupId());
-        if (!group.canUpload(totalFileSize)) {
-            throw new CustomBusinessException(Business_STORAGE_LIMIT_EXCEEDED);
-        }
-
-        for (MultipartFile multipartFile : command.files()) {
-            FileInfo file = FileInfo.create(constant.fileUpload().diskPath(),
-                folder, multipartFile);
-            int fileNumber = 1;
-            while (fileStoragePort.existsByFolderIdAndName(command.folderId(),
-                file.getFileName())) {
-                file.addFileNameNumber(++fileNumber);
+        long totalFileSize = command.files().stream().mapToLong(MultipartFile::getSize).sum();
+        redisStoragePort.executeWithLock(GROUP_LOCK + folder.getGroupId(), () -> {
+            Group group = groupStoragePort.findById(folder.getGroupId());
+            if (!group.canUpload(totalFileSize)) {
+                throw new CustomBusinessException(Business_STORAGE_LIMIT_EXCEEDED);
             }
+            group.increaseStorageUsed(totalFileSize);
+            groupStoragePort.save(group);
+            return null;
+        });
 
-            fileStoragePort.save(file);
-            filePort.uploadFile(file);
+        try {
+            for (MultipartFile multipartFile : command.files()) {
+                FileInfo file = FileInfo.create(constant.fileUpload().diskPath(),
+                    folder, multipartFile);
+                int fileNumber = 1;
+                while (fileStoragePort.existsByFolderIdAndName(command.folderId(),
+                    file.getFileName())) {
+                    file.addFileNameNumber(++fileNumber);
+                }
+
+                fileStoragePort.save(file);
+                filePort.uploadFile(file);
+            }
+        } catch (Exception e) {
+            redisStoragePort.executeWithLock(GROUP_LOCK + folder.getGroupId(), () -> {
+                Group group = groupStoragePort.findById(folder.getGroupId());
+                group.decreaseStorageUsed(totalFileSize);
+                groupStoragePort.save(group);
+                return null;
+            });
+            throw e;
         }
-
-        group.increaseStorageUsed(totalFileSize);
-        groupStoragePort.save(group);
 
         return RegisterFileServiceResponse.ofSuccess();
     }

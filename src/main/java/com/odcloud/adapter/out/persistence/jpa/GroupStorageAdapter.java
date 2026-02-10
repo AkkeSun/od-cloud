@@ -48,6 +48,11 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public List<Group> findByOwnerId(Long ownerId) {
+        return queryDsl.findByOwnerId(ownerId);
+    }
+
+    @Override
     public List<GroupAccount> findGroupAccountsByGroupId(Long groupId) {
         return queryDsl.findGroupAccountsByGroupId(groupId);
     }
@@ -90,5 +95,15 @@ class GroupStorageAdapter implements GroupStoragePort {
     @Override
     public void deleteGroupAccountById(Long id) {
         queryDsl.deleteGroupAccountById(id);
+    }
+
+    @Override
+    public void updateStorageTotal(Group group) {
+        queryDsl.updateStorageTotal(group);
+    }
+
+    @Override
+    public void updateStorageUsed(Group group) {
+        queryDsl.updateStorageUsed(group);
     }
 }

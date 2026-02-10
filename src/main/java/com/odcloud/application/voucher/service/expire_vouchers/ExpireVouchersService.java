@@ -24,8 +24,9 @@ class ExpireVouchersService implements ExpireVouchersUseCase {
         for (Voucher voucher : expiredVouchers) {
             voucher.expire();
             voucherStoragePort.update(voucher);
-            log.info("Voucher expired: id={}, type={}, accountId={}, groupId={}",
-                voucher.getId(), voucher.getVoucherType(), voucher.getAccountId(), voucher.getGroupId());
+            log.info("Voucher expired: id={}, type={}, accountId={}",
+                voucher.getId(), voucher.getVoucherType(), voucher.getAccountId());
+            // todo: 스토리지 바우처의 경우 용량 수정
         }
 
         return expiredVouchers.size();

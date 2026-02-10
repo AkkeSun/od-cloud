@@ -5,16 +5,12 @@ import lombok.Builder;
 
 @Builder
 record UpdateGroupResponse(
-    Boolean result,
-    String ownerEmail,
-    String name
+    Boolean result
 ) {
 
     static UpdateGroupResponse of(UpdateGroupServiceResponse serviceResponse) {
         return UpdateGroupResponse.builder()
             .result(serviceResponse.result())
-            .ownerEmail(serviceResponse.ownerEmail())
-            .name(serviceResponse.name())
             .build();
     }
 }

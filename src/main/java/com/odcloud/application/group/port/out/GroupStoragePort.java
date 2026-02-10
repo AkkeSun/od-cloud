@@ -18,6 +18,8 @@ public interface GroupStoragePort {
 
     List<Group> findByKeyword(String keyword);
 
+    List<Group> findByOwnerId(Long ownerId);
+
     List<GroupAccount> findGroupAccountsByGroupId(Long groupId);
 
     List<GroupAccount> findGroupAccountsByAccountId(Long accountId);
@@ -33,4 +35,9 @@ public interface GroupStoragePort {
     void deleteGroupAccountsByGroupId(Long groupId);
 
     void deleteGroupAccountById(Long id);
+
+    void updateStorageTotal(Group group);
+
+    void updateStorageUsed(Group group);
+
 }

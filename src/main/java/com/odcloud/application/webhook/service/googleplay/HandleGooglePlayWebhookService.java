@@ -1,5 +1,8 @@
 package com.odcloud.application.webhook.service.googleplay;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
+
+import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.voucher.port.out.PaymentStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
@@ -24,6 +27,7 @@ class HandleGooglePlayWebhookService implements HandleGooglePlayWebhookUseCase {
     private final PaymentStoragePort paymentStoragePort;
     private final VoucherStoragePort voucherStoragePort;
     private final GroupStoragePort groupStoragePort;
+    private final RedisStoragePort redisStoragePort;
 
     @Override
     @Transactional
@@ -84,9 +88,15 @@ class HandleGooglePlayWebhookService implements HandleGooglePlayWebhookUseCase {
         voucherStoragePort.update(voucher);
 
         if (voucher.getVoucherType().isStorageVoucher()) {
-            Group group = groupStoragePort.findById(voucher.getGroupId());
-            group.decreaseStorageTotal(voucher.getVoucherType().getStorageIncreaseSize());
-            groupStoragePort.save(group);
+            for (Group group : groupStoragePort.findByOwnerId(voucher.getAccountId())) {
+                redisStoragePort.executeWithLock(GROUP_LOCK + group.getId(), () -> {
+                    Group lockedGroup = groupStoragePort.findById(group.getId());
+                    lockedGroup.decreaseStorageTotal(
+                        voucher.getVoucherType().getStorageIncreaseSize());
+                    groupStoragePort.updateStorageTotal(lockedGroup);
+                    return null;
+                });
+            }
         }
 
         log.info("Voucher revoked: voucherId={}", voucher.getId());

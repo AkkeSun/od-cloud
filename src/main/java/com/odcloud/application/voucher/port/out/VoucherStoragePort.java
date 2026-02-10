@@ -10,10 +10,10 @@ public interface VoucherStoragePort {
     void update(Voucher voucher);
 
     Voucher findById(Long id);
-
-    List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds);
-
+    
     Voucher findByPaymentId(Long paymentId);
 
     List<Voucher> findExpiredActiveVouchers();
+
+    List<Voucher> findActiveByAccountId(Long accountId);
 }
