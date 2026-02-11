@@ -32,8 +32,7 @@ class IssueTokenService implements IssueTokenUseCase {
         GoogleUserInfoResponse userInfo = googleOAuth2Port.getUserInfo(googleAuthorization);
         Account account = accountStoragePort.findByEmail(userInfo.email());
 
-        List<Voucher> vouchers = voucherStoragePort.findActiveByAccountIdOrGroupIds(
-            account.getId(), account.getGroupIds());
+        List<Voucher> vouchers = voucherStoragePort.findActiveByAccountId(account.getId());
         account.updateVouchers(vouchers);
 
         String accessToken = jwtUtil.createAccessToken(account);
