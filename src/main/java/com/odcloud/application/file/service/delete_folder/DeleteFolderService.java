@@ -1,5 +1,8 @@
 package com.odcloud.application.file.service.delete_folder;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
+
+import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.DeleteFolderUseCase;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
@@ -24,6 +27,7 @@ class DeleteFolderService implements DeleteFolderUseCase {
     private final GroupStoragePort groupStoragePort;
     private final FileInfoStoragePort fileInfoStoragePort;
     private final FolderInfoStoragePort folderInfoStoragePort;
+    private final RedisStoragePort redisStoragePort;
 
     @Override
     @Transactional
@@ -35,9 +39,12 @@ class DeleteFolderService implements DeleteFolderUseCase {
 
         long deletedStorageSize = deleteFolderRecursively(folder, 0);
         if (deletedStorageSize > 0) {
-            Group group = groupStoragePort.findById(folder.getGroupId());
-            group.increaseStorageTotal(deletedStorageSize);
-            groupStoragePort.save(group);
+            redisStoragePort.executeWithLock(GROUP_LOCK + folder.getGroupId(), () -> {
+                Group group = groupStoragePort.findById(folder.getGroupId());
+                group.decreaseStorageUsed(deletedStorageSize);
+                groupStoragePort.updateStorageUsed(group);
+                return null;
+            });
         }
 
         return DeleteFolderServiceResponse.ofSuccess();
@@ -46,7 +53,7 @@ class DeleteFolderService implements DeleteFolderUseCase {
     private long deleteFolderRecursively(FolderInfo folder, long deletedStorageSize) {
         List<FolderInfo> childFolders = folderInfoStoragePort.findByParentId(folder.getId());
         for (FolderInfo childFolder : childFolders) {
-            deleteFolderRecursively(childFolder, deletedStorageSize);
+            deletedStorageSize = deleteFolderRecursively(childFolder, deletedStorageSize);
         }
 
         List<FileInfo> files = fileInfoStoragePort.findByFolderId(folder.getId());

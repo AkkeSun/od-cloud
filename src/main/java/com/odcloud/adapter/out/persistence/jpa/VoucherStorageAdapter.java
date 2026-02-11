@@ -34,8 +34,8 @@ class VoucherStorageAdapter implements VoucherStoragePort {
     }
 
     @Override
-    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
-        return repository.findActiveByAccountIdOrGroupIds(accountId, groupIds);
+    public List<Voucher> findActiveByAccountId(Long accountId) {
+        return repository.findActiveByAccountId(accountId);
     }
 
     @Override

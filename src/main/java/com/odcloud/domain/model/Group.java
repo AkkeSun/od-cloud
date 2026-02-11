@@ -1,5 +1,7 @@
 package com.odcloud.domain.model;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
+
 import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +47,7 @@ public class Group {
             .name(command.name())
             .ownerEmail(command.ownerEmail())
             .storageUsed(0L)
-            .storageTotal(3221225472L)
+            .storageTotal(DEFAULT_STORAGE_TOTAL)
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -55,7 +57,7 @@ public class Group {
             .name(name)
             .ownerEmail(ownerEmail)
             .storageUsed(0L)
-            .storageTotal(3221225472L)
+            .storageTotal(DEFAULT_STORAGE_TOTAL)
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -80,13 +82,8 @@ public class Group {
         this.modDt = LocalDateTime.now();
     }
 
-    public void increaseStorageTotal(long size) {
-        this.storageTotal = this.storageTotal + size;
-        this.modDt = LocalDateTime.now();
-    }
-
-    public void decreaseStorageTotal(long size) {
-        this.storageTotal = Math.max(3221225472L, this.storageTotal - size);
+    public void updateStorageTotal(long size) {
+        this.storageTotal = size;
         this.modDt = LocalDateTime.now();
     }
 

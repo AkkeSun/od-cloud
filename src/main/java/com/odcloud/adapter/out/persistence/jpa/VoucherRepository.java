@@ -4,7 +4,6 @@ import static com.odcloud.adapter.out.persistence.jpa.QVoucherEntity.voucherEnti
 
 import com.odcloud.domain.model.Voucher;
 import com.odcloud.domain.model.VoucherStatus;
-import com.odcloud.domain.model.VoucherType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -49,35 +48,6 @@ class VoucherRepository {
         return Optional.ofNullable(entity).map(this::toDomain);
     }
 
-    public Optional<Voucher> findForSubscription(
-        Long groupId, VoucherType voucherType, Long accountId
-    ) {
-        VoucherEntity entity = queryFactory
-            .selectFrom(voucherEntity)
-            .where(
-                voucherEntity.groupId.eq(groupId),
-                voucherEntity.voucherType.eq(voucherType),
-                voucherEntity.accountId.eq(accountId),
-                voucherEntity.status.eq(VoucherStatus.ACTIVE)
-            )
-            .fetchOne();
-
-        return Optional.ofNullable(entity).map(this::toDomain);
-    }
-
-    public List<Voucher> findActiveByAccountIdOrGroupIds(Long accountId, List<Long> groupIds) {
-        return queryFactory
-            .selectFrom(voucherEntity)
-            .where(
-                voucherEntity.status.eq(VoucherStatus.ACTIVE),
-                voucherEntity.accountId.eq(accountId).or(voucherEntity.groupId.in(groupIds))
-            )
-            .fetch()
-            .stream()
-            .map(this::toDomain)
-            .toList();
-    }
-
     public Optional<Voucher> findByPaymentId(Long paymentId) {
         VoucherEntity entity = queryFactory
             .selectFrom(voucherEntity)
@@ -100,6 +70,17 @@ class VoucherRepository {
             .toList();
     }
 
+    public List<Voucher> findActiveByAccountId(Long accountId) {
+        return queryFactory
+            .selectFrom(voucherEntity)
+            .where(voucherEntity.accountId.eq(accountId),
+                voucherEntity.status.eq(VoucherStatus.ACTIVE))
+            .fetch()
+            .stream()
+            .map(this::toDomain)
+            .toList();
+    }
+
     private VoucherEntity toEntity(Voucher voucher) {
         return VoucherEntity.builder()
             .id(voucher.getId())
@@ -107,7 +88,6 @@ class VoucherRepository {
             .voucherType(voucher.getVoucherType())
             .status(voucher.getStatus())
             .accountId(voucher.getAccountId())
-            .groupId(voucher.getGroupId())
             .memo(voucher.getMemo())
             .startAt(voucher.getStartAt())
             .endDt(voucher.getEndDt())
@@ -123,7 +103,6 @@ class VoucherRepository {
             .voucherType(entity.getVoucherType())
             .status(entity.getStatus())
             .accountId(entity.getAccountId())
-            .groupId(entity.getGroupId())
             .memo(entity.getMemo())
             .startAt(entity.getStartAt())
             .endDt(entity.getEndDt())

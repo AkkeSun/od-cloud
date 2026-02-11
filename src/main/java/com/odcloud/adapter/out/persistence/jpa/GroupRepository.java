@@ -292,17 +292,21 @@ class GroupRepository {
             .execute();
     }
 
-    List<Group> findByOwnerEmail(String ownerEmail) {
+    public List<Group> findByOwnerId(Long ownerId) {
         return queryFactory
             .select(Projections.constructor(
                 Group.class,
                 groupEntity.id,
                 groupEntity.ownerEmail,
                 groupEntity.name,
+                groupEntity.storageUsed,
+                groupEntity.storageTotal,
                 groupEntity.regDt
             ))
             .from(groupEntity)
-            .where(groupEntity.ownerEmail.eq(ownerEmail))
+            .innerJoin(accountEntity)
+            .on(groupEntity.ownerEmail.eq(accountEntity.email))
+            .where(accountEntity.id.eq(ownerId))
             .fetch();
     }
 
@@ -311,6 +315,24 @@ class GroupRepository {
         queryFactory
             .delete(groupAccountEntity)
             .where(groupAccountEntity.id.eq(id))
+            .execute();
+    }
+
+    @Transactional
+    public void updateStorageTotal(Group group) {
+        queryFactory.update(groupEntity)
+            .set(groupEntity.storageTotal, group.getStorageTotal())
+            .set(groupEntity.modDt, group.getModDt())
+            .where(groupEntity.id.eq(group.getId()))
+            .execute();
+    }
+
+    @Transactional
+    public void updateStorageUsed(Group group) {
+        queryFactory.update(groupEntity)
+            .set(groupEntity.storageUsed, group.getStorageUsed())
+            .set(groupEntity.modDt, group.getModDt())
+            .where(groupEntity.id.eq(group.getId()))
             .execute();
     }
 }
