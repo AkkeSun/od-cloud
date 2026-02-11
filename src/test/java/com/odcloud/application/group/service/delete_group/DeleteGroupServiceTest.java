@@ -2,6 +2,7 @@ package com.odcloud.application.group.service.delete_group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
 import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
 import com.odcloud.domain.model.FileInfo;
@@ -63,7 +64,7 @@ class DeleteGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group);
@@ -88,7 +89,7 @@ class DeleteGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group);
@@ -186,7 +187,7 @@ class DeleteGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group);
@@ -230,7 +231,7 @@ class DeleteGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group);

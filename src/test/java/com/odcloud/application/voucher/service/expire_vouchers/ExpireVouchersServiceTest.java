@@ -1,10 +1,14 @@
 package com.odcloud.application.voucher.service.expire_vouchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
+import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Voucher;
 import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +20,15 @@ class ExpireVouchersServiceTest {
 
     private ExpireVouchersService service;
     private FakeVoucherStoragePort voucherStoragePort;
+    private FakeGroupStoragePort groupStoragePort;
+    private FakeRedisStoragePort redisStoragePort;
 
     @BeforeEach
     void setUp() {
         voucherStoragePort = new FakeVoucherStoragePort();
-        service = new ExpireVouchersService(voucherStoragePort);
+        groupStoragePort = new FakeGroupStoragePort();
+        redisStoragePort = new FakeRedisStoragePort();
+        service = new ExpireVouchersService(voucherStoragePort, groupStoragePort, redisStoragePort);
     }
 
     @Nested
@@ -38,7 +46,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(31))
                 .endDt(now.minusDays(1))
                 .regDt(now.minusDays(31))
@@ -67,7 +74,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(31))
                 .endDt(now.minusDays(1))
                 .regDt(now.minusDays(31))
@@ -79,7 +85,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(2L)
-                .groupId(20L)
                 .startAt(now.minusDays(60))
                 .endDt(now.minusDays(30))
                 .regDt(now.minusDays(60))
@@ -91,7 +96,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.ADVERTISE_30)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(3L)
-                .groupId(null)
                 .startAt(now.minusDays(35))
                 .endDt(now.minusDays(5))
                 .regDt(now.minusDays(35))
@@ -122,7 +126,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(10))
                 .endDt(now.plusDays(20))
                 .regDt(now.minusDays(10))
@@ -149,7 +152,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.EXPIRED)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(60))
                 .endDt(now.minusDays(30))
                 .modDt(now.minusDays(30))
@@ -175,7 +177,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.REVOKED)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(31))
                 .endDt(now.minusDays(1))
                 .regDt(now.minusDays(31))
@@ -204,6 +205,43 @@ class ExpireVouchersServiceTest {
         }
 
         @Test
+        @DisplayName("[success] 스토리지 바우처 만료 시 소유 그룹의 storageTotal을 감소시킨다")
+        void success_decreaseStorageTotalOnStorageVoucherExpiry() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            long storageBasicSize = VoucherType.STORAGE_BASIC.getStorageIncreaseSize();
+
+            Group group = Group.builder()
+                .id(1L)
+                .name("testGroup")
+                .ownerEmail("owner@test.com")
+                .storageUsed(0L)
+                .storageTotal(storageBasicSize)
+                .regDt(now)
+                .build();
+            groupStoragePort.groupDatabase.add(group);
+
+            Voucher expiredStorageVoucher = Voucher.builder()
+                .id(1L)
+                .paymentId(100L)
+                .voucherType(VoucherType.STORAGE_BASIC)
+                .status(VoucherStatus.ACTIVE)
+                .accountId(1L)
+                .startAt(now.minusDays(31))
+                .endDt(now.minusDays(1))
+                .regDt(now.minusDays(31))
+                .build();
+            voucherStoragePort.database.add(expiredStorageVoucher);
+
+            // when
+            service.expireVouchers();
+
+            // then
+            Group updatedGroup = groupStoragePort.findById(1L);
+            assertThat(updatedGroup.getStorageTotal()).isEqualTo(DEFAULT_STORAGE_TOTAL);
+        }
+
+        @Test
         @DisplayName("[success] 만료된 바우처와 유효한 바우처가 섞여있으면 만료된 것만 처리한다")
         void success_mixedVouchers() {
             // given
@@ -215,7 +253,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_BASIC)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(1L)
-                .groupId(10L)
                 .startAt(now.minusDays(31))
                 .endDt(now.minusDays(1))
                 .regDt(now.minusDays(31))
@@ -227,7 +264,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.STORAGE_PLUS)
                 .status(VoucherStatus.ACTIVE)
                 .accountId(2L)
-                .groupId(20L)
                 .startAt(now.minusDays(10))
                 .endDt(now.plusDays(20))
                 .regDt(now.minusDays(10))
@@ -239,7 +275,6 @@ class ExpireVouchersServiceTest {
                 .voucherType(VoucherType.ADVERTISE_30)
                 .status(VoucherStatus.EXPIRED)
                 .accountId(3L)
-                .groupId(null)
                 .startAt(now.minusDays(60))
                 .endDt(now.minusDays(30))
                 .modDt(now.minusDays(30))

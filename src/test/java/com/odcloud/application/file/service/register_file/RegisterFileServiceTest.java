@@ -1,5 +1,6 @@
 package com.odcloud.application.file.service.register_file;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -10,6 +11,7 @@ import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.List;
@@ -44,7 +46,8 @@ class RegisterFileServiceTest {
             profileConstant,
             fakeFileStoragePort,
             fakeFolderStoragePort,
-            fakeGroupStoragePort
+            fakeGroupStoragePort,
+            new FakeRedisStoragePort()
         );
     }
 
@@ -60,7 +63,7 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .name("Test Group")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -105,7 +108,7 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .name("Test Group")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -192,7 +195,7 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .name("Test Group")
                 .storageUsed(3221225400L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -232,7 +235,7 @@ class RegisterFileServiceTest {
                 .id(1L)
                 .name("Test Group")
                 .storageUsed(1000L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 

@@ -1,5 +1,6 @@
 package com.odcloud.application.group.service.update_group;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -11,6 +12,8 @@ import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
+import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
@@ -25,6 +28,7 @@ class UpdateGroupServiceTest {
     private FakeGroupStoragePort fakeGroupStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
+    private FakeVoucherStoragePort fakeVoucherStoragePort;
     private UpdateGroupService updateGroupService;
 
     @BeforeEach
@@ -32,10 +36,13 @@ class UpdateGroupServiceTest {
         fakeGroupStoragePort = new FakeGroupStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
+        fakeVoucherStoragePort = new FakeVoucherStoragePort();
         updateGroupService = new UpdateGroupService(
             fakeGroupStoragePort,
             fakeAccountStoragePort,
-            fakeFolderStoragePort
+            fakeFolderStoragePort,
+            fakeVoucherStoragePort,
+            new FakeRedisStoragePort()
         );
     }
 
@@ -52,7 +59,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -85,7 +92,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -118,7 +125,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -170,7 +177,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -202,8 +209,6 @@ class UpdateGroupServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
-            assertThat(response.ownerEmail()).isEqualTo("newowner@example.com");
-            assertThat(response.name()).isEqualTo("Test Group");
 
             Group updatedGroup = fakeGroupStoragePort.findById(1L);
             assertThat(updatedGroup.getOwnerEmail()).isEqualTo("newowner@example.com");
@@ -228,7 +233,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -271,7 +276,6 @@ class UpdateGroupServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
-            assertThat(response.ownerEmail()).isEqualTo("newowner@example.com");
 
             // GroupAccount가 중복으로 추가되지 않았는지 확인 (기존 1개만 유지)
             assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
@@ -288,7 +292,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -328,7 +332,7 @@ class UpdateGroupServiceTest {
                 .name("Old Group Name")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -361,8 +365,6 @@ class UpdateGroupServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
-            assertThat(response.name()).isEqualTo("New Group Name");
-            assertThat(response.ownerEmail()).isEqualTo("owner@example.com");
 
             Group updatedGroup = fakeGroupStoragePort.findById(1L);
             assertThat(updatedGroup.getName()).isEqualTo("New Group Name");
@@ -382,7 +384,7 @@ class UpdateGroupServiceTest {
                 .name("Old Group Name")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -425,8 +427,6 @@ class UpdateGroupServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
-            assertThat(response.ownerEmail()).isEqualTo("newowner@example.com");
-            assertThat(response.name()).isEqualTo("New Group Name");
 
             Group updatedGroup = fakeGroupStoragePort.findById(1L);
             assertThat(updatedGroup.getOwnerEmail()).isEqualTo("newowner@example.com");
@@ -454,7 +454,7 @@ class UpdateGroupServiceTest {
                 .name("Test Group")
                 .ownerEmail("owner@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
@@ -476,8 +476,6 @@ class UpdateGroupServiceTest {
 
             // then
             assertThat(response.result()).isTrue();
-            assertThat(response.ownerEmail()).isEqualTo("owner@example.com");
-            assertThat(response.name()).isEqualTo("Test Group");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.odcloud.application.file.service.delete_file;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.file.port.in.command.DeleteFileCommand;
@@ -11,6 +12,7 @@ import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +34,9 @@ class DeleteFileServiceTest {
         deleteFileService = new DeleteFileService(
             new FakeFilePort(),
             fakeFileStoragePort,
-            fakeGroupStoragePort
+            fakeGroupStoragePort,
+            new FakeRedisStoragePort()
+
         );
     }
 
@@ -163,7 +167,7 @@ class DeleteFileServiceTest {
                 .id(groupId)
                 .name("Test Group")
                 .storageUsed(1000L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
@@ -215,7 +219,7 @@ class DeleteFileServiceTest {
                 .id(groupId)
                 .name("Test Group")
                 .storageUsed(1500L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
             fakeGroupStoragePort.groupDatabase.add(group);
 

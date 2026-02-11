@@ -1,5 +1,6 @@
 package com.odcloud.application.webhook.service.googleplay;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,6 +15,7 @@ import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -38,7 +40,9 @@ class HandleGooglePlayWebhookServiceTest {
         service = new HandleGooglePlayWebhookService(
             paymentStoragePort,
             voucherStoragePort,
-            groupStoragePort
+            groupStoragePort,
+            new FakeRedisStoragePort()
+
         );
     }
 
@@ -273,7 +277,8 @@ class HandleGooglePlayWebhookServiceTest {
                     .name("Test Group")
                     .ownerEmail("owner@test.com")
                     .storageUsed(50L * 1024 * 1024 * 1024)
-                    .storageTotal(103221225472L + VoucherType.STORAGE_BASIC.getStorageIncreaseSize())
+                    .storageTotal(
+                        DEFAULT_STORAGE_TOTAL + VoucherType.STORAGE_BASIC.getStorageIncreaseSize())
                     .regDt(LocalDateTime.now())
                     .build();
                 groupStoragePort.save(group);
@@ -317,7 +322,7 @@ class HandleGooglePlayWebhookServiceTest {
                     .name("Advertise Group")
                     .ownerEmail("ad@test.com")
                     .storageUsed(0L)
-                    .storageTotal(3221225472L)
+                    .storageTotal(DEFAULT_STORAGE_TOTAL)
                     .regDt(LocalDateTime.now())
                     .build();
                 groupStoragePort.save(group);
@@ -442,7 +447,6 @@ class HandleGooglePlayWebhookServiceTest {
             .voucherType(voucherType)
             .status(VoucherStatus.ACTIVE)
             .accountId(1L)
-            .groupId(groupId)
             .startAt(LocalDateTime.now())
             .endDt(LocalDateTime.now().plusDays(30))
             .regDt(LocalDateTime.now())

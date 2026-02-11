@@ -1,6 +1,7 @@
 package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
 import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ class GroupTest {
             assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(group.getName()).isEqualTo("테스트 그룹");
             assertThat(group.getStorageUsed()).isEqualTo(0L);
-            assertThat(group.getStorageTotal()).isEqualTo(3221225472L);
+            assertThat(group.getStorageTotal()).isEqualTo(DEFAULT_STORAGE_TOTAL);
             assertThat(group.getRegDt()).isAfter(before);
             assertThat(group.getRegDt()).isBefore(after);
         }
@@ -393,7 +394,7 @@ class GroupTest {
             Group group = Group.builder()
                 .id(123L)
                 .storageUsed(1000L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
 
             // when
@@ -410,7 +411,7 @@ class GroupTest {
             Group group = Group.builder()
                 .id(123L)
                 .storageUsed(3221225000L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
 
             // when
@@ -427,7 +428,7 @@ class GroupTest {
             Group group = Group.builder()
                 .id(123L)
                 .storageUsed(3221225000L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .build();
 
             // when

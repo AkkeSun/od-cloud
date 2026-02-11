@@ -138,4 +138,33 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     public void deleteGroupAccountById(Long id) {
 
     }
+
+    @Override
+    public List<Group> findByOwnerId(Long ownerId) {
+        return groupDatabase.stream()
+            .filter(group -> group.getOwnerEmail() != null)
+            .toList();
+    }
+
+    @Override
+    public void updateStorageTotal(Group group) {
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            if (groupDatabase.get(i).getId() != null &&
+                groupDatabase.get(i).getId().equals(group.getId())) {
+                groupDatabase.set(i, group);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void updateStorageUsed(Group group) {
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            if (groupDatabase.get(i).getId() != null &&
+                groupDatabase.get(i).getId().equals(group.getId())) {
+                groupDatabase.set(i, group);
+                break;
+            }
+        }
+    }
 }

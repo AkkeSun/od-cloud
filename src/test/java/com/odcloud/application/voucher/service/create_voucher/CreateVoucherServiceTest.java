@@ -1,5 +1,6 @@
 package com.odcloud.application.voucher.service.create_voucher;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
@@ -12,6 +13,7 @@ import com.odcloud.domain.model.VoucherStatus;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,8 @@ class CreateVoucherServiceTest {
         service = new CreateVoucherService(
             paymentStoragePort,
             voucherStoragePort,
-            groupStoragePort
+            groupStoragePort,
+            new FakeRedisStoragePort()
         );
     }
 
@@ -52,7 +55,7 @@ class CreateVoucherServiceTest {
                 .name("Test Group")
                 .ownerEmail("test@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L) // 3GB
+                .storageTotal(DEFAULT_STORAGE_TOTAL) // 3GB
                 .regDt(now)
                 .build();
             groupStoragePort.save(group);
@@ -87,13 +90,12 @@ class CreateVoucherServiceTest {
             Voucher voucher = voucherStoragePort.database.get(0);
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
             assertThat(voucher.getStatus()).isEqualTo(VoucherStatus.ACTIVE);
-            assertThat(voucher.getGroupId()).isEqualTo(10L);
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());
 
-            // Verify group storage increased by 300GB
+            // Verify group storage updated to 300GB
             Group updatedGroup = groupStoragePort.findById(10L);
-            long expectedTotal = 3221225472L + (300L * 1024 * 1024 * 1024);
+            long expectedTotal = 300L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -106,7 +108,7 @@ class CreateVoucherServiceTest {
                 .id(20L)
                 .name("Test Group 2")
                 .ownerEmail("test@example.com")
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(now)
                 .build();
             groupStoragePort.save(group);
@@ -135,9 +137,9 @@ class CreateVoucherServiceTest {
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
             assertThat(voucher.getEndDt()).isNotNull(); // STORAGE_BASIC has 30 days duration
 
-            // Verify group storage increased by 100GB
+            // Verify group storage updated to 100GB
             Group updatedGroup = groupStoragePort.findById(20L);
-            long expectedTotal = 3221225472L + (100L * 1024 * 1024 * 1024);
+            long expectedTotal = 100L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -168,7 +170,6 @@ class CreateVoucherServiceTest {
             assertThat(voucherStoragePort.database).hasSize(1);
             Voucher voucher = voucherStoragePort.database.get(0);
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.ADVERTISE_30);
-            assertThat(voucher.getGroupId()).isNull();
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());
         }
@@ -182,7 +183,7 @@ class CreateVoucherServiceTest {
                 .id(30L)
                 .name("Test Group 3")
                 .ownerEmail("test@example.com")
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(now)
                 .build();
             groupStoragePort.save(group);
@@ -210,9 +211,9 @@ class CreateVoucherServiceTest {
             Voucher voucher = voucherStoragePort.database.get(0);
             assertThat(voucher.getVoucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
 
-            // Verify group storage increased by 100GB
+            // Verify group storage updated to 100GB
             Group updatedGroup = groupStoragePort.findById(30L);
-            long expectedTotal = 3221225472L + (100L * 1024 * 1024 * 1024);
+            long expectedTotal = 100L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -227,7 +228,7 @@ class CreateVoucherServiceTest {
                 .name("Group 1")
                 .ownerEmail("test@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(now)
                 .build();
             groupStoragePort.save(group1);
@@ -237,7 +238,7 @@ class CreateVoucherServiceTest {
                 .name("Group 2")
                 .ownerEmail("test@example.com")
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(now)
                 .build();
             groupStoragePort.save(group2);

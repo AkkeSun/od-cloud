@@ -4,7 +4,7 @@ info:
   description: 모이미즘 API 입니다.
   version: 0.0.1
 servers:
-- url: https://cloud.odlab.kr
+- url: https://moimism.odlab.kr
 tags: []
 paths:
   /accounts:
@@ -2566,9 +2566,7 @@ paths:
                       "httpStatus" : 200,
                       "message" : "OK",
                       "data" : {
-                        "result" : true,
-                        "ownerEmail" : "newowner@example.com",
-                        "name" : "New Group Name"
+                        "result" : true
                       }
                     }
                 '[그룹 수정 API] name만 변경 성공':
@@ -2577,9 +2575,7 @@ paths:
                       "httpStatus" : 200,
                       "message" : "OK",
                       "data" : {
-                        "result" : true,
-                        "ownerEmail" : "owner@example.com",
-                        "name" : "New Group Name"
+                        "result" : true
                       }
                     }
                 '[그룹 수정 API] ownerEmail만 변경 성공':
@@ -2588,9 +2584,7 @@ paths:
                       "httpStatus" : 200,
                       "message" : "OK",
                       "data" : {
-                        "result" : true,
-                        "ownerEmail" : "newowner@example.com",
-                        "name" : "Test Group"
+                        "result" : true
                       }
                     }
         "500":
@@ -3650,14 +3644,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-01-16T16:27:29.828495"
+                          "notificationDt" : "2026-02-11T11:23:24.233519"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-01-16T16:27:29.82851"
+                          "notificationDt" : "2026-02-11T11:23:24.233543"
                         } ]
                       }
                     }
@@ -4151,8 +4145,8 @@ paths:
       tags:
       - Voucher
       summary: 바우처 생성 API
-      description: "바우처를 생성하는 API 입니다. 스토리지 바우처(STORAGE_BASIC, STORAGE_PLUS, STORAGE_50,\
-        \ STORAGE_100)인 경우 groupId가 필수입니다."
+      description: "바우처를 생성하는 API 입니다. 스토리지 바우처(STORAGE_BASIC, STORAGE_PLUS)인 경우 groupId가\
+        \ 필수입니다."
       operationId: "[바우처 생성 API] "
       parameters:
       - name: Authorization
@@ -4179,16 +4173,6 @@ paths:
                     "groupId" : 10,
                     "memo" : "프리미엄 플랜 구매"
                   }
-              '[바우처 생성 API] success_storage_basic':
-                value: |-
-                  {
-                    "storeType" : "GOOGLE",
-                    "storeTxId" : "GOOGLE_TX_67890",
-                    "purchasedAt" : "20260109 11:00:00",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 20,
-                    "memo" : "베이직 플랜"
-                  }
               '[바우처 생성 API] storeTxId 미입력':
                 value: |-
                   {
@@ -4211,16 +4195,6 @@ paths:
                     "groupId" : 9999,
                     "memo" : null
                   }
-              '[바우처 생성 API] success_storage_100':
-                value: |-
-                  {
-                    "storeType" : "GOOGLE",
-                    "storeTxId" : "GOOGLE_TX_100GB",
-                    "purchasedAt" : "20260109 13:00:00",
-                    "voucherType" : "STORAGE_100",
-                    "groupId" : 40,
-                    "memo" : null
-                  }
               '[바우처 생성 API] voucherType 미입력':
                 value: |-
                   {
@@ -4231,16 +4205,6 @@ paths:
                     "voucherType" : null,
                     "groupId" : 10,
                     "memo" : null
-                  }
-              '[바우처 생성 API] success_advertise':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "storeTxId" : "APPLE_TX_AD",
-                    "purchasedAt" : "20260109 14:00:00",
-                    "voucherType" : "ADVERTISE",
-                    "groupId" : null,
-                    "memo" : "광고 제거"
                   }
               '[바우처 생성 API] purchasedAt 미입력':
                 value: |-
@@ -4257,10 +4221,10 @@ paths:
                 value: |-
                   {
                     "storeType" : "GOOGLE",
-                    "subscriptionKey" : "sub_50",
-                    "orderTxId" : "GOOGLE_TX_50",
+                    "subscriptionKey" : "sub_plus",
+                    "orderTxId" : "GOOGLE_TX_PLUS",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_50",
+                    "voucherType" : "STORAGE_PLUS",
                     "groupId" : null,
                     "memo" : null
                   }
@@ -4286,16 +4250,6 @@ paths:
                     "groupId" : 10,
                     "memo" : null
                   }
-              '[바우처 생성 API] success_storage_50':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "storeTxId" : "APPLE_TX_50GB",
-                    "purchasedAt" : "20260109 12:00:00",
-                    "voucherType" : "STORAGE_50",
-                    "groupId" : 30,
-                    "memo" : "50GB 플랜"
-                  }
       responses:
         "200":
           description: "200"
@@ -4305,42 +4259,6 @@ paths:
                 $ref: "#/components/schemas/[response] success"
               examples:
                 '[바우처 생성 API] success':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[바우처 생성 API] success_storage_basic':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[바우처 생성 API] success_storage_100':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[바우처 생성 API] success_advertise':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[바우처 생성 API] success_storage_50':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -4440,6 +4358,89 @@ paths:
                         "errorMessage" : "유효한 인증 토큰이 아닙니다"
                       }
                     }
+  /webhook/googleplay:
+    post:
+      tags:
+      - Webhook
+      summary: Google Play Webhook API - Error
+      description: 결제 정보 없음
+      operationId: "[Google Play Webhook API] "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] Google Play Webhook API"
+            examples:
+              '[Google Play Webhook API] 결제 정보 없음':
+                value: |-
+                  {
+                    "message" : {
+                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAidW5rbm93bl90b2tlbiIsInN1YnNjcmlwdGlvbklkIjogInN1YnNjcmlwdGlvbiJ9fQ==",
+                      "messageId" : "msg_1770776604736",
+                      "publishTime" : "2024-01-01T00:00:00Z"
+                    },
+                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
+                  }
+              '[Google Play Webhook API] success-refund':
+                value: |-
+                  {
+                    "message" : {
+                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDEyLCJwdXJjaGFzZVRva2VuIjogInJldm9rZWRfdG9rZW5fNDU2In19",
+                      "messageId" : "msg_1770776604728",
+                      "publishTime" : "2024-01-01T00:00:00Z"
+                    },
+                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
+                  }
+              '[Google Play Webhook API] success-voided':
+                value: |-
+                  {
+                    "message" : {
+                      "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInZvaWRlZFB1cmNoYXNlTm90aWZpY2F0aW9uIjogewogICAgICAgICJwdXJjaGFzZVRva2VuIjogInZvaWRlZF90b2tlbiIsCiAgICAgICAgIm9yZGVySWQiOiAiR1BBLjEyMzQtNTY3OC05MDEyIiwKICAgICAgICAicmVmdW5kVHlwZSI6IDEKICAgIH0KfQo=",
+                      "messageId" : "msg_1770776604746",
+                      "publishTime" : "2024-01-01T00:00:00Z"
+                    },
+                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
+                  }
+              '[Google Play Webhook API] success-renewal':
+                value: |-
+                  {
+                    "message" : {
+                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAicHVyY2hhc2VfdG9rZW5fMTIzIiwic3Vic2NyaXB0aW9uSWQiOiAibW9udGhseV9zdWJzY3JpcHRpb24ifX0=",
+                      "messageId" : "msg_1770776604714",
+                      "publishTime" : "2024-01-01T00:00:00Z"
+                    },
+                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
+                  }
+              '[Google Play Webhook API] success-test':
+                value: |-
+                  {
+                    "message" : {
+                      "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInRlc3ROb3RpZmljYXRpb24iOiB7CiAgICAgICAgInZlcnNpb24iOiAiMS4wIgogICAgfQp9Cg==",
+                      "messageId" : "msg_1770776604755",
+                      "publishTime" : "2024-01-01T00:00:00Z"
+                    },
+                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
+                  }
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[Google Play Webhook API] 결제 정보 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4027,
+                        "errorMessage" : "조회된 결제 정보가 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
 components:
   schemas:
     '[request] 계정 등록 API':
@@ -4475,20 +4476,12 @@ components:
       properties:
         data:
           required:
-          - name
-          - ownerEmail
           - result
           type: object
           properties:
             result:
               type: boolean
-              description: 수정 성공 여부
-            name:
-              type: string
-              description: 그룹명
-            ownerEmail:
-              type: string
-              description: 변경된 소유자 이메일
+              description: 상태 변경 성공 여부
           description: 응답 데이터
         httpStatus:
           type: number
@@ -4853,56 +4846,33 @@ components:
           type: string
           description: 디바이스 고유 ID
           nullable: true
-    '[request] 바우처 생성 API':
-      title: "[request] 바우처 생성 API"
+    '[request] Google Play Webhook API':
+      title: "[request] Google Play Webhook API"
       required:
-      - orderTxId
-      - purchasedAt
-      - storeProcessDt
-      - storeTxId
-      - storeType
-      - subscriptionKey
-      - voucherType
+      - message
+      - subscription
       type: object
       properties:
-        storeType:
-          description: "스토어 타입 (APPLE, GOOGLE)"
-          oneOf:
-          - type: string
-          - null
-        orderTxId:
+        subscription:
           type: string
-          description: 결제 단위 트랜젝션 아이디
-        voucherType:
-          description: "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, STORAGE_50, STORAGE_100,\
-            \ ADVERTISE)"
-          oneOf:
-          - type: string
-          - null
-        storeProcessDt:
-          type: string
-          description: 스토어 처리 일시 (yyyy-MM-dd HH:mm:ss)
-        groupId:
-          description: 그룹 ID (스토리지 바우처인 경우 필수)
-          nullable: true
-          oneOf:
-          - type: number
-          - null
-        purchasedAt:
-          type: string
-          description: 구매 일시 (yyyyMMdd HH:mm:ss)
-        storeTxId:
-          type: string
-          description: 스토어 거래 ID
-        memo:
-          description: 메모
-          nullable: true
-          oneOf:
-          - type: string
-          - null
-        subscriptionKey:
-          type: string
-          description: 구독 고유키
+          description: Pub/Sub 구독 경로
+        message:
+          required:
+          - data
+          - messageId
+          - publishTime
+          type: object
+          properties:
+            publishTime:
+              type: string
+              description: 메시지 발행 시간
+            data:
+              type: string
+              description: Base64 인코딩된 알림 데이터
+            messageId:
+              type: string
+              description: 메시지 고유 ID
+          description: Pub/Sub 메시지 객체
     '[request] 그룹 수정 API':
       title: "[request] 그룹 수정 API"
       type: object
@@ -5020,6 +4990,48 @@ components:
           oneOf:
           - type: string
           - null
+    '[request] 바우처 생성 API':
+      title: "[request] 바우처 생성 API"
+      required:
+      - orderTxId
+      - storeProcessDt
+      - storeType
+      - subscriptionKey
+      - voucherType
+      type: object
+      properties:
+        storeType:
+          description: "스토어 타입 (APPLE, GOOGLE)"
+          oneOf:
+          - null
+          - type: string
+        orderTxId:
+          type: string
+          description: 결제 단위 트랜젝션 아이디
+        voucherType:
+          description: "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, ADVERTISE_30, ADVERTISE_90,\
+            \ ADVERTISE_365)"
+          oneOf:
+          - type: string
+          - null
+        storeProcessDt:
+          type: string
+          description: 스토어 처리 일시 (yyyy-MM-dd HH:mm:ss)
+        groupId:
+          description: 그룹 ID (스토리지 바우처인 경우 필수)
+          nullable: true
+          oneOf:
+          - type: number
+          - null
+        memo:
+          description: 메모
+          nullable: true
+          oneOf:
+          - null
+          - type: string
+        subscriptionKey:
+          type: string
+          description: 구독 고유키
     '[request] 파일 정보 수정 API':
       title: "[request] 파일 정보 수정 API"
       type: object

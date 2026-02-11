@@ -4,6 +4,7 @@ import com.odcloud.application.auth.port.out.RedisStoragePort;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -47,6 +48,17 @@ public class FakeRedisStoragePort implements RedisStoragePort {
     @Override
     public <T> List<T> findDataList(String key, Class<T> clazz) {
         return List.of();
+    }
+
+    @Override
+    public <T> T executeWithLock(String lockKey, Supplier<T> task) {
+        return task.get();
+    }
+
+    @Override
+    public <T> T executeWithLock(String lockKey, Supplier<T> task, long waitTimeMs,
+        long leaseTimeMs) {
+        return task.get();
     }
 
     public void reset() {

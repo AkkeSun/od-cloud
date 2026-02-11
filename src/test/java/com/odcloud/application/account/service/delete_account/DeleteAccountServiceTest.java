@@ -1,6 +1,7 @@
 package com.odcloud.application.account.service.delete_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
 import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
@@ -184,7 +185,7 @@ class DeleteAccountServiceTest {
                 .name("Test Group")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group);
@@ -282,7 +283,7 @@ class DeleteAccountServiceTest {
                 .name("Group 1")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group1);
@@ -306,7 +307,7 @@ class DeleteAccountServiceTest {
                 .name("Group 2")
                 .ownerEmail(account.getEmail())
                 .storageUsed(0L)
-                .storageTotal(3221225472L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(group2);

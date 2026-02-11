@@ -12,7 +12,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,9 +70,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .build();
 
             UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
-                Boolean.TRUE,
-                "newowner@example.com",
-                "Test Group"
+                Boolean.TRUE
             );
 
             given(useCase.update(any())).willReturn(serviceResponse);
@@ -88,11 +85,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부"),
-                fieldWithPath("data.ownerEmail").type(JsonFieldType.STRING)
-                    .description("변경된 소유자 이메일"),
-                fieldWithPath("data.name").type(JsonFieldType.STRING)
-                    .description("그룹명")
+                    .description("수정 성공 여부")
             );
         }
 
@@ -105,9 +98,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .build();
 
             UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
-                Boolean.TRUE,
-                "owner@example.com",
-                "New Group Name"
+                Boolean.TRUE
             );
 
             given(useCase.update(any())).willReturn(serviceResponse);
@@ -122,11 +113,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부"),
-                fieldWithPath("data.ownerEmail").type(JsonFieldType.STRING)
-                    .description("소유자 이메일"),
-                fieldWithPath("data.name").type(JsonFieldType.STRING)
-                    .description("변경된 그룹명")
+                    .description("수정 성공 여부")
             );
         }
 
@@ -140,9 +127,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .build();
 
             UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
-                Boolean.TRUE,
-                "newowner@example.com",
-                "New Group Name"
+                Boolean.TRUE
             );
 
             given(useCase.update(any())).willReturn(serviceResponse);
@@ -157,11 +142,7 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
-                    .description("수정 성공 여부"),
-                fieldWithPath("data.ownerEmail").type(JsonFieldType.STRING)
-                    .description("변경된 소유자 이메일"),
-                fieldWithPath("data.name").type(JsonFieldType.STRING)
-                    .description("변경된 그룹명")
+                    .description("수정 성공 여부")
             );
         }
 

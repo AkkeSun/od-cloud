@@ -10,6 +10,7 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,8 @@ class DeleteFolderServiceTest {
             new FakeFilePort(),
             fakeGroupStoragePort,
             fakeFileStoragePort,
-            fakeFolderStoragePort
+            fakeFolderStoragePort,
+            new FakeRedisStoragePort()
         );
     }
 
