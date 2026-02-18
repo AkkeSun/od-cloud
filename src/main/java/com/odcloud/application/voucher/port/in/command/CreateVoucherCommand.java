@@ -13,7 +13,6 @@ public record CreateVoucherCommand(
     String orderTxId,
     LocalDateTime storeProcessDt,
     VoucherType voucherType,
-    Long groupId,
     String memo
 ) {
 
