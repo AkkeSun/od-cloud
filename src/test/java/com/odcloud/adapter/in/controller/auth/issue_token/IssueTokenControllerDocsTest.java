@@ -21,6 +21,7 @@ import com.odcloud.application.auth.service.issue_token.IssueTokenServiceRespons
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -44,16 +45,18 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
         void success() throws Exception {
             // given
             String googleAuthorization = "Bearer google-auth-token-123";
+            String deviceId = "device-abc123";
             IssueTokenServiceResponse serviceResponse = IssueTokenServiceResponse.builder()
                 .accessToken("access-token-abc123")
                 .refreshToken("refresh-token-xyz789")
                 .build();
 
-            given(useCase.issue(googleAuthorization)).willReturn(serviceResponse);
+            given(useCase.issue(googleAuthorization, deviceId)).willReturn(serviceResponse);
 
             // when & then
             performDocument(
                 googleAuthorization,
+                deviceId,
                 status().isOk(),
                 "success",
                 "success",
@@ -75,16 +78,14 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
         void error_invalidGoogleToken() throws Exception {
             // given
             String googleAuthorization = "Bearer invalid-token";
-            given(useCase.issue(googleAuthorization))
+            String deviceId = "device-abc123";
+            given(useCase.issue(googleAuthorization, deviceId))
                 .willThrow(new com.odcloud.infrastructure.exception.CustomAuthenticationException(
                     com.odcloud.infrastructure.exception.ErrorCode.INVALID_GOOGLE_TOKEN));
 
             // when & then
-            performErrorDocument(
-                googleAuthorization,
-                status().isUnauthorized(),
-                "유효하지 않은 구글 토큰"
-            );
+            performErrorDocument(googleAuthorization, deviceId, status().isUnauthorized(),
+                "유효하지 않은 구글 토큰");
         }
 
         @Test
@@ -92,16 +93,14 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
         void error_accountNotFound() throws Exception {
             // given
             String googleAuthorization = "Bearer google-token-123";
-            given(useCase.issue(googleAuthorization))
+            String deviceId = "device-abc123";
+            given(useCase.issue(googleAuthorization, deviceId))
                 .willThrow(new com.odcloud.infrastructure.exception.CustomBusinessException(
                     com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_ACCOUNT));
 
             // when & then
-            performErrorDocument(
-                googleAuthorization,
-                status().isInternalServerError(),
-                "계정 없음"
-            );
+            performErrorDocument(googleAuthorization, deviceId, status().isInternalServerError(),
+                "계정 없음");
         }
 
         @Test
@@ -109,16 +108,14 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
         void error_emptyGroupAccount() throws Exception {
             // given
             String googleAuthorization = "Bearer google-token-123";
-            given(useCase.issue(googleAuthorization))
+            String deviceId = "device-abc123";
+            given(useCase.issue(googleAuthorization, deviceId))
                 .willThrow(new com.odcloud.infrastructure.exception.CustomBusinessException(
                     com.odcloud.infrastructure.exception.ErrorCode.Business_EMPTY_GROUP_ACCOUNT));
 
             // when & then
-            performErrorDocument(
-                googleAuthorization,
-                status().isInternalServerError(),
-                "승인된 그룹 없음"
-            );
+            performErrorDocument(googleAuthorization, deviceId, status().isInternalServerError(),
+                "승인된 그룹 없음");
         }
 
         @Test
@@ -126,28 +123,29 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
         void error_googleUserInfoError() throws Exception {
             // given
             String googleAuthorization = "Bearer google-token-123";
-            given(useCase.issue(googleAuthorization))
+            String deviceId = "device-abc123";
+            given(useCase.issue(googleAuthorization, deviceId))
                 .willThrow(new com.odcloud.infrastructure.exception.CustomBusinessException(
                     com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_USER_INFO_ERROR));
 
             // when & then
-            performErrorDocument(
-                googleAuthorization,
-                status().isInternalServerError(),
-                "구글 사용자 정보 조회 오류"
-            );
+            performErrorDocument(googleAuthorization, deviceId, status().isInternalServerError(),
+                "구글 사용자 정보 조회 오류");
         }
     }
 
     private void performDocument(
         String googleAuthorization,
+        String deviceId,
         ResultMatcher status,
         String docIdentifier,
         String responseSchema,
         FieldDescriptor... responseFields
     ) throws Exception {
         mockMvc.perform(post("/auth")
-                .header("googleAuthorization", googleAuthorization))
+                .header("googleAuthorization", googleAuthorization)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new IssueTokenRequest(deviceId))))
             .andDo(print())
             .andExpect(status)
             .andDo(document(String.format("[%s] %s", apiName, docIdentifier),
@@ -161,6 +159,10 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
                         headerWithName("googleAuthorization")
                             .description("구글 인증 토큰 (필수)")
                     )
+                    .requestFields(
+                        fieldWithPath("deviceId").type(JsonFieldType.STRING)
+                            .description("디바이스 ID (필수)")
+                    )
                     .responseFields(responseFields)
                     .requestSchema(Schema.schema("[request] " + apiName))
                     .responseSchema(Schema.schema("[response] " + responseSchema))
@@ -169,9 +171,9 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
             ));
     }
 
-    private void performErrorDocument(String googleAuthorization,
+    private void performErrorDocument(String googleAuthorization, String deviceId,
         ResultMatcher status, String identifier) throws Exception {
-        performDocument(googleAuthorization, status, identifier, "error",
+        performDocument(googleAuthorization, deviceId, status, identifier, "error",
             fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                 .description("상태 코드"),
             fieldWithPath("message").type(JsonFieldType.STRING)

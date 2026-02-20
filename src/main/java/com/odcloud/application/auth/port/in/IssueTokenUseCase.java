@@ -4,5 +4,5 @@ import com.odcloud.application.auth.service.issue_token.IssueTokenServiceRespons
 
 public interface IssueTokenUseCase {
 
-    IssueTokenServiceResponse issue(String googleAuthorization);
+    IssueTokenServiceResponse issue(String googleAuthorization, String deviceId);
 }

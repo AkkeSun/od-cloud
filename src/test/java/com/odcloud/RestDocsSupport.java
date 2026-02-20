@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odcloud.infrastructure.exception.ExceptionAdvice;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -12,6 +13,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class RestDocsSupport {
@@ -28,9 +30,14 @@ public abstract class RestDocsSupport {
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
             .setControllerAdvice(new ExceptionAdvice())
             .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+            .setCustomArgumentResolvers(initArgumentResolvers().toArray(new HandlerMethodArgumentResolver[0]))
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
             .build();
     }
 
     protected abstract Object initController();
+
+    protected List<HandlerMethodArgumentResolver> initArgumentResolvers() {
+        return List.of();
+    }
 }

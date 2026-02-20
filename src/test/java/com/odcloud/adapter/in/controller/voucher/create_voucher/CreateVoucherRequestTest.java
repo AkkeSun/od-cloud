@@ -40,7 +40,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:30:00")
                 .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(10L)
                 .memo("프리미엄 플랜")
                 .build();
 
@@ -57,7 +56,6 @@ class CreateVoucherRequestTest {
             assertThat(command.subscriptionKey()).isEqualTo("sub_apple_12345");
             assertThat(command.orderTxId()).isEqualTo("APPLE_TX_12345");
             assertThat(command.voucherType()).isEqualTo(VoucherType.STORAGE_PLUS);
-            assertThat(command.groupId()).isEqualTo(10L);
             assertThat(command.memo()).isEqualTo("프리미엄 플랜");
             assertThat(command.storeProcessDt()).isNotNull();
         }
@@ -72,7 +70,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("GOOGLE_TX_67890")
                 .storeProcessDt("2026-01-09 11:00:00")
                 .voucherType(VoucherType.ADVERTISE_30)
-                .groupId(null)
                 .memo("광고 제거")
                 .build();
 
@@ -86,7 +83,6 @@ class CreateVoucherRequestTest {
             assertThat(command).isNotNull();
             assertThat(command.accountId()).isEqualTo(2L);
             assertThat(command.voucherType()).isEqualTo(VoucherType.ADVERTISE_30);
-            assertThat(command.groupId()).isNull();
         }
     }
 
@@ -104,7 +100,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_BASIC")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .memo("베이직 플랜")
                 .build();
 
@@ -125,7 +120,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("GOOGLE_TX_AD")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.ADVERTISE_30)
-                .groupId(null)
                 .memo("광고 제거")
                 .build();
 
@@ -134,52 +128,6 @@ class CreateVoucherRequestTest {
 
             // then
             assertThat(violations).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[error] STORAGE_BASIC 바우처에 groupId가 없으면 검증에 실패한다")
-        void error_storageBasicWithoutGroupId() {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.APPLE)
-                .subscriptionKey("sub_basic")
-                .orderTxId("APPLE_TX_BASIC")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(null)
-                .memo("베이직 플랜")
-                .build();
-
-            // when
-            Set<ConstraintViolation<CreateVoucherRequest>> violations = validator.validate(request);
-
-            // then
-            assertThat(violations).hasSize(1);
-            assertThat(violations.iterator().next().getMessage())
-                .isEqualTo("스토리지 바우처인 경우 groupId는 필수값 입니다");
-        }
-
-        @Test
-        @DisplayName("[error] STORAGE_PLUS 바우처에 groupId가 없으면 검증에 실패한다")
-        void error_storagePlusWithoutGroupId() {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.APPLE)
-                .subscriptionKey("sub_plus")
-                .orderTxId("APPLE_TX_PLUS")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(null)
-                .memo("플러스 플랜")
-                .build();
-
-            // when
-            Set<ConstraintViolation<CreateVoucherRequest>> violations = validator.validate(request);
-
-            // then
-            assertThat(violations).hasSize(1);
-            assertThat(violations.iterator().next().getMessage())
-                .isEqualTo("스토리지 바우처인 경우 groupId는 필수값 입니다");
         }
 
         @Test
@@ -192,7 +140,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when
@@ -214,7 +161,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when
@@ -236,7 +182,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when
@@ -258,7 +203,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(null)
-                .groupId(10L)
                 .build();
 
             // when
@@ -285,7 +229,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .memo("테스트 메모")
                 .build();
 
@@ -295,7 +238,6 @@ class CreateVoucherRequestTest {
             assertThat(request.subscriptionKey()).isEqualTo("sub_test");
             assertThat(request.orderTxId()).isEqualTo("APPLE_TX_12345");
             assertThat(request.voucherType()).isEqualTo(VoucherType.STORAGE_BASIC);
-            assertThat(request.groupId()).isEqualTo(10L);
             assertThat(request.memo()).isEqualTo("테스트 메모");
         }
 
@@ -309,7 +251,6 @@ class CreateVoucherRequestTest {
                 .orderTxId(null)
                 .storeProcessDt(null)
                 .voucherType(null)
-                .groupId(null)
                 .memo(null)
                 .build();
 
@@ -318,7 +259,6 @@ class CreateVoucherRequestTest {
             assertThat(request.subscriptionKey()).isNull();
             assertThat(request.orderTxId()).isNull();
             assertThat(request.voucherType()).isNull();
-            assertThat(request.groupId()).isNull();
             assertThat(request.memo()).isNull();
         }
     }
@@ -337,7 +277,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .memo("테스트")
                 .build();
 
@@ -347,7 +286,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .memo("테스트")
                 .build();
 
@@ -366,7 +304,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             CreateVoucherRequest request2 = CreateVoucherRequest.builder()
@@ -375,7 +312,6 @@ class CreateVoucherRequestTest {
                 .orderTxId("GOOGLE_TX_67890")
                 .storeProcessDt("2026-01-09 11:00:00")
                 .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(20L)
                 .build();
 
             // when & then

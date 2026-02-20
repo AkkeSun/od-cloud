@@ -14,6 +14,7 @@ public class FakeJwtUtil implements JwtUtil {
     public String mockAccessToken = "fake-access-token";
     public String mockRefreshToken = "fake-refresh-token";
     public String mockEmail = "test@example.com";
+    public String mockDeviceId = "fake-device-id";
     public boolean shouldReturnInvalidToken = false;
 
     @Override
@@ -23,9 +24,14 @@ public class FakeJwtUtil implements JwtUtil {
     }
 
     @Override
-    public String createRefreshToken(Account account) {
-        log.info("FakeJwtUtil createRefreshToken: email={}", account.getEmail());
+    public String createRefreshToken(Account account, String deviceId) {
+        log.info("FakeJwtUtil createRefreshToken: email={}, deviceId={}", account.getEmail(), deviceId);
         return mockRefreshToken + "-" + account.getEmail();
+    }
+
+    @Override
+    public String getDeviceId(String token) {
+        return mockDeviceId;
     }
 
     @Override
@@ -59,6 +65,7 @@ public class FakeJwtUtil implements JwtUtil {
         mockAccessToken = "fake-access-token";
         mockRefreshToken = "fake-refresh-token";
         mockEmail = "test@example.com";
+        mockDeviceId = "fake-device-id";
         shouldReturnInvalidToken = false;
     }
 }

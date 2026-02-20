@@ -38,15 +38,21 @@ public class JwtUtilImpl implements JwtUtil {
     }
 
     @Override
-    public String createRefreshToken(Account account) {
+    public String createRefreshToken(Account account, String deviceId) {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(account.getEmail());
+        claims.put("deviceId", deviceId);
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(new Date(now.getTime() + constant.getRefreshTokenTtl()))
             .signWith(SignatureAlgorithm.HS256, constant.getJwtSecretKey())
             .compact();
+    }
+
+    @Override
+    public String getDeviceId(String token) {
+        return (String) getClaims(token).get("deviceId");
     }
 
     @Override

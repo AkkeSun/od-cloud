@@ -132,9 +132,10 @@ class JwtUtilImplTest {
                 .id(1L)
                 .email("test@example.com")
                 .build();
+            String deviceId = "device-abc123";
 
             // when
-            String refreshToken = jwtUtil.createRefreshToken(account);
+            String refreshToken = jwtUtil.createRefreshToken(account, deviceId);
 
             // then
             assertThat(refreshToken).isNotNull();
@@ -147,8 +148,44 @@ class JwtUtilImplTest {
                 .getBody();
 
             assertThat(claims.getSubject()).isEqualTo("test@example.com");
+            assertThat(claims.get("deviceId")).isEqualTo(deviceId);
             assertThat(claims.get("id")).isNull();
             assertThat(claims.get("groups")).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("[getDeviceId] 토큰에서 deviceId 추출")
+    class Describe_getDeviceId {
+
+        @Test
+        @DisplayName("[success] 정상적으로 deviceId를 추출한다")
+        void success() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("test@example.com")
+                .build();
+            String deviceId = "device-abc123";
+            String refreshToken = jwtUtil.createRefreshToken(account, deviceId);
+
+            // when
+            String extractedDeviceId = jwtUtil.getDeviceId(refreshToken);
+
+            // then
+            assertThat(extractedDeviceId).isEqualTo(deviceId);
+        }
+
+        @Test
+        @DisplayName("[failure] 유효하지 않은 토큰으로 deviceId 추출 시도하면 예외가 발생한다")
+        void failure_invalidToken() {
+            // given
+            String invalidToken = "Bearer invalid.token.here";
+
+            // when & then
+            assertThatThrownBy(() -> jwtUtil.getDeviceId(invalidToken))
+                .isInstanceOf(CustomAuthenticationException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_ACCESS_TOKEN);
         }
     }
 

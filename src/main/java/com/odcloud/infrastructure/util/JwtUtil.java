@@ -9,7 +9,9 @@ public interface JwtUtil {
     
     String createAccessToken(Account account);
 
-    String createRefreshToken(Account account);
+    String createRefreshToken(Account account, String deviceId);
+
+    String getDeviceId(String token);
 
     String getEmail(String token);
 

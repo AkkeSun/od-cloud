@@ -458,6 +458,37 @@ paths:
         schema:
           type: string
         example: Bearer google-token-123
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 토큰 발급 API"
+            examples:
+              '[토큰 발급 API] 구글 사용자 정보 조회 오류':
+                value: |-
+                  {
+                    "deviceId" : "device-abc123"
+                  }
+              '[토큰 발급 API] 계정 없음':
+                value: |-
+                  {
+                    "deviceId" : "device-abc123"
+                  }
+              '[토큰 발급 API] success':
+                value: |-
+                  {
+                    "deviceId" : "device-abc123"
+                  }
+              '[토큰 발급 API] 유효하지 않은 구글 토큰':
+                value: |-
+                  {
+                    "deviceId" : "device-abc123"
+                  }
+              '[토큰 발급 API] 승인된 그룹 없음':
+                value: |-
+                  {
+                    "deviceId" : "device-abc123"
+                  }
       responses:
         "500":
           description: "500"
@@ -908,6 +939,122 @@ paths:
                       "data" : {
                         "errorCode" : 4023,
                         "errorMessage" : "조회된 디바이스가 없습니다"
+                      }
+                    }
+  /devices/test-push:
+    post:
+      tags:
+      - Device
+      summary: 테스트 푸시 알림 API
+      description: 특정 계정의 디바이스로 테스트 푸시 알림을 전송하는 API 입니다. 인증이 필요하지 않습니다.
+      operationId: "[테스트 푸시 알림 API] "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[request] 테스트 푸시 알림 API"
+            examples:
+              '[테스트 푸시 알림 API] 기본 메시지로 전송':
+                value: |-
+                  {
+                    "email" : "test@example.com",
+                    "title" : null,
+                    "body" : null
+                  }
+              '[테스트 푸시 알림 API] 이메일 미입력':
+                value: |-
+                  {
+                    "email" : "",
+                    "title" : "테스트",
+                    "body" : "테스트 내용"
+                  }
+              '[테스트 푸시 알림 API] 이메일 null':
+                value: |-
+                  {
+                    "email" : null,
+                    "title" : "테스트",
+                    "body" : "테스트 내용"
+                  }
+              '[테스트 푸시 알림 API] 정상 전송':
+                value: |-
+                  {
+                    "email" : "test@example.com",
+                    "title" : "테스트",
+                    "body" : "테스트 내용"
+                  }
+              '[테스트 푸시 알림 API] 디바이스 없음':
+                value: |-
+                  {
+                    "email" : "test@example.com",
+                    "title" : "테스트",
+                    "body" : "테스트 내용"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] default-message"
+              examples:
+                '[테스트 푸시 알림 API] 기본 메시지로 전송':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : "SUCCESS",
+                        "email" : "test@example.com",
+                        "deviceCount" : 1
+                      }
+                    }
+                '[테스트 푸시 알림 API] 정상 전송':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : "SUCCESS",
+                        "email" : "test@example.com",
+                        "deviceCount" : 2
+                      }
+                    }
+                '[테스트 푸시 알림 API] 디바이스 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : "NO_DEVICE",
+                        "email" : "test@example.com",
+                        "deviceCount" : 0
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[테스트 푸시 알림 API] 이메일 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "must not be blank"
+                      }
+                    }
+                '[테스트 푸시 알림 API] 이메일 null':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "must not be blank"
                       }
                     }
   /files:
@@ -3644,14 +3791,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-02-11T11:23:24.233519"
+                          "notificationDt" : "2026-02-20T13:04:14.187055"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-02-11T11:23:24.233543"
+                          "notificationDt" : "2026-02-20T13:04:14.187069"
                         } ]
                       }
                     }
@@ -4170,7 +4317,7 @@ paths:
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:30:00",
                     "voucherType" : "STORAGE_PLUS",
-                    "groupId" : 10,
+                    "groupId" : 1,
                     "memo" : "프리미엄 플랜 구매"
                   }
               '[바우처 생성 API] storeTxId 미입력':
@@ -4376,7 +4523,7 @@ paths:
                   {
                     "message" : {
                       "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAidW5rbm93bl90b2tlbiIsInN1YnNjcmlwdGlvbklkIjogInN1YnNjcmlwdGlvbiJ9fQ==",
-                      "messageId" : "msg_1770776604736",
+                      "messageId" : "msg_1771560254559",
                       "publishTime" : "2024-01-01T00:00:00Z"
                     },
                     "subscription" : "projects/odcloud/subscriptions/play-webhook"
@@ -4386,7 +4533,7 @@ paths:
                   {
                     "message" : {
                       "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDEyLCJwdXJjaGFzZVRva2VuIjogInJldm9rZWRfdG9rZW5fNDU2In19",
-                      "messageId" : "msg_1770776604728",
+                      "messageId" : "msg_1771560254553",
                       "publishTime" : "2024-01-01T00:00:00Z"
                     },
                     "subscription" : "projects/odcloud/subscriptions/play-webhook"
@@ -4396,7 +4543,7 @@ paths:
                   {
                     "message" : {
                       "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInZvaWRlZFB1cmNoYXNlTm90aWZpY2F0aW9uIjogewogICAgICAgICJwdXJjaGFzZVRva2VuIjogInZvaWRlZF90b2tlbiIsCiAgICAgICAgIm9yZGVySWQiOiAiR1BBLjEyMzQtNTY3OC05MDEyIiwKICAgICAgICAicmVmdW5kVHlwZSI6IDEKICAgIH0KfQo=",
-                      "messageId" : "msg_1770776604746",
+                      "messageId" : "msg_1771560254566",
                       "publishTime" : "2024-01-01T00:00:00Z"
                     },
                     "subscription" : "projects/odcloud/subscriptions/play-webhook"
@@ -4406,7 +4553,7 @@ paths:
                   {
                     "message" : {
                       "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAicHVyY2hhc2VfdG9rZW5fMTIzIiwic3Vic2NyaXB0aW9uSWQiOiAibW9udGhseV9zdWJzY3JpcHRpb24ifX0=",
-                      "messageId" : "msg_1770776604714",
+                      "messageId" : "msg_1771560254542",
                       "publishTime" : "2024-01-01T00:00:00Z"
                     },
                     "subscription" : "projects/odcloud/subscriptions/play-webhook"
@@ -4416,7 +4563,7 @@ paths:
                   {
                     "message" : {
                       "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInRlc3ROb3RpZmljYXRpb24iOiB7CiAgICAgICAgInZlcnNpb24iOiAiMS4wIgogICAgfQp9Cg==",
-                      "messageId" : "msg_1770776604755",
+                      "messageId" : "msg_1771560254571",
                       "publishTime" : "2024-01-01T00:00:00Z"
                     },
                     "subscription" : "projects/odcloud/subscriptions/play-webhook"
@@ -4755,6 +4902,15 @@ components:
         content:
           type: string
           description: 문의 내용
+    '[request] 토큰 발급 API':
+      title: "[request] 토큰 발급 API"
+      required:
+      - deviceId
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: 디바이스 ID (필수)
     FindQuestionResponse:
       title: FindQuestionResponse
       required:
@@ -4990,6 +5146,29 @@ components:
           oneOf:
           - type: string
           - null
+    '[request] 테스트 푸시 알림 API':
+      title: "[request] 테스트 푸시 알림 API"
+      required:
+      - body
+      - email
+      - title
+      type: object
+      properties:
+        body:
+          description: "푸시 내용 (선택, 미입력 시 '테스트 푸시 알림입니다.')"
+          oneOf:
+          - type: string
+          - null
+        title:
+          description: "푸시 제목 (선택, 미입력 시 '테스트 푸시')"
+          oneOf:
+          - type: string
+          - null
+        email:
+          description: 대상 이메일
+          oneOf:
+          - type: string
+          - null
     '[request] 바우처 생성 API':
       title: "[request] 바우처 생성 API"
       required:
@@ -5044,6 +5223,37 @@ components:
           type: number
           description: 이동할 폴더 ID (옵션)
           nullable: true
+    '[response] default-message':
+      title: "[response] default-message"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - deviceCount
+          - email
+          - result
+          type: object
+          properties:
+            result:
+              type: string
+              description: "전송 결과 (SUCCESS, NO_DEVICE)"
+            deviceCount:
+              type: number
+              description: 디바이스 개수
+            email:
+              type: string
+              description: 대상 이메일
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     RegisterAnswerRequest:
       title: RegisterAnswerRequest
       required:

@@ -67,7 +67,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(10L)
                 .memo("프리미엄 플랜 구매")
                 .build();
 
@@ -93,9 +92,9 @@ class CreateVoucherServiceTest {
             assertThat(voucher.getEndDt()).isNotNull();
             assertThat(voucher.getEndDt()).isAfter(voucher.getStartAt());
 
-            // Verify group storage updated to 300GB
+            // Verify group storage updated to 200GB
             Group updatedGroup = groupStoragePort.findById(10L);
-            long expectedTotal = 300L * 1024 * 1024 * 1024;
+            long expectedTotal = 200L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -120,7 +119,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("GOOGLE_TX_67890")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(20L)
                 .memo("100GB 플랜")
                 .build();
 
@@ -139,7 +137,7 @@ class CreateVoucherServiceTest {
 
             // Verify group storage updated to 100GB
             Group updatedGroup = groupStoragePort.findById(20L);
-            long expectedTotal = 100L * 1024 * 1024 * 1024;
+            long expectedTotal = 50L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -155,7 +153,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("APPLE_TX_ADVERTISE")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.ADVERTISE_30)
-                .groupId(null)
                 .memo("광고 제거")
                 .build();
 
@@ -195,7 +192,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("GOOGLE_TX_BASIC")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(30L)
                 .memo("기본 플랜")
                 .build();
 
@@ -213,7 +209,7 @@ class CreateVoucherServiceTest {
 
             // Verify group storage updated to 100GB
             Group updatedGroup = groupStoragePort.findById(30L);
-            long expectedTotal = 100L * 1024 * 1024 * 1024;
+            long expectedTotal = 50L * 1024 * 1024 * 1024;
             assertThat(updatedGroup.getStorageTotal()).isEqualTo(expectedTotal);
         }
 
@@ -250,7 +246,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("TX_1")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(40L)
                 .memo("첫 번째 바우처")
                 .build();
 
@@ -261,7 +256,6 @@ class CreateVoucherServiceTest {
                 .orderTxId("TX_2")
                 .storeProcessDt(now)
                 .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(50L)
                 .memo("두 번째 바우처")
                 .build();
 

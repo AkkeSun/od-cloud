@@ -9,7 +9,6 @@ import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeJwtUtil;
 import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.fakeClass.FakeRedisStoragePort;
-import com.odcloud.fakeClass.FakeUserAgentUtil;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
@@ -23,7 +22,6 @@ import org.junit.jupiter.api.Test;
 class ReissueTokenServiceTest {
 
     private FakeJwtUtil fakeJwtUtil;
-    private FakeUserAgentUtil fakeUserAgentUtil;
     private ProfileConstant profileConstant;
     private FakeRedisStoragePort fakeRedisStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
@@ -33,14 +31,12 @@ class ReissueTokenServiceTest {
     @BeforeEach
     void setUp() {
         fakeJwtUtil = new FakeJwtUtil();
-        fakeUserAgentUtil = new FakeUserAgentUtil();
         profileConstant = FakeProfileConstant.create();
         fakeRedisStoragePort = new FakeRedisStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
         fakeVoucherStoragePort = new FakeVoucherStoragePort();
         reissueTokenService = new ReissueTokenService(
             fakeJwtUtil,
-            fakeUserAgentUtil,
             profileConstant,
             fakeRedisStoragePort,
             fakeAccountStoragePort,
@@ -71,7 +67,7 @@ class ReissueTokenServiceTest {
             String redisKey = String.format(
                 profileConstant.redisKey().token(),
                 email,
-                fakeUserAgentUtil.getUserAgent()
+                fakeJwtUtil.mockDeviceId
             );
             fakeRedisStoragePort.database.put(redisKey, refreshToken);
 
@@ -121,7 +117,7 @@ class ReissueTokenServiceTest {
             String differentToken = "different-token";
 
             String redisKey = String.format(profileConstant.redisKey().token(),
-                email, fakeUserAgentUtil.getUserAgent());
+                email, fakeJwtUtil.mockDeviceId);
             fakeRedisStoragePort.database.put(redisKey, differentToken);
 
             // when & then
@@ -149,7 +145,7 @@ class ReissueTokenServiceTest {
             String redisKey = String.format(
                 profileConstant.redisKey().token(),
                 email,
-                fakeUserAgentUtil.getUserAgent()
+                fakeJwtUtil.mockDeviceId
             );
             fakeRedisStoragePort.database.put(redisKey, oldRefreshToken);
 
@@ -181,7 +177,7 @@ class ReissueTokenServiceTest {
             String redisKey = String.format(
                 profileConstant.redisKey().token(),
                 email,
-                fakeUserAgentUtil.getUserAgent()
+                fakeJwtUtil.mockDeviceId
             );
             fakeRedisStoragePort.database.put(redisKey, refreshToken);
 
@@ -195,8 +191,8 @@ class ReissueTokenServiceTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 User Agent에서는 다른 Redis Key를 사용한다")
-        void success_differentUserAgentDifferentKey() {
+        @DisplayName("[success] 다른 디바이스에서는 다른 Redis Key를 사용한다")
+        void success_differentDeviceDifferentKey() {
             // given
             String email = "user@example.com";
             String refreshToken1 = "fake-refresh-token-" + email;
@@ -210,23 +206,23 @@ class ReissueTokenServiceTest {
                 .build();
             fakeAccountStoragePort.database.add(account);
 
-            // First user agent
+            // First device
             String redisKey1 = String.format(
                 profileConstant.redisKey().token(),
                 email,
-                fakeUserAgentUtil.getUserAgent()
+                fakeJwtUtil.mockDeviceId
             );
             fakeRedisStoragePort.database.put(redisKey1, refreshToken1);
 
             ReissueTokenServiceResponse response1 = reissueTokenService.reissueToken(refreshToken1);
 
-            // Change user agent
-            fakeUserAgentUtil.mockUserAgent = "Chrome/120.0";
+            // Second device
+            fakeJwtUtil.mockDeviceId = "another-device-id";
             String refreshToken2 = "fake-refresh-token-" + email;
             String redisKey2 = String.format(
                 profileConstant.redisKey().token(),
                 email,
-                fakeUserAgentUtil.getUserAgent()
+                fakeJwtUtil.mockDeviceId
             );
             fakeRedisStoragePort.database.put(redisKey2, refreshToken2);
 

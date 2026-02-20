@@ -11,7 +11,6 @@ import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
 import com.odcloud.fakeClass.FakeJwtUtil;
 import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.fakeClass.FakeRedisStoragePort;
-import com.odcloud.fakeClass.FakeUserAgentUtil;
 import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -26,7 +25,6 @@ class IssueTokenServiceTest {
 
     private FakeJwtUtil fakeJwtUtil;
     private ProfileConstant profileConstant;
-    private FakeUserAgentUtil fakeUserAgentUtil;
     private FakeGoogleOAuth2Port fakeGoogleOAuth2Port;
     private FakeRedisStoragePort fakeRedisStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
@@ -37,7 +35,6 @@ class IssueTokenServiceTest {
     void setUp() {
         fakeJwtUtil = new FakeJwtUtil();
         profileConstant = FakeProfileConstant.create();
-        fakeUserAgentUtil = new FakeUserAgentUtil();
         fakeGoogleOAuth2Port = new FakeGoogleOAuth2Port();
         fakeRedisStoragePort = new FakeRedisStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
@@ -45,7 +42,6 @@ class IssueTokenServiceTest {
         issueTokenService = new IssueTokenService(
             fakeJwtUtil,
             profileConstant,
-            fakeUserAgentUtil,
             fakeGoogleOAuth2Port,
             fakeRedisStoragePort,
             fakeAccountStoragePort,
@@ -81,9 +77,10 @@ class IssueTokenServiceTest {
             fakeAccountStoragePort.database.add(account);
 
             String googleAuthorization = "Bearer test-google-token";
+            String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization);
+            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             assertThat(response).isNotNull();
@@ -103,9 +100,10 @@ class IssueTokenServiceTest {
             fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
 
             String googleAuthorization = "Bearer test-google-token";
+            String deviceId = "device-abc123";
 
             // when & then
-            assertThatThrownBy(() -> issueTokenService.issue(googleAuthorization))
+            assertThatThrownBy(() -> issueTokenService.issue(googleAuthorization, deviceId))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_NOT_FOUND_ACCOUNT);
 
@@ -118,9 +116,10 @@ class IssueTokenServiceTest {
             // given
             fakeGoogleOAuth2Port.shouldThrowExceptionOnGetUserInfo = true;
             String googleAuthorization = "Bearer invalid-token";
+            String deviceId = "device-abc123";
 
             // when & then
-            assertThatThrownBy(() -> issueTokenService.issue(googleAuthorization))
+            assertThatThrownBy(() -> issueTokenService.issue(googleAuthorization, deviceId))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode",
                     ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
@@ -129,7 +128,7 @@ class IssueTokenServiceTest {
         }
 
         @Test
-        @DisplayName("[success] Refresh Token이 Redis에 정상적으로 저장된다")
+        @DisplayName("[success] Refresh Token이 Redis에 deviceId 키로 정상적으로 저장된다")
         void success_refreshTokenStoredInRedis() {
             // given
             GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
@@ -151,15 +150,16 @@ class IssueTokenServiceTest {
             fakeAccountStoragePort.database.add(account);
 
             String googleAuthorization = "Bearer test-google-token";
+            String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization);
+            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             String expectedRedisKey = String.format(
                 profileConstant.redisKey().token(),
                 "user@example.com",
-                fakeUserAgentUtil.getUserAgent()
+                deviceId
             );
             assertThat(fakeRedisStoragePort.database).containsKey(expectedRedisKey);
             assertThat(fakeRedisStoragePort.database.get(expectedRedisKey))
@@ -189,9 +189,10 @@ class IssueTokenServiceTest {
             fakeAccountStoragePort.database.add(account);
 
             String googleAuthorization = "Bearer test-google-token";
+            String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization);
+            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             assertThat(response).isNotNull();

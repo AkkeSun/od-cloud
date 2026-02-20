@@ -11,7 +11,6 @@ import com.odcloud.domain.model.Voucher;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.util.JwtUtil;
-import com.odcloud.infrastructure.util.UserAgentUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import org.springframework.util.ObjectUtils;
 class ReissueTokenService implements ReissueTokenUseCase {
 
     private final JwtUtil jwtUtil;
-    private final UserAgentUtil userAgent;
     private final ProfileConstant constant;
     private final RedisStoragePort redisStoragePort;
     private final AccountStoragePort accountStoragePort;
@@ -35,8 +33,8 @@ class ReissueTokenService implements ReissueTokenUseCase {
         }
 
         String email = jwtUtil.getEmail(refreshToken);
-        String redisKey = String.format(constant.redisKey().token(), email,
-            userAgent.getUserAgent());
+        String deviceId = jwtUtil.getDeviceId(refreshToken);
+        String redisKey = String.format(constant.redisKey().token(), email, deviceId);
 
         String savedRefreshToken = redisStoragePort.findData(redisKey, String.class);
         if (ObjectUtils.isEmpty(savedRefreshToken) || !savedRefreshToken.equals(refreshToken)) {
@@ -48,7 +46,7 @@ class ReissueTokenService implements ReissueTokenUseCase {
         List<Voucher> vouchers = voucherStoragePort.findActiveByAccountId(account.getId());
         account.updateVouchers(vouchers);
 
-        String newRefreshToken = jwtUtil.createRefreshToken(account);
+        String newRefreshToken = jwtUtil.createRefreshToken(account, deviceId);
 
         redisStoragePort.register(redisKey, newRefreshToken, constant.getRefreshTokenTtl());
         return ReissueTokenServiceResponse.builder()

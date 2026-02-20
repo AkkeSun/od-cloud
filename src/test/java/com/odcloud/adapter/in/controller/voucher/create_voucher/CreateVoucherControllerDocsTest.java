@@ -19,18 +19,26 @@ import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.voucher.port.in.CreateVoucherUseCase;
 import com.odcloud.application.voucher.service.create_voucher.CreateVoucherServiceResponse;
+import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.StoreType;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
+import com.odcloud.infrastructure.resolver.LoginAccount;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 class CreateVoucherControllerDocsTest extends RestDocsSupport {
 
@@ -40,6 +48,23 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
     @Override
     protected Object initController() {
         return new CreateVoucherController(useCase);
+    }
+
+    @Override
+    protected List<HandlerMethodArgumentResolver> initArgumentResolvers() {
+        return List.of(new HandlerMethodArgumentResolver() {
+            @Override
+            public boolean supportsParameter(MethodParameter parameter) {
+                return parameter.hasParameterAnnotation(LoginAccount.class);
+            }
+
+            @Override
+            public Object resolveArgument(MethodParameter parameter,
+                ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+                WebDataBinderFactory binderFactory) {
+                return Account.builder().id(1L).email("test@example.com").build();
+            }
+        });
     }
 
     @Nested
@@ -56,7 +81,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:30:00")
                 .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(10L)
                 .memo("프리미엄 플랜 구매")
                 .build();
 
@@ -86,7 +110,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             String authorization = "error token";
@@ -108,7 +131,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when & then
@@ -125,7 +147,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when & then
@@ -142,7 +163,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(10L)
                 .build();
 
             // when & then
@@ -160,49 +180,11 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(null)
-                .groupId(10L)
                 .build();
 
             // when & then
             performErrorDocument(request, "Bearer test", status().isBadRequest(),
                 "voucherType 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] STORAGE 바우처에 groupId가 없는 경우 400 에러를 반환한다")
-        void error_storageBasicWithoutGroupId() throws Exception {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.APPLE)
-                .subscriptionKey("sub_basic")
-                .orderTxId("APPLE_TX_BASIC")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(null)
-                .memo("베이직 플랜")
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(),
-                "스토리지 바우처 groupId 미입력");
-        }
-
-        @Test
-        @DisplayName("[error] STORAGE_PLUS 바우처에 groupId가 없는 경우 400 에러를 반환한다")
-        void error_storagePlusWithoutGroupId() throws Exception {
-            // given
-            CreateVoucherRequest request = CreateVoucherRequest.builder()
-                .storeType(StoreType.GOOGLE)
-                .subscriptionKey("sub_plus")
-                .orderTxId("GOOGLE_TX_PLUS")
-                .storeProcessDt("2026-01-09 10:00:00")
-                .voucherType(VoucherType.STORAGE_PLUS)
-                .groupId(null)
-                .build();
-
-            // when & then
-            performErrorDocument(request, "Bearer test", status().isBadRequest(),
-                "스토리지 바우처 groupId 미입력");
         }
 
         @Test
@@ -215,7 +197,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .orderTxId("APPLE_TX_12345")
                 .storeProcessDt("2026-01-09 10:00:00")
                 .voucherType(VoucherType.STORAGE_BASIC)
-                .groupId(9999L)
                 .build();
 
             given(useCase.create(any())).willThrow(
@@ -246,8 +227,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
             request.storeProcessDt() == null ? JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType voucherTypeType =
             request.voucherType() == null ? JsonFieldType.NULL : JsonFieldType.STRING;
-        JsonFieldType groupIdType =
-            request.groupId() == null ? JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType memoType = request.memo() == null ? JsonFieldType.NULL : JsonFieldType.STRING;
 
         mockMvc.perform(post("/vouchers")
@@ -276,8 +255,6 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("voucherType").type(voucherTypeType)
                             .description(
                                 "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, ADVERTISE_30, ADVERTISE_90, ADVERTISE_365)"),
-                        fieldWithPath("groupId").type(groupIdType)
-                            .description("그룹 ID (스토리지 바우처인 경우 필수)").optional(),
                         fieldWithPath("memo").type(memoType)
                             .description("메모").optional()
                     )
