@@ -19,14 +19,14 @@ class UpdateFolderController {
 
     private final UpdateFolderUseCase useCase;
 
-    @PatchMapping("/folders/{fileId}")
+    @PatchMapping("/folders/{folderId}")
     ApiResponse<UpdateFolderResponse> updateFolder(
-        @PathVariable Long fileId,
+        @PathVariable Long folderId,
         @Validated(ValidationSequence.class) @RequestBody UpdateFolderRequest request,
         @LoginAccount Account account
     ) {
         UpdateFolderServiceResponse response = useCase.updateFolder(
-            request.toCommand(fileId, account));
+            request.toCommand(folderId, account));
         return ApiResponse.ok(UpdateFolderResponse.of(response));
     }
 }
