@@ -40,6 +40,7 @@ public class LogAspect {
 
     @Around("controllerMethods()")
     public Object controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
+
         ApiCallLog apiCallLog = ApiCallLog.builder()
             .accountInfo(jwtUtil.getAccountInfo(request))
             .uri(request.getRequestURI())
@@ -48,8 +49,9 @@ public class LogAspect {
             .requestBody(truncateTextLimit(getRequestBody(joinPoint)))
             .regDt(LocalDateTime.now())
             .build();
-
-        log.info(apiCallLog.getRequestLog());
+        if (!request.getRequestURI().equals("/")) {
+            log.info(apiCallLog.getRequestLog());
+        }
 
         Object result = joinPoint.proceed();
 
@@ -57,14 +59,18 @@ public class LogAspect {
         apiCallLog.updateResponseBody(truncateTextLimit(responseBody));
         apiCallLog.updateHttpStatus(extractJsonField(responseBody, "httpStatus"));
         apiCallLog.updateErrorCode(extractJsonField(responseBody, "data", "errorCode"));
-        log.info(apiCallLog.getResponseLog());
+        if (!request.getRequestURI().equals("/")) {
+            log.info(apiCallLog.getResponseLog());
+        }
         return result;
     }
 
     @Around("controllerAdviceMethods()")
     public Object controllerAdviceResponseLog(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        log.info("[{} {}] response - {}", request.getMethod(), request.getRequestURI(), result);
+        if (!request.getRequestURI().equals("/")) {
+            log.info("[{} {}] response - {}", request.getMethod(), request.getRequestURI(), result);
+        }
         return result;
     }
 
@@ -90,5 +96,4 @@ public class LogAspect {
 
         return requestBody.toString();
     }
-
 }
