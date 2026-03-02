@@ -17,11 +17,11 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.auth.port.in.CallbackGoogleOAuth2UseCase;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
 
@@ -38,26 +38,28 @@ class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
     class Describe_callback {
 
         @Test
-        @DisplayName("[success] 유효한 인증 코드로 구글 액세스 토큰을 발급받는다")
+        @DisplayName("[success] 유효한 인증 코드로 프론트엔드로 리다이렉트한다")
         void success() throws Exception {
             // given
             String code = "valid-google-auth-code";
-            String html = "<html><body><script>window.opener.postMessage({type:'GOOGLE_OAUTH_CALLBACK',googleAccessToken:'Bearer google-access-token-123'},'http://localhost:3000');window.close();</script></body></html>";
-
-            given(useCase.callback(code)).willReturn(html);
+            CallbackGoogleOAuth2ServiceResponse serviceResponse = new CallbackGoogleOAuth2ServiceResponse(
+                "Bearer google-access-token-123",
+                "http://localhost:3000/auth/callback?googleAccessToken=Bearer+google-access-token-123"
+            );
+            given(useCase.callback(code)).willReturn(serviceResponse);
 
             // when & then
             mockMvc.perform(get("/auth/google")
                     .param("code", code))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isFound())
                 .andDo(document(String.format("[%s] success", apiName),
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
                         .tag("Auth")
                         .summary("구글 OAuth2 콜백 API")
-                        .description("구글 OAuth2 콜백을 처리하는 API 입니다. HTML 응답으로 window.opener.postMessage를 통해 토큰을 전달합니다.")
+                        .description("구글 OAuth2 콜백을 처리합니다. 프론트엔드로 302 리다이렉트하며 googleAccessToken을 쿼리 파라미터로 전달합니다.")
                         .queryParameters(
                             parameterWithName("code")
                                 .description("구글 OAuth2 인증 코드 (필수)")
@@ -72,7 +74,6 @@ class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
         @Test
         @DisplayName("[error] 인증 코드가 null인 경우 400 에러를 반환한다")
         void error_codeIsNull() throws Exception {
-            // when & then
             mockMvc.perform(get("/auth/google"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

@@ -32,26 +32,23 @@ class CallbackGoogleOAuth2ServiceTest {
     class Describe_callback {
 
         @Test
-        @DisplayName("[success] 정상적으로 authorization code를 access token으로 교환하고 HTML을 반환한다")
+        @DisplayName("[success] 정상적으로 googleAccessToken과 redirectUri를 반환한다")
         void success() {
-            // given
-            String code = "test-authorization-code";
-
             // when
-            String html = callbackGoogleOAuth2Service.callback(code);
+            CallbackGoogleOAuth2ServiceResponse response =
+                callbackGoogleOAuth2Service.callback("test-authorization-code");
 
             // then
-            assertThat(html).contains("Bearer fake-access-token");
-            assertThat(html).contains("http://localhost:3000");
-            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
+            assertThat(response.googleAccessToken()).isEqualTo("Bearer fake-access-token");
+            assertThat(response.redirectUri()).contains("http://localhost:3000/auth/callback");
+            assertThat(response.redirectUri()).contains("googleAccessToken=");
         }
 
         @Test
         @DisplayName("[success] 커스텀 토큰 응답으로 정상 처리한다")
         void success_customTokenResponse() {
             // given
-            String code = "test-code";
-            GoogleTokenResponse customTokenResponse = new GoogleTokenResponse(
+            fakeGoogleOAuth2Port.mockTokenResponse = new GoogleTokenResponse(
                 "custom-access-token",
                 "custom-id-token",
                 "custom-refresh-token",
@@ -59,56 +56,27 @@ class CallbackGoogleOAuth2ServiceTest {
                 "Bearer",
                 7200L
             );
-            fakeGoogleOAuth2Port.mockTokenResponse = customTokenResponse;
 
             // when
-            String html = callbackGoogleOAuth2Service.callback(code);
+            CallbackGoogleOAuth2ServiceResponse response =
+                callbackGoogleOAuth2Service.callback("test-code");
 
             // then
-            assertThat(html).contains("Bearer custom-access-token");
-            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
+            assertThat(response.googleAccessToken()).isEqualTo("Bearer custom-access-token");
+            assertThat(response.redirectUri()).contains("http://localhost:3000/auth/callback");
         }
 
         @Test
         @DisplayName("[failure] GoogleOAuth2Port에서 예외 발생 시 예외를 전파한다")
         void failure_portThrowsException() {
             // given
-            String code = "invalid-code";
             fakeGoogleOAuth2Port.shouldThrowExceptionOnGetToken = true;
 
             // when & then
-            assertThatThrownBy(() -> callbackGoogleOAuth2Service.callback(code))
+            assertThatThrownBy(() -> callbackGoogleOAuth2Service.callback("invalid-code"))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode",
                     ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
-        }
-
-        @Test
-        @DisplayName("[success] 빈 code로도 호출 가능하다")
-        void success_emptyCode() {
-            // given
-            String code = "";
-
-            // when
-            String html = callbackGoogleOAuth2Service.callback(code);
-
-            // then
-            assertThat(html).isNotNull();
-            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
-        }
-
-        @Test
-        @DisplayName("[success] 긴 authorization code도 정상 처리한다")
-        void success_longCode() {
-            // given
-            String longCode = "a".repeat(1000);
-
-            // when
-            String html = callbackGoogleOAuth2Service.callback(longCode);
-
-            // then
-            assertThat(html).isNotNull();
-            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
         }
     }
 }
