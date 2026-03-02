@@ -18,6 +18,7 @@ public class FakeProfileConstant {
                 .redirectUri("http://localhost:8080/callback")
                 .tokenApi("https://oauth2.googleapis.com/token")
                 .userInfoApi("https://www.googleapis.com/oauth2/v2/userinfo")
+                .allowedOrigin("http://localhost:3000")
                 .build())
             .redisKey(ProfileConstant.RedisKey.builder()
                 .token("token:%s:%s")

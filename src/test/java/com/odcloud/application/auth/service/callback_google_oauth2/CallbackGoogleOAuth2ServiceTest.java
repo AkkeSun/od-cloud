@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.adapter.out.client.google.GoogleTokenResponse;
 import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
+import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,10 @@ class CallbackGoogleOAuth2ServiceTest {
     @BeforeEach
     void setUp() {
         fakeGoogleOAuth2Port = new FakeGoogleOAuth2Port();
-        callbackGoogleOAuth2Service = new CallbackGoogleOAuth2Service(fakeGoogleOAuth2Port);
+        callbackGoogleOAuth2Service = new CallbackGoogleOAuth2Service(
+            fakeGoogleOAuth2Port,
+            FakeProfileConstant.create()
+        );
     }
 
     @Nested
@@ -28,18 +32,18 @@ class CallbackGoogleOAuth2ServiceTest {
     class Describe_callback {
 
         @Test
-        @DisplayName("[success] 정상적으로 authorization code를 access token으로 교환한다")
+        @DisplayName("[success] 정상적으로 authorization code를 access token으로 교환하고 HTML을 반환한다")
         void success() {
             // given
             String code = "test-authorization-code";
 
             // when
-            CallbackGoogleOAuth2ServiceResponse response = callbackGoogleOAuth2Service.callback(
-                code);
+            String html = callbackGoogleOAuth2Service.callback(code);
 
             // then
-            assertThat(response).isNotNull();
-            assertThat(response.googleAccessToken()).isEqualTo("Bearer fake-access-token");
+            assertThat(html).contains("Bearer fake-access-token");
+            assertThat(html).contains("http://localhost:3000");
+            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
         }
 
         @Test
@@ -58,12 +62,11 @@ class CallbackGoogleOAuth2ServiceTest {
             fakeGoogleOAuth2Port.mockTokenResponse = customTokenResponse;
 
             // when
-            CallbackGoogleOAuth2ServiceResponse response = callbackGoogleOAuth2Service.callback(
-                code);
+            String html = callbackGoogleOAuth2Service.callback(code);
 
             // then
-            assertThat(response).isNotNull();
-            assertThat(response.googleAccessToken()).isEqualTo("Bearer custom-access-token");
+            assertThat(html).contains("Bearer custom-access-token");
+            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
         }
 
         @Test
@@ -87,11 +90,11 @@ class CallbackGoogleOAuth2ServiceTest {
             String code = "";
 
             // when
-            CallbackGoogleOAuth2ServiceResponse response = callbackGoogleOAuth2Service.callback(
-                code);
+            String html = callbackGoogleOAuth2Service.callback(code);
 
             // then
-            assertThat(response).isNotNull();
+            assertThat(html).isNotNull();
+            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
         }
 
         @Test
@@ -101,12 +104,11 @@ class CallbackGoogleOAuth2ServiceTest {
             String longCode = "a".repeat(1000);
 
             // when
-            CallbackGoogleOAuth2ServiceResponse response = callbackGoogleOAuth2Service.callback(
-                longCode);
+            String html = callbackGoogleOAuth2Service.callback(longCode);
 
             // then
-            assertThat(response).isNotNull();
-            assertThat(response.googleAccessToken()).isNotNull();
+            assertThat(html).isNotNull();
+            assertThat(html).contains("GOOGLE_OAUTH_CALLBACK");
         }
     }
 }

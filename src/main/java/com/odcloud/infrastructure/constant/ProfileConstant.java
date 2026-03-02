@@ -49,7 +49,9 @@ public record ProfileConstant(
         @NotBlank
         String tokenApi,
         @NotBlank
-        String userInfoApi
+        String userInfoApi,
+        @NotBlank
+        String allowedOrigin
     ) {
 
     }

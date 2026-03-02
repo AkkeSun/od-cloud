@@ -7,6 +7,7 @@ import com.odcloud.infrastructure.exception.ExceptionAdvice;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -29,7 +30,7 @@ public abstract class RestDocsSupport {
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
             .setControllerAdvice(new ExceptionAdvice())
-            .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+            .setMessageConverters(new StringHttpMessageConverter(), new MappingJackson2HttpMessageConverter(objectMapper))
             .setCustomArgumentResolvers(initArgumentResolvers().toArray(new HandlerMethodArgumentResolver[0]))
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
             .build();

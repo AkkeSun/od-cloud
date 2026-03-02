@@ -71,6 +71,7 @@ service-constant:
     redirect-uri: http://localhost:8080/auth/google
     token-api: https://oauth2.googleapis.com
     user-info-api: https://www.googleapis.com
+    allowed-origin: http://localhost:3000
 
   redis-key:
     token: token::%s-%s

@@ -78,6 +78,7 @@ service-constant:
     redirect-uri: https://moimism.odlab.kr/auth/google
     token-api: https://oauth2.googleapis.com
     user-info-api: https://www.googleapis.com
+    allowed-origin: ${FRONTEND_ALLOWED_ORIGIN}
 
   redis-key:
     token: token::%s-%s
