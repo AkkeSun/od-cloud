@@ -93,5 +93,6 @@ jobs:
             export GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}"
             export GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}"
             export PROD_AES_SECRET="${{ secrets.PROD_AES_SECRET }}"
+            export OAUTH_CALLBACK_HTML="${{ secrets.OAUTH_CALLBACK_HTML }}"
             cd ${{ env.SERVICE_PATH }}
             /home/od/moimism/deploy.sh
