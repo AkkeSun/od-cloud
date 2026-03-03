@@ -14,6 +14,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
 @ExtendWith(RestDocumentationExtension.class)
@@ -30,6 +31,7 @@ public abstract class RestDocsSupport {
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
             .setControllerAdvice(new ExceptionAdvice())
+            .addFilter(new CharacterEncodingFilter("UTF-8", true))
             .setMessageConverters(new StringHttpMessageConverter(), new MappingJackson2HttpMessageConverter(objectMapper))
             .setCustomArgumentResolvers(initArgumentResolvers().toArray(new HandlerMethodArgumentResolver[0]))
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
