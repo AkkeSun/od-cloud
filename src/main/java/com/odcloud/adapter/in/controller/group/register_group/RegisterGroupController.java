@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.register_group;
 
 import com.odcloud.application.group.port.in.RegisterGroupUseCase;
-import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.service.register_group.RegisterGroupResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -22,8 +22,6 @@ class RegisterGroupController {
         @RequestBody @Valid RegisterGroupRequest request,
         @LoginAccount Account account
     ) {
-        RegisterGroupServiceResponse serviceResponse = useCase.register(
-            request.toCommand(account));
-        return ApiResponse.ok(RegisterGroupResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.register(request.toCommand(account)));
     }
 }

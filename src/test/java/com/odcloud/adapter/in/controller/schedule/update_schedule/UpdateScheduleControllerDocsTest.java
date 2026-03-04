@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.schedule.port.in.UpdateScheduleUseCase;
-import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleServiceResponse;
+import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -73,8 +73,8 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
-            UpdateScheduleServiceResponse serviceResponse =
-                UpdateScheduleServiceResponse.ofSuccess();
+            UpdateScheduleResponse serviceResponse =
+                UpdateScheduleResponse.ofSuccess();
 
             given(useCase.update(any())).willReturn(serviceResponse);
 
@@ -100,8 +100,8 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
                 .startDt("2025-01-02 14:00:00")
                 .build();
 
-            UpdateScheduleServiceResponse serviceResponse =
-                UpdateScheduleServiceResponse.ofSuccess();
+            UpdateScheduleResponse serviceResponse =
+                UpdateScheduleResponse.ofSuccess();
 
             given(useCase.update(any())).willReturn(serviceResponse);
 

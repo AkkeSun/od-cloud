@@ -1,6 +1,6 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

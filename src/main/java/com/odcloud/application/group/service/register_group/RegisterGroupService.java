@@ -6,7 +6,6 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROU
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.RegisterGroupUseCase;
-import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
@@ -27,7 +26,7 @@ class RegisterGroupService implements RegisterGroupUseCase {
 
     @Override
     @Transactional
-    public RegisterGroupServiceResponse register(RegisterGroupCommand command) {
+    public RegisterGroupResponse register(RegisterGroupCommand command) {
         if (groupStoragePort.existsByName(command.name())) {
             throw new CustomBusinessException(Business_SAVED_GROUP);
         }
@@ -43,6 +42,6 @@ class RegisterGroupService implements RegisterGroupUseCase {
         FolderInfo folder = FolderInfo.ofRootFolder(group);
         folderStoragePort.save(folder);
 
-        return RegisterGroupServiceResponse.ofSuccess();
+        return RegisterGroupResponse.ofSuccess();
     }
 }

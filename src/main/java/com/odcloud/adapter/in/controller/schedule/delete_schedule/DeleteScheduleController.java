@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.schedule.delete_schedule;
 
 import com.odcloud.application.schedule.port.in.DeleteScheduleUseCase;
-import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleServiceResponse;
+import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -21,7 +21,6 @@ class DeleteScheduleController {
         @PathVariable Long scheduleId,
         @LoginAccount Account account
     ) {
-        DeleteScheduleServiceResponse response = useCase.delete(scheduleId, account);
-        return ApiResponse.ok(DeleteScheduleResponse.of(response));
+        return ApiResponse.ok(useCase.delete(scheduleId, account));
     }
 }

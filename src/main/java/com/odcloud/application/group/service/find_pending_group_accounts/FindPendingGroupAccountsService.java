@@ -15,9 +15,9 @@ class FindPendingGroupAccountsService implements FindPendingGroupAccountsUseCase
     private final GroupStoragePort groupStoragePort;
 
     @Override
-    public FindPendingGroupAccountsServiceResponse findPendingAccounts(Account account) {
+    public FindPendingGroupAccountsResponse findPendingAccounts(Account account) {
         List<GroupAccount> pendingAccounts =
             groupStoragePort.findPendingGroupAccountsByOwnerEmail(account.getEmail());
-        return FindPendingGroupAccountsServiceResponse.of(pendingAccounts);
+        return FindPendingGroupAccountsResponse.of(pendingAccounts);
     }
 }

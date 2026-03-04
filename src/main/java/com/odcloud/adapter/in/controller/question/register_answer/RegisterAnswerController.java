@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.question.register_answer;
 
 import com.odcloud.application.question.port.in.RegisterAnswerUseCase;
-import com.odcloud.application.question.service.register_answer.RegisterAnswerServiceResponse;
+import com.odcloud.application.question.service.register_answer.RegisterAnswerResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,8 +24,6 @@ class RegisterAnswerController {
         @Valid @RequestBody RegisterAnswerRequest request,
         @LoginAccount Account account
     ) {
-        RegisterAnswerServiceResponse response = useCase.registerAnswer(
-            request.toCommand(questionId, account));
-        return ApiResponse.ok(RegisterAnswerResponse.of(response));
+        return ApiResponse.ok(useCase.registerAnswer(request.toCommand(questionId, account)));
     }
 }

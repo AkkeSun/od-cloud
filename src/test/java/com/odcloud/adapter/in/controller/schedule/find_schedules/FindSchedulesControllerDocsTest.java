@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.schedule.port.in.FindSchedulesUseCase;
-import com.odcloud.application.schedule.service.find_schedules.FindSchedulesServiceResponse;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesResponse;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -67,7 +67,7 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
             Schedule schedule2 = createSchedule(2L, "owner@example.com", 1L, "그룹 회의",
                 LocalDateTime.of(2025, 1, 15, 14, 0));
 
-            FindSchedulesServiceResponse serviceResponse = FindSchedulesServiceResponse.of(
+            FindSchedulesResponse serviceResponse = FindSchedulesResponse.of(
                 Arrays.asList(schedule1, schedule2));
 
             given(useCase.findSchedules(any())).willReturn(serviceResponse);

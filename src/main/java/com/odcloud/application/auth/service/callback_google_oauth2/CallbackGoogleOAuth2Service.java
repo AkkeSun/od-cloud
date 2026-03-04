@@ -14,9 +14,9 @@ class CallbackGoogleOAuth2Service implements CallbackGoogleOAuth2UseCase {
     private final ProfileConstant profileConstant;
 
     @Override
-    public CallbackGoogleOAuth2ServiceResponse callback(String code) {
+    public CallbackGoogleOAuth2Response callback(String code) {
         String googleAccessToken = "Bearer " + googleOAuth2Port.getToken(code).access_token();
-        return CallbackGoogleOAuth2ServiceResponse.of(googleAccessToken,
+        return CallbackGoogleOAuth2Response.of(googleAccessToken,
             profileConstant.googleOAuth2().allowedOrigin());
     }
 }

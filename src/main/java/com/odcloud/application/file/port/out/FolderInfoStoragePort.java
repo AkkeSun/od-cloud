@@ -1,6 +1,6 @@
 package com.odcloud.application.file.port.out;
 
-import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.service.find_files.FindFilesCommand;
 import com.odcloud.domain.model.FolderInfo;
 import java.util.List;
 

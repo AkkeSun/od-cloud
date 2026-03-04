@@ -1,8 +1,5 @@
 package com.odcloud.application.file.service.find_files;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;

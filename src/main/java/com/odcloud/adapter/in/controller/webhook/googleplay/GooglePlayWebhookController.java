@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.webhook.googleplay;
 
 import com.odcloud.application.webhook.port.in.HandleGooglePlayWebhookUseCase;
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
+import com.odcloud.application.webhook.service.googleplay.GooglePlayNotificationCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

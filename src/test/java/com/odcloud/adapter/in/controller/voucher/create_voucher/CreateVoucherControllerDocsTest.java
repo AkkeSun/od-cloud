@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.voucher.port.in.CreateVoucherUseCase;
-import com.odcloud.application.voucher.service.create_voucher.CreateVoucherServiceResponse;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.StoreType;
 import com.odcloud.domain.model.VoucherType;
@@ -84,7 +84,7 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .memo("프리미엄 플랜 구매")
                 .build();
 
-            CreateVoucherServiceResponse serviceResponse = CreateVoucherServiceResponse.ofSuccess();
+            CreateVoucherResponse serviceResponse = CreateVoucherResponse.ofSuccess();
             given(useCase.create(any())).willReturn(serviceResponse);
 
             // when & then

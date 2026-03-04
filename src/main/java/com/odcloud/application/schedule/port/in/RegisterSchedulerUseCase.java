@@ -1,9 +1,9 @@
 package com.odcloud.application.schedule.port.in;
 
-import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleResponse;
 
 public interface RegisterSchedulerUseCase {
 
-    RegisterScheduleServiceResponse register(RegisterScheduleCommand command);
+    RegisterScheduleResponse register(RegisterScheduleCommand command);
 }

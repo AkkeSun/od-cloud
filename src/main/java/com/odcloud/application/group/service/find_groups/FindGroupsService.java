@@ -2,7 +2,6 @@ package com.odcloud.application.group.service.find_groups;
 
 import com.odcloud.application.group.port.in.FindGroupsUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
-import com.odcloud.application.port.in.command.FindGroupsCommand;
 import com.odcloud.domain.model.Group;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +16,15 @@ class FindGroupsService implements FindGroupsUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public FindGroupsServiceResponse findAll(FindGroupsCommand command) {
+    public FindGroupsResponse findAll(String keyword) {
         List<Group> groups;
 
-        if ("all".equalsIgnoreCase(command.keyword())) {
+        if ("all".equalsIgnoreCase(keyword)) {
             groups = groupStoragePort.findAll();
         } else {
-            groups = groupStoragePort.findByKeyword(command.keyword());
+            groups = groupStoragePort.findByKeyword(keyword);
         }
 
-        return FindGroupsServiceResponse.of(groups);
+        return FindGroupsResponse.of(groups);
     }
 }

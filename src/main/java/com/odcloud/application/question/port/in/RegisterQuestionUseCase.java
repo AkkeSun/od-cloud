@@ -1,9 +1,9 @@
 package com.odcloud.application.question.port.in;
 
-import com.odcloud.application.question.port.in.command.RegisterQuestionCommand;
-import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.service.register_question.RegisterQuestionCommand;
+import com.odcloud.application.question.service.register_question.RegisterQuestionResponse;
 
 public interface RegisterQuestionUseCase {
 
-    RegisterQuestionServiceResponse registerQuestion(RegisterQuestionCommand command);
+    RegisterQuestionResponse registerQuestion(RegisterQuestionCommand command);
 }

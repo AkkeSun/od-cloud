@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.device.register_device;
 
 import com.odcloud.application.device.port.in.RegisterDeviceUseCase;
-import com.odcloud.application.device.service.register_device.RegisterDeviceServiceResponse;
+import com.odcloud.application.device.service.register_device.RegisterDeviceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -22,9 +22,6 @@ class RegisterDeviceController {
         @RequestBody @Valid RegisterDeviceRequest request,
         @LoginAccount Account account
     ) {
-        RegisterDeviceServiceResponse serviceResponse = useCase.register(
-            request.toCommand(account.getId())
-        );
-        return ApiResponse.ok(RegisterDeviceResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.register(request.toCommand(account)));
     }
 }

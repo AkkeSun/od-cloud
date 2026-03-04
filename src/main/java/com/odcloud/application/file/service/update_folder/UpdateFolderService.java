@@ -5,7 +5,6 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_FORBIDDEN_
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FOLDER_NAME;
 
 import com.odcloud.application.file.port.in.UpdateFolderUseCase;
-import com.odcloud.application.file.port.in.command.UpdateFolderCommand;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
@@ -22,7 +21,7 @@ class UpdateFolderService implements UpdateFolderUseCase {
 
     @Override
     @Transactional
-    public UpdateFolderServiceResponse updateFolder(UpdateFolderCommand command) {
+    public UpdateFolderResponse updateFolder(UpdateFolderCommand command) {
         FolderInfo folder = folderStoragePort.findById(command.folderId());
         if (!command.account().getGroupIds().contains(folder.getGroupId())) {
             throw new CustomAuthorizationException(ACCESS_DENIED);
@@ -35,7 +34,7 @@ class UpdateFolderService implements UpdateFolderUseCase {
         }
 
         folderStoragePort.save(folder);
-        return UpdateFolderServiceResponse.ofSuccess();
+        return UpdateFolderResponse.ofSuccess();
     }
 
     private void handleParentFolderChange(FolderInfo folder, UpdateFolderCommand command) {

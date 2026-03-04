@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.controller.device.register_device;
 
-import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
+import com.odcloud.application.device.service.register_device.RegisterDeviceCommand;
+import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -20,9 +21,9 @@ record RegisterDeviceRequest(
     String fcmToken
 ) {
 
-    RegisterDeviceCommand toCommand(Long accountId) {
+    RegisterDeviceCommand toCommand(Account account) {
         return RegisterDeviceCommand.builder()
-            .accountId(accountId)
+            .accountId(account.getId())
             .osType(osType)
             .deviceId(deviceId)
             .appVersion(appVersion)

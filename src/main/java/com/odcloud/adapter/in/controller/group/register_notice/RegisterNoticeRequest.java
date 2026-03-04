@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.register_notice;
 
-import com.odcloud.application.port.in.command.RegisterNoticeCommand;
+import com.odcloud.application.group.service.register_notice.RegisterNoticeCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotBlank;

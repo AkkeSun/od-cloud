@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

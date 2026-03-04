@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.port.in.DownloadFileUseCase;
 import com.odcloud.application.file.service.download_file.DownloadFileServiceResponse;
+import com.odcloud.application.file.port.in.FindFilesUseCase.DownloadFileUseCase;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.nio.charset.StandardCharsets;

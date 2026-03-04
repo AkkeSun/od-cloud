@@ -1,8 +1,8 @@
 package com.odcloud.application.auth.port.in;
 
-import com.odcloud.application.auth.service.issue_token.IssueTokenServiceResponse;
+import com.odcloud.application.auth.service.issue_token.IssueTokenResponse;
 
 public interface IssueTokenUseCase {
 
-    IssueTokenServiceResponse issue(String googleAuthorization, String deviceId);
+    IssueTokenResponse issue(String googleAuthorization, String deviceId);
 }

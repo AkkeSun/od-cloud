@@ -1,8 +1,7 @@
 package com.odcloud.adapter.in.controller.group.delete_group;
 
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
-import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
-import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
+import com.odcloud.application.group.service.delete_group.DeleteGroupResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -22,11 +21,7 @@ class DeleteGroupController {
         @PathVariable Long groupId,
         @LoginAccount Account account
     ) {
-        DeleteGroupServiceResponse response = deleteGroupUseCase.delete(DeleteGroupCommand.builder()
-            .groupId(groupId)
-            .currentOwnerEmail(account.getEmail())
-            .build());
-
-        return ApiResponse.ok(DeleteGroupResponse.of(response));
+        return ApiResponse.ok(
+            deleteGroupUseCase.delete(groupId, account));
     }
 }

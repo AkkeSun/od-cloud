@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.update_group_account_status;
 
 import com.odcloud.application.group.port.in.UpdateGroupAccountStatusUseCase;
-import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
+import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -26,8 +26,6 @@ class UpdateGroupAccountStatusController {
         @LoginAccount Account account,
         @RequestBody @Validated(ValidationSequence.class) UpdateGroupAccountStatusRequest request
     ) {
-        UpdateGroupAccountStatusServiceResponse serviceResponse = useCase.updateStatus(
-            request.toCommand(groupId, accountId, account));
-        return ApiResponse.ok(UpdateGroupAccountStatusResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.updateStatus(request.toCommand(groupId, accountId, account)));
     }
 }

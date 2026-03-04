@@ -2,62 +2,12 @@ package com.odcloud.adapter.in.controller.account.register_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.account.service.register_account.RegisterAccountServiceResponse;
+import com.odcloud.application.account.service.register_account.RegisterAccountResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class RegisterAccountResponseTest {
-
-    @Nested
-    @DisplayName("[of] ServiceResponse를 Response로 변환하는 정적 팩토리 메서드")
-    class Describe_of {
-
-        @Test
-        @DisplayName("[success] ServiceResponse를 Response로 변환한다")
-        void success() {
-            // given
-            RegisterAccountServiceResponse serviceResponse =
-                RegisterAccountServiceResponse.ofSuccess();
-
-            // when
-            RegisterAccountResponse response = RegisterAccountResponse.of(serviceResponse);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(response.result()).isTrue();
-        }
-
-        @Test
-        @DisplayName("[success] false 값을 포함한 ServiceResponse를 Response로 변환한다")
-        void success_falseValue() {
-            // given
-            RegisterAccountServiceResponse serviceResponse =
-                new RegisterAccountServiceResponse(false);
-
-            // when
-            RegisterAccountResponse response = RegisterAccountResponse.of(serviceResponse);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(response.result()).isFalse();
-        }
-
-        @Test
-        @DisplayName("[success] null 값을 포함한 ServiceResponse를 Response로 변환한다")
-        void success_nullValue() {
-            // given
-            RegisterAccountServiceResponse serviceResponse =
-                new RegisterAccountServiceResponse(null);
-
-            // when
-            RegisterAccountResponse response = RegisterAccountResponse.of(serviceResponse);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(response.result()).isNull();
-        }
-    }
 
     @Nested
     @DisplayName("[constructor] Response 생성자 테스트")

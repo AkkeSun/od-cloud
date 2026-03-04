@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
+import com.odcloud.application.file.service.register_file.RegisterFileResponse;
 import com.odcloud.application.file.port.in.RegisterFileUseCase;
-import com.odcloud.application.file.service.register_file.RegisterFileServiceResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ class RegisterFileController {
         @PathVariable Long folderId,
         @Valid RegisterFileRequest request
     ) {
-        RegisterFileServiceResponse response = useCase.register(request.toCommand(folderId));
-        return ApiResponse.ok(RegisterFileResponse.of(response));
+        return ApiResponse.ok(useCase.register(request.toCommand(folderId)));
     }
 }

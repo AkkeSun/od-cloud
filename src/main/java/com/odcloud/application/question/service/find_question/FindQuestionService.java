@@ -18,9 +18,9 @@ class FindQuestionService implements FindQuestionUseCase {
     private final AnswerStoragePort answerStoragePort;
 
     @Override
-    public FindQuestionServiceResponse findQuestion(Long questionId) {
+    public FindQuestionResponse findQuestion(Long questionId) {
         Question question = questionStoragePort.findById(questionId);
         Answer answer = answerStoragePort.findOneByQuestionId(questionId).orElse(null);
-        return FindQuestionServiceResponse.of(question, answer);
+        return FindQuestionResponse.of(question, answer);
     }
 }

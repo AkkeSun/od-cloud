@@ -3,11 +3,10 @@ package com.odcloud.application.schedule.service.register_schedule;
 import static com.odcloud.infrastructure.exception.ErrorCode.ACCESS_DENIED;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.schedule.port.in.RegisterSchedulerUseCase;
-import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
@@ -31,7 +30,7 @@ class RegisterScheduleService implements RegisterSchedulerUseCase {
 
     @Override
     @Transactional
-    public RegisterScheduleServiceResponse register(RegisterScheduleCommand command) {
+    public RegisterScheduleResponse register(RegisterScheduleCommand command) {
         if (command.groupAccessDenied()) {
             throw new CustomAuthenticationException(ACCESS_DENIED);
         }
@@ -51,6 +50,6 @@ class RegisterScheduleService implements RegisterSchedulerUseCase {
             }
         }
 
-        return RegisterScheduleServiceResponse.ofSuccess();
+        return RegisterScheduleResponse.ofSuccess();
     }
 }

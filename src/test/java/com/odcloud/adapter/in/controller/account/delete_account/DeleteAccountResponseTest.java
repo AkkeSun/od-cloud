@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.account.delete_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.account.service.delete_account.DeleteAccountServiceResponse;
+import com.odcloud.application.account.service.delete_account.DeleteAccountResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,39 +29,6 @@ class DeleteAccountResponseTest {
         void success_nullValue() {
             // when
             DeleteAccountResponse response = new DeleteAccountResponse(null);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(response.result()).isNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("[of] 팩토리 메서드 테스트")
-    class Describe_of {
-
-        @Test
-        @DisplayName("[success] of()로 ServiceResponse로부터 응답을 생성한다")
-        void success() {
-            // given
-            DeleteAccountServiceResponse serviceResponse = DeleteAccountServiceResponse.ofSuccess();
-
-            // when
-            DeleteAccountResponse response = DeleteAccountResponse.of(serviceResponse);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(response.result()).isTrue();
-        }
-
-        @Test
-        @DisplayName("[success] null result를 가진 ServiceResponse로부터 응답을 생성한다")
-        void success_nullResult() {
-            // given
-            DeleteAccountServiceResponse serviceResponse = new DeleteAccountServiceResponse(null);
-
-            // when
-            DeleteAccountResponse response = DeleteAccountResponse.of(serviceResponse);
 
             // then
             assertThat(response).isNotNull();

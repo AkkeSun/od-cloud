@@ -3,7 +3,6 @@ package com.odcloud.application.group.service.update_notice;
 import com.odcloud.application.group.port.in.UpdateNoticeUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
-import com.odcloud.application.port.in.command.UpdateNoticeCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -21,7 +20,7 @@ class UpdateNoticeService implements UpdateNoticeUseCase {
 
     @Override
     @Transactional
-    public UpdateNoticeServiceResponse update(UpdateNoticeCommand command) {
+    public UpdateNoticeResponse update(UpdateNoticeCommand command) {
         Group group = groupStoragePort.findById(command.groupId());
         if (!group.getOwnerEmail().equals(command.account().getEmail())) {
             throw new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER);
@@ -34,6 +33,6 @@ class UpdateNoticeService implements UpdateNoticeUseCase {
 
         notice.update(command);
         noticeStoragePort.update(notice);
-        return UpdateNoticeServiceResponse.ofSuccess();
+        return UpdateNoticeResponse.ofSuccess();
     }
 }

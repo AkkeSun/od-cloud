@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.group.port.in.command.UpdateGroupCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;

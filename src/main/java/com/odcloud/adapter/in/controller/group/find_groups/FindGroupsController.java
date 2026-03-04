@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.find_groups;
 
 import com.odcloud.application.group.port.in.FindGroupsUseCase;
-import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
+import com.odcloud.application.group.service.find_groups.FindGroupsResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ class FindGroupsController {
     ApiResponse<FindGroupsResponse> findAll(
         @Valid @ModelAttribute FindGroupsRequest request
     ) {
-        FindGroupsServiceResponse serviceResponse = useCase.findAll(request.toCommand());
-        return ApiResponse.ok(FindGroupsResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.findAll(request.getKeyword()));
     }
 }

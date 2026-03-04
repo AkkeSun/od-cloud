@@ -1,8 +1,6 @@
 package com.odcloud.application.question.service.find_questions;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.odcloud.application.question.port.in.command.FindQuestionsCommand;
+import com.odcloud.application.question.service.find_question.FindQuestionsCommand;
 import com.odcloud.domain.model.Question;
 import com.odcloud.fakeClass.FakeQuestionStoragePort;
 import java.time.LocalDateTime;

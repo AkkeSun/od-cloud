@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExi
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FILE_NAME;
 
 import com.odcloud.application.file.port.in.UpdateFileUseCase;
-import com.odcloud.application.file.port.in.command.UpdateFileCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FileInfo;
@@ -24,7 +23,7 @@ class UpdateFileService implements UpdateFileUseCase {
 
     @Override
     @Transactional
-    public UpdateFileServiceResponse update(UpdateFileCommand command) {
+    public UpdateFileResponse update(UpdateFileCommand command) {
         FileInfo file = fileStoragePort.findById(command.fileId());
 
         if (command.isFileNameUpdate(file.getFileName())) {
@@ -53,6 +52,6 @@ class UpdateFileService implements UpdateFileUseCase {
         }
 
         fileStoragePort.save(file);
-        return UpdateFileServiceResponse.ofSuccess();
+        return UpdateFileResponse.ofSuccess();
     }
 }

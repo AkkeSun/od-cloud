@@ -3,7 +3,6 @@ package com.odcloud.application.file.service.update_folder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.file.port.in.command.UpdateFolderCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;

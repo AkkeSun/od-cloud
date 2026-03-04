@@ -3,7 +3,6 @@ package com.odcloud.application.schedule.service.update_schedule;
 import static com.odcloud.infrastructure.exception.ErrorCode.ACCESS_DENIED;
 
 import com.odcloud.application.schedule.port.in.UpdateScheduleUseCase;
-import com.odcloud.application.schedule.port.in.command.UpdateScheduleCommand;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
@@ -19,7 +18,7 @@ class UpdateScheduleService implements UpdateScheduleUseCase {
 
     @Override
     @Transactional
-    public UpdateScheduleServiceResponse update(UpdateScheduleCommand command) {
+    public UpdateScheduleResponse update(UpdateScheduleCommand command) {
         Schedule schedule = scheduleStoragePort.findById(command.scheduleId());
 
         if (schedule.isGroupSchedule() && !command.account().getGroupIds()
@@ -36,6 +35,6 @@ class UpdateScheduleService implements UpdateScheduleUseCase {
         if (schedule.isGroupSchedule()) {
             // todo: 그룹 일정 수정 시 알림 발송
         }
-        return UpdateScheduleServiceResponse.ofSuccess();
+        return UpdateScheduleResponse.ofSuccess();
     }
 }

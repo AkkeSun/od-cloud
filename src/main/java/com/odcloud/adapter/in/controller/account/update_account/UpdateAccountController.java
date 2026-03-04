@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.account.update_account;
 
 import com.odcloud.application.account.port.in.UpdateAccountUseCase;
-import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.service.update_account.UpdateAccountResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,7 +24,6 @@ class UpdateAccountController {
         @ModelAttribute @Valid UpdateAccountRequest request,
         @LoginAccount Account account
     ) {
-        UpdateAccountServiceResponse serviceResponse = useCase.update(request.toCommand(account));
-        return ApiResponse.ok(UpdateAccountResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.update(request.toCommand(account)));
     }
 }

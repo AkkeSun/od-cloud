@@ -3,7 +3,7 @@ package com.odcloud.adapter.in.controller.webhook.googleplay;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
+import com.odcloud.application.webhook.service.googleplay.GooglePlayNotificationCommand;
 import com.odcloud.domain.model.GooglePlayNotificationType;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

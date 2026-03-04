@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
 import com.odcloud.domain.model.GooglePlayNotificationType;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Payment;

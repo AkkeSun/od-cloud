@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
-import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -66,7 +66,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             ScheduleEntity savedEntity = entityManager
-                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email",
+                    ScheduleEntity.class)
                 .setParameter("email", "user@example.com")
                 .getSingleResult();
 
@@ -100,7 +101,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             ScheduleEntity savedEntity = entityManager
-                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.groupId = :groupId", ScheduleEntity.class)
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.groupId = :groupId",
+                    ScheduleEntity.class)
                 .setParameter("groupId", 1L)
                 .getSingleResult();
 
@@ -132,7 +134,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             ScheduleEntity savedEntity = entityManager
-                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email",
+                    ScheduleEntity.class)
                 .setParameter("email", "user@example.com")
                 .getSingleResult();
 
@@ -175,7 +178,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
             entityManager.clear();
 
             // then
-            ScheduleEntity savedEntity = entityManager.find(ScheduleEntity.class, existingSchedule.getId());
+            ScheduleEntity savedEntity = entityManager.find(ScheduleEntity.class,
+                existingSchedule.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getContent()).isEqualTo(aesUtil.encryptText("수정된 회의"));
             assertThat(savedEntity.getStartDt()).isEqualTo(newStartDt);
@@ -244,7 +248,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             ScheduleEntity savedEntity = entityManager
-                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email",
+                    ScheduleEntity.class)
                 .setParameter("email", "user@example.com")
                 .getSingleResult();
 
@@ -277,7 +282,8 @@ class ScheduleStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             ScheduleEntity savedEntity = entityManager
-                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email", ScheduleEntity.class)
+                .createQuery("SELECT s FROM ScheduleEntity s WHERE s.writerEmail = :email",
+                    ScheduleEntity.class)
                 .setParameter("email", "user@example.com")
                 .getSingleResult();
 

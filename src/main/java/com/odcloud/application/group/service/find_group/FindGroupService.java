@@ -19,9 +19,9 @@ class FindGroupService implements FindGroupUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public FindGroupServiceResponse findById(Long groupId) {
+    public FindGroupResponse findById(Long groupId) {
         Group group = groupStoragePort.findById(groupId);
         List<Notice> notices = noticeStoragePort.findByGroupId(groupId, 5);
-        return FindGroupServiceResponse.of(group, notices);
+        return FindGroupResponse.of(group, notices);
     }
 }

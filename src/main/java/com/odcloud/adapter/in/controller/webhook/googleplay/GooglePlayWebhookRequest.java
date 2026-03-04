@@ -3,7 +3,7 @@ package com.odcloud.adapter.in.controller.webhook.googleplay;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
+import com.odcloud.application.webhook.service.googleplay.GooglePlayNotificationCommand;
 import com.odcloud.domain.model.GooglePlayNotificationType;
 import com.odcloud.infrastructure.util.StringUtil;
 import java.nio.charset.StandardCharsets;

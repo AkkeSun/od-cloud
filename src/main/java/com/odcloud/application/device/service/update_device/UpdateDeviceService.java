@@ -1,7 +1,6 @@
 package com.odcloud.application.device.service.update_device;
 
 import com.odcloud.application.device.port.in.UpdateDeviceUseCase;
-import com.odcloud.application.device.port.in.command.UpdateDeviceCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -18,7 +17,7 @@ class UpdateDeviceService implements UpdateDeviceUseCase {
 
     @Override
     @Transactional
-    public UpdateDeviceServiceResponse update(UpdateDeviceCommand command) {
+    public UpdateDeviceResponse update(UpdateDeviceCommand command) {
         AccountDevice device = storagePort.findByAccountIdAndOsTypeAndDeviceId(
             command.accountId(),
             command.osType(),
@@ -28,6 +27,6 @@ class UpdateDeviceService implements UpdateDeviceUseCase {
         device.updateDevice(command.pushYn(), command.fcmToken());
         storagePort.save(device);
 
-        return UpdateDeviceServiceResponse.ofSuccess();
+        return UpdateDeviceResponse.ofSuccess();
     }
 }

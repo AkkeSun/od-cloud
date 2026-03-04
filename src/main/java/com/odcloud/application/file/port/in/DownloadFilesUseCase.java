@@ -1,9 +1,9 @@
 package com.odcloud.application.file.port.in;
 
-import com.odcloud.application.file.service.download_files.DownloadFilesServiceResponse;
+import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
 import java.util.List;
 
 public interface DownloadFilesUseCase {
 
-    DownloadFilesServiceResponse download(List<Long> fileIds);
+    DownloadFilesResponse download(List<Long> fileIds);
 }

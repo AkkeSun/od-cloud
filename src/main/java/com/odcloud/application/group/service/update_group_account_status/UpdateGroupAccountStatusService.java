@@ -3,10 +3,9 @@ package com.odcloud.application.group.service.update_group_account_status;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.in.UpdateGroupAccountStatusUseCase;
-import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
@@ -27,7 +26,7 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
 
     @Override
     @Transactional
-    public UpdateGroupAccountStatusServiceResponse updateStatus(
+    public UpdateGroupAccountStatusResponse updateStatus(
         UpdateGroupAccountStatusCommand command
     ) {
         Group group = groupStoragePort.findById(command.groupId());
@@ -50,6 +49,6 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
             }
         }
 
-        return UpdateGroupAccountStatusServiceResponse.ofSuccess();
+        return UpdateGroupAccountStatusResponse.ofSuccess();
     }
 }

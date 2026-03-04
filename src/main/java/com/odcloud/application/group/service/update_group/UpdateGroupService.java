@@ -10,7 +10,6 @@ import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.UpdateGroupUseCase;
-import com.odcloud.application.group.port.in.command.UpdateGroupCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Account;
@@ -34,7 +33,7 @@ class UpdateGroupService implements UpdateGroupUseCase {
 
     @Override
     @Transactional
-    public UpdateGroupServiceResponse update(UpdateGroupCommand command) {
+    public UpdateGroupResponse update(UpdateGroupCommand command) {
         redisStoragePort.executeWithLock(GROUP_LOCK + command.groupId(), () -> {
             Group group = groupStoragePort.findById(command.groupId());
             if (!group.getOwnerEmail().equals(command.currentOwnerEmail())) {
@@ -84,6 +83,6 @@ class UpdateGroupService implements UpdateGroupUseCase {
             return null;
         });
 
-        return UpdateGroupServiceResponse.ofSuccess();
+        return UpdateGroupResponse.ofSuccess();
     }
 }

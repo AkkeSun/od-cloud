@@ -1,9 +1,9 @@
 package com.odcloud.application.device.port.in;
 
-import com.odcloud.application.device.port.in.command.UpdateDeviceCommand;
-import com.odcloud.application.device.service.update_device.UpdateDeviceServiceResponse;
+import com.odcloud.application.device.service.update_device.UpdateDeviceCommand;
+import com.odcloud.application.device.service.update_device.UpdateDeviceResponse;
 
 public interface UpdateDeviceUseCase {
 
-    UpdateDeviceServiceResponse update(UpdateDeviceCommand command);
+    UpdateDeviceResponse update(UpdateDeviceCommand command);
 }

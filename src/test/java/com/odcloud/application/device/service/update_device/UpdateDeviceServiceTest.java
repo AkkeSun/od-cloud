@@ -3,7 +3,6 @@ package com.odcloud.application.device.service.update_device;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.device.port.in.command.UpdateDeviceCommand;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

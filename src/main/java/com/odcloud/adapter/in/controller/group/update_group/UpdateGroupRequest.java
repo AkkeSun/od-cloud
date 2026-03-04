@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.update_group;
 
-import com.odcloud.application.group.port.in.command.UpdateGroupCommand;
+import com.odcloud.application.group.service.update_group.UpdateGroupCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import lombok.AllArgsConstructor;

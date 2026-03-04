@@ -1,6 +1,6 @@
 package com.odcloud.application.schedule.port.out;
 
-import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesCommand;
 import com.odcloud.domain.model.Schedule;
 import java.time.LocalDateTime;
 import java.util.List;

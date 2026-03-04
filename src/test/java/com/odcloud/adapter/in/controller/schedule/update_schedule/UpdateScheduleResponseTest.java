@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.schedule.update_schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleServiceResponse;
+import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,8 @@ class UpdateScheduleResponseTest {
         @DisplayName("[success] ServiceResponse를 Response로 변환한다")
         void success() {
             // given
-            UpdateScheduleServiceResponse serviceResponse =
-                UpdateScheduleServiceResponse.ofSuccess();
+            UpdateScheduleResponse serviceResponse =
+                UpdateScheduleResponse.ofSuccess();
 
             // when
             UpdateScheduleResponse response = UpdateScheduleResponse.of(serviceResponse);
@@ -32,8 +32,8 @@ class UpdateScheduleResponseTest {
         @DisplayName("[success] false 값을 포함한 ServiceResponse를 Response로 변환한다")
         void success_falseValue() {
             // given
-            UpdateScheduleServiceResponse serviceResponse =
-                new UpdateScheduleServiceResponse(false);
+            UpdateScheduleResponse serviceResponse =
+                new UpdateScheduleResponse(false);
 
             // when
             UpdateScheduleResponse response = UpdateScheduleResponse.of(serviceResponse);

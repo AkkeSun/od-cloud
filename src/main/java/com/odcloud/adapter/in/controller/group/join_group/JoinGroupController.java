@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.join_group;
 
 import com.odcloud.application.group.port.in.JoinGroupUseCase;
-import com.odcloud.application.group.service.join_group.JoinGroupServiceResponse;
+import com.odcloud.application.group.service.join_group.JoinGroupResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -21,7 +21,6 @@ class JoinGroupController {
         @PathVariable Long groupId,
         @LoginAccount Account account
     ) {
-        JoinGroupServiceResponse serviceResponse = useCase.join(groupId, account);
-        return ApiResponse.ok(JoinGroupResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.join(groupId, account));
     }
 }

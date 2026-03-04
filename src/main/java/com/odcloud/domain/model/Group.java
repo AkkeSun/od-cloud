@@ -2,7 +2,7 @@ package com.odcloud.domain.model;
 
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
-import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
+import com.odcloud.application.group.service.register_group.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -3,7 +3,6 @@ package com.odcloud.application.group.service.delete_notice;
 import com.odcloud.application.group.port.in.DeleteNoticeUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
-import com.odcloud.application.port.in.command.DeleteNoticeCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -21,7 +20,7 @@ class DeleteNoticeService implements DeleteNoticeUseCase {
 
     @Override
     @Transactional
-    public DeleteNoticeServiceResponse delete(DeleteNoticeCommand command) {
+    public DeleteNoticeResponse delete(DeleteNoticeCommand command) {
         Group group = groupStoragePort.findById(command.groupId());
         if (!group.getOwnerEmail().equals(command.account().getEmail())) {
             throw new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER);
@@ -33,6 +32,6 @@ class DeleteNoticeService implements DeleteNoticeUseCase {
         }
 
         noticeStoragePort.delete(notice);
-        return DeleteNoticeServiceResponse.ofSuccess();
+        return DeleteNoticeResponse.ofSuccess();
     }
 }

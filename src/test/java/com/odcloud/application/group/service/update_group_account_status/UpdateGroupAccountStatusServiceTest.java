@@ -3,7 +3,6 @@ package com.odcloud.application.group.service.update_group_account_status;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;

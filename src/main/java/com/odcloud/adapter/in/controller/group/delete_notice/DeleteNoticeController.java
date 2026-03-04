@@ -1,8 +1,7 @@
 package com.odcloud.adapter.in.controller.group.delete_notice;
 
 import com.odcloud.application.group.port.in.DeleteNoticeUseCase;
-import com.odcloud.application.group.service.delete_notice.DeleteNoticeServiceResponse;
-import com.odcloud.application.port.in.command.DeleteNoticeCommand;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -23,13 +22,6 @@ class DeleteNoticeController {
         @PathVariable Long noticeId,
         @LoginAccount Account account
     ) {
-        DeleteNoticeCommand command = DeleteNoticeCommand.builder()
-            .groupId(groupId)
-            .noticeId(noticeId)
-            .account(account)
-            .build();
-
-        DeleteNoticeServiceResponse serviceResponse = useCase.delete(command);
-        return ApiResponse.ok(DeleteNoticeResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.delete(new DeleteNoticeRequest().toCommand(groupId, noticeId, account)));
     }
 }

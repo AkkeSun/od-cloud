@@ -1,9 +1,9 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.port.in.command.RegisterGroupCommand;
-import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.service.register_group.RegisterGroupCommand;
+import com.odcloud.application.group.service.register_group.RegisterGroupResponse;
 
 public interface RegisterGroupUseCase {
 
-    RegisterGroupServiceResponse register(RegisterGroupCommand command);
+    RegisterGroupResponse register(RegisterGroupCommand command);
 }

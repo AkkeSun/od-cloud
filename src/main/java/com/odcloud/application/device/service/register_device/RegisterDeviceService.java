@@ -1,7 +1,6 @@
 package com.odcloud.application.device.service.register_device;
 
 import com.odcloud.application.device.port.in.RegisterDeviceUseCase;
-import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.domain.model.AccountDevice;
 import java.util.Optional;
@@ -17,7 +16,7 @@ class RegisterDeviceService implements RegisterDeviceUseCase {
 
     @Override
     @Transactional
-    public RegisterDeviceServiceResponse register(RegisterDeviceCommand command) {
+    public RegisterDeviceResponse register(RegisterDeviceCommand command) {
         Optional<AccountDevice> existingDevice = storagePort.findByAccountIdAndOsTypeAndDeviceId(
             command.accountId(),
             command.osType(),
@@ -32,6 +31,6 @@ class RegisterDeviceService implements RegisterDeviceUseCase {
         } else {
             savedDevice = storagePort.save(AccountDevice.of(command));
         }
-        return RegisterDeviceServiceResponse.of(savedDevice);
+        return RegisterDeviceResponse.of(savedDevice);
     }
 }

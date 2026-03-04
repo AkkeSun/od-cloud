@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
-import com.odcloud.application.group.port.in.command.UpdateGroupAccountStatusCommand;
+import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusCommand;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.persistence.EntityManager;

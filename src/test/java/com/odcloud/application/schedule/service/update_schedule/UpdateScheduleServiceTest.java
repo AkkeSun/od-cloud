@@ -3,7 +3,6 @@ package com.odcloud.application.schedule.service.update_schedule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.schedule.port.in.command.UpdateScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -69,7 +68,7 @@ class UpdateScheduleServiceTest {
                 .build();
 
             // when
-            UpdateScheduleServiceResponse response = updateScheduleService.update(command);
+            UpdateScheduleResponse response = updateScheduleService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -115,7 +114,7 @@ class UpdateScheduleServiceTest {
                 .build();
 
             // when
-            UpdateScheduleServiceResponse response = updateScheduleService.update(command);
+            UpdateScheduleResponse response = updateScheduleService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -164,7 +163,7 @@ class UpdateScheduleServiceTest {
                 .build();
 
             // when
-            UpdateScheduleServiceResponse response = updateScheduleService.update(command);
+            UpdateScheduleResponse response = updateScheduleService.update(command);
 
             // then
             assertThat(response.result()).isTrue();

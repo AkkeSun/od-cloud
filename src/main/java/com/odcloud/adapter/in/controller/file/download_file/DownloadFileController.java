@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.download_file;
 
-import com.odcloud.application.file.port.in.DownloadFileUseCase;
-import com.odcloud.application.file.service.download_file.DownloadFileServiceResponse;
+import com.odcloud.application.file.service.download_file.DownloadFileResponse;
+import com.odcloud.application.file.port.in.FindFilesUseCase.DownloadFileUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ class DownloadFileController {
 
     @GetMapping("/files/{fileId}/download")
     ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
-        DownloadFileServiceResponse serviceResponse = useCase.downloadFile(fileId);
+        DownloadFileResponse response = useCase.downloadFile(fileId);
         return ResponseEntity.ok()
-            .headers(serviceResponse.headers())
-            .body(serviceResponse.resource());
+            .headers(response.headers())
+            .body(response.resource());
     }
 }

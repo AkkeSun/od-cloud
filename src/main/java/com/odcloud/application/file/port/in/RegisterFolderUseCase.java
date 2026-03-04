@@ -1,9 +1,9 @@
 package com.odcloud.application.file.port.in;
 
-import com.odcloud.application.file.port.in.command.RegisterFolderCommand;
-import com.odcloud.application.file.service.register_folder.RegisterFolderServiceResponse;
+import com.odcloud.application.file.service.register_folder.RegisterFolderCommand;
+import com.odcloud.application.file.service.register_folder.RegisterFolderResponse;
 
 public interface RegisterFolderUseCase {
 
-    RegisterFolderServiceResponse createFolder(RegisterFolderCommand command);
+    RegisterFolderResponse createFolder(RegisterFolderCommand command);
 }

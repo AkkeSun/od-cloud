@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.auth.reissue_token;
 
 import com.odcloud.application.auth.port.in.ReissueTokenUseCase;
-import com.odcloud.application.auth.service.reissue_token.ReissueTokenServiceResponse;
+import com.odcloud.application.auth.service.reissue_token.ReissueTokenResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,7 +16,6 @@ class ReissueTokenController {
 
     @PutMapping("/auth")
     ApiResponse<ReissueTokenResponse> update(@RequestHeader String refreshToken) {
-        ReissueTokenServiceResponse serviceResponse = useCase.reissueToken(refreshToken);
-        return ApiResponse.ok(ReissueTokenResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.reissueToken(refreshToken));
     }
 }

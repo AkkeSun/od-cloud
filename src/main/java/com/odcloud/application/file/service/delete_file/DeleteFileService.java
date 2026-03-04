@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
 
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.DeleteFileUseCase;
-import com.odcloud.application.file.port.in.command.DeleteFileCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
@@ -29,8 +28,8 @@ class DeleteFileService implements DeleteFileUseCase {
 
     @Override
     @Transactional
-    public DeleteFileServiceResponse deleteFile(DeleteFileCommand command) {
-        List<DeleteFileServiceResponseItem> logs = new ArrayList<>();
+    public DeleteFileResponse deleteFile(DeleteFileCommand command) {
+        List<DeleteFileResponseItem> logs = new ArrayList<>();
         boolean allSuccess = true;
 
         for (Long fileId : command.fileIds()) {
@@ -49,17 +48,17 @@ class DeleteFileService implements DeleteFileUseCase {
                 });
                 filePort.deleteFile(file.getFileLoc());
 
-                logs.add(DeleteFileServiceResponseItem.ofSuccess(fileId));
+                logs.add(DeleteFileResponseItem.ofSuccess(fileId));
             } catch (Exception e) {
                 allSuccess = false;
-                logs.add(DeleteFileServiceResponseItem.builder()
+                logs.add(DeleteFileResponseItem.builder()
                     .fileId(fileId)
                     .errorMessage(e.getMessage())
                     .build());
             }
         }
 
-        return DeleteFileServiceResponse.builder()
+        return DeleteFileResponse.builder()
             .result(allSuccess)
             .logs(logs)
             .build();

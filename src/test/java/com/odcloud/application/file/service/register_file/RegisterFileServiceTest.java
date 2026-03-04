@@ -4,7 +4,6 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeFilePort;
@@ -221,7 +220,8 @@ class RegisterFileServiceTest {
             // when & then
             assertThatThrownBy(() -> registerFileService.register(command))
                 .isInstanceOf(CustomBusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_STORAGE_LIMIT_EXCEEDED);
+                .hasFieldOrPropertyWithValue("errorCode",
+                    ErrorCode.Business_STORAGE_LIMIT_EXCEEDED);
 
             assertThat(fakeFileStoragePort.database).isEmpty();
             assertThat(fakeFilePort.uploadFileCallCount).isZero();

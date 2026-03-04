@@ -31,7 +31,7 @@ class DeleteFolderService implements DeleteFolderUseCase {
 
     @Override
     @Transactional
-    public DeleteFolderServiceResponse deleteFolder(Account account, Long folderId) {
+    public DeleteFolderResponse deleteFolder(Account account, Long folderId) {
         FolderInfo folder = folderInfoStoragePort.findById(folderId);
         if (!account.getGroupIds().contains(folder.getGroupId())) {
             throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
@@ -47,7 +47,7 @@ class DeleteFolderService implements DeleteFolderUseCase {
             });
         }
 
-        return DeleteFolderServiceResponse.ofSuccess();
+        return DeleteFolderResponse.ofSuccess();
     }
 
     private long deleteFolderRecursively(FolderInfo folder, long deletedStorageSize) {

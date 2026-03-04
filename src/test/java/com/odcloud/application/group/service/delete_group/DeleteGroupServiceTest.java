@@ -1,10 +1,9 @@
 package com.odcloud.application.group.service.delete_group;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
-import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;

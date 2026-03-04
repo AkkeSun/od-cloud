@@ -1,9 +1,9 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.port.in.command.UpdateGroupCommand;
-import com.odcloud.application.group.service.update_group.UpdateGroupServiceResponse;
+import com.odcloud.application.group.service.update_group.UpdateGroupCommand;
+import com.odcloud.application.group.service.update_group.UpdateGroupResponse;
 
 public interface UpdateGroupUseCase {
 
-    UpdateGroupServiceResponse update(UpdateGroupCommand command);
+    UpdateGroupResponse update(UpdateGroupCommand command);
 }

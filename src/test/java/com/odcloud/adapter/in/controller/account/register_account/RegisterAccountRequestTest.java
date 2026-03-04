@@ -2,79 +2,11 @@ package com.odcloud.adapter.in.controller.account.register_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class RegisterAccountRequestTest {
-
-    @Nested
-    @DisplayName("[toCommand] Request를 Command로 변환하는 메서드")
-    class Describe_toCommand {
-
-        @Test
-        @DisplayName("[success] Request를 Command로 변환한다")
-        void success() {
-            // given
-            RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
-                .groupId(1L)
-                .build();
-
-            String googleAuthorization = "Bearer google-token-123";
-
-            // when
-            RegisterAccountCommand command = request.toCommand(googleAuthorization);
-
-            // then
-            assertThat(command).isNotNull();
-            assertThat(command.googleAuthorization()).isEqualTo(googleAuthorization);
-            assertThat(command.name()).isEqualTo("홍길동");
-            assertThat(command.groupId()).isEqualTo(1L);
-        }
-
-        @Test
-        @DisplayName("[success] null 값이 포함된 Request를 Command로 변환한다")
-        void success_withNullValues() {
-            // given
-            RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name(null)
-                .groupId(null)
-                .build();
-
-            String googleAuthorization = null;
-
-            // when
-            RegisterAccountCommand command = request.toCommand(googleAuthorization);
-
-            // then
-            assertThat(command).isNotNull();
-            assertThat(command.googleAuthorization()).isNull();
-            assertThat(command.name()).isNull();
-            assertThat(command.groupId()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] 빈 문자열이 포함된 Request를 Command로 변환한다")
-        void success_withEmptyStrings() {
-            // given
-            RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("")
-                .groupId(1L)
-                .build();
-
-            String googleAuthorization = "";
-
-            // when
-            RegisterAccountCommand command = request.toCommand(googleAuthorization);
-
-            // then
-            assertThat(command).isNotNull();
-            assertThat(command.googleAuthorization()).isEmpty();
-            assertThat(command.name()).isEmpty();
-        }
-    }
 
     @Nested
     @DisplayName("[builder] Builder 패턴 테스트")

@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.account.register_account;
 
 import com.odcloud.application.account.port.in.RegisterAccountUseCase;
-import com.odcloud.application.account.service.register_account.RegisterAccountServiceResponse;
+import com.odcloud.application.account.service.register_account.RegisterAccountResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,6 @@ class RegisterAccountController {
         @RequestHeader String googleAuthorization,
         @RequestBody @Valid RegisterAccountRequest request
     ) {
-        RegisterAccountServiceResponse serviceResponse = useCase.register(
-            request.toCommand(googleAuthorization));
-        return ApiResponse.ok(RegisterAccountResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.register(request.toCommand(googleAuthorization)));
     }
 }

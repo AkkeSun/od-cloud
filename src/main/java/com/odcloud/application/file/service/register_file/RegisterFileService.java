@@ -5,7 +5,6 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_STORAGE_LI
 
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.RegisterFileUseCase;
-import com.odcloud.application.file.port.in.command.RegisterFileCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
@@ -35,7 +34,7 @@ class RegisterFileService implements RegisterFileUseCase {
 
     @Override
     @Transactional
-    public RegisterFileServiceResponse register(RegisterFileCommand command) {
+    public RegisterFileResponse register(RegisterFileCommand command) {
         FolderInfo folder = folderStoragePort.findById(command.folderId());
 
         long totalFileSize = command.files().stream().mapToLong(MultipartFile::getSize).sum();
@@ -72,6 +71,6 @@ class RegisterFileService implements RegisterFileUseCase {
             throw e;
         }
 
-        return RegisterFileServiceResponse.ofSuccess();
+        return RegisterFileResponse.ofSuccess();
     }
 }

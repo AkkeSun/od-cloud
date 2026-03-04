@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.schedule.delete_schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleServiceResponse;
+import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,8 @@ class DeleteScheduleResponseTest {
         @DisplayName("[success] ServiceResponse를 Response로 변환한다")
         void success() {
             // given
-            DeleteScheduleServiceResponse serviceResponse =
-                DeleteScheduleServiceResponse.ofSuccess();
+            DeleteScheduleResponse serviceResponse =
+                DeleteScheduleResponse.ofSuccess();
 
             // when
             DeleteScheduleResponse response = DeleteScheduleResponse.of(serviceResponse);
@@ -32,8 +32,8 @@ class DeleteScheduleResponseTest {
         @DisplayName("[success] false 값을 포함한 ServiceResponse를 Response로 변환한다")
         void success_falseValue() {
             // given
-            DeleteScheduleServiceResponse serviceResponse =
-                new DeleteScheduleServiceResponse(false);
+            DeleteScheduleResponse serviceResponse =
+                new DeleteScheduleResponse(false);
 
             // when
             DeleteScheduleResponse response = DeleteScheduleResponse.of(serviceResponse);
@@ -47,8 +47,8 @@ class DeleteScheduleResponseTest {
         @DisplayName("[success] null 값을 포함한 ServiceResponse를 Response로 변환한다")
         void success_nullValue() {
             // given
-            DeleteScheduleServiceResponse serviceResponse =
-                new DeleteScheduleServiceResponse(null);
+            DeleteScheduleResponse serviceResponse =
+                new DeleteScheduleResponse(null);
 
             // when
             DeleteScheduleResponse response = DeleteScheduleResponse.of(serviceResponse);

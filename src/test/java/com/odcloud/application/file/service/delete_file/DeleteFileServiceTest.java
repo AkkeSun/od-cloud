@@ -3,7 +3,6 @@ package com.odcloud.application.file.service.delete_file;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.file.port.in.command.DeleteFileCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;

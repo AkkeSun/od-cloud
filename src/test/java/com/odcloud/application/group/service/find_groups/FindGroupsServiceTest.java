@@ -1,8 +1,5 @@
 package com.odcloud.application.group.service.find_groups;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.odcloud.application.port.in.command.FindGroupsCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import java.time.LocalDateTime;

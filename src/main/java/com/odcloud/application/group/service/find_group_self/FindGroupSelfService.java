@@ -2,9 +2,9 @@ package com.odcloud.application.group.service.find_group_self;
 
 import com.odcloud.application.group.port.in.FindGroupSelfUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
-import com.odcloud.application.group.service.find_group_self.FindGroupSelfServiceResponse.ActiveGroupInfo;
-import com.odcloud.application.group.service.find_group_self.FindGroupSelfServiceResponse.DeniedGroupInfo;
-import com.odcloud.application.group.service.find_group_self.FindGroupSelfServiceResponse.PendingGroupInfo;
+import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse.ActiveGroupInfo;
+import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse.DeniedGroupInfo;
+import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse.PendingGroupInfo;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
@@ -21,7 +21,7 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public FindGroupSelfServiceResponse findSelf(Account account) {
+    public FindGroupSelfResponse findSelf(Account account) {
         List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByAccountId(
             account.getId());
 
@@ -52,6 +52,6 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
             })
             .toList();
 
-        return FindGroupSelfServiceResponse.of(activeGroups, pendingGroups, deniedGroups);
+        return FindGroupSelfResponse.of(activeGroups, pendingGroups, deniedGroups);
     }
 }

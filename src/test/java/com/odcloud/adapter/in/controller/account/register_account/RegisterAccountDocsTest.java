@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.account.port.in.RegisterAccountUseCase;
-import com.odcloud.application.account.service.register_account.RegisterAccountServiceResponse;
+import com.odcloud.application.account.service.register_account.RegisterAccountResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,8 +51,8 @@ class RegisterAccountDocsTest extends RestDocsSupport {
                 .groupId(1L)
                 .build();
 
-            RegisterAccountServiceResponse serviceResponse =
-                RegisterAccountServiceResponse.ofSuccess();
+            RegisterAccountResponse serviceResponse =
+                RegisterAccountResponse.ofSuccess();
 
             given(useCase.register(any())).willReturn(serviceResponse);
 
@@ -79,8 +79,8 @@ class RegisterAccountDocsTest extends RestDocsSupport {
                 .newGroupName("새로운 그룹")
                 .build();
 
-            RegisterAccountServiceResponse serviceResponse =
-                RegisterAccountServiceResponse.ofSuccess();
+            RegisterAccountResponse serviceResponse =
+                RegisterAccountResponse.ofSuccess();
 
             given(useCase.register(any())).willReturn(serviceResponse);
 

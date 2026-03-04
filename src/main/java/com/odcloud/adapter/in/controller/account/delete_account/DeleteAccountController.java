@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.account.delete_account;
 
 import com.odcloud.application.account.port.in.DeleteAccountUseCase;
-import com.odcloud.application.account.service.delete_account.DeleteAccountServiceResponse;
+import com.odcloud.application.account.service.delete_account.DeleteAccountResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -17,7 +17,6 @@ class DeleteAccountController {
 
     @DeleteMapping("/accounts")
     ApiResponse<DeleteAccountResponse> delete(@LoginAccount Account account) {
-        DeleteAccountServiceResponse response = deleteAccountUseCase.delete(account);
-        return ApiResponse.ok(DeleteAccountResponse.of(response));
+        return ApiResponse.ok(deleteAccountUseCase.delete(account));
     }
 }

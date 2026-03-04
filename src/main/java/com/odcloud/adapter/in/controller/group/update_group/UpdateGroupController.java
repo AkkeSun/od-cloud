@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.update_group;
 
 import com.odcloud.application.group.port.in.UpdateGroupUseCase;
-import com.odcloud.application.group.service.update_group.UpdateGroupServiceResponse;
+import com.odcloud.application.group.service.update_group.UpdateGroupResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,8 +24,6 @@ class UpdateGroupController {
         @RequestBody @Valid UpdateGroupRequest request,
         @LoginAccount Account account
     ) {
-        UpdateGroupServiceResponse serviceResponse = useCase.update(
-            request.toCommand(groupId, account));
-        return ApiResponse.ok(UpdateGroupResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.update(request.toCommand(groupId, account)));
     }
 }

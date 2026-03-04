@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
@@ -68,7 +67,7 @@ class RegisterAccountServiceTest {
                 .build();
 
             // when
-            RegisterAccountServiceResponse response = registerAccountService.register(command);
+            RegisterAccountResponse response = registerAccountService.register(command);
 
             // then
             assertThat(response).isNotNull();
@@ -202,7 +201,7 @@ class RegisterAccountServiceTest {
                 .build();
 
             // when
-            RegisterAccountServiceResponse response = registerAccountService.register(command);
+            RegisterAccountResponse response = registerAccountService.register(command);
 
             // then
             assertThat(response).isNotNull();
@@ -231,7 +230,7 @@ class RegisterAccountServiceTest {
                 .build();
 
             // when
-            RegisterAccountServiceResponse response = registerAccountService.register(command);
+            RegisterAccountResponse response = registerAccountService.register(command);
 
             // then
             assertThat(response).isNotNull();

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.StoreType;
 import com.odcloud.domain.model.VoucherType;

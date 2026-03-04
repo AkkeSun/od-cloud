@@ -1,9 +1,8 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
-import com.odcloud.application.port.in.command.FindGroupsCommand;
+import com.odcloud.application.group.service.find_groups.FindGroupsResponse;
 
 public interface FindGroupsUseCase {
 
-    FindGroupsServiceResponse findAll(FindGroupsCommand command);
+    FindGroupsResponse findAll(String keyword);
 }

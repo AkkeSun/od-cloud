@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
+import com.odcloud.application.account.service.register_account.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.List;

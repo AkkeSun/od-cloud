@@ -1,6 +1,6 @@
 package com.odcloud.adapter.in.controller.group.update_group_account_show_yn;
 
-import com.odcloud.application.port.in.command.UpdateGroupAccountUseYnCommand;
+import com.odcloud.application.group.service.update_group_account_use_yn.UpdateGroupAccountUseYnCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import com.odcloud.infrastructure.validation.Contains;
@@ -17,7 +17,7 @@ record UpdateGroupAccountShowYnRequest(
     String showYn
 ) {
 
-    public UpdateGroupAccountUseYnCommand toCommand(Long groupId, Account account) {
+    UpdateGroupAccountUseYnCommand toCommand(Long groupId, Account account) {
         return UpdateGroupAccountUseYnCommand.builder()
             .groupId(groupId)
             .account(account)

@@ -1,7 +1,6 @@
 package com.odcloud.application.file.service.find_files;
 
 import com.odcloud.application.file.port.in.FindFilesUseCase;
-import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FileInfo;
@@ -22,12 +21,12 @@ class FindFilesService implements FindFilesUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public FindFilesServiceResponse findAll(FindFilesCommand command) {
+    public FindFilesResponse findAll(FindFilesCommand command) {
         String webServerHost = constant.webServerHost();
         List<FileInfo> files = fileStoragePort.findAll(command);
         files.forEach(fileInfo -> fileInfo.updateFileLocForHosting(webServerHost));
 
         List<FolderInfo> folders = folderStoragePort.findAll(command);
-        return FindFilesServiceResponse.of(files, folders, command.folderId());
+        return FindFilesResponse.of(files, folders, command.folderId());
     }
 }

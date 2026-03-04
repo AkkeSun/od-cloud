@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.schedule.find_schedules;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.schedule.service.find_schedules.FindSchedulesServiceResponse;
+import com.odcloud.application.schedule.service.find_schedules.FindSchedulesResponse;
 import com.odcloud.domain.model.Schedule;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ class FindSchedulesResponseTest {
                 .regDt(LocalDateTime.now())
                 .build();
 
-            FindSchedulesServiceResponse serviceResponse = FindSchedulesServiceResponse.of(
+            FindSchedulesResponse serviceResponse = FindSchedulesResponse.of(
                 Arrays.asList(schedule1, schedule2));
 
             // when

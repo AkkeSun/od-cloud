@@ -14,8 +14,8 @@ class FindGroupAccountListService implements FindGroupAccountListUseCase {
     private final GroupStoragePort groupStoragePort;
 
     @Override
-    public FindGroupAccountListServiceResponse findGroupAccountList(Long groupId) {
+    public FindGroupAccountListResponse findGroupAccountList(Long groupId) {
         List<GroupAccount> groupAccounts = groupStoragePort.findGroupAccountsByGroupId(groupId);
-        return FindGroupAccountListServiceResponse.of(groupAccounts);
+        return FindGroupAccountListResponse.of(groupAccounts);
     }
 }

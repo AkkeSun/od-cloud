@@ -5,12 +5,11 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_USER
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
 import com.odcloud.application.account.port.in.RegisterAccountUseCase;
-import com.odcloud.application.account.port.in.command.RegisterAccountCommand;
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
@@ -36,7 +35,7 @@ class RegisterAccountService implements RegisterAccountUseCase {
 
     @Override
     @Transactional
-    public RegisterAccountServiceResponse register(RegisterAccountCommand command) {
+    public RegisterAccountResponse register(RegisterAccountCommand command) {
         GoogleUserInfoResponse info = googleOAuth2Port.getUserInfo(command.googleAuthorization());
         if (accountStoragePort.existsByEmail(info.email())) {
             throw new CustomBusinessException(Business_SAVED_USER);
@@ -60,6 +59,6 @@ class RegisterAccountService implements RegisterAccountUseCase {
                 deviceStoragePort.findByAccountEmailForPush(group.getOwnerEmail())));
         }
 
-        return RegisterAccountServiceResponse.ofSuccess();
+        return RegisterAccountResponse.ofSuccess();
     }
 }

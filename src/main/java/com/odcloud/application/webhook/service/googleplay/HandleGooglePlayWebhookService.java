@@ -8,7 +8,6 @@ import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.voucher.port.out.PaymentStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.application.webhook.port.in.HandleGooglePlayWebhookUseCase;
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Payment;
 import com.odcloud.domain.model.Voucher;
@@ -70,7 +69,8 @@ class HandleGooglePlayWebhookService implements HandleGooglePlayWebhookUseCase {
 
     private void handleRefund(GooglePlayNotificationCommand command) {
         String purchaseToken = command.purchaseToken();
-        log.info("Processing refund: purchaseToken={}, orderId={}", purchaseToken, command.orderId());
+        log.info("Processing refund: purchaseToken={}, orderId={}", purchaseToken,
+            command.orderId());
 
         Optional<Payment> existingPayment = paymentStoragePort.findBySubscriptionKey(purchaseToken);
         if (existingPayment.isEmpty() && command.orderId() != null) {

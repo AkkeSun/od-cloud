@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.schedule.register_schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,8 @@ class RegisterScheduleResponseTest {
         @DisplayName("[success] ServiceResponse를 Response로 변환한다")
         void success() {
             // given
-            RegisterScheduleServiceResponse serviceResponse =
-                RegisterScheduleServiceResponse.ofSuccess();
+            RegisterScheduleResponse serviceResponse =
+                RegisterScheduleResponse.ofSuccess();
 
             // when
             RegisterScheduleResponse response = RegisterScheduleResponse.of(serviceResponse);
@@ -32,8 +32,8 @@ class RegisterScheduleResponseTest {
         @DisplayName("[success] false 값을 포함한 ServiceResponse를 Response로 변환한다")
         void success_falseValue() {
             // given
-            RegisterScheduleServiceResponse serviceResponse =
-                new RegisterScheduleServiceResponse(false);
+            RegisterScheduleResponse serviceResponse =
+                new RegisterScheduleResponse(false);
 
             // when
             RegisterScheduleResponse response = RegisterScheduleResponse.of(serviceResponse);
@@ -47,8 +47,8 @@ class RegisterScheduleResponseTest {
         @DisplayName("[success] null 값을 포함한 ServiceResponse를 Response로 변환한다")
         void success_nullValue() {
             // given
-            RegisterScheduleServiceResponse serviceResponse =
-                new RegisterScheduleServiceResponse(null);
+            RegisterScheduleResponse serviceResponse =
+                new RegisterScheduleResponse(null);
 
             // when
             RegisterScheduleResponse response = RegisterScheduleResponse.of(serviceResponse);

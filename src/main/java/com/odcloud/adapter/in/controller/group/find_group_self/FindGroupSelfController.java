@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.find_group_self;
 
 import com.odcloud.application.group.port.in.FindGroupSelfUseCase;
-import com.odcloud.application.group.service.find_group_self.FindGroupSelfServiceResponse;
+import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -17,7 +17,6 @@ class FindGroupSelfController {
 
     @GetMapping("/groups/self")
     ApiResponse<FindGroupSelfResponse> findSelf(@LoginAccount Account account) {
-        FindGroupSelfServiceResponse serviceResponse = useCase.findSelf(account);
-        return ApiResponse.ok(FindGroupSelfResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.findSelf(account));
     }
 }

@@ -2,7 +2,6 @@ package com.odcloud.application.question.service.register_question;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.question.port.in.command.RegisterQuestionCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Question;
 import com.odcloud.fakeClass.FakeQuestionStoragePort;

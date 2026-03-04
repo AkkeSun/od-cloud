@@ -1,7 +1,7 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.application.file.port.in.command.FindFilesCommand;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
+import com.odcloud.application.file.service.find_files.FindFilesCommand;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;

@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.update_file;
 
+import com.odcloud.application.file.service.update_file.UpdateFileResponse;
 import com.odcloud.application.file.port.in.UpdateFileUseCase;
-import com.odcloud.application.file.service.update_file.UpdateFileServiceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -23,7 +23,6 @@ class UpdateFileController {
         @RequestBody UpdateFileRequest request,
         @LoginAccount Account account
     ) {
-        UpdateFileServiceResponse response = useCase.update(request.toCommand(fileId, account));
-        return ApiResponse.ok(UpdateFileResponse.of(response));
+        return ApiResponse.ok(useCase.update(request.toCommand(fileId, account)));
     }
 }

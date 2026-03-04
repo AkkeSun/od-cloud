@@ -5,7 +5,6 @@ import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.voucher.port.in.CreateVoucherUseCase;
-import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
 import com.odcloud.application.voucher.port.out.PaymentStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Group;
@@ -26,7 +25,7 @@ class CreateVoucherService implements CreateVoucherUseCase {
 
     @Override
     @Transactional
-    public CreateVoucherServiceResponse create(CreateVoucherCommand command) {
+    public CreateVoucherResponse create(CreateVoucherCommand command) {
         Payment savedPayment = paymentStoragePort.save(Payment.create(command));
         voucherStoragePort.save(Voucher.create(savedPayment.getId(), command));
 
@@ -41,6 +40,6 @@ class CreateVoucherService implements CreateVoucherUseCase {
                 });
             }
         }
-        return CreateVoucherServiceResponse.ofSuccess();
+        return CreateVoucherResponse.ofSuccess();
     }
 }

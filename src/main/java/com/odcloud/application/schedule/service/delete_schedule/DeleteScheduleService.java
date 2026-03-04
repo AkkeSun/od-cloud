@@ -19,7 +19,7 @@ class DeleteScheduleService implements DeleteScheduleUseCase {
 
     @Override
     @Transactional
-    public DeleteScheduleServiceResponse delete(Long scheduleId, Account account) {
+    public DeleteScheduleResponse delete(Long scheduleId, Account account) {
         Schedule schedule = scheduleStoragePort.findById(scheduleId);
 
         if (schedule.isGroupSchedule()) {
@@ -35,6 +35,6 @@ class DeleteScheduleService implements DeleteScheduleUseCase {
         if (schedule.isGroupSchedule()) {
             // todo: 알림 발송
         }
-        return DeleteScheduleServiceResponse.ofSuccess();
+        return DeleteScheduleResponse.ofSuccess();
     }
 }

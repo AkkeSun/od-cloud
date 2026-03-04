@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.download_files;
 
+import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
 import com.odcloud.application.file.port.in.DownloadFilesUseCase;
-import com.odcloud.application.file.service.download_files.DownloadFilesServiceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -19,9 +19,9 @@ class DownloadFilesController {
 
     @GetMapping("/files/download")
     ResponseEntity<Resource> downloadFiles(@Valid DownloadFilesRequest request) {
-        DownloadFilesServiceResponse serviceResponse = useCase.download(request.getFileIds());
+        DownloadFilesResponse response = useCase.download(request.getFileIds());
         return ResponseEntity.ok()
-            .headers(serviceResponse.headers())
-            .body(serviceResponse.resource());
+            .headers(response.headers())
+            .body(response.resource());
     }
 }

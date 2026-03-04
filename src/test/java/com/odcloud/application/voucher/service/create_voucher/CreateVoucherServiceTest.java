@@ -3,7 +3,6 @@ package com.odcloud.application.voucher.service.create_voucher;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Payment;
 import com.odcloud.domain.model.PaymentStatus;
@@ -71,7 +70,7 @@ class CreateVoucherServiceTest {
                 .build();
 
             // when
-            CreateVoucherServiceResponse response = service.create(command);
+            CreateVoucherResponse response = service.create(command);
 
             // then
             assertThat(response).isNotNull();
@@ -123,7 +122,7 @@ class CreateVoucherServiceTest {
                 .build();
 
             // when
-            CreateVoucherServiceResponse response = service.create(command);
+            CreateVoucherResponse response = service.create(command);
 
             // then
             assertThat(response).isNotNull();
@@ -157,7 +156,7 @@ class CreateVoucherServiceTest {
                 .build();
 
             // when
-            CreateVoucherServiceResponse response = service.create(command);
+            CreateVoucherResponse response = service.create(command);
 
             // then
             assertThat(response).isNotNull();
@@ -196,7 +195,7 @@ class CreateVoucherServiceTest {
                 .build();
 
             // when
-            CreateVoucherServiceResponse response = service.create(command);
+            CreateVoucherResponse response = service.create(command);
 
             // then
             assertThat(response).isNotNull();
@@ -260,8 +259,8 @@ class CreateVoucherServiceTest {
                 .build();
 
             // when
-            CreateVoucherServiceResponse response1 = service.create(command1);
-            CreateVoucherServiceResponse response2 = service.create(command2);
+            CreateVoucherResponse response1 = service.create(command1);
+            CreateVoucherResponse response2 = service.create(command2);
 
             // then
             assertThat(response1).isNotNull();

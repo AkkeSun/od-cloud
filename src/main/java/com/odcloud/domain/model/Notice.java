@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.port.in.command.RegisterNoticeCommand;
-import com.odcloud.application.port.in.command.UpdateNoticeCommand;
+import com.odcloud.application.group.service.register_notice.RegisterNoticeCommand;
+import com.odcloud.application.group.service.update_notice.UpdateNoticeCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

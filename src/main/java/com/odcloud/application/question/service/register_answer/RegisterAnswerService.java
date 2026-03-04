@@ -1,9 +1,8 @@
 package com.odcloud.application.question.service.register_answer;
 
+import com.odcloud.application.question.port.in.RegisterAnswerUseCase;
 import com.odcloud.application.question.port.out.AnswerStoragePort;
 import com.odcloud.application.question.port.out.QuestionStoragePort;
-import com.odcloud.application.question.port.in.RegisterAnswerUseCase;
-import com.odcloud.application.question.port.in.command.RegisterAnswerCommand;
 import com.odcloud.domain.model.Answer;
 import com.odcloud.domain.model.Question;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -21,7 +20,7 @@ class RegisterAnswerService implements RegisterAnswerUseCase {
 
     @Override
     @Transactional
-    public RegisterAnswerServiceResponse registerAnswer(RegisterAnswerCommand command) {
+    public RegisterAnswerResponse registerAnswer(RegisterAnswerCommand command) {
         Question question = questionStoragePort.findById(command.questionId());
 
         if (answerStoragePort.existsByQuestionId(command.questionId())) {
@@ -34,6 +33,6 @@ class RegisterAnswerService implements RegisterAnswerUseCase {
 
         // TODO: 문의자에게 푸시 알림 전송
         // NotificationPort.sendPushNotification(question.getWriterEmail(), "답변이 등록되었습니다.");
-        return RegisterAnswerServiceResponse.ofSuccess();
+        return RegisterAnswerResponse.ofSuccess();
     }
 }

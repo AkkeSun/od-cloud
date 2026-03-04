@@ -1,5 +1,7 @@
 package com.odcloud.adapter.in.controller.group.update_notice;
 
+import com.odcloud.application.group.service.update_notice.UpdateNoticeCommand;
+import com.odcloud.domain.model.Account;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -11,4 +13,13 @@ record UpdateNoticeRequest(
     String content
 ) {
 
+    UpdateNoticeCommand toCommand(Long groupId, Long noticeId, Account account) {
+        return UpdateNoticeCommand.builder()
+            .groupId(groupId)
+            .noticeId(noticeId)
+            .account(account)
+            .title(title)
+            .content(content)
+            .build();
+    }
 }

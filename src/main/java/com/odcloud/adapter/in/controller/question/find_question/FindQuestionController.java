@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.question.find_question;
 
 import com.odcloud.application.question.port.in.FindQuestionUseCase;
-import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse;
+import com.odcloud.application.question.service.find_question.FindQuestionResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,6 @@ class FindQuestionController {
 
     @GetMapping("/questions/{questionId}")
     ApiResponse<FindQuestionResponse> findQuestion(@PathVariable Long questionId) {
-        FindQuestionServiceResponse response = useCase.findQuestion(questionId);
-        return ApiResponse.ok(FindQuestionResponse.of(response));
+        return ApiResponse.ok(useCase.findQuestion(questionId));
     }
 }

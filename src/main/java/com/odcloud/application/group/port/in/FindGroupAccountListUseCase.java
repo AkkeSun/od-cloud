@@ -1,8 +1,8 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListServiceResponse;
+import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListResponse;
 
 public interface FindGroupAccountListUseCase {
 
-    FindGroupAccountListServiceResponse findGroupAccountList(Long groupId);
+    FindGroupAccountListResponse findGroupAccountList(Long groupId);
 }

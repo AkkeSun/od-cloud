@@ -3,7 +3,6 @@ package com.odcloud.application.group.service.update_notice;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.odcloud.application.port.in.command.UpdateNoticeCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;

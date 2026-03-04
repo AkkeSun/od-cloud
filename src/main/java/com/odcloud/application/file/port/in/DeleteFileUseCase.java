@@ -1,9 +1,9 @@
 package com.odcloud.application.file.port.in;
 
-import com.odcloud.application.file.port.in.command.DeleteFileCommand;
-import com.odcloud.application.file.service.delete_file.DeleteFileServiceResponse;
+import com.odcloud.application.file.service.delete_file.DeleteFileCommand;
+import com.odcloud.application.file.service.delete_file.DeleteFileResponse;
 
 public interface DeleteFileUseCase {
 
-    DeleteFileServiceResponse deleteFile(DeleteFileCommand command);
+    DeleteFileResponse deleteFile(DeleteFileCommand command);
 }

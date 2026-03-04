@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.auth.callback_google_oauth2;
 
 import com.odcloud.application.auth.port.in.CallbackGoogleOAuth2UseCase;
-import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2Response;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ class CallbackGoogleOAuth2Controller {
 
     @GetMapping("/auth/google")
     ResponseEntity<Void> callback(@Valid CallbackGoogleOAuth2Request request) {
-        CallbackGoogleOAuth2ServiceResponse serviceResponse = useCase.callback(request.getCode());
+        CallbackGoogleOAuth2Response response = useCase.callback(request.getCode());
         return ResponseEntity.status(HttpStatus.FOUND)
-            .location(URI.create(serviceResponse.redirectUri()))
+            .location(URI.create(response.redirectUri()))
             .build();
     }
 }

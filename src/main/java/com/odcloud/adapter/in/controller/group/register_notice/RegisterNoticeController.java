@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.group.register_notice;
 
 import com.odcloud.application.group.port.in.RegisterNoticeUseCase;
-import com.odcloud.application.group.service.register_notice.RegisterNoticeServiceResponse;
+import com.odcloud.application.group.service.register_notice.RegisterNoticeResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,8 +24,6 @@ class RegisterNoticeController {
         @LoginAccount Account account,
         @RequestBody @Valid RegisterNoticeRequest request
     ) {
-        RegisterNoticeServiceResponse serviceResponse = useCase.register(
-            request.toCommand(groupId, account));
-        return ApiResponse.ok(RegisterNoticeResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.register(request.toCommand(groupId, account)));
     }
 }

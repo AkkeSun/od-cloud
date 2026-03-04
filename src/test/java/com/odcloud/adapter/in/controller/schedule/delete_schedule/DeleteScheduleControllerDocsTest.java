@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.schedule.port.in.DeleteScheduleUseCase;
-import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleServiceResponse;
+import com.odcloud.application.schedule.service.delete_schedule.DeleteScheduleResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -65,8 +65,8 @@ class DeleteScheduleControllerDocsTest extends RestDocsSupport {
             // given
             Long scheduleId = 1L;
 
-            DeleteScheduleServiceResponse serviceResponse =
-                DeleteScheduleServiceResponse.ofSuccess();
+            DeleteScheduleResponse serviceResponse =
+                DeleteScheduleResponse.ofSuccess();
 
             given(useCase.delete(any(), any())).willReturn(serviceResponse);
 

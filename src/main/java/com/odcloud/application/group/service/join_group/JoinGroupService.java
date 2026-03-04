@@ -1,8 +1,8 @@
 package com.odcloud.application.group.service.join_group;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.in.JoinGroupUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
@@ -22,12 +22,12 @@ class JoinGroupService implements JoinGroupUseCase {
 
     @Override
     @Transactional
-    public JoinGroupServiceResponse join(Long groupId, Account account) {
+    public JoinGroupResponse join(Long groupId, Account account) {
         Group group = groupStoragePort.findById(groupId);
         groupStoragePort.save(GroupAccount.ofPending(group, account));
 
         pushFcmUseCase.pushAsync(PushFcmCommand.ofGroupPending(group,
             deviceStoragePort.findByAccountEmailForPush(group.getOwnerEmail())));
-        return JoinGroupServiceResponse.ofSuccess();
+        return JoinGroupResponse.ofSuccess();
     }
 }

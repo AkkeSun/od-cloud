@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.voucher.create_voucher;
 
 import com.odcloud.application.voucher.port.in.CreateVoucherUseCase;
-import com.odcloud.application.voucher.service.create_voucher.CreateVoucherServiceResponse;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -22,7 +22,6 @@ class CreateVoucherController {
         @RequestBody @Valid CreateVoucherRequest request,
         @LoginAccount Account account
     ) {
-        CreateVoucherServiceResponse serviceResponse = useCase.create(request.toCommand(account));
-        return ApiResponse.ok(CreateVoucherResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.create(request.toCommand(account)));
     }
 }

@@ -26,7 +26,7 @@ class IssueTokenService implements IssueTokenUseCase {
     private final VoucherStoragePort voucherStoragePort;
 
     @Override
-    public IssueTokenServiceResponse issue(String googleAuthorization, String deviceId) {
+    public IssueTokenResponse issue(String googleAuthorization, String deviceId) {
         GoogleUserInfoResponse userInfo = googleOAuth2Port.getUserInfo(googleAuthorization);
         Account account = accountStoragePort.findByEmail(userInfo.email());
 
@@ -39,7 +39,7 @@ class IssueTokenService implements IssueTokenUseCase {
         redisStoragePort.register(String.format(constant.redisKey().token(), account.getEmail(),
             deviceId), refreshToken, constant.getRefreshTokenTtl());
 
-        return IssueTokenServiceResponse.builder()
+        return IssueTokenResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
             .build();

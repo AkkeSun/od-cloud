@@ -3,7 +3,6 @@ package com.odcloud.application.account.service.update_account;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.account.port.in.command.UpdateAccountCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountStoragePort;

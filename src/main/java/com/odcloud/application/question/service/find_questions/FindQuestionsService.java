@@ -1,8 +1,8 @@
 package com.odcloud.application.question.service.find_questions;
 
-import com.odcloud.application.question.port.out.QuestionStoragePort;
 import com.odcloud.application.question.port.in.FindQuestionsUseCase;
-import com.odcloud.application.question.port.in.command.FindQuestionsCommand;
+import com.odcloud.application.question.port.out.QuestionStoragePort;
+import com.odcloud.application.question.service.find_question.FindQuestionsCommand;
 import com.odcloud.domain.model.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,8 +17,8 @@ class FindQuestionsService implements FindQuestionsUseCase {
     private final QuestionStoragePort questionStoragePort;
 
     @Override
-    public FindQuestionsServiceResponse findQuestions(FindQuestionsCommand command) {
+    public FindQuestionsResponse findQuestions(FindQuestionsCommand command) {
         Page<Question> questions = questionStoragePort.findAll(command.page(), command.size());
-        return FindQuestionsServiceResponse.of(questions);
+        return FindQuestionsResponse.of(questions);
     }
 }

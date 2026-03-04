@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.update_folder;
 
+import com.odcloud.application.file.service.update_folder.UpdateFolderResponse;
 import com.odcloud.application.file.port.in.UpdateFolderUseCase;
-import com.odcloud.application.file.service.update_folder.UpdateFolderServiceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -25,8 +25,6 @@ class UpdateFolderController {
         @Validated(ValidationSequence.class) @RequestBody UpdateFolderRequest request,
         @LoginAccount Account account
     ) {
-        UpdateFolderServiceResponse response = useCase.updateFolder(
-            request.toCommand(folderId, account));
-        return ApiResponse.ok(UpdateFolderResponse.of(response));
+        return ApiResponse.ok(useCase.updateFolder(request.toCommand(folderId, account)));
     }
 }

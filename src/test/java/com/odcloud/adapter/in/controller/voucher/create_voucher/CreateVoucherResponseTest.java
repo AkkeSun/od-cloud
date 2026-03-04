@@ -2,7 +2,7 @@ package com.odcloud.adapter.in.controller.voucher.create_voucher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.voucher.service.create_voucher.CreateVoucherServiceResponse;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ class CreateVoucherResponseTest {
         @DisplayName("[success] ServiceResponse를 Response로 변환한다")
         void success() {
             // given
-            CreateVoucherServiceResponse serviceResponse = CreateVoucherServiceResponse.ofSuccess();
+            CreateVoucherResponse serviceResponse = CreateVoucherResponse.ofSuccess();
 
             // when
             CreateVoucherResponse response = CreateVoucherResponse.of(serviceResponse);
@@ -31,7 +31,7 @@ class CreateVoucherResponseTest {
         @DisplayName("[success] false 값을 가진 ServiceResponse를 Response로 변환한다")
         void success_falseResult() {
             // given
-            CreateVoucherServiceResponse serviceResponse = new CreateVoucherServiceResponse(false);
+            CreateVoucherResponse serviceResponse = new CreateVoucherResponse(false);
 
             // when
             CreateVoucherResponse response = CreateVoucherResponse.of(serviceResponse);

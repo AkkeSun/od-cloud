@@ -3,12 +3,11 @@ package com.odcloud.application.group.service.register_notice;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
+import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.in.RegisterNoticeUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
-import com.odcloud.application.port.in.command.RegisterNoticeCommand;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
@@ -29,7 +28,7 @@ class RegisterNoticeService implements RegisterNoticeUseCase {
 
     @Override
     @Transactional
-    public RegisterNoticeServiceResponse register(RegisterNoticeCommand command) {
+    public RegisterNoticeResponse register(RegisterNoticeCommand command) {
         Group group = groupStoragePort.findById(command.groupId());
         if (!group.getOwnerEmail().equals(command.account().getEmail())) {
             throw new CustomBusinessException(Business_INVALID_GROUP_OWNER);
@@ -46,6 +45,6 @@ class RegisterNoticeService implements RegisterNoticeUseCase {
             pushFcmUseCase.pushAsync(PushFcmCommand.ofNotice(devices, group, savedNotice));
         }
 
-        return RegisterNoticeServiceResponse.ofSuccess();
+        return RegisterNoticeResponse.ofSuccess();
     }
 }

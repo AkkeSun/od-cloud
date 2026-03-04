@@ -1,7 +1,7 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.voucher.port.in.command.CreateVoucherCommand;
-import com.odcloud.application.webhook.port.in.command.GooglePlayNotificationCommand;
+import com.odcloud.application.voucher.service.create_voucher.CreateVoucherCommand;
+import com.odcloud.application.webhook.service.googleplay.GooglePlayNotificationCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

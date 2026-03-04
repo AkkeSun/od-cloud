@@ -1,8 +1,5 @@
 package com.odcloud.application.schedule.service.find_schedules;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.odcloud.application.schedule.port.in.command.FindSchedulesCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -56,7 +53,7 @@ class FindSchedulesServiceTest {
                 .build();
 
             // when
-            FindSchedulesServiceResponse response = findSchedulesService.findSchedules(command);
+            FindSchedulesResponse response = findSchedulesService.findSchedules(command);
 
             // then
             assertThat(response.schedules()).hasSize(3);
@@ -92,7 +89,7 @@ class FindSchedulesServiceTest {
                 .build();
 
             // when
-            FindSchedulesServiceResponse response = findSchedulesService.findSchedules(command);
+            FindSchedulesResponse response = findSchedulesService.findSchedules(command);
 
             // then
             assertThat(response.schedules()).hasSize(1);
@@ -126,7 +123,7 @@ class FindSchedulesServiceTest {
                 .build();
 
             // when
-            FindSchedulesServiceResponse response = findSchedulesService.findSchedules(command);
+            FindSchedulesResponse response = findSchedulesService.findSchedules(command);
 
             // then
             assertThat(response.schedules()).hasSize(4);
@@ -149,7 +146,7 @@ class FindSchedulesServiceTest {
                 .build();
 
             // when
-            FindSchedulesServiceResponse response = findSchedulesService.findSchedules(command);
+            FindSchedulesResponse response = findSchedulesService.findSchedules(command);
 
             // then
             assertThat(response.schedules()).isEmpty();

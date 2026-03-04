@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.schedule.register_schedule;
 
 import com.odcloud.application.schedule.port.in.RegisterSchedulerUseCase;
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -23,7 +23,6 @@ class RegisterScheduleController {
         @Validated(ValidationSequence.class) @RequestBody RegisterScheduleRequest request,
         @LoginAccount Account account
     ) {
-        RegisterScheduleServiceResponse response = useCase.register(request.toCommand(account));
-        return ApiResponse.ok(RegisterScheduleResponse.of(response));
+        return ApiResponse.ok(useCase.register(request.toCommand(account)));
     }
 }

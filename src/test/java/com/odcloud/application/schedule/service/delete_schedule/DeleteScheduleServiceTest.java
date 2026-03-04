@@ -3,7 +3,7 @@ package com.odcloud.application.schedule.service.delete_schedule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -58,7 +58,7 @@ class DeleteScheduleServiceTest {
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
             // when
-            DeleteScheduleServiceResponse response = deleteScheduleService.delete(scheduleId,
+            DeleteScheduleResponse response = deleteScheduleService.delete(scheduleId,
                 account);
 
             // then
@@ -98,7 +98,7 @@ class DeleteScheduleServiceTest {
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
             // when
-            DeleteScheduleServiceResponse response = deleteScheduleService.delete(scheduleId,
+            DeleteScheduleResponse response = deleteScheduleService.delete(scheduleId,
                 account);
 
             // then
@@ -243,7 +243,7 @@ class DeleteScheduleServiceTest {
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
             // when
-            DeleteScheduleServiceResponse response = deleteScheduleService.delete(scheduleId,
+            DeleteScheduleResponse response = deleteScheduleService.delete(scheduleId,
                 otherMember);
 
             // then

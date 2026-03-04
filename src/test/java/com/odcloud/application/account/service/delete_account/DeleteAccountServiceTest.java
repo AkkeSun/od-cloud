@@ -1,10 +1,10 @@
 package com.odcloud.application.account.service.delete_account;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
-import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
+import com.odcloud.application.group.service.delete_group.DeleteGroupCommand;
 import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.AccountDevice;
@@ -72,6 +72,7 @@ class DeleteAccountServiceTest {
 
     // Fake implementation of DeleteGroupUseCase for testing
     private static class FakeDeleteGroupUseCase implements DeleteGroupUseCase {
+
         private final FakeGroupStoragePort groupStoragePort;
         private final FakeFolderStoragePort folderInfoStoragePort;
         private final FakeFileStoragePort fileInfoStoragePort;
@@ -114,7 +115,8 @@ class DeleteAccountServiceTest {
                 scheduleStoragePort.delete(schedule);
             }
 
-            List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(), Integer.MAX_VALUE);
+            List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(),
+                Integer.MAX_VALUE);
             for (Notice notice : notices) {
                 noticeStoragePort.delete(notice);
             }
@@ -238,7 +240,7 @@ class DeleteAccountServiceTest {
             scheduleStoragePort.save(groupSchedule);
 
             // when
-            DeleteAccountServiceResponse response = service.delete(account);
+            DeleteAccountResponse response = service.delete(account);
 
             // then
             assertThat(response).isNotNull();
@@ -344,7 +346,7 @@ class DeleteAccountServiceTest {
             folderInfoStoragePort.save(folder2);
 
             // when
-            DeleteAccountServiceResponse response = service.delete(account);
+            DeleteAccountResponse response = service.delete(account);
 
             // then
             assertThat(response).isNotNull();
@@ -374,7 +376,7 @@ class DeleteAccountServiceTest {
             accountStoragePort.save(account);
 
             // when
-            DeleteAccountServiceResponse response = service.delete(account);
+            DeleteAccountResponse response = service.delete(account);
 
             // then
             assertThat(response).isNotNull();
@@ -398,7 +400,7 @@ class DeleteAccountServiceTest {
             accountStoragePort.save(account);
 
             // when
-            DeleteAccountServiceResponse response = service.delete(account);
+            DeleteAccountResponse response = service.delete(account);
 
             // then
             assertThat(response).isNotNull();
@@ -422,7 +424,7 @@ class DeleteAccountServiceTest {
             accountStoragePort.save(account);
 
             // when
-            DeleteAccountServiceResponse response = service.delete(account);
+            DeleteAccountResponse response = service.delete(account);
 
             // then
             assertThat(response).isNotNull();

@@ -3,7 +3,7 @@ package com.odcloud.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.IntegrationTestSupport;
-import com.odcloud.application.file.port.in.command.FindFilesCommand;
+import com.odcloud.application.file.service.find_files.FindFilesCommand;
 import com.odcloud.domain.model.FileInfo;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;

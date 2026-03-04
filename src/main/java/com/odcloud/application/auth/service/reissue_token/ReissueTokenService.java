@@ -27,7 +27,7 @@ class ReissueTokenService implements ReissueTokenUseCase {
     private final VoucherStoragePort voucherStoragePort;
 
     @Override
-    public ReissueTokenServiceResponse reissueToken(String refreshToken) {
+    public ReissueTokenResponse reissueToken(String refreshToken) {
         if (!jwtUtil.validateTokenExceptExpiration(refreshToken)) {
             throw new CustomAuthenticationException(INVALID_REFRESH_TOKEN);
         }
@@ -49,7 +49,7 @@ class ReissueTokenService implements ReissueTokenUseCase {
         String newRefreshToken = jwtUtil.createRefreshToken(account, deviceId);
 
         redisStoragePort.register(redisKey, newRefreshToken, constant.getRefreshTokenTtl());
-        return ReissueTokenServiceResponse.builder()
+        return ReissueTokenResponse.builder()
             .accessToken(jwtUtil.createAccessToken(account))
             .refreshToken(newRefreshToken)
             .build();

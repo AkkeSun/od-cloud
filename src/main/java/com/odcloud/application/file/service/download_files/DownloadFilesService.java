@@ -19,9 +19,9 @@ class DownloadFilesService implements DownloadFilesUseCase {
     private final FileInfoStoragePort fileStoragePort;
 
     @Override
-    public DownloadFilesServiceResponse download(List<Long> fileIds) {
+    public DownloadFilesResponse download(List<Long> fileIds) {
         List<FileInfo> files = fileStoragePort.findByIds(fileIds);
         FileResponse fileResponse = filePort.readFiles(files);
-        return new DownloadFilesServiceResponse(fileResponse.resource(), fileResponse.headers());
+        return new DownloadFilesResponse(fileResponse.resource(), fileResponse.headers());
     }
 }

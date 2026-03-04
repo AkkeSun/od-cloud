@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.delete_file;
 
 import com.odcloud.application.file.port.in.DeleteFileUseCase;
-import com.odcloud.application.file.service.delete_file.DeleteFileServiceResponse;
+import com.odcloud.application.file.service.delete_file.DeleteFileResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,7 +24,6 @@ class DeleteFileController {
         @LoginAccount Account account,
         @Valid @RequestBody DeleteFileRequest request
     ) {
-        DeleteFileServiceResponse serviceResponse = useCase.deleteFile(request.toCommand(account));
-        return ApiResponse.ok(DeleteFileResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.deleteFile(request.toCommand(account)));
     }
 }

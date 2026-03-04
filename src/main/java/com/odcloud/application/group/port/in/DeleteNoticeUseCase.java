@@ -1,9 +1,9 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.service.delete_notice.DeleteNoticeServiceResponse;
-import com.odcloud.application.port.in.command.DeleteNoticeCommand;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeCommand;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeResponse;
 
 public interface DeleteNoticeUseCase {
 
-    DeleteNoticeServiceResponse delete(DeleteNoticeCommand command);
+    DeleteNoticeResponse delete(DeleteNoticeCommand command);
 }

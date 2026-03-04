@@ -1,9 +1,9 @@
 package com.odcloud.application.group.port.in;
 
-import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
-import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
+import com.odcloud.application.group.service.delete_group.DeleteGroupResponse;
+import com.odcloud.domain.model.Account;
 
 public interface DeleteGroupUseCase {
 
-    DeleteGroupServiceResponse delete(DeleteGroupCommand command);
+    DeleteGroupResponse delete(Long groupId, Account account);
 }

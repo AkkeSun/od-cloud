@@ -6,10 +6,10 @@ import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
-import com.odcloud.application.group.port.in.command.DeleteGroupCommand;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
+import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
@@ -33,32 +33,31 @@ class DeleteGroupService implements DeleteGroupUseCase {
 
     @Override
     @Transactional
-    public DeleteGroupServiceResponse delete(DeleteGroupCommand command) {
-        Group group = groupStoragePort.findById(command.groupId());
-        if (!group.getOwnerEmail().equals(command.currentOwnerEmail())) {
+    public DeleteGroupResponse delete(Long groupId, Account account) {
+        Group group = groupStoragePort.findById(groupId);
+        if (!group.getOwnerEmail().equals(account.getEmail())) {
             throw new CustomBusinessException(Business_INVALID_GROUP_OWNER);
         }
 
-        List<FileInfo> files = fileInfoStoragePort.findByGroupId(command.groupId());
+        List<FileInfo> files = fileInfoStoragePort.findByGroupId(groupId);
         for (FileInfo file : files) {
             filePort.deleteFile(file.getFileLoc());
         }
-        fileInfoStoragePort.deleteByGroupId(command.groupId());
-        folderInfoStoragePort.deleteByGroupId(command.groupId());
+        fileInfoStoragePort.deleteByGroupId(groupId);
+        folderInfoStoragePort.deleteByGroupId(groupId);
 
-        List<Schedule> schedules = scheduleStoragePort.findByGroupId(command.groupId());
+        List<Schedule> schedules = scheduleStoragePort.findByGroupId(groupId);
         for (Schedule schedule : schedules) {
             scheduleStoragePort.delete(schedule);
         }
 
-        List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(),
-            Integer.MAX_VALUE);
+        List<Notice> notices = noticeStoragePort.findByGroupId(groupId, Integer.MAX_VALUE);
         for (Notice notice : notices) {
             noticeStoragePort.delete(notice);
         }
 
-        groupStoragePort.deleteGroupAccountsByGroupId(command.groupId());
+        groupStoragePort.deleteGroupAccountsByGroupId(groupId);
         groupStoragePort.delete(group);
-        return DeleteGroupServiceResponse.ofSuccess();
+        return DeleteGroupResponse.ofSuccess();
     }
 }

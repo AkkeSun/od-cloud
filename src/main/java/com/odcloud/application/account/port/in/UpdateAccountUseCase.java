@@ -1,9 +1,9 @@
 package com.odcloud.application.account.port.in;
 
-import com.odcloud.application.account.port.in.command.UpdateAccountCommand;
-import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.service.update_account.UpdateAccountCommand;
+import com.odcloud.application.account.service.update_account.UpdateAccountResponse;
 
 public interface UpdateAccountUseCase {
 
-    UpdateAccountServiceResponse update(UpdateAccountCommand command);
+    UpdateAccountResponse update(UpdateAccountCommand command);
 }

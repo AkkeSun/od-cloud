@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.question.register_question;
 
 import com.odcloud.application.question.port.in.RegisterQuestionUseCase;
-import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.service.register_question.RegisterQuestionResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -22,8 +22,6 @@ class RegisterQuestionController {
         @Valid @RequestBody RegisterQuestionRequest request,
         @LoginAccount Account account
     ) {
-        RegisterQuestionServiceResponse response = useCase.registerQuestion(
-            request.toCommand(account));
-        return ApiResponse.ok(RegisterQuestionResponse.of(response));
+        return ApiResponse.ok(useCase.registerQuestion(request.toCommand(account)));
     }
 }

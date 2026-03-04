@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.file.port.in.DeleteFileUseCase;
 import com.odcloud.application.file.service.delete_file.DeleteFileServiceResponse;
-import com.odcloud.application.file.service.delete_file.DeleteFileServiceResponseItem;
+import com.odcloud.application.file.service.delete_file.DeleteFileResponseItem;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.List;
@@ -81,7 +81,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
             DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
                 .result(true)
                 .logs(List.of(
-                    DeleteFileServiceResponseItem.builder()
+                    DeleteFileResponseItem.builder()
                         .fileId(1L)
                         .errorMessage(null)
                         .build()
@@ -123,9 +123,9 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
             DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
                 .result(true)
                 .logs(List.of(
-                    DeleteFileServiceResponseItem.builder().fileId(1L).errorMessage(null).build(),
-                    DeleteFileServiceResponseItem.builder().fileId(2L).errorMessage(null).build(),
-                    DeleteFileServiceResponseItem.builder().fileId(3L).errorMessage(null).build()
+                    DeleteFileResponseItem.builder().fileId(1L).errorMessage(null).build(),
+                    DeleteFileResponseItem.builder().fileId(2L).errorMessage(null).build(),
+                    DeleteFileResponseItem.builder().fileId(3L).errorMessage(null).build()
                 ))
                 .build();
 
@@ -165,11 +165,11 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
             DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
                 .result(false)
                 .logs(List.of(
-                    DeleteFileServiceResponseItem.builder()
+                    DeleteFileResponseItem.builder()
                         .fileId(1L)
                         .errorMessage(null)
                         .build(),
-                    DeleteFileServiceResponseItem.builder()
+                    DeleteFileResponseItem.builder()
                         .fileId(2L)
                         .errorMessage("조회된 파일이 없습니다")
                         .build()
@@ -212,7 +212,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
             DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
                 .result(false)
                 .logs(List.of(
-                    DeleteFileServiceResponseItem.builder()
+                    DeleteFileResponseItem.builder()
                         .fileId(999L)
                         .errorMessage("조회된 파일이 없습니다")
                         .build()
@@ -255,7 +255,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
             DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
                 .result(false)
                 .logs(List.of(
-                    DeleteFileServiceResponseItem.builder()
+                    DeleteFileResponseItem.builder()
                         .fileId(1L)
                         .errorMessage("접근 권한이 없습니다")
                         .build()

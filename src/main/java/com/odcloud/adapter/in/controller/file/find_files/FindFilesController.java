@@ -1,7 +1,7 @@
 package com.odcloud.adapter.in.controller.file.find_files;
 
+import com.odcloud.application.file.service.find_files.FindFilesResponse;
 import com.odcloud.application.file.port.in.FindFilesUseCase;
-import com.odcloud.application.file.service.find_files.FindFilesServiceResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.resolver.LoginAccount;
 import com.odcloud.infrastructure.response.ApiResponse;
@@ -24,7 +24,6 @@ class FindFilesController {
         @Valid @ModelAttribute FindFilesRequest request,
         @LoginAccount Account account
     ) {
-        FindFilesServiceResponse serviceResponse = useCase.findAll(request.toCommand(account));
-        return ApiResponse.ok(FindFilesResponse.of(serviceResponse));
+        return ApiResponse.ok(useCase.findAll(request.toCommand(account)));
     }
 }

@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.schedule.port.in.RegisterSchedulerUseCase;
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleServiceResponse;
+import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -70,8 +70,8 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
-            RegisterScheduleServiceResponse serviceResponse =
-                RegisterScheduleServiceResponse.ofSuccess();
+            RegisterScheduleResponse serviceResponse =
+                RegisterScheduleResponse.ofSuccess();
 
             given(useCase.register(any())).willReturn(serviceResponse);
 

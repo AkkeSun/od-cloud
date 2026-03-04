@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.schedule.port.in.command.RegisterScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
@@ -69,7 +68,7 @@ class RegisterScheduleServiceTest {
                 .build();
 
             // when
-            RegisterScheduleServiceResponse response = registerScheduleService.register(command);
+            RegisterScheduleResponse response = registerScheduleService.register(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -105,7 +104,7 @@ class RegisterScheduleServiceTest {
                 .build();
 
             // when
-            RegisterScheduleServiceResponse response = registerScheduleService.register(command);
+            RegisterScheduleResponse response = registerScheduleService.register(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -142,7 +141,7 @@ class RegisterScheduleServiceTest {
                 .build();
 
             // when
-            RegisterScheduleServiceResponse response = registerScheduleService.register(command);
+            RegisterScheduleResponse response = registerScheduleService.register(command);
 
             // then
             assertThat(response.result()).isTrue();

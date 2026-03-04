@@ -1,7 +1,6 @@
 package com.odcloud.application.device.service.push_fcm;
 
 import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.in.command.PushFcmCommand;
 import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.application.device.port.out.FcmPort;
 import com.odcloud.domain.model.AccountDevice;

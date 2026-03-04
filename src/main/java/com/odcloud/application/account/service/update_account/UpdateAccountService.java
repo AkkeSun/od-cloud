@@ -1,7 +1,6 @@
 package com.odcloud.application.account.service.update_account;
 
 import com.odcloud.application.account.port.in.UpdateAccountUseCase;
-import com.odcloud.application.account.port.in.command.UpdateAccountCommand;
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.domain.model.Account;
@@ -22,7 +21,7 @@ class UpdateAccountService implements UpdateAccountUseCase {
 
     @Override
     @Transactional
-    public UpdateAccountServiceResponse update(UpdateAccountCommand command) {
+    public UpdateAccountResponse update(UpdateAccountCommand command) {
         Account account = accountStoragePort.findByEmail(command.account().getEmail());
         if (command.pictureFile() != null) {
             FileInfo file = FileInfo.ofProfilePicture(constant.fileUpload().diskPath(),
@@ -41,6 +40,6 @@ class UpdateAccountService implements UpdateAccountUseCase {
 
         account.updateModDt();
         Account updatedAccount = accountStoragePort.save(account);
-        return UpdateAccountServiceResponse.of(updatedAccount);
+        return UpdateAccountResponse.of(updatedAccount);
     }
 }

@@ -2,7 +2,6 @@ package com.odcloud.application.device.service.register_device;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.device.port.in.command.RegisterDeviceCommand;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import java.time.LocalDateTime;

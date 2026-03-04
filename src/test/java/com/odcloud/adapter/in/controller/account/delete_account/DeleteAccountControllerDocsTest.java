@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.account.port.in.DeleteAccountUseCase;
-import com.odcloud.application.account.service.delete_account.DeleteAccountServiceResponse;
+import com.odcloud.application.account.service.delete_account.DeleteAccountResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -60,7 +60,7 @@ class DeleteAccountControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 계정을 삭제한다")
         void success_deleteAccount() throws Exception {
             // given
-            DeleteAccountServiceResponse serviceResponse = DeleteAccountServiceResponse.ofSuccess();
+            DeleteAccountResponse serviceResponse = DeleteAccountResponse.ofSuccess();
             given(useCase.delete(any())).willReturn(serviceResponse);
 
             // when & then
