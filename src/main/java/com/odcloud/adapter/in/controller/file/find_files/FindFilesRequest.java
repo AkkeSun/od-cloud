@@ -21,9 +21,7 @@ public class FindFilesRequest {
     private String sortType;
 
     private Long folderId;
-
-    private Long groupId;
-
+    
     private String keyword;
 
     FindFilesCommand toCommand(Account account) {
@@ -31,7 +29,6 @@ public class FindFilesRequest {
             .account(account)
             .sortType(sortType)
             .folderId(folderId)
-            .groupId(groupId)
             .keyword(keyword)
             .build();
     }

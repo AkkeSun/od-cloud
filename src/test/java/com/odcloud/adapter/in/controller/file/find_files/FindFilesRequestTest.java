@@ -29,7 +29,6 @@ class FindFilesRequestTest {
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(10L)
-                .groupId(1L)
                 .keyword("test")
                 .build();
 
@@ -41,7 +40,6 @@ class FindFilesRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.sortType()).isEqualTo("NAME_ASC");
             assertThat(command.folderId()).isEqualTo(10L);
-            assertThat(command.groupId()).isEqualTo(1L);
             assertThat(command.keyword()).isEqualTo("test");
         }
 
@@ -67,7 +65,6 @@ class FindFilesRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.sortType()).isEqualTo("REG_DT_DESC");
             assertThat(command.folderId()).isEqualTo(10L);
-            assertThat(command.groupId()).isNull();
             assertThat(command.keyword()).isNull();
         }
 
@@ -94,7 +91,6 @@ class FindFilesRequestTest {
             assertThat(command.sortType()).isEqualTo("NAME_DESC");
             assertThat(command.keyword()).isEqualTo("report");
             assertThat(command.folderId()).isNull();
-            assertThat(command.groupId()).isNull();
         }
 
         @Test
@@ -110,7 +106,6 @@ class FindFilesRequestTest {
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(0L)
-                .groupId(1L)
                 .build();
 
             // when
@@ -119,7 +114,6 @@ class FindFilesRequestTest {
             // then
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.folderId()).isEqualTo(0L);
-            assertThat(command.groupId()).isEqualTo(1L);
         }
 
         @Test
@@ -192,7 +186,6 @@ class FindFilesRequestTest {
             assertThat(command.account()).isEqualTo(account);
             assertThat(command.sortType()).isNull();
             assertThat(command.folderId()).isNull();
-            assertThat(command.groupId()).isNull();
             assertThat(command.keyword()).isNull();
         }
     }
@@ -208,7 +201,6 @@ class FindFilesRequestTest {
             FindFilesRequest request = FindFilesRequest.builder()
                 .sortType("NAME_ASC")
                 .folderId(10L)
-                .groupId(1L)
                 .keyword("test")
                 .build();
 
@@ -216,7 +208,6 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isEqualTo("NAME_ASC");
             assertThat(request.getFolderId()).isEqualTo(10L);
-            assertThat(request.getGroupId()).isEqualTo(1L);
             assertThat(request.getKeyword()).isEqualTo("test");
         }
 
@@ -231,7 +222,6 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isNull();
             assertThat(request.getFolderId()).isNull();
-            assertThat(request.getGroupId()).isNull();
             assertThat(request.getKeyword()).isNull();
         }
 
@@ -245,7 +235,6 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isNull();
             assertThat(request.getFolderId()).isNull();
-            assertThat(request.getGroupId()).isNull();
             assertThat(request.getKeyword()).isNull();
         }
 
@@ -256,7 +245,6 @@ class FindFilesRequestTest {
             FindFilesRequest request = new FindFilesRequest(
                 "NAME_ASC",
                 10L,
-                1L,
                 "test"
             );
 
@@ -264,7 +252,6 @@ class FindFilesRequestTest {
             assertThat(request).isNotNull();
             assertThat(request.getSortType()).isEqualTo("NAME_ASC");
             assertThat(request.getFolderId()).isEqualTo(10L);
-            assertThat(request.getGroupId()).isEqualTo(1L);
             assertThat(request.getKeyword()).isEqualTo("test");
         }
     }

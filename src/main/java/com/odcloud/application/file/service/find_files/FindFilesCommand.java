@@ -9,7 +9,6 @@ public record FindFilesCommand(
     Account account,
     Long folderId,
     String sortType,
-    Long groupId,
     String keyword
 ) {
 
