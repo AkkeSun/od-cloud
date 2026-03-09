@@ -101,6 +101,6 @@ public class FileInfo {
 
     public void addFileNameNumber(int number) {
         this.fileName = fileName.split("\\.")[0] + "(" + number + ")" + fileName.substring(
-            fileName.lastIndexOf(".") + 1);
+            fileName.lastIndexOf("."));
     }
 }
