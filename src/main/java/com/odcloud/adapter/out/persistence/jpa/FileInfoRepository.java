@@ -92,10 +92,8 @@ class FileInfoRepository {
 
         if (command.isFulltextSearch() && !isH2) {
             sql = String.format(sql,
-                "AND to_tsvector('simple'::regconfig, f.FILE_NAME::text) @@ plainto_tsquery('simple', :keyword)");
-        } else if (command.isFulltextSearch() && isH2) {
-            sql = String.format(sql, "AND f.FILE_NAME LIKE :keyword");
-        } else if (command.isLikeSearch()) {
+                "AND to_tsvector('simple'::regconfig, f.FILE_NAME::text) @@ to_tsquery('simple', :keyword)");
+        } else if (command.isFulltextSearch() || command.isLikeSearch()) {
             sql = String.format(sql, "AND f.FILE_NAME LIKE :keyword");
         } else if (command.isRootSearch()) {
             sql = String.format(sql, "AND f.FOLDER_ID IS NULL ");
@@ -107,8 +105,8 @@ class FileInfoRepository {
         query.setParameter("groupIds", command.account().getGroupIds());
 
         if (command.isFulltextSearch() && !isH2) {
-            query.setParameter("keyword", command.keyword());
-        } else if ((command.isFulltextSearch() && isH2) || command.isLikeSearch()) {
+            query.setParameter("keyword", command.keyword().toLowerCase() + ":*");
+        } else if (command.isFulltextSearch() || command.isLikeSearch()) {
             query.setParameter("keyword", "%" + command.keyword() + "%");
         } else if (!command.isRootSearch()) {
             query.setParameter("folderId", command.folderId());

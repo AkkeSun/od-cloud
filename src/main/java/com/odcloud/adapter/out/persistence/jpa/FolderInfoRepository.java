@@ -66,10 +66,8 @@ class FolderInfoRepository {
 
         if (command.isFulltextSearch() && !isH2) {
             sql = String.format(sql,
-                "AND to_tsvector('simple'::regconfig, NAME::text) @@ plainto_tsquery('simple', :keyword)");
-        } else if (command.isFulltextSearch() && isH2) {
-            sql = String.format(sql, "AND NAME LIKE :keyword");
-        } else if (command.isLikeSearch()) {
+                "AND to_tsvector('simple'::regconfig, NAME::text) @@ to_tsquery('simple', :keyword)");
+        } else if (command.isFulltextSearch() || command.isLikeSearch()) {
             sql = String.format(sql, "AND NAME LIKE :keyword");
         } else if (command.isRootSearch()) {
             sql = String.format(sql, "AND PARENT_ID IS NULL ");
@@ -81,8 +79,8 @@ class FolderInfoRepository {
         query.setParameter("groupIds", command.account().getGroupIds());
 
         if (command.isFulltextSearch() && !isH2) {
-            query.setParameter("keyword", command.keyword());
-        } else if ((command.isFulltextSearch() && isH2) || command.isLikeSearch()) {
+            query.setParameter("keyword", command.keyword().toLowerCase() + ":*");
+        } else if (command.isFulltextSearch() || command.isLikeSearch()) {
             query.setParameter("keyword", "%" + command.keyword() + "%");
         } else if (!command.isRootSearch()) {
             query.setParameter("folderId", command.folderId());
