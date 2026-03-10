@@ -66,7 +66,7 @@ class FolderInfoRepository {
 
         if (command.isFulltextSearch() && !isH2) {
             sql = String.format(sql,
-                "AND MATCH(NAME) AGAINST(:keyword IN BOOLEAN MODE)");
+                "AND to_tsvector('simple'::regconfig, NAME::text) @@ plainto_tsquery('simple', :keyword)");
         } else if (command.isFulltextSearch() && isH2) {
             sql = String.format(sql, "AND NAME LIKE :keyword");
         } else if (command.isLikeSearch()) {
@@ -81,7 +81,7 @@ class FolderInfoRepository {
         query.setParameter("groupIds", command.account().getGroupIds());
 
         if (command.isFulltextSearch() && !isH2) {
-            query.setParameter("keyword", command.keyword() + "*");
+            query.setParameter("keyword", command.keyword());
         } else if ((command.isFulltextSearch() && isH2) || command.isLikeSearch()) {
             query.setParameter("keyword", "%" + command.keyword() + "%");
         } else if (!command.isRootSearch()) {
