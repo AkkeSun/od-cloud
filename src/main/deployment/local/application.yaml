@@ -1,6 +1,8 @@
 spring:
   application:
     name: od-cloud
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
   jpa:
     hibernate:
       ddl-auto: none
