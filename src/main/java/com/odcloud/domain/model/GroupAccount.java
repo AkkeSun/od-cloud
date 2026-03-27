@@ -80,6 +80,12 @@ public class GroupAccount {
         this.modDt = LocalDateTime.now();
     }
 
+    public void updateToPending() {
+        this.status = "PENDING";
+        this.showYn = "Y";
+        this.modDt = LocalDateTime.now();
+    }
+
     public boolean isBlock() {
         return "BLOCK".equals(status);
     }

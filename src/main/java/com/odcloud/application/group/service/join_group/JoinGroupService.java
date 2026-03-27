@@ -8,6 +8,7 @@ import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
+import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,15 @@ class JoinGroupService implements JoinGroupUseCase {
     @Transactional
     public JoinGroupResponse join(Long groupId, Account account) {
         Group group = groupStoragePort.findById(groupId);
-        groupStoragePort.save(GroupAccount.ofPending(group, account));
+
+        try {
+            GroupAccount groupAccount = groupStoragePort.findGroupAccountByGroupIdAndAccountId(
+                groupId, account.getId());
+            groupAccount.updateToPending();
+            groupStoragePort.save(groupAccount);
+        } catch (CustomBusinessException e) {
+            groupStoragePort.save(GroupAccount.ofPending(group, account));
+        }
 
         pushFcmUseCase.pushAsync(PushFcmCommand.ofGroupPending(group,
             deviceStoragePort.findByAccountEmailForPush(group.getOwnerEmail())));
