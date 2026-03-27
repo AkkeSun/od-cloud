@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 class UpdateAccountRequest {
 
     private String nickname;
-    @FileType(allowed = {"PNG", "JPG", "JPGE"},
+    @FileType(allowed = {"PNG", "JPG", "JPEG"},
         message = "프로필 사진은 이미지만 등록 가능 가능합니다")
     private MultipartFile pictureFile;
 
