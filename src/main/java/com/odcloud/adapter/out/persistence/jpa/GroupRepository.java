@@ -262,7 +262,8 @@ class GroupRepository {
             .on(groupAccountEntity.groupId.eq(groupEntity.id))
             .where(groupAccountEntity.groupId.eq(groupId)
                 .and(groupAccountEntity.accountId.eq(accountId)))
-            .fetchOne();
+            .orderBy(groupAccountEntity.id.desc())
+            .fetchFirst();
 
         if (groupAccount == null) {
             return Optional.empty();
