@@ -19,7 +19,6 @@ public class Group {
     private Long id;
     private String name;
     private String ownerEmail;
-    private Long rootFolderId;
     private Long storageUsed;
     private Long storageTotal;
     private List<GroupAccount> groupMembers;
@@ -30,14 +29,6 @@ public class Group {
         this.id = id;
         this.ownerEmail = ownerEmail;
         this.name = name;
-        this.regDt = regDt;
-    }
-
-    public Group(Long id, String ownerEmail, String name, Long rootFolderId, LocalDateTime regDt) {
-        this.id = id;
-        this.ownerEmail = ownerEmail;
-        this.name = name;
-        this.rootFolderId = rootFolderId;
         this.regDt = regDt;
     }
 

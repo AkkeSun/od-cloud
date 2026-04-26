@@ -40,8 +40,6 @@ public class Account {
                 .map(groupInfo -> Group.builder()
                     .id(((Number) groupInfo.get("id")).longValue())
                     .name(groupInfo.get("name").toString())
-                    .rootFolderId(groupInfo.get("folderId") != null
-                        ? ((Number) groupInfo.get("folderId")).longValue() : null)
                     .build())
                 .collect(Collectors.toList()))
             .build();
@@ -69,7 +67,6 @@ public class Account {
                 java.util.Map<String, Object> groupInfo = new java.util.HashMap<>();
                 groupInfo.put("id", group.getId());
                 groupInfo.put("name", group.getName());
-                groupInfo.put("folderId", group.getRootFolderId());
                 return groupInfo;
             })
             .collect(Collectors.toList());
