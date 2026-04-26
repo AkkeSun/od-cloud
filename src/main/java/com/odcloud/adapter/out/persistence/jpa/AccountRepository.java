@@ -1,6 +1,7 @@
 package com.odcloud.adapter.out.persistence.jpa;
 
 import static com.odcloud.adapter.out.persistence.jpa.QAccountEntity.accountEntity;
+import static com.odcloud.adapter.out.persistence.jpa.QFolderInfoEntity.folderInfoEntity;
 import static com.odcloud.adapter.out.persistence.jpa.QGroupAccountEntity.groupAccountEntity;
 import static com.odcloud.adapter.out.persistence.jpa.QGroupEntity.groupEntity;
 
@@ -60,12 +61,15 @@ class AccountRepository {
                 groupEntity.id,
                 groupEntity.ownerEmail,
                 groupEntity.name,
+                folderInfoEntity.id,
                 groupEntity.regDt))
             .from(groupEntity)
             .innerJoin(groupAccountEntity)
             .on(groupEntity.id.eq(groupAccountEntity.groupId))
             .innerJoin(accountEntity)
             .on(groupAccountEntity.accountId.eq(accountEntity.id))
+            .leftJoin(folderInfoEntity)
+            .on(folderInfoEntity.groupId.eq(groupEntity.id).and(folderInfoEntity.parentId.isNull()))
             .where(accountEntity.email.eq(email)
                 .and(groupAccountEntity.status.eq("ACTIVE")))
             .fetch());
