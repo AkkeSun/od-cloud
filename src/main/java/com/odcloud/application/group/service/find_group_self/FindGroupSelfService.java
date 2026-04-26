@@ -1,5 +1,6 @@
 package com.odcloud.application.group.service.find_group_self;
 
+import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.FindGroupSelfUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse.ActiveGroupInfo;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 class FindGroupSelfService implements FindGroupSelfUseCase {
 
     private final GroupStoragePort groupStoragePort;
+    private final FolderInfoStoragePort folderInfoStoragePort;
 
     @Override
     @Transactional(readOnly = true)
@@ -30,7 +32,8 @@ class FindGroupSelfService implements FindGroupSelfUseCase {
             .filter(ga -> "Y".equals(ga.getShowYn()))
             .map(ga -> {
                 Group group = groupStoragePort.findById(ga.getGroupId());
-                return ActiveGroupInfo.of(group);
+                return ActiveGroupInfo.of(group,
+                    folderInfoStoragePort.findRootFolderByGroupId(ga.getGroupId()));
             })
             .toList();
 

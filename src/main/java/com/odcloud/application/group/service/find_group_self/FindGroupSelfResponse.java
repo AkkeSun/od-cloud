@@ -1,5 +1,6 @@
 package com.odcloud.application.group.service.find_group_self;
 
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import java.util.List;
@@ -26,14 +27,16 @@ public record FindGroupSelfResponse(
     public record ActiveGroupInfo(
         Long id,
         String name,
+        Long folderId,
         MemberInfo manager,
         int activeMemberCount
     ) {
 
-        public static ActiveGroupInfo of(Group group) {
+        public static ActiveGroupInfo of(Group group, FolderInfo rootFolder) {
             return ActiveGroupInfo.builder()
                 .id(group.getId())
                 .name(group.getName())
+                .folderId(rootFolder != null ? rootFolder.getId() : null)
                 .manager(group.getGroupMembers().stream()
                     .filter(member -> member.getEmail().equals(group.getOwnerEmail()))
                     .findFirst()
