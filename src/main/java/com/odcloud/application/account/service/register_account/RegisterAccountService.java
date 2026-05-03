@@ -41,7 +41,7 @@ class RegisterAccountService implements RegisterAccountUseCase {
             throw new CustomBusinessException(Business_SAVED_USER);
         }
 
-        Account account = accountStoragePort.save(Account.of(info, command));
+        Account account = accountStoragePort.save(Account.of(info));
         if (StringUtils.hasText(command.newGroupName())) {
             if (groupStoragePort.existsByName(command.newGroupName())) {
                 throw new CustomBusinessException(Business_SAVED_GROUP);

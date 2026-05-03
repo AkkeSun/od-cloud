@@ -7,8 +7,6 @@ public record RegisterAccountCommand(
 
     String googleAuthorization,
 
-    String name,
-
     Long groupId,
 
     String newGroupName

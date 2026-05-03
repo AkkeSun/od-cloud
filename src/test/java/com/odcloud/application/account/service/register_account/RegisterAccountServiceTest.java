@@ -62,7 +62,6 @@ class RegisterAccountServiceTest {
 
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer test-token")
-                .name("홍길동")
                 .groupId(groupId)
                 .build();
 
@@ -74,7 +73,6 @@ class RegisterAccountServiceTest {
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeAccountStoragePort.database.get(0).getEmail()).isEqualTo(
                 "fake@example.com");
-            assertThat(fakeAccountStoragePort.database.get(0).getName()).isEqualTo("홍길동");
             assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "PENDING");
@@ -109,7 +107,6 @@ class RegisterAccountServiceTest {
 
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer test-token")
-                .name("새 사용자")
                 .groupId(groupId)
                 .build();
 
@@ -129,7 +126,6 @@ class RegisterAccountServiceTest {
             // given
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer test-token")
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -158,7 +154,6 @@ class RegisterAccountServiceTest {
 
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer invalid-token")
-                .name("홍길동")
                 .groupId(groupId)
                 .build();
 
@@ -196,7 +191,6 @@ class RegisterAccountServiceTest {
 
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .googleAuthorization("Bearer custom-token")
-                .name("커스텀 이름")
                 .groupId(groupId)
                 .build();
 
@@ -208,34 +202,7 @@ class RegisterAccountServiceTest {
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeAccountStoragePort.database.get(0).getEmail()).isEqualTo(
                 "custom@example.com");
-            assertThat(fakeAccountStoragePort.database.get(0).getName()).isEqualTo("커스텀 이름");
             assertThat(fakeAccountStoragePort.database.get(0).getNickname()).isEqualTo("커스텀 사용자");
-        }
-
-        @Test
-        @DisplayName("[success] 빈 이름으로도 계정을 등록할 수 있다")
-        void success_emptyName() {
-            // given
-            Long groupId = 1L;
-            Group group = Group.builder()
-                .id(groupId)
-                .ownerEmail("owner@example.com")
-                .build();
-            fakeGroupStoragePort.groupDatabase.add(group);
-
-            RegisterAccountCommand command = RegisterAccountCommand.builder()
-                .googleAuthorization("Bearer test-token")
-                .name("")
-                .groupId(groupId)
-                .build();
-
-            // when
-            RegisterAccountResponse response = registerAccountService.register(command);
-
-            // then
-            assertThat(response).isNotNull();
-            assertThat(fakeAccountStoragePort.database).hasSize(1);
-            assertThat(fakeAccountStoragePort.database.get(0).getName()).isEmpty();
         }
 
         @Test
@@ -253,7 +220,6 @@ class RegisterAccountServiceTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                 .groupId(1L)
                 .googleAuthorization("Bearer test-token")
-                .name("홍길동")
                 .newGroupName(existingGroupName)
                 .build();
 

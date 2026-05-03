@@ -54,7 +54,7 @@ public record MailRequest(
                     + "    </div>\n"
                     + "  </body>\n"
                     + "</html>\n",
-                group.getName(), requester.getName(), requester.getEmail()))
+                group.getName(), requester.getNickname(), requester.getEmail()))
             .toList(List.of(group.getOwnerEmail()))
             .fileList(List.of())
             .build();
@@ -99,7 +99,7 @@ public record MailRequest(
                 + "      </p>\n"
                 + "    </div>\n"
                 + "  </body>\n"
-                + "</html>\n", groupAccount.getName(), groupAccount.getGroupName()))
+                + "</html>\n", groupAccount.getNickName(), groupAccount.getGroupName()))
             .toList(List.of(groupAccount.getEmail()))
             .fileList(List.of())
             .build();

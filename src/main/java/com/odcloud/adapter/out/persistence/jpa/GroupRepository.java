@@ -6,7 +6,6 @@ import static com.odcloud.adapter.out.persistence.jpa.QGroupEntity.groupEntity;
 
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
-import com.odcloud.infrastructure.util.AesUtil;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 class GroupRepository {
 
-    private final AesUtil aesUtil;
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
 
@@ -88,7 +86,6 @@ class GroupRepository {
                 groupAccountEntity.accountId,
                 groupEntity.name,
                 groupEntity.ownerEmail,
-                accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 accountEntity.picture,
@@ -106,7 +103,6 @@ class GroupRepository {
             .where(groupAccountEntity.groupId.eq(id))
             .fetch();
 
-        members.forEach(m -> m.updateName(aesUtil.decryptText(m.getName())));
         group.updateGroupMembers(members);
 
         return Optional.of(group);
@@ -140,7 +136,7 @@ class GroupRepository {
     }
 
     List<GroupAccount> findGroupAccountsByGroupId(Long groupId) {
-        List<GroupAccount> groupAccounts = queryFactory
+        return queryFactory
             .select(Projections.constructor(
                 GroupAccount.class,
                 groupAccountEntity.id,
@@ -148,7 +144,6 @@ class GroupRepository {
                 groupAccountEntity.accountId,
                 groupEntity.name,
                 groupEntity.ownerEmail,
-                accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 accountEntity.picture,
@@ -166,13 +161,10 @@ class GroupRepository {
             .where(groupAccountEntity.groupId.eq(groupId))
             .orderBy(groupAccountEntity.id.asc())
             .fetch();
-
-        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
-        return groupAccounts;
     }
 
     List<GroupAccount> findGroupAccountsByAccountId(Long accountId) {
-        List<GroupAccount> groupAccounts = queryFactory
+        return queryFactory
             .select(Projections.constructor(
                 GroupAccount.class,
                 groupAccountEntity.id,
@@ -180,7 +172,6 @@ class GroupRepository {
                 groupAccountEntity.accountId,
                 groupEntity.name,
                 groupEntity.ownerEmail,
-                accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 accountEntity.picture,
@@ -198,13 +189,10 @@ class GroupRepository {
             .where(groupAccountEntity.accountId.eq(accountId))
             .orderBy(groupAccountEntity.id.desc())
             .fetch();
-
-        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
-        return groupAccounts;
     }
 
     List<GroupAccount> findPendingGroupAccountsByOwnerEmail(String ownerEmail) {
-        List<GroupAccount> groupAccounts = queryFactory
+        return queryFactory
             .select(Projections.constructor(
                 GroupAccount.class,
                 groupAccountEntity.id,
@@ -212,7 +200,6 @@ class GroupRepository {
                 groupAccountEntity.accountId,
                 groupEntity.name,
                 groupEntity.ownerEmail,
-                accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 accountEntity.picture,
@@ -231,9 +218,6 @@ class GroupRepository {
                 .and(groupAccountEntity.status.eq("PENDING")))
             .orderBy(groupAccountEntity.groupId.asc(), groupAccountEntity.regDt.asc())
             .fetch();
-
-        groupAccounts.forEach(ga -> ga.updateName(aesUtil.decryptText(ga.getName())));
-        return groupAccounts;
     }
 
     Optional<GroupAccount> findGroupAccountByGroupIdAndAccountId(Long groupId, Long accountId) {
@@ -245,7 +229,6 @@ class GroupRepository {
                 groupAccountEntity.accountId,
                 groupEntity.name,
                 groupEntity.ownerEmail,
-                accountEntity.name,
                 accountEntity.nickname,
                 accountEntity.email,
                 accountEntity.picture,
@@ -269,7 +252,6 @@ class GroupRepository {
             return Optional.empty();
         }
 
-        groupAccount.updateName(aesUtil.decryptText(groupAccount.getName()));
         return Optional.of(groupAccount);
     }
 

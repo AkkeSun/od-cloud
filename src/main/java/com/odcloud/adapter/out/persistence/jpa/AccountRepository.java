@@ -6,7 +6,6 @@ import static com.odcloud.adapter.out.persistence.jpa.QGroupEntity.groupEntity;
 
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
-import com.odcloud.infrastructure.util.AesUtil;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 class AccountRepository {
 
-    private final AesUtil aesUtil;
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
 
@@ -90,7 +88,6 @@ class AccountRepository {
             .id(account.getId())
             .email(account.getEmail())
             .nickname(account.getNickname())
-            .name(aesUtil.encryptText(account.getName()))
             .picture(account.getPicture())
             .regDt(account.getRegDt())
             .modDt(account.getModDt())
@@ -102,7 +99,6 @@ class AccountRepository {
             .id(entity.getId())
             .email(entity.getEmail())
             .nickname(entity.getNickname())
-            .name(aesUtil.decryptText(entity.getName()))
             .picture(entity.getPicture())
             .regDt(entity.getRegDt())
             .modDt(entity.getModDt())

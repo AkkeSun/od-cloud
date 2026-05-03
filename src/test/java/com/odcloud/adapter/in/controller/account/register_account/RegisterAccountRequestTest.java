@@ -17,13 +17,11 @@ class RegisterAccountRequestTest {
         void success() {
             // when
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
             // then
             assertThat(request).isNotNull();
-            assertThat(request.name()).isEqualTo("홍길동");
             assertThat(request.groupId()).isEqualTo(1L);
         }
 
@@ -32,12 +30,10 @@ class RegisterAccountRequestTest {
         void success_nullValues() {
             // when
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name(null)
                 .groupId(null)
                 .build();
 
             // then
-            assertThat(request.name()).isNull();
             assertThat(request.groupId()).isNull();
         }
     }
@@ -51,12 +47,10 @@ class RegisterAccountRequestTest {
         void success() {
             // given
             RegisterAccountRequest request1 = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
             RegisterAccountRequest request2 = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -70,13 +64,11 @@ class RegisterAccountRequestTest {
         void success_notEqual() {
             // given
             RegisterAccountRequest request1 = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
             RegisterAccountRequest request2 = RegisterAccountRequest.builder()
-                .name("김철수")
-                .groupId(1L)
+                .groupId(2L)
                 .build();
 
             // when & then
@@ -89,27 +81,10 @@ class RegisterAccountRequestTest {
     class Describe_accessor {
 
         @Test
-        @DisplayName("[success] name()으로 값을 조회한다")
-        void success_name() {
-            // given
-            RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
-                .groupId(1L)
-                .build();
-
-            // when
-            String name = request.name();
-
-            // then
-            assertThat(name).isEqualTo("홍길동");
-        }
-
-        @Test
         @DisplayName("[success] groupId()로 값을 조회한다")
         void success_groupId() {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -130,7 +105,6 @@ class RegisterAccountRequestTest {
         void success() {
             // given
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 

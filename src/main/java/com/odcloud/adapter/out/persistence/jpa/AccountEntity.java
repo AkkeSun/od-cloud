@@ -31,9 +31,6 @@ class AccountEntity {
     @Column(name = "nick_name")
     private String nickname;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "picture")
     private String picture;
 
