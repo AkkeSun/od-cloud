@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.account.service.register_account.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -90,11 +89,11 @@ class AccountTest {
     }
 
     @Nested
-    @DisplayName("[of] GoogleUserInfoResponse와 RegisterAccountCommand로부터 Account를 생성하는 정적 팩토리 메서드")
+    @DisplayName("[of] GoogleUserInfoResponse로부터 Account를 생성하는 정적 팩토리 메서드")
     class Describe_of_fromGoogleUserInfo {
 
         @Test
-        @DisplayName("[success] GoogleUserInfoResponse와 RegisterAccountCommand로부터 Account를 생성한다")
+        @DisplayName("[success] GoogleUserInfoResponse로부터 Account를 생성한다")
         void success() {
             // given
             GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
@@ -102,17 +101,11 @@ class AccountTest {
                 .name("테스터")
                 .picture("https://example.com/picture.jpg")
                 .build();
-            RegisterAccountCommand command = new RegisterAccountCommand(
-                "Bearer google-token",
-                "홍길동",
-                1L,
-                null
-            );
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            Account account = Account.of(userInfo, command);
+            Account account = Account.of(userInfo);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -120,7 +113,6 @@ class AccountTest {
             assertThat(account).isNotNull();
             assertThat(account.getEmail()).isEqualTo("test@example.com");
             assertThat(account.getNickname()).isEqualTo("테스터");
-            assertThat(account.getName()).isEqualTo("홍길동");
             assertThat(account.getPicture()).isEqualTo("https://example.com/picture.jpg");
             assertThat(account.getRegDt()).isAfter(before);
             assertThat(account.getRegDt()).isBefore(after);
@@ -306,21 +298,6 @@ class AccountTest {
         }
 
         @Test
-        @DisplayName("[success] getName()으로 name을 조회한다")
-        void success_getName() {
-            // given
-            Account account = Account.builder()
-                .name("홍길동")
-                .build();
-
-            // when
-            String name = account.getName();
-
-            // then
-            assertThat(name).isEqualTo("홍길동");
-        }
-
-        @Test
         @DisplayName("[success] getPicture()로 picture를 조회한다")
         void success_getPicture() {
             // given
@@ -420,7 +397,6 @@ class AccountTest {
                 1L,
                 "test@example.com",
                 "테스터",
-                "홍길동",
                 "https://example.com/picture.jpg",
                 groups,
                 null,
@@ -433,7 +409,6 @@ class AccountTest {
             assertThat(account.getId()).isEqualTo(1L);
             assertThat(account.getEmail()).isEqualTo("test@example.com");
             assertThat(account.getNickname()).isEqualTo("테스터");
-            assertThat(account.getName()).isEqualTo("홍길동");
             assertThat(account.getPicture()).isEqualTo("https://example.com/picture.jpg");
             assertThat(account.getGroups()).hasSize(1);
             assertThat(account.getModDt()).isEqualTo(now);

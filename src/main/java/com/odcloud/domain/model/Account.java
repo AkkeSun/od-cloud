@@ -1,7 +1,6 @@
 package com.odcloud.domain.model;
 
 import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import com.odcloud.application.account.service.register_account.RegisterAccountCommand;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +20,6 @@ public class Account {
     private Long id;
     private String email;
     private String nickname;
-    private String name;
     private String picture;
     private List<Group> groups;
     private List<Voucher> vouchers;
@@ -45,11 +43,10 @@ public class Account {
             .build();
     }
 
-    public static Account of(GoogleUserInfoResponse userInfo, RegisterAccountCommand command) {
+    public static Account of(GoogleUserInfoResponse userInfo) {
         return Account.builder()
             .email(userInfo.email())
             .nickname(userInfo.name())
-            .name(command.name())
             .picture(userInfo.picture())
             .regDt(LocalDateTime.now())
             .build();

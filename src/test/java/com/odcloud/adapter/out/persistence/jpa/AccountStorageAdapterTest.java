@@ -43,7 +43,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             Account account = Account.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("홍길동")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .build();
@@ -58,7 +57,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getId()).isNotNull();
             assertThat(result.getEmail()).isEqualTo("test@example.com");
             assertThat(result.getNickname()).isEqualTo("tester");
-            assertThat(result.getName()).isEqualTo("홍길동");
             assertThat(result.getPicture()).isEqualTo("https://example.com/pic.jpg");
 
             AccountEntity savedEntity = entityManager.find(AccountEntity.class, result.getId());
@@ -74,7 +72,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity existingAccount = AccountEntity.builder()
                 .email("test@example.com")
                 .nickname("oldnick")
-                .name("김철수")
                 .picture("https://example.com/old.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -87,7 +84,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
                 .id(existingAccount.getId())
                 .email("test@example.com")
                 .nickname("newnick")
-                .name("김영희")
                 .picture("https://example.com/new.jpg")
                 .regDt(now)
                 .modDt(now.plusHours(1))
@@ -102,40 +98,12 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(existingAccount.getId());
             assertThat(result.getNickname()).isEqualTo("newnick");
-            assertThat(result.getName()).isEqualTo("김영희");
             assertThat(result.getPicture()).isEqualTo("https://example.com/new.jpg");
 
             AccountEntity savedEntity = entityManager.find(AccountEntity.class,
                 existingAccount.getId());
             assertThat(savedEntity).isNotNull();
             assertThat(savedEntity.getNickname()).isEqualTo("newnick");
-        }
-
-        @Test
-        @DisplayName("[success] 이름이 암호화되어 저장된다")
-        void success_encryptedName() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-            Account account = Account.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .name("홍길동")
-                .picture("https://example.com/pic.jpg")
-                .regDt(now)
-                .build();
-
-            // when
-            Account result = adapter.save(account);
-            entityManager.flush();
-            entityManager.clear();
-
-            // then
-            AccountEntity savedEntity = entityManager.find(AccountEntity.class, result.getId());
-            assertThat(savedEntity).isNotNull();
-            // 저장된 이름은 암호화되어 있어야 함 (원본과 다름)
-            assertThat(savedEntity.getName()).isNotEqualTo("홍길동");
-            // 하지만 반환된 도메인 객체의 이름은 복호화되어 있어야 함
-            assertThat(result.getName()).isEqualTo("홍길동");
         }
 
         @Test
@@ -146,7 +114,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             Account account = Account.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("테스트")
                 .picture(null)
                 .regDt(now)
                 .modDt(null)
@@ -176,7 +143,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("existing@example.com")
                 .nickname("existing")
-                .name("기존사용자")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -210,7 +176,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(AccountEntity.builder()
                 .email("user1@example.com")
                 .nickname("user1")
-                .name("사용자1")
                 .picture("https://example.com/pic1.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -219,7 +184,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(AccountEntity.builder()
                 .email("user2@example.com")
                 .nickname("user2")
-                .name("사용자2")
                 .picture("https://example.com/pic2.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -242,7 +206,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("Test@Example.com")
                 .nickname("test")
-                .name("테스트")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -269,7 +232,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("홍길동")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -285,33 +247,7 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getEmail()).isEqualTo("test@example.com");
             assertThat(result.getNickname()).isEqualTo("tester");
-            assertThat(result.getName()).isEqualTo("홍길동");
             assertThat(result.getPicture()).isEqualTo("https://example.com/pic.jpg");
-        }
-
-        @Test
-        @DisplayName("[success] 이름이 복호화되어 반환된다")
-        void success_decryptedName() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-            AccountEntity account = AccountEntity.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .name("홍길동")
-                .picture("https://example.com/pic.jpg")
-                .regDt(now)
-                .modDt(now)
-                .build();
-            entityManager.persist(account);
-            entityManager.flush();
-            entityManager.clear();
-
-            // when
-            Account result = adapter.findByEmail("test@example.com");
-
-            // then
-            assertThat(result).isNotNull();
-            assertThat(result.getName()).isEqualTo("홍길동");
         }
 
         @Test
@@ -341,7 +277,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("홍길동")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -410,7 +345,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("홍길동")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -455,7 +389,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
                 .nickname("tester")
-                .name("홍길동")
                 .picture("https://example.com/pic.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -490,7 +423,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(AccountEntity.builder()
                 .email("user1@example.com")
                 .nickname("user1")
-                .name("사용자1")
                 .picture("https://example.com/pic1.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -499,7 +431,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             entityManager.persist(AccountEntity.builder()
                 .email("user2@example.com")
                 .nickname("user2")
-                .name("사용자2")
                 .picture("https://example.com/pic2.jpg")
                 .regDt(now)
                 .modDt(now)
@@ -515,7 +446,6 @@ class AccountStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getEmail()).isEqualTo("user1@example.com");
             assertThat(result.getNickname()).isEqualTo("user1");
-            assertThat(result.getName()).isEqualTo("사용자1");
         }
     }
 }

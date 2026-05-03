@@ -66,56 +66,6 @@ class GroupAccountTest {
     }
 
     @Nested
-    @DisplayName("[updateName] name을 업데이트하는 메서드")
-    class Describe_updateName {
-
-        @Test
-        @DisplayName("[success] name을 업데이트한다")
-        void success() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .name("홍길동")
-                .build();
-
-            // when
-            groupAccount.updateName("김철수");
-
-            // then
-            assertThat(groupAccount.getName()).isEqualTo("김철수");
-        }
-
-        @Test
-        @DisplayName("[success] name을 null로 업데이트한다")
-        void success_null() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .name("홍길동")
-                .build();
-
-            // when
-            groupAccount.updateName(null);
-
-            // then
-            assertThat(groupAccount.getName()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] name을 빈 문자열로 업데이트한다")
-        void success_emptyString() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .name("홍길동")
-                .build();
-
-            // when
-            groupAccount.updateName("");
-
-            // then
-            assertThat(groupAccount.getName()).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("[updateStatus] status를 업데이트하는 메서드")
     class Describe_updateStatus {
 

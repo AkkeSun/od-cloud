@@ -58,7 +58,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정 생성
             AccountEntity account1 = AccountEntity.builder()
                 .email("hong@example.com")
-                .name("홍길동")
                 .nickname("gildong")
                 .picture("https://example.com/hong.jpg")
                 .modDt(now)
@@ -67,7 +66,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account2 = AccountEntity.builder()
                 .email("kim@example.com")
-                .name("김철수")
                 .nickname("cheolsu")
                 .picture("https://example.com/kim.jpg")
                 .modDt(now)
@@ -104,14 +102,12 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).hasSize(2);
             assertThat(result.get(0).getGroupId()).isEqualTo(groupId);
             assertThat(result.get(0).getAccountId()).isEqualTo(account1.getId());
-            assertThat(result.get(0).getName()).isEqualTo("홍길동");
             assertThat(result.get(0).getNickName()).isEqualTo("gildong");
             assertThat(result.get(0).getEmail()).isEqualTo("hong@example.com");
             assertThat(result.get(0).getStatus()).isEqualTo("APPROVED");
 
             assertThat(result.get(1).getGroupId()).isEqualTo(groupId);
             assertThat(result.get(1).getAccountId()).isEqualTo(account2.getId());
-            assertThat(result.get(1).getName()).isEqualTo("김철수");
             assertThat(result.get(1).getNickName()).isEqualTo("cheolsu");
             assertThat(result.get(1).getEmail()).isEqualTo("kim@example.com");
             assertThat(result.get(1).getStatus()).isEqualTo("PENDING");
@@ -180,7 +176,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정 생성
             AccountEntity account1 = AccountEntity.builder()
                 .email("user1@example.com")
-                .name("사용자1")
                 .nickname("user1")
                 .picture("https://example.com/user1.jpg")
                 .modDt(now)
@@ -189,7 +184,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account2 = AccountEntity.builder()
                 .email("user2@example.com")
-                .name("사용자2")
                 .nickname("user2")
                 .picture("https://example.com/user2.jpg")
                 .modDt(now)
@@ -198,7 +192,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account3 = AccountEntity.builder()
                 .email("user3@example.com")
-                .name("사용자3")
                 .nickname("user3")
                 .picture("https://example.com/user3.jpg")
                 .modDt(now)
@@ -271,7 +264,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정 생성
             AccountEntity approvedUser = AccountEntity.builder()
                 .email("approved@example.com")
-                .name("활성 사용자")
                 .nickname("active")
                 .picture("https://example.com/approved.jpg")
                 .modDt(now)
@@ -280,7 +272,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity pendingUser = AccountEntity.builder()
                 .email("pending@example.com")
-                .name("대기 중인 사용자")
                 .nickname("pending")
                 .picture("https://example.com/pending.jpg")
                 .modDt(now)
@@ -289,7 +280,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity rejectedUser = AccountEntity.builder()
                 .email("rejected@example.com")
-                .name("차단된 사용자")
                 .nickname("block")
                 .picture("https://example.com/rejected.jpg")
                 .modDt(now)
@@ -355,7 +345,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             for (int i = 5; i >= 1; i--) {
                 AccountEntity account = AccountEntity.builder()
                     .email("user" + i + "@example.com")
-                    .name("사용자" + i)
                     .nickname("user" + i)
                     .picture("https://example.com/user" + i + ".jpg")
                     .modDt(now)
@@ -384,50 +373,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             }
         }
 
-        @Test
-        @DisplayName("[success] 이름이 암호화된 경우 복호화하여 반환한다")
-        void success_decryptName() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            GroupEntity group = GroupEntity.builder()
-                .ownerEmail("owner@example.com")
-                .name("테스트 그룹")
-                .regDt(now)
-                .build();
-            entityManager.persist(group);
-            entityManager.flush();
-
-            Long groupId = group.getId();
-
-            // 계정 생성 (이름은 자동으로 암호화됨)
-            AccountEntity account = AccountEntity.builder()
-                .email("test@example.com")
-                .name("홍길동")  // 암호화될 이름
-                .nickname("gildong")
-                .picture("https://example.com/gildong.jpg")
-                .modDt(now)
-                .regDt(now)
-                .build();
-            entityManager.persist(account);
-
-            GroupAccountEntity groupAccount = GroupAccountEntity.builder()
-                .groupId(groupId)
-                .accountId(account.getId())
-                .status("ACTIVE")
-                .modDt(now)
-                .regDt(now)
-                .build();
-            entityManager.persist(groupAccount);
-
-            // when
-            List<GroupAccount> result = adapter.findGroupAccountsByGroupId(groupId);
-
-            // then
-            assertThat(result).hasSize(1);
-            // 복호화된 이름이 반환되어야 함
-            assertThat(result.get(0).getName()).isEqualTo("홍길동");
-        }
     }
 
     @Nested
@@ -540,7 +485,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정 생성
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -593,7 +537,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -886,51 +829,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             );
         }
 
-        @Test
-        @DisplayName("[success] 멤버 이름이 복호화되어 반환된다")
-        void success_decryptedNames() {
-            // given
-            LocalDateTime now = LocalDateTime.now();
-
-            GroupEntity group = GroupEntity.builder()
-                .ownerEmail("owner@example.com")
-                .name("테스트 그룹")
-                .regDt(now)
-                .build();
-            entityManager.persist(group);
-            entityManager.flush();
-
-            Long groupId = group.getId();
-
-            AccountEntity account = AccountEntity.builder()
-                .email("test@example.com")
-                .name("홍길동")  // 암호화될 이름
-                .nickname("gildong")
-                .picture("https://example.com/pic.jpg")
-                .modDt(now)
-                .regDt(now)
-                .build();
-            entityManager.persist(account);
-
-            entityManager.persist(GroupAccountEntity.builder()
-                .groupId(groupId)
-                .accountId(account.getId())
-                .status("ACTIVE")
-                .modDt(now)
-                .regDt(now)
-                .build());
-
-            entityManager.flush();
-            entityManager.clear();
-
-            // when
-            com.odcloud.domain.model.Group result = adapter.findById(groupId);
-
-            // then
-            assertThat(result).isNotNull();
-            assertThat(result.getGroupMembers()).hasSize(1);
-            assertThat(result.getGroupMembers().get(0).getName()).isEqualTo("홍길동");
-        }
     }
 
     @Nested
@@ -955,7 +853,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -991,7 +888,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result).isNotNull();
             assertThat(result.getGroupId()).isEqualTo(groupId);
             assertThat(result.getAccountId()).isEqualTo(account.getId());
-            assertThat(result.getName()).isEqualTo("테스트 사용자");
             assertThat(result.getNickName()).isEqualTo("tester");
             assertThat(result.getEmail()).isEqualTo("test@example.com");
             assertThat(result.getStatus()).isEqualTo("ACTIVE");
@@ -1015,7 +911,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -1060,7 +955,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -1133,7 +1027,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("테스트 사용자")
                 .nickname("tester")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -1179,7 +1072,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account = AccountEntity.builder()
                 .email("test@example.com")
-                .name("홍길동")  // 암호화될 이름
                 .nickname("gildong")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -1213,7 +1105,7 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getName()).isEqualTo("홍길동");
+            assertThat(result.getNickName()).isEqualTo("gildong");
         }
     }
 }

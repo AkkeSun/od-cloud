@@ -18,7 +18,6 @@ public class GroupAccount {
     private Long accountId;
     private String groupName;
     private String groupOwner;
-    private String name;
     private String nickName;
     private String email;
     private String picture;
@@ -28,13 +27,12 @@ public class GroupAccount {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public GroupAccount(Long id, Long groupId, Long accountId, String name, String nickName,
+    public GroupAccount(Long id, Long groupId, Long accountId, String nickName,
         String email, String picture, String status, String memo, LocalDateTime modDt,
         LocalDateTime regDt) {
         this.id = id;
         this.groupId = groupId;
         this.accountId = accountId;
-        this.name = name;
         this.nickName = nickName;
         this.email = email;
         this.picture = picture;
@@ -63,10 +61,6 @@ public class GroupAccount {
             .modDt(LocalDateTime.now())
             .regDt(LocalDateTime.now())
             .build();
-    }
-
-    public void updateName(String name) {
-        this.name = name;
     }
 
     public void updateStatus(UpdateGroupAccountStatusCommand command) {

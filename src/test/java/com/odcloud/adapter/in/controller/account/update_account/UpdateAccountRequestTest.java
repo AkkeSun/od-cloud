@@ -35,7 +35,6 @@ class UpdateAccountRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("홍길동")
                 .build();
 
             // when
@@ -60,7 +59,6 @@ class UpdateAccountRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("홍길동")
                 .build();
 
             // when
@@ -92,7 +90,6 @@ class UpdateAccountRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("홍길동")
                 .build();
 
             // when
@@ -117,7 +114,6 @@ class UpdateAccountRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("홍길동")
                 .build();
 
             // when
@@ -142,7 +138,6 @@ class UpdateAccountRequestTest {
             Account account = Account.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("홍길동")
                 .build();
 
             // when

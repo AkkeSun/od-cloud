@@ -47,7 +47,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -75,7 +74,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .newGroupName("새로운 그룹")
                 .build();
 
@@ -99,26 +97,11 @@ class RegisterAccountDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 이름이 빈 문자열인 경우 400 에러를 반환한다")
-        void error_nameIsBlank() throws Exception {
-            // given
-            String googleAuthorization = "Bearer google-token-123";
-            RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name(null)
-                .groupId(1L)
-                .build();
-
-            // when & then
-            performErrorDocument(googleAuthorization, request, status().isBadRequest(), "이름 미입력");
-        }
-
-        @Test
         @DisplayName("[error] 유효하지 않은 구글 토큰인 경우 401 에러를 반환한다")
         void error_invalidGoogleToken() throws Exception {
             // given
             String googleAuthorization = "Bearer invalid-token";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -137,7 +120,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -156,7 +138,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -175,7 +156,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .groupId(1L)
                 .build();
 
@@ -194,7 +174,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-token-123";
             RegisterAccountRequest request = RegisterAccountRequest.builder()
-                .name("홍길동")
                 .newGroupName("기존 그룹")
                 .build();
 
@@ -217,8 +196,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
         FieldDescriptor... responseFields
     ) throws Exception {
 
-        JsonFieldType nameType = request.name() == null ?
-            JsonFieldType.NULL : JsonFieldType.STRING;
         JsonFieldType groupIdType = request.groupId() == null ?
             JsonFieldType.NULL : JsonFieldType.NUMBER;
         JsonFieldType groupNameType = request.newGroupName() == null ?
@@ -243,8 +220,6 @@ class RegisterAccountDocsTest extends RestDocsSupport {
                             .description("구글 인증 토큰")
                     )
                     .requestFields(
-                        fieldWithPath("name").type(nameType)
-                            .description("사용자 이름"),
                         fieldWithPath("groupId").type(groupIdType)
                             .description("그룹 ID"),
                         fieldWithPath("newGroupName").type(groupNameType)
