@@ -69,7 +69,7 @@ service-constant:
   jwt:
     temp-token-ttl: 300000 # 5 min
     access-token-ttl: 1800000 # 30 min
-    refresh-token-ttl: 7200000 # 2 hour
+    refresh-token-ttl: 604800000 # 7 days
     secretKey: ${PROD_JWT_SECRET}
 
   google-oauth2:
