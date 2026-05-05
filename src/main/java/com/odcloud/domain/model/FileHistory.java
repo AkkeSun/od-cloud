@@ -25,19 +25,6 @@ public class FileHistory {
     private Long fileSize;
     private LocalDateTime regDt;
 
-    public static FileHistory ofUpload(FileInfo file, String actorEmail) {
-        return FileHistory.builder()
-            .fileId(file.getId())
-            .groupId(file.getGroupId())
-            .actionType(FileHistoryActionType.UPLOAD)
-            .actorEmail(actorEmail)
-            .afterFileName(file.getFileName())
-            .afterFolderId(file.getFolderId())
-            .fileSize(file.getFileSize())
-            .regDt(LocalDateTime.now())
-            .build();
-    }
-
     public static FileHistory ofRename(FileInfo fileAfter, String beforeFileName, String actorEmail) {
         return FileHistory.builder()
             .fileId(fileAfter.getId())
