@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odcloud.application.group.port.in.FindGroupSelfUseCase;
-import com.odcloud.application.group.service.find_group_self.FindGroupSelfServiceResponse;
+import com.odcloud.application.group.service.find_group_self.FindGroupSelfResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.exception.ExceptionAdvice;
@@ -95,54 +95,54 @@ class FindGroupSelfControllerDocsTest {
         @DisplayName("[success] 가입된 그룹과 대기중인 그룹을 분리하여 조회한다")
         void success_findSelfGroups() throws Exception {
             // given
-            FindGroupSelfServiceResponse.MemberInfo manager1 =
-                FindGroupSelfServiceResponse.MemberInfo.builder()
+            FindGroupSelfResponse.MemberInfo manager1 =
+                FindGroupSelfResponse.MemberInfo.builder()
                     .nickname("Manager")
                     .email("manager@example.com")
                     .build();
 
-            FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup1 =
-                FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
+            FindGroupSelfResponse.ActiveGroupInfo activeGroup1 =
+                FindGroupSelfResponse.ActiveGroupInfo.builder()
                     .id(1L)
                     .name("My Team")
                     .manager(manager1)
                     .activeMemberCount(3)
                     .build();
 
-            FindGroupSelfServiceResponse.MemberInfo manager2 =
-                FindGroupSelfServiceResponse.MemberInfo.builder()
+            FindGroupSelfResponse.MemberInfo manager2 =
+                FindGroupSelfResponse.MemberInfo.builder()
                     .nickname("OtherManager")
                     .email("other@example.com")
                     .build();
-            FindGroupSelfServiceResponse.ActiveGroupInfo activeGroup2 =
-                FindGroupSelfServiceResponse.ActiveGroupInfo.builder()
+            FindGroupSelfResponse.ActiveGroupInfo activeGroup2 =
+                FindGroupSelfResponse.ActiveGroupInfo.builder()
                     .id(2L)
                     .name("Development Team")
                     .manager(manager2)
                     .activeMemberCount(2)
                     .build();
 
-            FindGroupSelfServiceResponse.PendingGroupInfo pendingGroup =
-                FindGroupSelfServiceResponse.PendingGroupInfo.builder()
+            FindGroupSelfResponse.PendingGroupInfo pendingGroup =
+                FindGroupSelfResponse.PendingGroupInfo.builder()
                     .id(3L)
                     .name("Marketing Team")
                     .activeMemberCount(1)
                     .build();
 
-            FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroup =
-                FindGroupSelfServiceResponse.DeniedGroupInfo.builder()
+            FindGroupSelfResponse.DeniedGroupInfo deniedGroup =
+                FindGroupSelfResponse.DeniedGroupInfo.builder()
                     .id(4L)
                     .name("Sales Team")
                     .deniedCause("요청이 거부되었습니다")
                     .build();
 
-            FindGroupSelfServiceResponse serviceResponse = FindGroupSelfServiceResponse.builder()
+            FindGroupSelfResponse Response = FindGroupSelfResponse.builder()
                 .activeGroups(List.of(activeGroup1, activeGroup2))
                 .pendingGroups(List.of(pendingGroup))
                 .deniedGroups(List.of(deniedGroup))
                 .build();
 
-            given(useCase.findSelf(any())).willReturn(serviceResponse);
+            given(useCase.findSelf(any())).willReturn(Response);
 
             // when & then
             performDocument("현재 사용자의 그룹 정보 조회 성공", "success",
@@ -166,6 +166,8 @@ class FindGroupSelfControllerDocsTest {
                     .type(JsonFieldType.STRING).description("매니저 닉네임").optional(),
                 fieldWithPath("data.activeGroups[].manager.email")
                     .type(JsonFieldType.STRING).description("매니저 이메일").optional(),
+                fieldWithPath("data.activeGroups[].folderId")
+                    .type(JsonFieldType.NUMBER).description("루트 폴더 ID").optional(),
                 fieldWithPath("data.activeGroups[].activeMemberCount")
                     .type(JsonFieldType.NUMBER).description("활성 사용자 수"),
                 fieldWithPath("data.pendingGroups")

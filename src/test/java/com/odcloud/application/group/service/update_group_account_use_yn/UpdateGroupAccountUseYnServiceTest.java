@@ -42,7 +42,6 @@ class UpdateGroupAccountUseYnServiceTest {
                 .groupId(groupId)
                 .accountId(accountId)
                 .email("user@example.com")
-                .name("사용자")
                 .status("ACTIVE")
                 .showYn("N")
                 .build();
@@ -60,7 +59,7 @@ class UpdateGroupAccountUseYnServiceTest {
                 .build();
 
             // when
-            UpdateGroupAccountUseYnServiceResponse response = updateGroupAccountUseYnService
+            UpdateGroupAccountUseYnResponse response = updateGroupAccountUseYnService
                 .updateShowYn(command);
 
             // then
@@ -81,7 +80,6 @@ class UpdateGroupAccountUseYnServiceTest {
                 .groupId(groupId)
                 .accountId(accountId)
                 .email("user@example.com")
-                .name("사용자")
                 .status("ACTIVE")
                 .showYn("Y")
                 .build();
@@ -99,7 +97,7 @@ class UpdateGroupAccountUseYnServiceTest {
                 .build();
 
             // when
-            UpdateGroupAccountUseYnServiceResponse response = updateGroupAccountUseYnService
+            UpdateGroupAccountUseYnResponse response = updateGroupAccountUseYnService
                 .updateShowYn(command);
 
             // then

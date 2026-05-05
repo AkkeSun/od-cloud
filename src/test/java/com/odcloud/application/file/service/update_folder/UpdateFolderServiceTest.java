@@ -45,7 +45,6 @@ class UpdateFolderServiceTest {
                 .groups(List.of(Group.of(1L)))
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .build();
 
             FolderInfo folder = FolderInfo.builder()
@@ -66,7 +65,7 @@ class UpdateFolderServiceTest {
                 .build();
 
             // when
-            UpdateFolderServiceResponse response = updateFolderService.updateFolder(command);
+            UpdateFolderResponse response = updateFolderService.updateFolder(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -120,7 +119,7 @@ class UpdateFolderServiceTest {
                 .build();
 
             // when
-            UpdateFolderServiceResponse response = updateFolderService.updateFolder(command);
+            UpdateFolderResponse response = updateFolderService.updateFolder(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -172,7 +171,7 @@ class UpdateFolderServiceTest {
                 .build();
 
             // when
-            UpdateFolderServiceResponse response = updateFolderService.updateFolder(command);
+            UpdateFolderResponse response = updateFolderService.updateFolder(command);
 
             // then
             assertThat(response.result()).isTrue();

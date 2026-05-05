@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.DeleteNoticeUseCase;
-import com.odcloud.application.group.service.delete_notice.DeleteNoticeServiceResponse;
+import com.odcloud.application.group.service.delete_notice.DeleteNoticeResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +49,7 @@ class DeleteNoticeControllerDocsTest extends RestDocsSupport {
             Long groupId = 1L;
             Long noticeId = 1L;
 
-            DeleteNoticeServiceResponse response = DeleteNoticeServiceResponse.ofSuccess();
+            DeleteNoticeResponse response = DeleteNoticeResponse.ofSuccess();
             given(useCase.delete(any())).willReturn(response);
 
             // when & then

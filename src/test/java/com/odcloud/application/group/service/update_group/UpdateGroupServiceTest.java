@@ -140,7 +140,6 @@ class UpdateGroupServiceTest {
                 .id(2L)
                 .email("newowner@example.com")
                 .nickname("New Owner")
-                .name("새 오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(newOwner);
@@ -192,7 +191,6 @@ class UpdateGroupServiceTest {
                 .id(2L)
                 .email("newowner@example.com")
                 .nickname("New Owner")
-                .name("새 오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(newOwner);
@@ -204,7 +202,7 @@ class UpdateGroupServiceTest {
                 .build();
 
             // when
-            UpdateGroupServiceResponse response = updateGroupService.update(command);
+            UpdateGroupResponse response = updateGroupService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -248,7 +246,6 @@ class UpdateGroupServiceTest {
                 .id(2L)
                 .email("newowner@example.com")
                 .nickname("New Owner")
-                .name("새 오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(newOwner);
@@ -271,7 +268,7 @@ class UpdateGroupServiceTest {
                 .build();
 
             // when
-            UpdateGroupServiceResponse response = updateGroupService.update(command);
+            UpdateGroupResponse response = updateGroupService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -360,7 +357,7 @@ class UpdateGroupServiceTest {
                 .build();
 
             // when
-            UpdateGroupServiceResponse response = updateGroupService.update(command);
+            UpdateGroupResponse response = updateGroupService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -399,7 +396,6 @@ class UpdateGroupServiceTest {
                 .id(2L)
                 .email("newowner@example.com")
                 .nickname("New Owner")
-                .name("새 오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(newOwner);
@@ -422,7 +418,7 @@ class UpdateGroupServiceTest {
                 .build();
 
             // when
-            UpdateGroupServiceResponse response = updateGroupService.update(command);
+            UpdateGroupResponse response = updateGroupService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -471,7 +467,7 @@ class UpdateGroupServiceTest {
                 .build();
 
             // when
-            UpdateGroupServiceResponse response = updateGroupService.update(command);
+            UpdateGroupResponse response = updateGroupService.update(command);
 
             // then
             assertThat(response.result()).isTrue();

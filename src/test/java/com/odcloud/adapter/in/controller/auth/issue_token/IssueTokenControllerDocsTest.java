@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.auth.port.in.IssueTokenUseCase;
-import com.odcloud.application.auth.service.issue_token.IssueTokenServiceResponse;
+import com.odcloud.application.auth.service.issue_token.IssueTokenResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,12 +46,12 @@ class IssueTokenControllerDocsTest extends RestDocsSupport {
             // given
             String googleAuthorization = "Bearer google-auth-token-123";
             String deviceId = "device-abc123";
-            IssueTokenServiceResponse serviceResponse = IssueTokenServiceResponse.builder()
+            IssueTokenResponse Response = IssueTokenResponse.builder()
                 .accessToken("access-token-abc123")
                 .refreshToken("refresh-token-xyz789")
                 .build();
 
-            given(useCase.issue(googleAuthorization, deviceId)).willReturn(serviceResponse);
+            given(useCase.issue(googleAuthorization, deviceId)).willReturn(Response);
 
             // when & then
             performDocument(

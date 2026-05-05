@@ -67,10 +67,10 @@ class FindSchedulesControllerDocsTest extends RestDocsSupport {
             Schedule schedule2 = createSchedule(2L, "owner@example.com", 1L, "그룹 회의",
                 LocalDateTime.of(2025, 1, 15, 14, 0));
 
-            FindSchedulesResponse serviceResponse = FindSchedulesResponse.of(
+            FindSchedulesResponse Response = FindSchedulesResponse.of(
                 Arrays.asList(schedule1, schedule2));
 
-            given(useCase.findSchedules(any())).willReturn(serviceResponse);
+            given(useCase.findSchedules(any())).willReturn(Response);
 
             // when & then
             performDocument("2025-01-15", null, "Bearer test",

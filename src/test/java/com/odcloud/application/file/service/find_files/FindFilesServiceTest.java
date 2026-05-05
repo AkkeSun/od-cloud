@@ -1,5 +1,7 @@
 package com.odcloud.application.file.service.find_files;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
@@ -90,7 +92,7 @@ class FindFilesServiceTest {
                 .build();
 
             // when
-            FindFilesServiceResponse response = findFilesService.findAll(command);
+            FindFilesResponse response = findFilesService.findAll(command);
 
             // then
             assertThat(response).isNotNull();
@@ -156,7 +158,7 @@ class FindFilesServiceTest {
                 .build();
 
             // when
-            FindFilesServiceResponse response = findFilesService.findAll(command);
+            FindFilesResponse response = findFilesService.findAll(command);
 
             // then
             assertThat(response).isNotNull();
@@ -218,18 +220,17 @@ class FindFilesServiceTest {
             FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(1L)
-                .groupId(1L)
                 .sortType("NAME_ASC")
                 .build();
 
             // when
-            FindFilesServiceResponse response = findFilesService.findAll(command);
+            FindFilesResponse response = findFilesService.findAll(command);
 
             // then
             assertThat(response).isNotNull();
-            assertThat(response.folders()).hasSize(1);
-            assertThat(response.folders().get(0).name()).isEqualTo("Child of Group1");
-            assertThat(response.folders().get(0).groupId()).isEqualTo(1L);
+            assertThat(response.folders()).hasSize(2);
+            assertThat(response.folders()).extracting("name")
+                .containsExactlyInAnyOrder("Child of Group1", "Child of Group2");
         }
 
         // Note: 권한 체크 로직(PUBLIC/PRIVATE)은 Repository 계층에서 처리되므로
@@ -262,7 +263,7 @@ class FindFilesServiceTest {
                 .build();
 
             // when
-            FindFilesServiceResponse response = findFilesService.findAll(command);
+            FindFilesResponse response = findFilesService.findAll(command);
 
             // then
             assertThat(response).isNotNull();
@@ -286,7 +287,7 @@ class FindFilesServiceTest {
                 .build();
 
             // when
-            FindFilesServiceResponse response = findFilesService.findAll(command);
+            FindFilesResponse response = findFilesService.findAll(command);
 
             // then
             assertThat(response).isNotNull();

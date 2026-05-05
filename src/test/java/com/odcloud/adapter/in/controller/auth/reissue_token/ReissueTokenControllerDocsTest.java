@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.auth.port.in.ReissueTokenUseCase;
-import com.odcloud.application.auth.service.reissue_token.ReissueTokenServiceResponse;
+import com.odcloud.application.auth.service.reissue_token.ReissueTokenResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,12 +44,12 @@ class ReissueTokenControllerDocsTest extends RestDocsSupport {
         void success() throws Exception {
             // given
             String refreshToken = "valid-refresh-token-123";
-            ReissueTokenServiceResponse serviceResponse = ReissueTokenServiceResponse.builder()
+            ReissueTokenResponse Response = ReissueTokenResponse.builder()
                 .accessToken("new-access-token-abc123")
                 .refreshToken("new-refresh-token-xyz789")
                 .build();
 
-            given(useCase.reissueToken(refreshToken)).willReturn(serviceResponse);
+            given(useCase.reissueToken(refreshToken)).willReturn(Response);
 
             // when & then
             performDocument(refreshToken, status().isOk(), "success", "success",

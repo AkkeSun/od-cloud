@@ -50,7 +50,7 @@ class RegisterFolderServiceTest {
                 .build();
 
             // when
-            RegisterFolderServiceResponse response = registerFolderService.createFolder(command);
+            RegisterFolderResponse response = registerFolderService.createFolder(command);
 
             // then
             assertThat(response).isNotNull();

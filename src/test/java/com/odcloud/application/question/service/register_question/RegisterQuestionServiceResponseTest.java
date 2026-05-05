@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class RegisterQuestionServiceResponseTest {
+class RegisterQuestionResponseTest {
 
     @Nested
     @DisplayName("[ofSuccess] 성공 응답을 생성하는 정적 팩토리 메서드")
@@ -16,7 +16,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] 성공 응답을 생성한다")
         void success() {
             // when
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.ofSuccess();
+            RegisterQuestionResponse response = RegisterQuestionResponse.ofSuccess();
 
             // then
             assertThat(response).isNotNull();
@@ -27,8 +27,8 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] 매번 동일한 값을 가진 응답을 생성한다")
         void success_sameValue() {
             // when
-            RegisterQuestionServiceResponse response1 = RegisterQuestionServiceResponse.ofSuccess();
-            RegisterQuestionServiceResponse response2 = RegisterQuestionServiceResponse.ofSuccess();
+            RegisterQuestionResponse response1 = RegisterQuestionResponse.ofSuccess();
+            RegisterQuestionResponse response2 = RegisterQuestionResponse.ofSuccess();
 
             // then
             assertThat(response1.result()).isEqualTo(response2.result());
@@ -43,7 +43,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] Builder로 응답을 생성한다")
         void success() {
             // when
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response = RegisterQuestionResponse.builder()
                 .result(true)
                 .build();
 
@@ -56,7 +56,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] false 값으로 응답을 생성한다")
         void success_falseResult() {
             // when
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response = RegisterQuestionResponse.builder()
                 .result(false)
                 .build();
 
@@ -68,7 +68,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] null 값으로 응답을 생성한다")
         void success_nullResult() {
             // when
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response = RegisterQuestionResponse.builder()
                 .result(null)
                 .build();
 
@@ -85,11 +85,11 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] 응답은 불변 객체이다")
         void success() {
             // given
-            RegisterQuestionServiceResponse response1 = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response1 = RegisterQuestionResponse.builder()
                 .result(true)
                 .build();
 
-            RegisterQuestionServiceResponse response2 = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response2 = RegisterQuestionResponse.builder()
                 .result(true)
                 .build();
 
@@ -102,11 +102,11 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] 다른 값으로 생성된 응답은 동등하지 않다")
         void success_notEqual() {
             // given
-            RegisterQuestionServiceResponse response1 = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response1 = RegisterQuestionResponse.builder()
                 .result(true)
                 .build();
 
-            RegisterQuestionServiceResponse response2 = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response2 = RegisterQuestionResponse.builder()
                 .result(false)
                 .build();
 
@@ -123,7 +123,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] result()로 값을 조회한다")
         void success() {
             // given
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.builder()
+            RegisterQuestionResponse response = RegisterQuestionResponse.builder()
                 .result(true)
                 .build();
 
@@ -143,7 +143,7 @@ class RegisterQuestionServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            RegisterQuestionServiceResponse response = RegisterQuestionServiceResponse.ofSuccess();
+            RegisterQuestionResponse response = RegisterQuestionResponse.ofSuccess();
 
             // when
             String result = response.toString();

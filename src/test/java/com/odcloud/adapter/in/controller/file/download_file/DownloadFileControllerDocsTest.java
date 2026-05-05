@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.download_file.DownloadFileServiceResponse;
-import com.odcloud.application.file.port.in.FindFilesUseCase.DownloadFileUseCase;
+import com.odcloud.application.file.port.in.DownloadFileUseCase;
+import com.odcloud.application.file.service.download_file.DownloadFileResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.nio.charset.StandardCharsets;
@@ -88,10 +88,9 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
             headers.setContentType(MediaType.TEXT_PLAIN);
             headers.setContentLength(fileContent.length);
 
-            DownloadFileServiceResponse serviceResponse =
-                new DownloadFileServiceResponse(resource, headers);
+            DownloadFileResponse Response = new DownloadFileResponse(resource, headers);
 
-            given(useCase.downloadFile(fileId)).willReturn(serviceResponse);
+            given(useCase.downloadFile(fileId)).willReturn(Response);
 
             // when & then
             performDocument(fileId, status().isOk(), "success", authorization);

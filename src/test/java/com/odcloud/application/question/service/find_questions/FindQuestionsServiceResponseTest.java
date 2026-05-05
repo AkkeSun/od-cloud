@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-class FindQuestionsServiceResponseTest {
+class FindQuestionsResponseTest {
 
     @Nested
     @DisplayName("[of] Page<Question>으로부터 응답을 생성하는 정적 팩토리 메서드")
@@ -47,7 +47,7 @@ class FindQuestionsServiceResponseTest {
             Page<Question> page = new PageImpl<>(questions, PageRequest.of(0, 10), 15);
 
             // when
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response = FindQuestionsResponse.of(page);
 
             // then
             assertThat(response).isNotNull();
@@ -66,7 +66,7 @@ class FindQuestionsServiceResponseTest {
             Page<Question> page = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
 
             // when
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response = FindQuestionsResponse.of(page);
 
             // then
             assertThat(response.pageNumber()).isEqualTo(0);
@@ -94,7 +94,7 @@ class FindQuestionsServiceResponseTest {
             Page<Question> page = new PageImpl<>(List.of(question), PageRequest.of(1, 10), 11);
 
             // when
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response = FindQuestionsResponse.of(page);
 
             // then
             assertThat(response.pageNumber()).isEqualTo(1);
@@ -125,7 +125,7 @@ class FindQuestionsServiceResponseTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.builder()
+            FindQuestionsResponse response = FindQuestionsResponse.builder()
                 .pageNumber(0)
                 .pageSize(10)
                 .totalElements(1)
@@ -146,7 +146,7 @@ class FindQuestionsServiceResponseTest {
         @DisplayName("[success] 빈 질문 목록으로 응답을 생성한다")
         void success_emptyQuestions() {
             // when
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.builder()
+            FindQuestionsResponse response = FindQuestionsResponse.builder()
                 .pageNumber(0)
                 .pageSize(10)
                 .totalElements(0)
@@ -168,8 +168,8 @@ class FindQuestionsServiceResponseTest {
         void success() {
             // given
             Page<Question> page = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
-            FindQuestionsServiceResponse response1 = FindQuestionsServiceResponse.of(page);
-            FindQuestionsServiceResponse response2 = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response1 = FindQuestionsResponse.of(page);
+            FindQuestionsResponse response2 = FindQuestionsResponse.of(page);
 
             // when & then
             assertThat(response1).isEqualTo(response2);
@@ -183,8 +183,8 @@ class FindQuestionsServiceResponseTest {
             Page<Question> page1 = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
             Page<Question> page2 = new PageImpl<>(List.of(), PageRequest.of(1, 10), 0);
 
-            FindQuestionsServiceResponse response1 = FindQuestionsServiceResponse.of(page1);
-            FindQuestionsServiceResponse response2 = FindQuestionsServiceResponse.of(page2);
+            FindQuestionsResponse response1 = FindQuestionsResponse.of(page1);
+            FindQuestionsResponse response2 = FindQuestionsResponse.of(page2);
 
             // when & then
             assertThat(response1).isNotEqualTo(response2);
@@ -211,7 +211,7 @@ class FindQuestionsServiceResponseTest {
                 .build();
 
             Page<Question> page = new PageImpl<>(List.of(question), PageRequest.of(0, 10), 1);
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response = FindQuestionsResponse.of(page);
 
             // when & then
             assertThat(response.pageNumber()).isEqualTo(0);
@@ -232,7 +232,7 @@ class FindQuestionsServiceResponseTest {
         void success() {
             // given
             Page<Question> page = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
-            FindQuestionsServiceResponse response = FindQuestionsServiceResponse.of(page);
+            FindQuestionsResponse response = FindQuestionsResponse.of(page);
 
             // when
             String result = response.toString();

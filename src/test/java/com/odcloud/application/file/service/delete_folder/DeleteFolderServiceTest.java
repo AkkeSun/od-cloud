@@ -63,7 +63,7 @@ class DeleteFolderServiceTest {
                 .build();
 
             // when
-            DeleteFolderServiceResponse response = deleteFolderService.deleteFolder(ownerAccount,
+            DeleteFolderResponse response = deleteFolderService.deleteFolder(ownerAccount,
                 1L);
 
             // then
@@ -117,7 +117,7 @@ class DeleteFolderServiceTest {
                 .build();
 
             // when
-            DeleteFolderServiceResponse response = deleteFolderService.deleteFolder(ownerAccount,
+            DeleteFolderResponse response = deleteFolderService.deleteFolder(ownerAccount,
                 1L);
 
             // then
@@ -173,7 +173,7 @@ class DeleteFolderServiceTest {
                 .build();
 
             // when
-            DeleteFolderServiceResponse response = deleteFolderService.deleteFolder(ownerAccount,
+            DeleteFolderResponse response = deleteFolderService.deleteFolder(ownerAccount,
                 1L);
 
             // then
@@ -238,7 +238,7 @@ class DeleteFolderServiceTest {
                 .build();
 
             // when
-            DeleteFolderServiceResponse response = deleteFolderService.deleteFolder(ownerAccount,
+            DeleteFolderResponse response = deleteFolderService.deleteFolder(ownerAccount,
                 1L);
 
             // then

@@ -38,7 +38,7 @@ class RegisterDeviceServiceTest {
                 .build();
 
             // when
-            RegisterDeviceServiceResponse response = registerDeviceService.register(command);
+            RegisterDeviceResponse response = registerDeviceService.register(command);
 
             // then
             assertThat(response).isNotNull();
@@ -93,7 +93,7 @@ class RegisterDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            RegisterDeviceServiceResponse response = registerDeviceService.register(command);
+            RegisterDeviceResponse response = registerDeviceService.register(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -152,7 +152,7 @@ class RegisterDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            RegisterDeviceServiceResponse response = registerDeviceService.register(command);
+            RegisterDeviceResponse response = registerDeviceService.register(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -204,7 +204,7 @@ class RegisterDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            RegisterDeviceServiceResponse response = registerDeviceService.register(command);
+            RegisterDeviceResponse response = registerDeviceService.register(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -247,7 +247,7 @@ class RegisterDeviceServiceTest {
                 .build();
 
             // when
-            RegisterDeviceServiceResponse response = registerDeviceService.register(command);
+            RegisterDeviceResponse response = registerDeviceService.register(command);
 
             // then
             assertThat(response).isNotNull();

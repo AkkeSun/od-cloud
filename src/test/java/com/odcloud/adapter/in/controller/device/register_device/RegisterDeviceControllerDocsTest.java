@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.device.port.in.RegisterDeviceUseCase;
-import com.odcloud.application.device.service.register_device.RegisterDeviceServiceResponse;
+import com.odcloud.application.device.service.register_device.RegisterDeviceResponse;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -82,10 +82,10 @@ class RegisterDeviceControllerDocsTest extends RestDocsSupport {
                 .fcmToken("fcm-token-123")
                 .pushYn("Y")
                 .build();
-            RegisterDeviceServiceResponse serviceResponse =
-                RegisterDeviceServiceResponse.of(mockDevice);
+            RegisterDeviceResponse Response =
+                RegisterDeviceResponse.of(mockDevice);
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", request, status().isOk(), "success", "success",

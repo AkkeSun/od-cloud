@@ -1,5 +1,7 @@
 package com.odcloud.application.group.service.find_groups;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import java.time.LocalDateTime;
@@ -52,29 +54,25 @@ class FindGroupsServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group2);
             fakeGroupStoragePort.groupDatabase.add(group3);
 
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("all")
-                .build();
-
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("all");
 
             // then
             assertThat(response.groups()).hasSize(3);
 
-            FindGroupsServiceResponse.GroupResponseItem responseGroup1 = response.groups().get(0);
+            FindGroupsResponse.GroupResponseItem responseGroup1 = response.groups().get(0);
             assertThat(responseGroup1.id()).isEqualTo(1L);
             assertThat(responseGroup1.ownerEmail()).isEqualTo("owner1@example.com");
             assertThat(responseGroup1.name()).isEqualTo("Development Team");
             assertThat(responseGroup1.regDt()).isEqualTo("2024-01-01T12:00");
 
-            FindGroupsServiceResponse.GroupResponseItem responseGroup2 = response.groups().get(1);
+            FindGroupsResponse.GroupResponseItem responseGroup2 = response.groups().get(1);
             assertThat(responseGroup2.id()).isEqualTo(2L);
             assertThat(responseGroup2.ownerEmail()).isEqualTo("owner2@example.com");
             assertThat(responseGroup2.name()).isEqualTo("Marketing Team");
             assertThat(responseGroup2.regDt()).isEqualTo("2024-01-02T12:00");
 
-            FindGroupsServiceResponse.GroupResponseItem responseGroup3 = response.groups().get(2);
+            FindGroupsResponse.GroupResponseItem responseGroup3 = response.groups().get(2);
             assertThat(responseGroup3.id()).isEqualTo(3L);
             assertThat(responseGroup3.ownerEmail()).isEqualTo("owner3@example.com");
             assertThat(responseGroup3.name()).isEqualTo("Sales Team");
@@ -110,18 +108,12 @@ class FindGroupsServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group2);
             fakeGroupStoragePort.groupDatabase.add(group3);
 
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("Team")
-                .build();
-
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("Development");
 
             // then
-            assertThat(response.groups()).hasSize(3);
-            assertThat(response.groups())
-                .extracting(FindGroupsServiceResponse.GroupResponseItem::name)
-                .allMatch(desc -> desc.contains("Team"));
+            assertThat(response.groups()).hasSize(1);
+            assertThat(response.groups().get(0).name()).isEqualTo("Development Team");
         }
 
         @Test
@@ -153,30 +145,21 @@ class FindGroupsServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group2);
             fakeGroupStoragePort.groupDatabase.add(group3);
 
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("개발")
-                .build();
-
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("개발");
 
             // then
             assertThat(response.groups()).hasSize(2);
             assertThat(response.groups())
-                .extracting(FindGroupsServiceResponse.GroupResponseItem::id)
+                .extracting(FindGroupsResponse.GroupResponseItem::id)
                 .containsExactly(1L, 3L);
         }
 
         @Test
         @DisplayName("[success] 그룹이 없는 경우 빈 목록을 반환한다")
         void success_emptyGroups() {
-            // given
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("all")
-                .build();
-
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("all");
 
             // then
             assertThat(response.groups()).isEmpty();
@@ -194,13 +177,9 @@ class FindGroupsServiceTest {
                 .build();
 
             fakeGroupStoragePort.groupDatabase.add(group1);
-
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("마케팅")
-                .build();
-
+            
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("마케팅");
 
             // then
             assertThat(response.groups()).isEmpty();
@@ -219,12 +198,8 @@ class FindGroupsServiceTest {
 
             fakeGroupStoragePort.groupDatabase.add(group1);
 
-            FindGroupsCommand command = FindGroupsCommand.builder()
-                .keyword("ALL")
-                .build();
-
             // when
-            FindGroupsServiceResponse response = findGroupsService.findAll(command);
+            FindGroupsResponse response = findGroupsService.findAll("ALL");
 
             // then
             assertThat(response.groups()).hasSize(1);

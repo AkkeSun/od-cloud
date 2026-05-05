@@ -685,7 +685,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // 계정과 그룹 멤버도 추가
             AccountEntity account = AccountEntity.builder()
                 .email("member@example.com")
-                .name("멤버")
                 .nickname("member")
                 .picture("https://example.com/pic.jpg")
                 .modDt(now)
@@ -741,7 +740,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account1 = AccountEntity.builder()
                 .email("member1@example.com")
-                .name("멤버1")
                 .nickname("member1")
                 .picture("https://example.com/pic1.jpg")
                 .modDt(now)
@@ -751,7 +749,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
 
             AccountEntity account2 = AccountEntity.builder()
                 .email("member2@example.com")
-                .name("멤버2")
                 .nickname("member2")
                 .picture("https://example.com/pic2.jpg")
                 .modDt(now)
@@ -787,9 +784,6 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             assertThat(result.getOwnerEmail()).isEqualTo("owner@example.com");
             assertThat(result.getName()).isEqualTo("테스트 그룹");
             assertThat(result.getGroupMembers()).hasSize(2);
-            assertThat(result.getGroupMembers())
-                .extracting(com.odcloud.domain.model.GroupAccount::getName)
-                .containsExactlyInAnyOrder("멤버1", "멤버2");
         }
 
         @Test

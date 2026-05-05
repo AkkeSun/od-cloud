@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.update_folder.UpdateFolderServiceResponse;
 import com.odcloud.application.file.port.in.UpdateFolderUseCase;
+import com.odcloud.application.file.service.update_folder.UpdateFolderResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -70,8 +70,8 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                 .name("수정된 폴더명")
                 .build();
 
-            UpdateFolderServiceResponse serviceResponse = UpdateFolderServiceResponse.ofSuccess();
-            given(useCase.updateFolder(any())).willReturn(serviceResponse);
+            UpdateFolderResponse Response = UpdateFolderResponse.ofSuccess();
+            given(useCase.updateFolder(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(), "success_폴더명만_수정",
@@ -95,8 +95,8 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(2L)
                 .build();
 
-            UpdateFolderServiceResponse serviceResponse = UpdateFolderServiceResponse.ofSuccess();
-            given(useCase.updateFolder(any())).willReturn(serviceResponse);
+            UpdateFolderResponse Response = UpdateFolderResponse.ofSuccess();
+            given(useCase.updateFolder(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(),
@@ -121,8 +121,8 @@ class UpdateFolderControllerDocsTest extends RestDocsSupport {
                 .parentId(2L)
                 .build();
 
-            UpdateFolderServiceResponse serviceResponse = UpdateFolderServiceResponse.ofSuccess();
-            given(useCase.updateFolder(any())).willReturn(serviceResponse);
+            UpdateFolderResponse Response = UpdateFolderResponse.ofSuccess();
+            given(useCase.updateFolder(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(), "success", "success",

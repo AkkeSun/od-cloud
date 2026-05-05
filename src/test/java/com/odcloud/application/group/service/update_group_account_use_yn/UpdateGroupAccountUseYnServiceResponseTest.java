@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class UpdateGroupAccountUseYnServiceResponseTest {
+class UpdateGroupAccountUseYnResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 UpdateGroupAccountUseYnServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 UpdateGroupAccountUseYnResponse를 생성한다")
         void success() {
             // when
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
 
             // then
@@ -25,10 +25,10 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] false 값으로 Constructor로 UpdateGroupAccountUseYnServiceResponse를 생성한다")
+        @DisplayName("[success] false 값으로 Constructor로 UpdateGroupAccountUseYnResponse를 생성한다")
         void success_false() {
             // when
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 Boolean.FALSE);
 
             // then
@@ -37,10 +37,10 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 UpdateGroupAccountUseYnServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 UpdateGroupAccountUseYnResponse를 생성한다")
         void success_nullValue() {
             // when
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 null);
 
             // then
@@ -57,7 +57,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         @DisplayName("[success] ofSuccess()로 성공 응답을 생성한다")
         void success() {
             // when
-            UpdateGroupAccountUseYnServiceResponse response = UpdateGroupAccountUseYnServiceResponse.ofSuccess();
+            UpdateGroupAccountUseYnResponse response = UpdateGroupAccountUseYnResponse.ofSuccess();
 
             // then
             assertThat(response).isNotNull();
@@ -73,7 +73,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         @DisplayName("[success] result()로 result를 조회한다")
         void success() {
             // given
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
 
             // when
@@ -89,12 +89,12 @@ class UpdateGroupAccountUseYnServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] UpdateGroupAccountUseYnServiceResponse는 불변 객체이다")
+        @DisplayName("[success] UpdateGroupAccountUseYnResponse는 불변 객체이다")
         void success() {
             // given
-            UpdateGroupAccountUseYnServiceResponse response1 = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response1 = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
-            UpdateGroupAccountUseYnServiceResponse response2 = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response2 = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
 
             // when & then
@@ -103,12 +103,12 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 값으로 생성된 UpdateGroupAccountUseYnServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 값으로 생성된 UpdateGroupAccountUseYnResponse는 동등하지 않다")
         void success_notEqual() {
             // given
-            UpdateGroupAccountUseYnServiceResponse response1 = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response1 = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
-            UpdateGroupAccountUseYnServiceResponse response2 = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response2 = new UpdateGroupAccountUseYnResponse(
                 Boolean.FALSE);
 
             // when & then
@@ -124,7 +124,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 Boolean.TRUE);
 
             // when
@@ -132,7 +132,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("UpdateGroupAccountUseYnServiceResponse");
+            assertThat(result).contains("UpdateGroupAccountUseYnResponse");
             assertThat(result).contains("true");
         }
 
@@ -140,7 +140,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValue() {
             // given
-            UpdateGroupAccountUseYnServiceResponse response = new UpdateGroupAccountUseYnServiceResponse(
+            UpdateGroupAccountUseYnResponse response = new UpdateGroupAccountUseYnResponse(
                 null);
 
             // when
@@ -148,7 +148,7 @@ class UpdateGroupAccountUseYnServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("UpdateGroupAccountUseYnServiceResponse");
+            assertThat(result).contains("UpdateGroupAccountUseYnResponse");
             assertThat(result).contains("null");
         }
     }

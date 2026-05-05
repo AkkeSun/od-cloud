@@ -45,7 +45,7 @@ class DownloadFileServiceTest {
             fakeFileStoragePort.database.add(file);
 
             // when
-            DownloadFileServiceResponse response = downloadFileService.downloadFile(1L);
+            DownloadFileResponse response = downloadFileService.downloadFile(1L);
 
             // then
             assertThat(response).isNotNull();

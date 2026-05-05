@@ -37,7 +37,6 @@ class FindPendingGroupAccountsServiceTest {
                 .id(1L)
                 .email(ownerEmail)
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -124,7 +123,7 @@ class FindPendingGroupAccountsServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(pendingOther);
 
             // when
-            FindPendingGroupAccountsServiceResponse response = service.findPendingAccounts(owner);
+            FindPendingGroupAccountsResponse response = service.findPendingAccounts(owner);
 
             // then
             assertThat(response).isNotNull();
@@ -162,7 +161,6 @@ class FindPendingGroupAccountsServiceTest {
                 .id(1L)
                 .email(ownerEmail)
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -186,7 +184,7 @@ class FindPendingGroupAccountsServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(active1);
 
             // when
-            FindPendingGroupAccountsServiceResponse response = service.findPendingAccounts(owner);
+            FindPendingGroupAccountsResponse response = service.findPendingAccounts(owner);
 
             // then
             assertThat(response).isNotNull();
@@ -202,7 +200,6 @@ class FindPendingGroupAccountsServiceTest {
                 .id(1L)
                 .email(ownerEmail)
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -215,7 +212,7 @@ class FindPendingGroupAccountsServiceTest {
             fakeGroupStoragePort.groupDatabase.add(otherGroup);
 
             // when
-            FindPendingGroupAccountsServiceResponse response = service.findPendingAccounts(owner);
+            FindPendingGroupAccountsResponse response = service.findPendingAccounts(owner);
 
             // then
             assertThat(response).isNotNull();

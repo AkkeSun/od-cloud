@@ -101,7 +101,7 @@ class FindGroupServiceTest {
             fakeNoticeStoragePort.database.add(notice2);
 
             // when
-            FindGroupServiceResponse response = findGroupService.findById(groupId);
+            FindGroupResponse response = findGroupService.findById(groupId);
 
             // then
             assertThat(response).isNotNull();
@@ -114,7 +114,7 @@ class FindGroupServiceTest {
 
             assertThat(response.members()).hasSize(2);
             assertThat(response.members())
-                .extracting(FindGroupServiceResponse.MemberInfo::nickname)
+                .extracting(FindGroupResponse.MemberInfo::nickname)
                 .containsExactlyInAnyOrder("Member1", "Member2");
 
             assertThat(response.activeMemberCount()).isEqualTo(3);
@@ -152,7 +152,7 @@ class FindGroupServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
 
             // when
-            FindGroupServiceResponse response = findGroupService.findById(groupId);
+            FindGroupResponse response = findGroupService.findById(groupId);
 
             // then
             assertThat(response.manager()).isNotNull();
@@ -188,7 +188,7 @@ class FindGroupServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
 
             // when
-            FindGroupServiceResponse response = findGroupService.findById(groupId);
+            FindGroupResponse response = findGroupService.findById(groupId);
 
             // then
             assertThat(response.notices()).isEmpty();
@@ -234,7 +234,7 @@ class FindGroupServiceTest {
             }
 
             // when
-            FindGroupServiceResponse response = findGroupService.findById(groupId);
+            FindGroupResponse response = findGroupService.findById(groupId);
 
             // then
             assertThat(response.notices()).hasSize(5);
@@ -289,7 +289,7 @@ class FindGroupServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
 
             // when
-            FindGroupServiceResponse response = findGroupService.findById(groupId);
+            FindGroupResponse response = findGroupService.findById(groupId);
 
             // then
             assertThat(response.members()).hasSize(1);

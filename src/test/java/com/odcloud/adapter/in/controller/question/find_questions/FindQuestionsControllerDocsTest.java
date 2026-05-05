@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.question.port.in.FindQuestionsUseCase;
-import com.odcloud.application.question.service.find_questions.FindQuestionsServiceResponse;
+import com.odcloud.application.question.service.find_questions.FindQuestionsResponse;
 import com.odcloud.domain.model.Question;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,9 +51,9 @@ class FindQuestionsControllerDocsTest extends RestDocsSupport {
             .regDt(LocalDateTime.of(2025, 1, 20, 10, 0))
             .build();
 
-        FindQuestionsServiceResponse serviceResponse = FindQuestionsServiceResponse.of(
+        FindQuestionsResponse Response = FindQuestionsResponse.of(
             new PageImpl<>(List.of(question), PageRequest.of(0, 10), 1));
-        given(useCase.findQuestions(any())).willReturn(serviceResponse);
+        given(useCase.findQuestions(any())).willReturn(Response);
 
         // when & then
         mockMvc.perform(get("/questions")
@@ -91,12 +91,18 @@ class FindQuestionsControllerDocsTest extends RestDocsSupport {
                             .description("문의 게시글 목록"),
                         fieldWithPath("data.questions[].id").type(JsonFieldType.NUMBER)
                             .description("문의 ID"),
+                        fieldWithPath("data.questions[].writerEmail").type(JsonFieldType.STRING)
+                            .description("작성자 이메일"),
                         fieldWithPath("data.questions[].writerNickname").type(JsonFieldType.STRING)
                             .description("작성자 닉네임"),
                         fieldWithPath("data.questions[].title").type(JsonFieldType.STRING)
                             .description("제목"),
+                        fieldWithPath("data.questions[].content").type(JsonFieldType.STRING)
+                            .description("내용"),
                         fieldWithPath("data.questions[].answered").type(JsonFieldType.BOOLEAN)
                             .description("답변 완료 여부"),
+                        fieldWithPath("data.questions[].modDt").type(JsonFieldType.STRING)
+                            .description("수정일시").optional(),
                         fieldWithPath("data.questions[].regDt").type(JsonFieldType.STRING)
                             .description("등록일시")
                     )

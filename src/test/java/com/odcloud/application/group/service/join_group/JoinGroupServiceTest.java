@@ -48,7 +48,6 @@ class JoinGroupServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -60,7 +59,7 @@ class JoinGroupServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
 
             // when
-            JoinGroupServiceResponse response = joinGroupService.join(groupId, account);
+            JoinGroupResponse response = joinGroupService.join(groupId, account);
 
             // then
             assertThat(response).isNotNull();
@@ -83,7 +82,6 @@ class JoinGroupServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -111,7 +109,6 @@ class JoinGroupServiceTest {
                 .id(1L)
                 .email("user1@example.com")
                 .nickname("User1")
-                .name("사용자1")
                 .groups(new ArrayList<>())
                 .build();
 
@@ -119,7 +116,6 @@ class JoinGroupServiceTest {
                 .id(2L)
                 .email("user2@example.com")
                 .nickname("User2")
-                .name("사용자2")
                 .groups(new ArrayList<>())
                 .build();
 

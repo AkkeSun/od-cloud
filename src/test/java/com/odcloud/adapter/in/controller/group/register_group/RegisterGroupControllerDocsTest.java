@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.RegisterGroupUseCase;
-import com.odcloud.application.group.service.register_group.RegisterGroupServiceResponse;
+import com.odcloud.application.group.service.register_group.RegisterGroupResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -68,10 +68,9 @@ class RegisterGroupControllerDocsTest extends RestDocsSupport {
                 .name("테스트 그룹")
                 .build();
 
-            RegisterGroupServiceResponse serviceResponse =
-                RegisterGroupServiceResponse.ofSuccess();
+            RegisterGroupResponse Response = RegisterGroupResponse.ofSuccess();
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument(request, "Bearer test", status().isOk(), "success", "success",

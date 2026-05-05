@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.question.port.in.RegisterQuestionUseCase;
-import com.odcloud.application.question.service.register_question.RegisterQuestionServiceResponse;
+import com.odcloud.application.question.service.register_question.RegisterQuestionResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -44,8 +44,8 @@ class RegisterQuestionControllerDocsTest extends RestDocsSupport {
             .content("API 사용 방법을 알고 싶습니다.")
             .build();
 
-        RegisterQuestionServiceResponse serviceResponse = RegisterQuestionServiceResponse.ofSuccess();
-        given(useCase.registerQuestion(any())).willReturn(serviceResponse);
+        RegisterQuestionResponse Response = RegisterQuestionResponse.ofSuccess();
+        given(useCase.registerQuestion(any())).willReturn(Response);
 
         // when & then
         mockMvc.perform(post("/questions")

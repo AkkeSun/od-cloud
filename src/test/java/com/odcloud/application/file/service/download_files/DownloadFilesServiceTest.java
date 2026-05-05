@@ -67,7 +67,7 @@ class DownloadFilesServiceTest {
             List<Long> fileIds = List.of(1L, 2L, 3L);
 
             // when
-            DownloadFilesServiceResponse response = downloadFilesService.download(fileIds);
+            DownloadFilesResponse response = downloadFilesService.download(fileIds);
 
             // then
             assertThat(response).isNotNull();

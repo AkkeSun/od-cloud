@@ -41,7 +41,7 @@ class RegisterQuestionServiceTest {
                 .build();
 
             // when
-            RegisterQuestionServiceResponse response = registerQuestionService.registerQuestion(
+            RegisterQuestionResponse response = registerQuestionService.registerQuestion(
                 command);
 
             // then
@@ -142,7 +142,7 @@ class RegisterQuestionServiceTest {
                 .build();
 
             // when
-            RegisterQuestionServiceResponse response = registerQuestionService.registerQuestion(
+            RegisterQuestionResponse response = registerQuestionService.registerQuestion(
                 command);
 
             // then
@@ -166,11 +166,11 @@ class RegisterQuestionServiceTest {
                 .build();
 
             // when
-            RegisterQuestionServiceResponse response = registerQuestionService.registerQuestion(
+            RegisterQuestionResponse response = registerQuestionService.registerQuestion(
                 command);
 
             // then
-            assertThat(response).isEqualTo(RegisterQuestionServiceResponse.ofSuccess());
+            assertThat(response).isEqualTo(RegisterQuestionResponse.ofSuccess());
             assertThat(response.result()).isTrue();
         }
     }

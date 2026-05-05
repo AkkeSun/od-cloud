@@ -56,7 +56,7 @@ class UpdateDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            UpdateDeviceServiceResponse response = updateDeviceService.update(command);
+            UpdateDeviceResponse response = updateDeviceService.update(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -100,7 +100,7 @@ class UpdateDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            UpdateDeviceServiceResponse response = updateDeviceService.update(command);
+            UpdateDeviceResponse response = updateDeviceService.update(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -144,7 +144,7 @@ class UpdateDeviceServiceTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            UpdateDeviceServiceResponse response = updateDeviceService.update(command);
+            UpdateDeviceResponse response = updateDeviceService.update(command);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -189,7 +189,7 @@ class UpdateDeviceServiceTest {
                 .build();
 
             // when
-            UpdateDeviceServiceResponse response = updateDeviceService.update(command);
+            UpdateDeviceResponse response = updateDeviceService.update(command);
 
             // then
             assertThat(response).isNotNull();

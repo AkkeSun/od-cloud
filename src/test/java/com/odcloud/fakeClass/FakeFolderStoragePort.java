@@ -61,7 +61,7 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
                 .toList();
         }
 
-        // folderId와 groupId로 필터링
+        // folderId로 필터링
         return database.stream()
             .filter(folder -> {
                 if (command.folderId() == null) {
@@ -69,12 +69,6 @@ public class FakeFolderStoragePort implements FolderInfoStoragePort {
                 }
                 return folder.getParentId() != null && folder.getParentId()
                     .equals(command.folderId());
-            })
-            .filter(folder -> {
-                if (command.groupId() == null) {
-                    return true;
-                }
-                return folder.getGroupId().equals(command.groupId());
             })
             .toList();
     }

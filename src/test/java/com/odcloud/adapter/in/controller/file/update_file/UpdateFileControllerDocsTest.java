@@ -75,8 +75,8 @@ class UpdateFileControllerDocsTest extends RestDocsSupport {
                 .folderId(2L)
                 .build();
 
-            UpdateFileResponse serviceResponse = UpdateFileResponse.ofSuccess();
-            given(useCase.update(any())).willReturn(serviceResponse);
+            UpdateFileResponse Response = UpdateFileResponse.ofSuccess();
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(fileId, request, status().isOk(), "파일명과 폴더 동시 변경", "success",

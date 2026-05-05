@@ -50,10 +50,10 @@ class RegisterAccountDocsTest extends RestDocsSupport {
                 .groupId(1L)
                 .build();
 
-            RegisterAccountResponse serviceResponse =
+            RegisterAccountResponse Response =
                 RegisterAccountResponse.ofSuccess();
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument(googleAuthorization, request, status().isOk(), "success", "success",
@@ -77,10 +77,10 @@ class RegisterAccountDocsTest extends RestDocsSupport {
                 .newGroupName("새로운 그룹")
                 .build();
 
-            RegisterAccountResponse serviceResponse =
+            RegisterAccountResponse Response =
                 RegisterAccountResponse.ofSuccess();
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument(googleAuthorization, request, status().isOk(), "success_with_new_group",

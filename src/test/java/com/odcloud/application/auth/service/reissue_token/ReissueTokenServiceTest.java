@@ -72,7 +72,7 @@ class ReissueTokenServiceTest {
             fakeRedisStoragePort.database.put(redisKey, refreshToken);
 
             // when
-            ReissueTokenServiceResponse response = reissueTokenService.reissueToken(refreshToken);
+            ReissueTokenResponse response = reissueTokenService.reissueToken(refreshToken);
 
             // then
             assertThat(response).isNotNull();
@@ -150,7 +150,7 @@ class ReissueTokenServiceTest {
             fakeRedisStoragePort.database.put(redisKey, oldRefreshToken);
 
             // when
-            ReissueTokenServiceResponse response = reissueTokenService.reissueToken(
+            ReissueTokenResponse response = reissueTokenService.reissueToken(
                 oldRefreshToken);
 
             // then
@@ -182,7 +182,7 @@ class ReissueTokenServiceTest {
             fakeRedisStoragePort.database.put(redisKey, refreshToken);
 
             // when
-            ReissueTokenServiceResponse response = reissueTokenService.reissueToken(refreshToken);
+            ReissueTokenResponse response = reissueTokenService.reissueToken(refreshToken);
 
             // then
             assertThat(response).isNotNull();
@@ -214,7 +214,7 @@ class ReissueTokenServiceTest {
             );
             fakeRedisStoragePort.database.put(redisKey1, refreshToken1);
 
-            ReissueTokenServiceResponse response1 = reissueTokenService.reissueToken(refreshToken1);
+            ReissueTokenResponse response1 = reissueTokenService.reissueToken(refreshToken1);
 
             // Second device
             fakeJwtUtil.mockDeviceId = "another-device-id";
@@ -226,7 +226,7 @@ class ReissueTokenServiceTest {
             );
             fakeRedisStoragePort.database.put(redisKey2, refreshToken2);
 
-            ReissueTokenServiceResponse response2 = reissueTokenService.reissueToken(refreshToken2);
+            ReissueTokenResponse response2 = reissueTokenService.reissueToken(refreshToken2);
 
             // then
             assertThat(response1).isNotNull();

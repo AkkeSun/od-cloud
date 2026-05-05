@@ -51,7 +51,6 @@ class UpdateAccountServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("oldNickname")
-                .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
                 .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -73,7 +72,7 @@ class UpdateAccountServiceTest {
                 .build();
 
             // when
-            UpdateAccountServiceResponse response = updateAccountService.update(command);
+            UpdateAccountResponse response = updateAccountService.update(command);
 
             // then
             assertThat(response).isNotNull();
@@ -101,7 +100,6 @@ class UpdateAccountServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("oldNickname")
-                .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
                 .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -116,7 +114,7 @@ class UpdateAccountServiceTest {
                 .build();
 
             // when
-            UpdateAccountServiceResponse response = updateAccountService.update(command);
+            UpdateAccountResponse response = updateAccountService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -141,7 +139,6 @@ class UpdateAccountServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("myNickname")
-                .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
                 .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -163,7 +160,7 @@ class UpdateAccountServiceTest {
                 .build();
 
             // when
-            UpdateAccountServiceResponse response = updateAccountService.update(command);
+            UpdateAccountResponse response = updateAccountService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -188,7 +185,6 @@ class UpdateAccountServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("nickname")
-                .name("사용자")
                 .picture("https://example.com/external-profile.jpg")
                 .groups(List.of(Group.of(1L)))
                 .regDt(LocalDateTime.of(2024, 1, 1, 12, 0))
@@ -210,7 +206,7 @@ class UpdateAccountServiceTest {
                 .build();
 
             // when
-            UpdateAccountServiceResponse response = updateAccountService.update(command);
+            UpdateAccountResponse response = updateAccountService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -233,7 +229,6 @@ class UpdateAccountServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("oldNickname")
-                .name("사용자")
                 .picture("http://localhost:8080/picture/old.jpg")
                 .groups(List.of(Group.of(1L)))
                 .regDt(originalRegDt)
@@ -249,7 +244,7 @@ class UpdateAccountServiceTest {
                 .build();
 
             // when
-            UpdateAccountServiceResponse response = updateAccountService.update(command);
+            UpdateAccountResponse response = updateAccountService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -268,7 +263,6 @@ class UpdateAccountServiceTest {
                 .id(999L)
                 .email("nonexistent@example.com")
                 .nickname("oldNickname")
-                .name("사용자")
                 .picture("/picture/old.jpg")
                 .groups(List.of())
                 .build();

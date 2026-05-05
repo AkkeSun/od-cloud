@@ -4,6 +4,7 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
@@ -68,13 +69,10 @@ class DeleteGroupServiceTest {
                 .build();
             groupStoragePort.save(group);
 
-            DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId(1L)
-                .currentOwnerEmail("other@example.com")
-                .build();
+            Account notOwner = Account.builder().email("other@example.com").build();
 
             // when & then
-            assertThatThrownBy(() -> service.delete(command))
+            assertThatThrownBy(() -> service.delete(1L, notOwner))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_INVALID_GROUP_OWNER);
         }
@@ -147,14 +145,10 @@ class DeleteGroupServiceTest {
                 .regDt(LocalDateTime.now())
                 .build();
             groupStoragePort.save(groupAccount);
-
-            DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId(1L)
-                .currentOwnerEmail("owner@example.com")
-                .build();
-
+            
             // when
-            DeleteGroupServiceResponse response = service.delete(command);
+            Account owner = Account.builder().email("owner@example.com").build();
+            DeleteGroupResponse response = service.delete(1L, owner);
 
             // then
             assertThat(response).isNotNull();
@@ -202,13 +196,9 @@ class DeleteGroupServiceTest {
                 .build();
             folderInfoStoragePort.save(rootFolder);
 
-            DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId(1L)
-                .currentOwnerEmail("owner@example.com")
-                .build();
-
             // when
-            DeleteGroupServiceResponse response = service.delete(command);
+            Account owner = Account.builder().email("owner@example.com").build();
+            DeleteGroupResponse response = service.delete(1L, owner);
 
             // then
             assertThat(response).isNotNull();
@@ -246,13 +236,9 @@ class DeleteGroupServiceTest {
                 .build();
             folderInfoStoragePort.save(rootFolder);
 
-            DeleteGroupCommand command = DeleteGroupCommand.builder()
-                .groupId(1L)
-                .currentOwnerEmail("owner@example.com")
-                .build();
-
             // when
-            DeleteGroupServiceResponse response = service.delete(command);
+            Account owner = Account.builder().email("owner@example.com").build();
+            DeleteGroupResponse response = service.delete(1L, owner);
 
             // then
             assertThat(response).isNotNull();

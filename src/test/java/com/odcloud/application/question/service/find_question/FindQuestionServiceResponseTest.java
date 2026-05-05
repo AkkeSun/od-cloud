@@ -2,8 +2,8 @@ package com.odcloud.application.question.service.find_question;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse.AnswerResponseItem;
-import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse.QuestionResponseItem;
+import com.odcloud.application.question.service.find_question.FindQuestionResponse.AnswerResponseItem;
+import com.odcloud.application.question.service.find_question.FindQuestionResponse.QuestionResponseItem;
 import com.odcloud.domain.model.Answer;
 import com.odcloud.domain.model.Question;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class FindQuestionServiceResponseTest {
+class FindQuestionResponseTest {
 
     @Nested
     @DisplayName("[of] Domain 모델로부터 응답을 생성하는 정적 팩토리 메서드")
@@ -44,7 +44,7 @@ class FindQuestionServiceResponseTest {
                 .build();
 
             // when
-            FindQuestionServiceResponse response = FindQuestionServiceResponse.of(question,
+            FindQuestionResponse response = FindQuestionResponse.of(question,
                 answer);
 
             // then
@@ -85,7 +85,7 @@ class FindQuestionServiceResponseTest {
                 .build();
 
             // when
-            FindQuestionServiceResponse response = FindQuestionServiceResponse.of(question, null);
+            FindQuestionResponse response = FindQuestionResponse.of(question, null);
 
             // then
             assertThat(response).isNotNull();
@@ -232,7 +232,7 @@ class FindQuestionServiceResponseTest {
                 .build();
 
             // when
-            FindQuestionServiceResponse response = FindQuestionServiceResponse.builder()
+            FindQuestionResponse response = FindQuestionResponse.builder()
                 .question(question)
                 .answer(null)
                 .build();
@@ -263,8 +263,8 @@ class FindQuestionServiceResponseTest {
                 .regDt(now)
                 .build();
 
-            FindQuestionServiceResponse response1 = FindQuestionServiceResponse.of(question, null);
-            FindQuestionServiceResponse response2 = FindQuestionServiceResponse.of(question, null);
+            FindQuestionResponse response1 = FindQuestionResponse.of(question, null);
+            FindQuestionResponse response2 = FindQuestionResponse.of(question, null);
 
             // when & then
             assertThat(response1).isEqualTo(response2);

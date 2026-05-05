@@ -80,7 +80,7 @@ class IssueTokenServiceTest {
             String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
+            IssueTokenResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             assertThat(response).isNotNull();
@@ -153,7 +153,7 @@ class IssueTokenServiceTest {
             String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
+            IssueTokenResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             String expectedRedisKey = String.format(
@@ -192,7 +192,7 @@ class IssueTokenServiceTest {
             String deviceId = "device-abc123";
 
             // when
-            IssueTokenServiceResponse response = issueTokenService.issue(googleAuthorization, deviceId);
+            IssueTokenResponse response = issueTokenService.issue(googleAuthorization, deviceId);
 
             // then
             assertThat(response).isNotNull();

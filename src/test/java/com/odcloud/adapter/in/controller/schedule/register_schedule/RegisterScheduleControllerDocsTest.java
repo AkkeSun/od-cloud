@@ -70,10 +70,10 @@ class RegisterScheduleControllerDocsTest extends RestDocsSupport {
                 .notificationDt("2025-01-01 09:50:00")
                 .build();
 
-            RegisterScheduleResponse serviceResponse =
+            RegisterScheduleResponse Response =
                 RegisterScheduleResponse.ofSuccess();
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument(request, "Bearer test", status().isOk(), "success", "success",

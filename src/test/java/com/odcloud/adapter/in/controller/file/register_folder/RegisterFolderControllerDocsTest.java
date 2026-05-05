@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.register_folder.RegisterFolderServiceResponse;
 import com.odcloud.application.file.port.in.RegisterFolderUseCase;
+import com.odcloud.application.file.service.register_folder.RegisterFolderResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -71,10 +71,9 @@ class RegisterFolderControllerDocsTest extends RestDocsSupport {
                 .name("새 폴더")
                 .build();
 
-            RegisterFolderServiceResponse serviceResponse =
-                new RegisterFolderServiceResponse(true);
+            RegisterFolderResponse Response = new RegisterFolderResponse(true);
 
-            given(useCase.createFolder(any())).willReturn(serviceResponse);
+            given(useCase.createFolder(any())).willReturn(Response);
 
             // when & then
             performDocument(request, "Bearer token", status().isOk(), "success", "success",

@@ -71,7 +71,7 @@ class UpdateFileServiceTest {
                 .build();
 
             // when
-            UpdateFileServiceResponse response = updateFileService.update(command);
+            UpdateFileResponse response = updateFileService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -122,7 +122,7 @@ class UpdateFileServiceTest {
                 .build();
 
             // when
-            UpdateFileServiceResponse response = updateFileService.update(command);
+            UpdateFileResponse response = updateFileService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -172,7 +172,7 @@ class UpdateFileServiceTest {
                 .build();
 
             // when
-            UpdateFileServiceResponse response = updateFileService.update(command);
+            UpdateFileResponse response = updateFileService.update(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -341,7 +341,7 @@ class UpdateFileServiceTest {
                 .build();
 
             // when
-            UpdateFileServiceResponse response = updateFileService.update(command);
+            UpdateFileResponse response = updateFileService.update(command);
 
             // then
             assertThat(response.result()).isTrue();

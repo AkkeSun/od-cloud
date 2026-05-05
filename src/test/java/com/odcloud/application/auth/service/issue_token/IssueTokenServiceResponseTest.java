@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class IssueTokenServiceResponseTest {
+class IssueTokenResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 IssueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 IssueTokenResponse를 생성한다")
         void success() {
             // when
-            IssueTokenServiceResponse response = new IssueTokenServiceResponse(
+            IssueTokenResponse response = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -28,10 +28,10 @@ class IssueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 IssueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 IssueTokenResponse를 생성한다")
         void success_nullValues() {
             // when
-            IssueTokenServiceResponse response = new IssueTokenServiceResponse(null, null);
+            IssueTokenResponse response = new IssueTokenResponse(null, null);
 
             // then
             assertThat(response.accessToken()).isNull();
@@ -44,10 +44,10 @@ class IssueTokenServiceResponseTest {
     class Describe_builder {
 
         @Test
-        @DisplayName("[success] Builder로 IssueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 IssueTokenResponse를 생성한다")
         void success() {
             // when
-            IssueTokenServiceResponse response = IssueTokenServiceResponse.builder()
+            IssueTokenResponse response = IssueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -59,10 +59,10 @@ class IssueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] Builder로 null 값을 가진 IssueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 null 값을 가진 IssueTokenResponse를 생성한다")
         void success_nullValues() {
             // when
-            IssueTokenServiceResponse response = IssueTokenServiceResponse.builder()
+            IssueTokenResponse response = IssueTokenResponse.builder()
                 .accessToken(null)
                 .refreshToken(null)
                 .build();
@@ -82,7 +82,7 @@ class IssueTokenServiceResponseTest {
         @DisplayName("[success] accessToken()으로 accessToken을 조회한다")
         void success_accessToken() {
             // given
-            IssueTokenServiceResponse response = IssueTokenServiceResponse.builder()
+            IssueTokenResponse response = IssueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -98,7 +98,7 @@ class IssueTokenServiceResponseTest {
         @DisplayName("[success] refreshToken()으로 refreshToken을 조회한다")
         void success_refreshToken() {
             // given
-            IssueTokenServiceResponse response = IssueTokenServiceResponse.builder()
+            IssueTokenResponse response = IssueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -116,14 +116,14 @@ class IssueTokenServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] IssueTokenServiceResponse는 불변 객체이다")
+        @DisplayName("[success] IssueTokenResponse는 불변 객체이다")
         void success() {
             // given
-            IssueTokenServiceResponse response1 = new IssueTokenServiceResponse(
+            IssueTokenResponse response1 = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            IssueTokenServiceResponse response2 = new IssueTokenServiceResponse(
+            IssueTokenResponse response2 = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -134,14 +134,14 @@ class IssueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 accessToken을 가진 IssueTokenServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 accessToken을 가진 IssueTokenResponse는 동등하지 않다")
         void success_differentAccessToken() {
             // given
-            IssueTokenServiceResponse response1 = new IssueTokenServiceResponse(
+            IssueTokenResponse response1 = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            IssueTokenServiceResponse response2 = new IssueTokenServiceResponse(
+            IssueTokenResponse response2 = new IssueTokenResponse(
                 "access-token-789",
                 "refresh-token-456"
             );
@@ -151,14 +151,14 @@ class IssueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 refreshToken을 가진 IssueTokenServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 refreshToken을 가진 IssueTokenResponse는 동등하지 않다")
         void success_differentRefreshToken() {
             // given
-            IssueTokenServiceResponse response1 = new IssueTokenServiceResponse(
+            IssueTokenResponse response1 = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            IssueTokenServiceResponse response2 = new IssueTokenServiceResponse(
+            IssueTokenResponse response2 = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-789"
             );
@@ -176,7 +176,7 @@ class IssueTokenServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            IssueTokenServiceResponse response = new IssueTokenServiceResponse(
+            IssueTokenResponse response = new IssueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -186,7 +186,7 @@ class IssueTokenServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("IssueTokenServiceResponse");
+            assertThat(result).contains("IssueTokenResponse");
             assertThat(result).contains("access-token-123");
             assertThat(result).contains("refresh-token-456");
         }
@@ -195,14 +195,14 @@ class IssueTokenServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValues() {
             // given
-            IssueTokenServiceResponse response = new IssueTokenServiceResponse(null, null);
+            IssueTokenResponse response = new IssueTokenResponse(null, null);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("IssueTokenServiceResponse");
+            assertThat(result).contains("IssueTokenResponse");
             assertThat(result).contains("null");
         }
     }

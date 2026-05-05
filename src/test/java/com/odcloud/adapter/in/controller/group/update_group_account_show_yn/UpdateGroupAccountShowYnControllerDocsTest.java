@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.UpdateGroupAccountUseYnUseCase;
-import com.odcloud.application.group.service.update_group_account_use_yn.UpdateGroupAccountUseYnServiceResponse;
+import com.odcloud.application.group.service.update_group_account_use_yn.UpdateGroupAccountUseYnResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -70,10 +70,10 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
                 .showYn("Y")
                 .build();
 
-            UpdateGroupAccountUseYnServiceResponse serviceResponse =
-                UpdateGroupAccountUseYnServiceResponse.ofSuccess();
+            UpdateGroupAccountUseYnResponse Response =
+                UpdateGroupAccountUseYnResponse.ofSuccess();
 
-            given(useCase.updateShowYn(any())).willReturn(serviceResponse);
+            given(useCase.updateShowYn(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, request, status().isOk(),
@@ -98,10 +98,10 @@ class UpdateGroupAccountShowYnControllerDocsTest extends RestDocsSupport {
                 .showYn("N")
                 .build();
 
-            UpdateGroupAccountUseYnServiceResponse serviceResponse =
-                UpdateGroupAccountUseYnServiceResponse.ofSuccess();
+            UpdateGroupAccountUseYnResponse Response =
+                UpdateGroupAccountUseYnResponse.ofSuccess();
 
-            given(useCase.updateShowYn(any())).willReturn(serviceResponse);
+            given(useCase.updateShowYn(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, request, status().isOk(),

@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.find_files.FindFilesServiceResponse;
 import com.odcloud.application.file.port.in.FindFilesUseCase;
+import com.odcloud.application.file.service.find_files.FindFilesResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.List;
@@ -66,45 +66,45 @@ class FindFilesControllerDocsTest extends RestDocsSupport {
             Long folderId = 1L;
             String sortType = "NAME_ASC";
 
-            FindFilesServiceResponse.FileResponseItem file1 =
-                FindFilesServiceResponse.FileResponseItem.builder()
+            FindFilesResponse.FileResponseItem file1 =
+                FindFilesResponse.FileResponseItem.builder()
                     .id(1L)
                     .name("test1.txt")
                     .fileLoc("/group1/test1.txt")
                     .regDt("2024-01-01 12:00:00")
                     .build();
 
-            FindFilesServiceResponse.FileResponseItem file2 =
-                FindFilesServiceResponse.FileResponseItem.builder()
+            FindFilesResponse.FileResponseItem file2 =
+                FindFilesResponse.FileResponseItem.builder()
                     .id(2L)
                     .name("test2.pdf")
                     .fileLoc("/group1/test2.pdf")
                     .regDt("2024-01-02 12:00:00")
                     .build();
 
-            FindFilesServiceResponse.FolderResponseItem folder1 =
-                FindFilesServiceResponse.FolderResponseItem.builder()
+            FindFilesResponse.FolderResponseItem folder1 =
+                FindFilesResponse.FolderResponseItem.builder()
                     .id(11L)
                     .name("Documents")
                     .groupId(1L)
                     .regDt("2024-01-01 12:00:00")
                     .build();
 
-            FindFilesServiceResponse.FolderResponseItem folder2 =
-                FindFilesServiceResponse.FolderResponseItem.builder()
+            FindFilesResponse.FolderResponseItem folder2 =
+                FindFilesResponse.FolderResponseItem.builder()
                     .id(12L)
                     .name("Private")
                     .groupId(1L)
                     .regDt("2024-01-02 12:00:00")
                     .build();
 
-            FindFilesServiceResponse serviceResponse = FindFilesServiceResponse.builder()
+            FindFilesResponse Response = FindFilesResponse.builder()
                 .parentFolderId(folderId)
                 .files(List.of(file1, file2))
                 .folders(List.of(folder1, folder2))
                 .build();
 
-            given(useCase.findAll(any())).willReturn(serviceResponse);
+            given(useCase.findAll(any())).willReturn(Response);
 
             // when & then
             performDocument("folderId로 조회 성공", "success-by-folderId", authorization,

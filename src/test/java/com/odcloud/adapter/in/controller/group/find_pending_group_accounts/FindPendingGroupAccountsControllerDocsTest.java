@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.FindPendingGroupAccountsUseCase;
-import com.odcloud.application.group.service.find_pending_group_accounts.FindPendingGroupAccountsServiceResponse;
+import com.odcloud.application.group.service.find_pending_group_accounts.FindPendingGroupAccountsResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
@@ -72,51 +72,48 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 오너인 그룹의 PENDING 상태 사용자 목록을 그룹별로 조회한다")
         void success() throws Exception {
             // given
-            FindPendingGroupAccountsServiceResponse.PendingAccountInfo pending1 =
-                FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
+            FindPendingGroupAccountsResponse.PendingAccountInfo pending1 =
+                FindPendingGroupAccountsResponse.PendingAccountInfo.builder()
                     .accountId(10L)
                     .nickname("User1")
-                    .name("홍길동")
                     .email("user1@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 1, 10, 0))
                     .build();
 
-            FindPendingGroupAccountsServiceResponse.PendingAccountInfo pending2 =
-                FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
+            FindPendingGroupAccountsResponse.PendingAccountInfo pending2 =
+                FindPendingGroupAccountsResponse.PendingAccountInfo.builder()
                     .accountId(11L)
                     .nickname("User2")
-                    .name("김철수")
                     .email("user2@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 2, 11, 0))
                     .build();
 
-            FindPendingGroupAccountsServiceResponse.PendingAccountInfo pending3 =
-                FindPendingGroupAccountsServiceResponse.PendingAccountInfo.builder()
+            FindPendingGroupAccountsResponse.PendingAccountInfo pending3 =
+                FindPendingGroupAccountsResponse.PendingAccountInfo.builder()
                     .accountId(12L)
                     .nickname("User3")
-                    .name("이영희")
                     .email("user3@example.com")
                     .requestDate(LocalDateTime.of(2025, 1, 3, 12, 0))
                     .build();
 
-            FindPendingGroupAccountsServiceResponse.GroupPendingAccounts group1 =
-                FindPendingGroupAccountsServiceResponse.GroupPendingAccounts.builder()
+            FindPendingGroupAccountsResponse.GroupPendingAccounts group1 =
+                FindPendingGroupAccountsResponse.GroupPendingAccounts.builder()
                     .groupId(1L)
                     .groupName("Test Group 1")
                     .pendingAccounts(List.of(pending1, pending2))
                     .build();
 
-            FindPendingGroupAccountsServiceResponse.GroupPendingAccounts group2 =
-                FindPendingGroupAccountsServiceResponse.GroupPendingAccounts.builder()
+            FindPendingGroupAccountsResponse.GroupPendingAccounts group2 =
+                FindPendingGroupAccountsResponse.GroupPendingAccounts.builder()
                     .groupId(1L)
                     .groupName("Test Group 2")
                     .pendingAccounts(List.of(pending3))
                     .build();
 
-            FindPendingGroupAccountsServiceResponse serviceResponse =
-                new FindPendingGroupAccountsServiceResponse(List.of(group1, group2));
+            FindPendingGroupAccountsResponse Response =
+                new FindPendingGroupAccountsResponse(List.of(group1, group2));
 
-            given(useCase.findPendingAccounts(any())).willReturn(serviceResponse);
+            given(useCase.findPendingAccounts(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", status().isOk(), "success", "success",
@@ -137,9 +134,6 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
                 fieldWithPath("data.groups[].pendingAccounts[].accountId").type(
                         JsonFieldType.NUMBER)
                     .description("사용자 ID"),
-                fieldWithPath("data.groups[].pendingAccounts[].name").type(
-                        JsonFieldType.STRING)
-                    .description("사용자 이름"),
                 fieldWithPath("data.groups[].pendingAccounts[].email").type(
                         JsonFieldType.STRING)
                     .description("사용자 이메일"),
@@ -156,10 +150,10 @@ class FindPendingGroupAccountsControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] PENDING 상태 사용자가 없으면 빈 목록을 반환한다")
         void success_emptyList() throws Exception {
             // given
-            FindPendingGroupAccountsServiceResponse serviceResponse =
-                new FindPendingGroupAccountsServiceResponse(List.of());
+            FindPendingGroupAccountsResponse Response =
+                new FindPendingGroupAccountsResponse(List.of());
 
-            given(useCase.findPendingAccounts(any())).willReturn(serviceResponse);
+            given(useCase.findPendingAccounts(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", status().isOk(), "빈 목록 조회", "success-empty",

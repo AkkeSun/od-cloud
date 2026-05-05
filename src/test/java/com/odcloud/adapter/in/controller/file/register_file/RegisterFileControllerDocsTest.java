@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.register_file.RegisterFileServiceResponse;
 import com.odcloud.application.file.port.in.RegisterFileUseCase;
+import com.odcloud.application.file.service.register_file.RegisterFileResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -73,10 +73,9 @@ class RegisterFileControllerDocsTest extends RestDocsSupport {
             );
             String authorization = "Bearer test";
 
-            RegisterFileServiceResponse serviceResponse =
-                new RegisterFileServiceResponse(true);
+            RegisterFileResponse Response = new RegisterFileResponse(true);
 
-            given(useCase.register(any())).willReturn(serviceResponse);
+            given(useCase.register(any())).willReturn(Response);
 
             // when & then
             performDocument(folderId, status().isOk(), "success", "success", authorization,

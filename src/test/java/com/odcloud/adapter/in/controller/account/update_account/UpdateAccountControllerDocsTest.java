@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.account.port.in.UpdateAccountUseCase;
-import com.odcloud.application.account.service.update_account.UpdateAccountServiceResponse;
+import com.odcloud.application.account.service.update_account.UpdateAccountResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -62,10 +62,10 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 .nickname("새닉네임")
                 .picture("http://localhost:8080/picture/profile.png")
                 .build();
-            UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.of(mockAccount);
+            UpdateAccountResponse Response =
+                UpdateAccountResponse.of(mockAccount);
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(authorization, nickname, pictureFile, status().isOk(), "success",
@@ -78,9 +78,9 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
                     .description("수정 성공 여부"),
-                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                fieldWithPath("data.nickname").type(JsonFieldType.STRING)
                     .description("수정된 닉네임"),
-                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                fieldWithPath("data.picture").type(JsonFieldType.STRING)
                     .description("수정된 프로필 사진 URL")
             );
         }
@@ -96,10 +96,10 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 .nickname("새닉네임")
                 .picture("http://localhost:8080/picture/old.png")
                 .build();
-            UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.of(mockAccount);
+            UpdateAccountResponse Response =
+                UpdateAccountResponse.of(mockAccount);
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(authorization, nickname, null, status().isOk(), "닉네임만 수정", "success",
@@ -111,9 +111,9 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
                     .description("수정 성공 여부"),
-                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                fieldWithPath("data.nickname").type(JsonFieldType.STRING)
                     .description("수정된 닉네임"),
-                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                fieldWithPath("data.picture").type(JsonFieldType.STRING)
                     .description("프로필 사진 URL")
             );
         }
@@ -134,10 +134,10 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                 .nickname("기존닉네임")
                 .picture("http://localhost:8080/picture/profile.png")
                 .build();
-            UpdateAccountServiceResponse serviceResponse =
-                UpdateAccountServiceResponse.of(mockAccount);
+            UpdateAccountResponse Response =
+                UpdateAccountResponse.of(mockAccount);
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(authorization, null, pictureFile, status().isOk(), "프로필 사진만 수정",
@@ -150,9 +150,9 @@ class UpdateAccountControllerDocsTest extends RestDocsSupport {
                     .description("응답 데이터"),
                 fieldWithPath("data.result").type(JsonFieldType.BOOLEAN)
                     .description("수정 성공 여부"),
-                fieldWithPath("data.nickName").type(JsonFieldType.STRING)
+                fieldWithPath("data.nickname").type(JsonFieldType.STRING)
                     .description("닉네임"),
-                fieldWithPath("data.pictureFile").type(JsonFieldType.STRING)
+                fieldWithPath("data.picture").type(JsonFieldType.STRING)
                     .description("수정된 프로필 사진 URL")
             );
         }

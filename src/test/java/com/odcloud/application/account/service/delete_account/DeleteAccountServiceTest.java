@@ -4,8 +4,7 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
-import com.odcloud.application.group.service.delete_group.DeleteGroupCommand;
-import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
+import com.odcloud.application.group.service.delete_group.DeleteGroupResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.FileInfo;
@@ -97,10 +96,10 @@ class DeleteAccountServiceTest {
         }
 
         @Override
-        public DeleteGroupServiceResponse delete(DeleteGroupCommand command) {
-            Group group = groupStoragePort.findById(command.groupId());
+        public DeleteGroupResponse delete(Long groupId, Account account) {
+            Group group = groupStoragePort.findById(groupId);
 
-            List<FolderInfo> folders = folderInfoStoragePort.findByGroupId(command.groupId());
+            List<FolderInfo> folders = folderInfoStoragePort.findByGroupId(groupId);
             for (FolderInfo folder : folders) {
                 List<FileInfo> files = fileInfoStoragePort.findByFolderId(folder.getId());
                 for (FileInfo file : files) {
@@ -110,21 +109,20 @@ class DeleteAccountServiceTest {
                 folderInfoStoragePort.delete(folder);
             }
 
-            List<Schedule> schedules = scheduleStoragePort.findByGroupId(command.groupId());
+            List<Schedule> schedules = scheduleStoragePort.findByGroupId(groupId);
             for (Schedule schedule : schedules) {
                 scheduleStoragePort.delete(schedule);
             }
 
-            List<Notice> notices = noticeStoragePort.findByGroupId(command.groupId(),
-                Integer.MAX_VALUE);
+            List<Notice> notices = noticeStoragePort.findByGroupId(groupId, Integer.MAX_VALUE);
             for (Notice notice : notices) {
                 noticeStoragePort.delete(notice);
             }
 
-            groupStoragePort.deleteGroupAccountsByGroupId(command.groupId());
+            groupStoragePort.deleteGroupAccountsByGroupId(groupId);
             groupStoragePort.delete(group);
 
-            return DeleteGroupServiceResponse.ofSuccess();
+            return DeleteGroupResponse.ofSuccess();
         }
     }
 
@@ -140,7 +138,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .email("test@example.com")
                 .nickname("test")
-                .name("Test User")
                 .picture("picture.jpg")
                 .regDt(LocalDateTime.now())
                 .build();
@@ -274,7 +271,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .email("test@example.com")
                 .nickname("test")
-                .name("Test User")
                 .regDt(LocalDateTime.now())
                 .build();
             accountStoragePort.save(account);
@@ -370,7 +366,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .email("test@example.com")
                 .nickname("test")
-                .name("Test User")
                 .regDt(LocalDateTime.now())
                 .build();
             accountStoragePort.save(account);
@@ -394,7 +389,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .email("test@example.com")
                 .nickname("test")
-                .name("Test User")
                 .regDt(LocalDateTime.now())
                 .build();
             accountStoragePort.save(account);
@@ -418,7 +412,6 @@ class DeleteAccountServiceTest {
                 .id(1L)
                 .email("test@example.com")
                 .nickname("test")
-                .name("Test User")
                 .regDt(LocalDateTime.now())
                 .build();
             accountStoragePort.save(account);

@@ -86,7 +86,7 @@ class UpdateNoticeServiceTest {
                 .build();
 
             // when
-            UpdateNoticeServiceResponse response = updateNoticeService.update(command);
+            UpdateNoticeResponse response = updateNoticeService.update(command);
 
             // then
             assertThat(response.result()).isTrue();

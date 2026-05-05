@@ -40,7 +40,6 @@ class UpdateScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList())
                 .build();
 
@@ -138,7 +137,6 @@ class UpdateScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList(group))
                 .build();
 
@@ -188,7 +186,6 @@ class UpdateScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList(group))
                 .build();
 
@@ -226,7 +223,6 @@ class UpdateScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList())
                 .build();
 

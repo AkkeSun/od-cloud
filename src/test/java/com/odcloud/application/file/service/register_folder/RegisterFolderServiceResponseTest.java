@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class RegisterFolderServiceResponseTest {
+class RegisterFolderResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 RegisterFolderServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 RegisterFolderResponse를 생성한다")
         void success() {
             // when
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response = new RegisterFolderResponse(
                 Boolean.TRUE);
 
             // then
@@ -25,10 +25,10 @@ class RegisterFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] false 값으로 Constructor로 RegisterFolderServiceResponse를 생성한다")
+        @DisplayName("[success] false 값으로 Constructor로 RegisterFolderResponse를 생성한다")
         void success_false() {
             // when
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response = new RegisterFolderResponse(
                 Boolean.FALSE);
 
             // then
@@ -37,10 +37,10 @@ class RegisterFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 RegisterFolderServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 RegisterFolderResponse를 생성한다")
         void success_nullValue() {
             // when
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(null);
+            RegisterFolderResponse response = new RegisterFolderResponse(null);
 
             // then
             assertThat(response).isNotNull();
@@ -56,7 +56,7 @@ class RegisterFolderServiceResponseTest {
         @DisplayName("[success] ofSuccess()로 성공 응답을 생성한다")
         void success() {
             // when
-            RegisterFolderServiceResponse response = RegisterFolderServiceResponse.ofSuccess();
+            RegisterFolderResponse response = RegisterFolderResponse.ofSuccess();
 
             // then
             assertThat(response).isNotNull();
@@ -72,7 +72,7 @@ class RegisterFolderServiceResponseTest {
         @DisplayName("[success] result()로 result를 조회한다")
         void success() {
             // given
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response = new RegisterFolderResponse(
                 Boolean.TRUE);
 
             // when
@@ -88,12 +88,12 @@ class RegisterFolderServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] RegisterFolderServiceResponse는 불변 객체이다")
+        @DisplayName("[success] RegisterFolderResponse는 불변 객체이다")
         void success() {
             // given
-            RegisterFolderServiceResponse response1 = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response1 = new RegisterFolderResponse(
                 Boolean.TRUE);
-            RegisterFolderServiceResponse response2 = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response2 = new RegisterFolderResponse(
                 Boolean.TRUE);
 
             // when & then
@@ -102,12 +102,12 @@ class RegisterFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 값으로 생성된 RegisterFolderServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 값으로 생성된 RegisterFolderResponse는 동등하지 않다")
         void success_notEqual() {
             // given
-            RegisterFolderServiceResponse response1 = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response1 = new RegisterFolderResponse(
                 Boolean.TRUE);
-            RegisterFolderServiceResponse response2 = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response2 = new RegisterFolderResponse(
                 Boolean.FALSE);
 
             // when & then
@@ -123,7 +123,7 @@ class RegisterFolderServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(
+            RegisterFolderResponse response = new RegisterFolderResponse(
                 Boolean.TRUE);
 
             // when
@@ -131,7 +131,7 @@ class RegisterFolderServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("RegisterFolderServiceResponse");
+            assertThat(result).contains("RegisterFolderResponse");
             assertThat(result).contains("true");
         }
 
@@ -139,14 +139,14 @@ class RegisterFolderServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValue() {
             // given
-            RegisterFolderServiceResponse response = new RegisterFolderServiceResponse(null);
+            RegisterFolderResponse response = new RegisterFolderResponse(null);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("RegisterFolderServiceResponse");
+            assertThat(result).contains("RegisterFolderResponse");
             assertThat(result).contains("null");
         }
     }

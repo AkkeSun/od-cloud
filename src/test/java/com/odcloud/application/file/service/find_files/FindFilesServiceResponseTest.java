@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class FindFilesServiceResponseTest {
+class FindFilesResponseTest {
 
     @Nested
     @DisplayName("[of] File과 Folder 리스트로 Response 생성")
@@ -61,7 +61,7 @@ class FindFilesServiceResponseTest {
             Long parentFolderId = 10L;
 
             // when
-            FindFilesServiceResponse response = FindFilesServiceResponse.of(files, folders,
+            FindFilesResponse response = FindFilesResponse.of(files, folders,
                 parentFolderId);
 
             // then
@@ -98,7 +98,7 @@ class FindFilesServiceResponseTest {
             Long parentFolderId = 10L;
 
             // when
-            FindFilesServiceResponse response = FindFilesServiceResponse.of(files, folders,
+            FindFilesResponse response = FindFilesResponse.of(files, folders,
                 parentFolderId);
 
             // then
@@ -117,7 +117,7 @@ class FindFilesServiceResponseTest {
             Long parentFolderId = null;
 
             // when
-            FindFilesServiceResponse response = FindFilesServiceResponse.of(files, folders,
+            FindFilesResponse response = FindFilesResponse.of(files, folders,
                 parentFolderId);
 
             // then
@@ -147,8 +147,8 @@ class FindFilesServiceResponseTest {
                 .build();
 
             // when
-            FindFilesServiceResponse.FolderResponseItem item =
-                FindFilesServiceResponse.FolderResponseItem.of(folder);
+            FindFilesResponse.FolderResponseItem item =
+                FindFilesResponse.FolderResponseItem.of(folder);
 
             // then
             assertThat(item).isNotNull();
@@ -173,8 +173,8 @@ class FindFilesServiceResponseTest {
                 .build();
 
             // when
-            FindFilesServiceResponse.FolderResponseItem item =
-                FindFilesServiceResponse.FolderResponseItem.of(folder);
+            FindFilesResponse.FolderResponseItem item =
+                FindFilesResponse.FolderResponseItem.of(folder);
 
             // then
             assertThat(item).isNotNull();
@@ -202,8 +202,8 @@ class FindFilesServiceResponseTest {
                 .build();
 
             // when
-            FindFilesServiceResponse.FileResponseItem item =
-                FindFilesServiceResponse.FileResponseItem.of(file);
+            FindFilesResponse.FileResponseItem item =
+                FindFilesResponse.FileResponseItem.of(file);
 
             // then
             assertThat(item).isNotNull();
@@ -236,10 +236,10 @@ class FindFilesServiceResponseTest {
                 .build();
 
             // when
-            FindFilesServiceResponse.FileResponseItem pdfItem =
-                FindFilesServiceResponse.FileResponseItem.of(pdfFile);
-            FindFilesServiceResponse.FileResponseItem imageItem =
-                FindFilesServiceResponse.FileResponseItem.of(imageFile);
+            FindFilesResponse.FileResponseItem pdfItem =
+                FindFilesResponse.FileResponseItem.of(pdfFile);
+            FindFilesResponse.FileResponseItem imageItem =
+                FindFilesResponse.FileResponseItem.of(imageFile);
 
             // then
             assertThat(pdfItem.name()).isEqualTo("document.pdf");
@@ -258,16 +258,16 @@ class FindFilesServiceResponseTest {
         @DisplayName("[success] Builder로 Response를 생성한다")
         void success() {
             // given
-            FindFilesServiceResponse.FileResponseItem fileItem =
-                FindFilesServiceResponse.FileResponseItem.builder()
+            FindFilesResponse.FileResponseItem fileItem =
+                FindFilesResponse.FileResponseItem.builder()
                     .id(1L)
                     .name("test.txt")
                     .fileLoc("/group1/test.txt")
                     .regDt("2024-01-01 00:00:00")
                     .build();
 
-            FindFilesServiceResponse.FolderResponseItem folderItem =
-                FindFilesServiceResponse.FolderResponseItem.builder()
+            FindFilesResponse.FolderResponseItem folderItem =
+                FindFilesResponse.FolderResponseItem.builder()
                     .id(2L)
                     .name("Test Folder")
                     .groupId(1L)
@@ -275,7 +275,7 @@ class FindFilesServiceResponseTest {
                     .build();
 
             // when
-            FindFilesServiceResponse response = FindFilesServiceResponse.builder()
+            FindFilesResponse response = FindFilesResponse.builder()
                 .parentFolderId(10L)
                 .files(List.of(fileItem))
                 .folders(List.of(folderItem))

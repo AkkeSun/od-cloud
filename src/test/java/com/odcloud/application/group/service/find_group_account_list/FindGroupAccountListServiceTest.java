@@ -35,7 +35,6 @@ class FindGroupAccountListServiceTest {
                 .groupId(groupId)
                 .accountId(1L)
                 .email("user1@example.com")
-                .name("사용자1")
                 .nickName("닉네임1")
                 .status("ACTIVE")
                 .build();
@@ -45,7 +44,6 @@ class FindGroupAccountListServiceTest {
                 .groupId(groupId)
                 .accountId(2L)
                 .email("user2@example.com")
-                .name("사용자2")
                 .nickName("닉네임2")
                 .status("PENDING")
                 .build();
@@ -54,7 +52,7 @@ class FindGroupAccountListServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(account2);
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(groupId);
 
             // then
@@ -71,7 +69,7 @@ class FindGroupAccountListServiceTest {
             Long groupId = 1L;
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(groupId);
 
             // then
@@ -115,7 +113,7 @@ class FindGroupAccountListServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(otherAccount);
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(targetGroupId);
 
             // then
@@ -161,7 +159,7 @@ class FindGroupAccountListServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(rejectedAccount);
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(groupId);
 
             // then
@@ -190,7 +188,7 @@ class FindGroupAccountListServiceTest {
             }
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(groupId);
 
             // then
@@ -214,7 +212,7 @@ class FindGroupAccountListServiceTest {
             fakeGroupStoragePort.groupAccountDatabase.add(account);
 
             // when
-            FindGroupAccountListServiceResponse response = findGroupAccountListService
+            FindGroupAccountListResponse response = findGroupAccountListService
                 .findGroupAccountList(groupId);
 
             // then

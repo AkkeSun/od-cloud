@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.question.port.in.FindQuestionUseCase;
-import com.odcloud.application.question.service.find_question.FindQuestionServiceResponse;
+import com.odcloud.application.question.service.find_question.FindQuestionResponse;
 import com.odcloud.domain.model.Answer;
 import com.odcloud.domain.model.Question;
 import java.time.LocalDateTime;
@@ -58,9 +58,9 @@ class FindQuestionControllerDocsTest extends RestDocsSupport {
             .regDt(LocalDateTime.of(2025, 1, 20, 15, 30))
             .build();
 
-        FindQuestionServiceResponse serviceResponse = FindQuestionServiceResponse.of(question,
+        FindQuestionResponse Response = FindQuestionResponse.of(question,
             answer);
-        given(useCase.findQuestion(any())).willReturn(serviceResponse);
+        given(useCase.findQuestion(any())).willReturn(Response);
 
         // when & then
         mockMvc.perform(get("/questions/{questionId}", 1L))
@@ -87,6 +87,8 @@ class FindQuestionControllerDocsTest extends RestDocsSupport {
                             .description("문의 정보"),
                         fieldWithPath("data.question.id").type(JsonFieldType.NUMBER)
                             .description("문의 ID"),
+                        fieldWithPath("data.question.writerEmail").type(JsonFieldType.STRING)
+                            .description("작성자 이메일"),
                         fieldWithPath("data.question.writerNickname").type(JsonFieldType.STRING)
                             .description("작성자 닉네임"),
                         fieldWithPath("data.question.title").type(JsonFieldType.STRING)
@@ -95,16 +97,24 @@ class FindQuestionControllerDocsTest extends RestDocsSupport {
                             .description("내용"),
                         fieldWithPath("data.question.answered").type(JsonFieldType.BOOLEAN)
                             .description("답변 완료 여부"),
+                        fieldWithPath("data.question.modDt").type(JsonFieldType.STRING)
+                            .description("수정일시").optional(),
                         fieldWithPath("data.question.regDt").type(JsonFieldType.STRING)
                             .description("등록일시"),
                         fieldWithPath("data.answer").type(JsonFieldType.OBJECT)
                             .description("답변 정보 (답변이 없는 경우 null)"),
                         fieldWithPath("data.answer.id").type(JsonFieldType.NUMBER)
                             .description("답변 ID"),
+                        fieldWithPath("data.answer.questionId").type(JsonFieldType.NUMBER)
+                            .description("문의 ID"),
+                        fieldWithPath("data.answer.writerEmail").type(JsonFieldType.STRING)
+                            .description("답변 작성자 이메일"),
                         fieldWithPath("data.answer.writerNickname").type(JsonFieldType.STRING)
                             .description("답변 작성자 닉네임"),
                         fieldWithPath("data.answer.content").type(JsonFieldType.STRING)
                             .description("답변 내용"),
+                        fieldWithPath("data.answer.modDt").type(JsonFieldType.STRING)
+                            .description("답변 수정일시").optional(),
                         fieldWithPath("data.answer.regDt").type(JsonFieldType.STRING)
                             .description("답변 등록일시")
                     )
@@ -127,9 +137,9 @@ class FindQuestionControllerDocsTest extends RestDocsSupport {
             .regDt(LocalDateTime.of(2025, 1, 20, 10, 0))
             .build();
 
-        FindQuestionServiceResponse serviceResponse = FindQuestionServiceResponse.of(question,
+        FindQuestionResponse Response = FindQuestionResponse.of(question,
             null);
-        given(useCase.findQuestion(any())).willReturn(serviceResponse);
+        given(useCase.findQuestion(any())).willReturn(Response);
 
         // when & then
         mockMvc.perform(get("/questions/{questionId}", 1L))

@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.FindGroupsUseCase;
-import com.odcloud.application.group.service.find_groups.FindGroupsServiceResponse;
+import com.odcloud.application.group.service.find_groups.FindGroupsResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -45,35 +45,35 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] keyword가 'all'인 경우 모든 그룹 목록을 조회한다")
         void success_findAllGroups() throws Exception {
             // given
-            FindGroupsServiceResponse.GroupResponseItem group1 =
-                FindGroupsServiceResponse.GroupResponseItem.builder()
+            FindGroupsResponse.GroupResponseItem group1 =
+                FindGroupsResponse.GroupResponseItem.builder()
                     .id(1L)
                     .ownerEmail("owner1@example.com")
                     .name("Development Team")
                     .regDt("2024-01-01T12:00:00")
                     .build();
 
-            FindGroupsServiceResponse.GroupResponseItem group2 =
-                FindGroupsServiceResponse.GroupResponseItem.builder()
+            FindGroupsResponse.GroupResponseItem group2 =
+                FindGroupsResponse.GroupResponseItem.builder()
                     .id(2L)
                     .ownerEmail("owner2@example.com")
                     .name("Marketing Team")
                     .regDt("2024-01-02T12:00:00")
                     .build();
 
-            FindGroupsServiceResponse.GroupResponseItem group3 =
-                FindGroupsServiceResponse.GroupResponseItem.builder()
+            FindGroupsResponse.GroupResponseItem group3 =
+                FindGroupsResponse.GroupResponseItem.builder()
                     .id(3L)
                     .ownerEmail("owner3@example.com")
                     .name("Sales Team")
                     .regDt("2024-01-03T12:00:00")
                     .build();
 
-            FindGroupsServiceResponse serviceResponse = FindGroupsServiceResponse.builder()
+            FindGroupsResponse Response = FindGroupsResponse.builder()
                 .groups(List.of(group1, group2, group3))
                 .build();
 
-            given(useCase.findAll(any())).willReturn(serviceResponse);
+            given(useCase.findAll(any())).willReturn(Response);
 
             // when & then
             performDocument("그룹 목록 조회 성공 (all)", "success_all", "all",
@@ -101,27 +101,27 @@ class FindGroupsControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] keyword로 Description을 LIKE 검색한다")
         void success_searchByKeyword() throws Exception {
             // given
-            FindGroupsServiceResponse.GroupResponseItem group1 =
-                FindGroupsServiceResponse.GroupResponseItem.builder()
+            FindGroupsResponse.GroupResponseItem group1 =
+                FindGroupsResponse.GroupResponseItem.builder()
                     .id(1L)
                     .ownerEmail("owner1@example.com")
                     .name("개발팀")
                     .regDt("2024-01-01T12:00:00")
                     .build();
 
-            FindGroupsServiceResponse.GroupResponseItem group2 =
-                FindGroupsServiceResponse.GroupResponseItem.builder()
+            FindGroupsResponse.GroupResponseItem group2 =
+                FindGroupsResponse.GroupResponseItem.builder()
                     .id(3L)
                     .ownerEmail("owner3@example.com")
                     .name("개발 지원팀")
                     .regDt("2024-01-03T12:00:00")
                     .build();
 
-            FindGroupsServiceResponse serviceResponse = FindGroupsServiceResponse.builder()
+            FindGroupsResponse Response = FindGroupsResponse.builder()
                 .groups(List.of(group1, group2))
                 .build();
 
-            given(useCase.findAll(any())).willReturn(serviceResponse);
+            given(useCase.findAll(any())).willReturn(Response);
 
             // when & then
             performDocument("그룹 목록 조회 성공 (keyword 검색)", "success_keyword", "개발",

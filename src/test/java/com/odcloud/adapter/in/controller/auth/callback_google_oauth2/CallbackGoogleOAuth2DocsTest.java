@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.auth.port.in.CallbackGoogleOAuth2UseCase;
-import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2ServiceResponse;
+import com.odcloud.application.auth.service.callback_google_oauth2.CallbackGoogleOAuth2Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,11 +42,11 @@ class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
         void success() throws Exception {
             // given
             String code = "valid-google-auth-code";
-            CallbackGoogleOAuth2ServiceResponse serviceResponse = new CallbackGoogleOAuth2ServiceResponse(
+            CallbackGoogleOAuth2Response Response = new CallbackGoogleOAuth2Response(
                 "Bearer google-access-token-123",
                 "http://localhost:3000/auth/callback?googleAccessToken=Bearer+google-access-token-123"
             );
-            given(useCase.callback(code)).willReturn(serviceResponse);
+            given(useCase.callback(code)).willReturn(Response);
 
             // when & then
             mockMvc.perform(get("/auth/google")
@@ -59,7 +59,8 @@ class CallbackGoogleOAuth2DocsTest extends RestDocsSupport {
                     resource(ResourceSnippetParameters.builder()
                         .tag("Auth")
                         .summary("구글 OAuth2 콜백 API")
-                        .description("구글 OAuth2 콜백을 처리합니다. 프론트엔드로 302 리다이렉트하며 googleAccessToken을 쿼리 파라미터로 전달합니다.")
+                        .description(
+                            "구글 OAuth2 콜백을 처리합니다. 프론트엔드로 302 리다이렉트하며 googleAccessToken을 쿼리 파라미터로 전달합니다.")
                         .queryParameters(
                             parameterWithName("code")
                                 .description("구글 OAuth2 인증 코드 (필수)")

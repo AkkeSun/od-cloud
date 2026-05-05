@@ -30,7 +30,7 @@ class RegisterFolderRequestTest {
             given(account.getEmail()).willReturn("test@example.com");
 
             // when
-            RegisterFolderCommand command = request.toCommand(account);
+            RegisterFolderCommand command = request.toCommand(account.getEmail());
 
             // then
             assertThat(command).isNotNull();
@@ -54,7 +54,7 @@ class RegisterFolderRequestTest {
             given(account.getEmail()).willReturn(null);
 
             // when
-            RegisterFolderCommand command = request.toCommand(account);
+            RegisterFolderCommand command = request.toCommand(account.getEmail());
 
             // then
             assertThat(command).isNotNull();
@@ -78,7 +78,7 @@ class RegisterFolderRequestTest {
             given(account.getEmail()).willReturn("");
 
             // when
-            RegisterFolderCommand command = request.toCommand(account);
+            RegisterFolderCommand command = request.toCommand(account.getEmail());
 
             // then
             assertThat(command).isNotNull();

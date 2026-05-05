@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.file.port.in.DeleteFileUseCase;
-import com.odcloud.application.file.service.delete_file.DeleteFileServiceResponse;
+import com.odcloud.application.file.service.delete_file.DeleteFileResponse;
 import com.odcloud.application.file.service.delete_file.DeleteFileResponseItem;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -78,7 +78,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
+            DeleteFileResponse Response = DeleteFileResponse.builder()
                 .result(true)
                 .logs(List.of(
                     DeleteFileResponseItem.builder()
@@ -88,7 +88,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                 ))
                 .build();
 
-            given(useCase.deleteFile(any())).willReturn(serviceResponse);
+            given(useCase.deleteFile(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), "success", "success", authorization, requestBody,
@@ -120,7 +120,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
+            DeleteFileResponse Response = DeleteFileResponse.builder()
                 .result(true)
                 .logs(List.of(
                     DeleteFileResponseItem.builder().fileId(1L).errorMessage(null).build(),
@@ -129,7 +129,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                 ))
                 .build();
 
-            given(useCase.deleteFile(any())).willReturn(serviceResponse);
+            given(useCase.deleteFile(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), "success_multiple", "success", authorization,
@@ -162,7 +162,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
+            DeleteFileResponse Response = DeleteFileResponse.builder()
                 .result(false)
                 .logs(List.of(
                     DeleteFileResponseItem.builder()
@@ -176,7 +176,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                 ))
                 .build();
 
-            given(useCase.deleteFile(any())).willReturn(serviceResponse);
+            given(useCase.deleteFile(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), "partial_success", "partial_success", authorization,
@@ -209,7 +209,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
+            DeleteFileResponse Response = DeleteFileResponse.builder()
                 .result(false)
                 .logs(List.of(
                     DeleteFileResponseItem.builder()
@@ -219,7 +219,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                 ))
                 .build();
 
-            given(useCase.deleteFile(any())).willReturn(serviceResponse);
+            given(useCase.deleteFile(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), "error_file_not_found", "error", authorization,
@@ -252,7 +252,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            DeleteFileServiceResponse serviceResponse = DeleteFileServiceResponse.builder()
+            DeleteFileResponse Response = DeleteFileResponse.builder()
                 .result(false)
                 .logs(List.of(
                     DeleteFileResponseItem.builder()
@@ -262,7 +262,7 @@ class DeleteFileControllerDocsTest extends RestDocsSupport {
                 ))
                 .build();
 
-            given(useCase.deleteFile(any())).willReturn(serviceResponse);
+            given(useCase.deleteFile(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), "error_forbidden", "error", authorization, requestBody,

@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.FindGroupAccountListUseCase;
-import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListServiceResponse;
+import com.odcloud.application.group.service.find_group_account_list.FindGroupAccountListResponse;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -70,7 +70,6 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .id(1L)
                     .groupId(groupId)
                     .accountId(100L)
-                    .name("홍길동")
                     .nickName("gildong")
                     .email("hong@example.com")
                     .status("ACTIVE")
@@ -81,7 +80,6 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .id(2L)
                     .groupId(groupId)
                     .accountId(200L)
-                    .name("김철수")
                     .nickName("chulsoo")
                     .email("kim@example.com")
                     .status("PENDING")
@@ -90,10 +88,10 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .build()
             );
 
-            FindGroupAccountListServiceResponse serviceResponse =
-                FindGroupAccountListServiceResponse.of(groupAccounts);
+            FindGroupAccountListResponse Response =
+                FindGroupAccountListResponse.of(groupAccounts);
 
-            given(useCase.findGroupAccountList(groupId)).willReturn(serviceResponse);
+            given(useCase.findGroupAccountList(groupId)).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, status().isOk(), "success", "success",
@@ -111,18 +109,30 @@ class FindGroupAccountListControllerDocsTest extends RestDocsSupport {
                     .description("그룹 ID"),
                 fieldWithPath("data.groupAccounts[].accountId").type(JsonFieldType.NUMBER)
                     .description("계정 ID"),
-                fieldWithPath("data.groupAccounts[].name").type(JsonFieldType.STRING)
-                    .description("사용자 이름"),
+                fieldWithPath("data.groupAccounts[].groupName").type(JsonFieldType.STRING)
+                    .description("그룹명").optional(),
+                fieldWithPath("data.groupAccounts[].groupOwner").type(JsonFieldType.STRING)
+                    .description("그룹 오너 이메일").optional(),
                 fieldWithPath("data.groupAccounts[].nickName").type(JsonFieldType.STRING)
-                    .description("사용자 닉네임"),
+                    .description("사용자 닉네임").optional(),
                 fieldWithPath("data.groupAccounts[].email").type(JsonFieldType.STRING)
-                    .description("사용자 이메일"),
+                    .description("사용자 이메일").optional(),
+                fieldWithPath("data.groupAccounts[].picture").type(JsonFieldType.STRING)
+                    .description("프로필 사진").optional(),
                 fieldWithPath("data.groupAccounts[].status").type(JsonFieldType.STRING)
-                    .description("계정 상태 (ACTIVE /  PENDING / BLOCK)"),
-                fieldWithPath("data.groupAccounts[].updateDt").type(JsonFieldType.STRING)
-                    .description("수정 일시"),
+                    .description("계정 상태 (ACTIVE / PENDING / BLOCK)").optional(),
+                fieldWithPath("data.groupAccounts[].memo").type(JsonFieldType.STRING)
+                    .description("메모").optional(),
+                fieldWithPath("data.groupAccounts[].showYn").type(JsonFieldType.STRING)
+                    .description("노출 여부").optional(),
+                fieldWithPath("data.groupAccounts[].modDt").type(JsonFieldType.STRING)
+                    .description("수정 일시").optional(),
                 fieldWithPath("data.groupAccounts[].regDt").type(JsonFieldType.STRING)
-                    .description("등록 일시")
+                    .description("등록 일시").optional(),
+                fieldWithPath("data.groupAccounts[].block").type(JsonFieldType.BOOLEAN)
+                    .description("차단 여부"),
+                fieldWithPath("data.groupAccounts[].active").type(JsonFieldType.BOOLEAN)
+                    .description("활성 여부")
             );
         }
     }

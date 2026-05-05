@@ -65,10 +65,10 @@ class DeleteScheduleControllerDocsTest extends RestDocsSupport {
             // given
             Long scheduleId = 1L;
 
-            DeleteScheduleResponse serviceResponse =
+            DeleteScheduleResponse Response =
                 DeleteScheduleResponse.ofSuccess();
 
-            given(useCase.delete(any(), any())).willReturn(serviceResponse);
+            given(useCase.delete(any(), any())).willReturn(Response);
 
             // when & then
             performDocument(scheduleId, "Bearer test", status().isOk(), "success", "success",

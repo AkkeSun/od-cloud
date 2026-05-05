@@ -53,7 +53,6 @@ class RegisterScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList())
                 .build();
 
@@ -127,7 +126,6 @@ class RegisterScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList(group))
                 .build();
 
@@ -165,7 +163,6 @@ class RegisterScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList(group))
                 .build();
 
@@ -194,7 +191,6 @@ class RegisterScheduleServiceTest {
                 .id(1L)
                 .email("user@example.com")
                 .nickname("User")
-                .name("사용자")
                 .groups(Arrays.asList())
                 .build();
 

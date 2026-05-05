@@ -50,7 +50,7 @@ class FindQuestionServiceTest {
             fakeQuestionStoragePort.database.add(question);
 
             // when
-            FindQuestionServiceResponse response = findQuestionService.findQuestion(1L);
+            FindQuestionResponse response = findQuestionService.findQuestion(1L);
 
             // then
             assertThat(response).isNotNull();
@@ -93,7 +93,7 @@ class FindQuestionServiceTest {
             fakeAnswerStoragePort.database.add(answer);
 
             // when
-            FindQuestionServiceResponse response = findQuestionService.findQuestion(1L);
+            FindQuestionResponse response = findQuestionService.findQuestion(1L);
 
             // then
             assertThat(response).isNotNull();
@@ -144,7 +144,7 @@ class FindQuestionServiceTest {
             fakeAnswerStoragePort.database.add(answer);
 
             // when
-            FindQuestionServiceResponse response = findQuestionService.findQuestion(1L);
+            FindQuestionResponse response = findQuestionService.findQuestion(1L);
 
             // then
             assertThat(response.question().writerNickname()).isEqualTo("questioner");
@@ -174,7 +174,7 @@ class FindQuestionServiceTest {
             fakeQuestionStoragePort.database.add(question);
 
             // when
-            FindQuestionServiceResponse response = findQuestionService.findQuestion(1L);
+            FindQuestionResponse response = findQuestionService.findQuestion(1L);
 
             // then
             assertThat(response.question().modDt()).isEqualTo(modDt);
@@ -208,7 +208,7 @@ class FindQuestionServiceTest {
             fakeQuestionStoragePort.database.add(question2);
 
             // when
-            FindQuestionServiceResponse response = findQuestionService.findQuestion(2L);
+            FindQuestionResponse response = findQuestionService.findQuestion(2L);
 
             // then
             assertThat(response.question().id()).isEqualTo(2L);

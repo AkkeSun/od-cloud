@@ -3,8 +3,10 @@ package com.odcloud.application.group.service.find_group_self;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
+import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,12 +18,15 @@ import org.junit.jupiter.api.Test;
 class FindGroupSelfServiceTest {
 
     private FakeGroupStoragePort fakeGroupStoragePort;
+    private FakeFolderStoragePort fakeFolderStoragePort;
     private FindGroupSelfService findGroupSelfService;
 
     @BeforeEach
     void setUp() {
         fakeGroupStoragePort = new FakeGroupStoragePort();
-        findGroupSelfService = new FindGroupSelfService(fakeGroupStoragePort);
+        fakeFolderStoragePort = new FakeFolderStoragePort();
+        findGroupSelfService = new FindGroupSelfService(fakeGroupStoragePort,
+            fakeFolderStoragePort);
     }
 
     @Nested
@@ -105,6 +110,15 @@ class FindGroupSelfServiceTest {
 
             pendingGroup.updateGroupMembers(List.of(userPendingAccount, managerMember));
 
+            FolderInfo activeGroupRootFolder = FolderInfo.builder()
+                .id(1L)
+                .groupId(1L)
+                .name("Development Team")
+                .parentId(null)
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(activeGroupRootFolder);
+
             fakeGroupStoragePort.groupDatabase.add(activeGroup);
             fakeGroupStoragePort.groupDatabase.add(pendingGroup);
             fakeGroupStoragePort.groupAccountDatabase.add(userActiveAccount);
@@ -116,18 +130,18 @@ class FindGroupSelfServiceTest {
                 .build();
 
             // when
-            FindGroupSelfServiceResponse response = findGroupSelfService.findSelf(account);
+            FindGroupSelfResponse response = findGroupSelfService.findSelf(account);
 
             // then
             assertThat(response.activeGroups()).hasSize(1);
             assertThat(response.pendingGroups()).hasSize(1);
             assertThat(response.deniedGroups()).isEmpty();
 
-            FindGroupSelfServiceResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
+            FindGroupSelfResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
                 .get(0);
             assertThat(activeGroupInfo.name()).isEqualTo("Development Team");
 
-            FindGroupSelfServiceResponse.PendingGroupInfo pendingGroupInfo = response.pendingGroups()
+            FindGroupSelfResponse.PendingGroupInfo pendingGroupInfo = response.pendingGroups()
                 .get(0);
             assertThat(pendingGroupInfo.name()).isEqualTo("Marketing Team");
             assertThat(pendingGroupInfo.activeMemberCount()).isEqualTo(1);
@@ -146,7 +160,7 @@ class FindGroupSelfServiceTest {
                 .build();
 
             // when
-            FindGroupSelfServiceResponse response = findGroupSelfService.findSelf(account);
+            FindGroupSelfResponse response = findGroupSelfService.findSelf(account);
 
             // then
             assertThat(response.activeGroups()).isEmpty();
@@ -222,6 +236,15 @@ class FindGroupSelfServiceTest {
 
             deniedGroup.updateGroupMembers(List.of(userDeniedAccount, managerMember2));
 
+            FolderInfo activeGroupRootFolder = FolderInfo.builder()
+                .id(1L)
+                .groupId(1L)
+                .name("Development Team")
+                .parentId(null)
+                .regDt(LocalDateTime.now())
+                .build();
+            fakeFolderStoragePort.database.add(activeGroupRootFolder);
+
             fakeGroupStoragePort.groupDatabase.add(activeGroup);
             fakeGroupStoragePort.groupDatabase.add(deniedGroup);
             fakeGroupStoragePort.groupAccountDatabase.add(userActiveAccount);
@@ -233,18 +256,18 @@ class FindGroupSelfServiceTest {
                 .build();
 
             // when
-            FindGroupSelfServiceResponse response = findGroupSelfService.findSelf(account);
+            FindGroupSelfResponse response = findGroupSelfService.findSelf(account);
 
             // then
             assertThat(response.activeGroups()).hasSize(1);
             assertThat(response.pendingGroups()).isEmpty();
             assertThat(response.deniedGroups()).hasSize(1);
 
-            FindGroupSelfServiceResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
+            FindGroupSelfResponse.ActiveGroupInfo activeGroupInfo = response.activeGroups()
                 .get(0);
             assertThat(activeGroupInfo.name()).isEqualTo("Development Team");
 
-            FindGroupSelfServiceResponse.DeniedGroupInfo deniedGroupInfo = response.deniedGroups()
+            FindGroupSelfResponse.DeniedGroupInfo deniedGroupInfo = response.deniedGroups()
                 .get(0);
             assertThat(deniedGroupInfo.id()).isEqualTo(2L);
             assertThat(deniedGroupInfo.name()).isEqualTo("Marketing Team");

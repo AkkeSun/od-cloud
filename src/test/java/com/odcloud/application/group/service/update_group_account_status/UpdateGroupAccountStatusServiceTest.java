@@ -58,7 +58,6 @@ class UpdateGroupAccountStatusServiceTest {
                 .groupId(groupId)
                 .accountId(accountId)
                 .email("user@example.com")
-                .name("사용자")
                 .status("PENDING")
                 .build();
             fakeGroupStoragePort.groupAccountDatabase.add(groupAccount);
@@ -71,7 +70,7 @@ class UpdateGroupAccountStatusServiceTest {
                 .build();
 
             // when
-            UpdateGroupAccountStatusServiceResponse response = updateGroupAccountStatusService
+            UpdateGroupAccountStatusResponse response = updateGroupAccountStatusService
                 .updateStatus(command);
 
             // then
@@ -174,7 +173,6 @@ class UpdateGroupAccountStatusServiceTest {
                 .groupId(groupId)
                 .accountId(accountId)
                 .email("user@example.com")
-                .name("사용자")
                 .status("PENDING")
                 .build();
             fakeGroupStoragePort.groupAccountDatabase.add(groupAccount);
@@ -188,7 +186,7 @@ class UpdateGroupAccountStatusServiceTest {
                 .build();
 
             // when
-            UpdateGroupAccountStatusServiceResponse response = updateGroupAccountStatusService
+            UpdateGroupAccountStatusResponse response = updateGroupAccountStatusService
                 .updateStatus(command);
 
             // then
@@ -220,7 +218,6 @@ class UpdateGroupAccountStatusServiceTest {
                 .groupId(groupId)
                 .accountId(accountId)
                 .email("user@example.com")
-                .name("사용자")
                 .status("PENDING")
                 .build();
             fakeGroupStoragePort.groupAccountDatabase.add(groupAccount);
@@ -234,7 +231,7 @@ class UpdateGroupAccountStatusServiceTest {
                 .build();
 
             // when
-            UpdateGroupAccountStatusServiceResponse response = updateGroupAccountStatusService
+            UpdateGroupAccountStatusResponse response = updateGroupAccountStatusService
                 .updateStatus(command);
 
             // then

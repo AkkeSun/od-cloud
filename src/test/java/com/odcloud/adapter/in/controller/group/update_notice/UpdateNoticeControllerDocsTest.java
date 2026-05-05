@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.UpdateNoticeUseCase;
-import com.odcloud.application.group.service.update_notice.UpdateNoticeServiceResponse;
+import com.odcloud.application.group.service.update_notice.UpdateNoticeResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ class UpdateNoticeControllerDocsTest extends RestDocsSupport {
                 }
                 """;
 
-            UpdateNoticeServiceResponse response = UpdateNoticeServiceResponse.ofSuccess();
+            UpdateNoticeResponse response = UpdateNoticeResponse.ofSuccess();
             given(useCase.update(any())).willReturn(response);
 
             // when & then

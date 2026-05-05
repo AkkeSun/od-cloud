@@ -18,7 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.device.port.in.UpdateDeviceUseCase;
-import com.odcloud.application.device.service.update_device.UpdateDeviceServiceResponse;
+import com.odcloud.application.device.service.update_device.UpdateDeviceResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -74,10 +74,10 @@ class UpdateDeviceControllerDocsTest extends RestDocsSupport {
                 .fcmToken("new-fcm-token")
                 .build();
 
-            UpdateDeviceServiceResponse serviceResponse =
-                UpdateDeviceServiceResponse.ofSuccess();
+            UpdateDeviceResponse Response =
+                UpdateDeviceResponse.ofSuccess();
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", request, status().isOk(), "success", "success",
@@ -103,10 +103,10 @@ class UpdateDeviceControllerDocsTest extends RestDocsSupport {
                 .fcmToken(null)
                 .build();
 
-            UpdateDeviceServiceResponse serviceResponse =
-                UpdateDeviceServiceResponse.ofSuccess();
+            UpdateDeviceResponse Response =
+                UpdateDeviceResponse.ofSuccess();
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", request, status().isOk(),
@@ -133,10 +133,10 @@ class UpdateDeviceControllerDocsTest extends RestDocsSupport {
                 .fcmToken("new-fcm-token")
                 .build();
 
-            UpdateDeviceServiceResponse serviceResponse =
-                UpdateDeviceServiceResponse.ofSuccess();
+            UpdateDeviceResponse Response =
+                UpdateDeviceResponse.ofSuccess();
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", request, status().isOk(),

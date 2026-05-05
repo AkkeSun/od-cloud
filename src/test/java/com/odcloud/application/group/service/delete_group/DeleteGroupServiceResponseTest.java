@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class DeleteGroupServiceResponseTest {
+class DeleteGroupResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 DeleteGroupServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 DeleteGroupResponse를 생성한다")
         void success() {
             // when
-            DeleteGroupServiceResponse response = new DeleteGroupServiceResponse(Boolean.TRUE);
+            DeleteGroupResponse response = new DeleteGroupResponse(Boolean.TRUE);
 
             // then
             assertThat(response).isNotNull();
@@ -24,10 +24,10 @@ class DeleteGroupServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 DeleteGroupServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 DeleteGroupResponse를 생성한다")
         void success_nullValue() {
             // when
-            DeleteGroupServiceResponse response = new DeleteGroupServiceResponse(null);
+            DeleteGroupResponse response = new DeleteGroupResponse(null);
 
             // then
             assertThat(response).isNotNull();
@@ -43,7 +43,7 @@ class DeleteGroupServiceResponseTest {
         @DisplayName("[success] ofSuccess()로 성공 응답을 생성한다")
         void success() {
             // when
-            DeleteGroupServiceResponse response = DeleteGroupServiceResponse.ofSuccess();
+            DeleteGroupResponse response = DeleteGroupResponse.ofSuccess();
 
             // then
             assertThat(response).isNotNull();
@@ -59,7 +59,7 @@ class DeleteGroupServiceResponseTest {
         @DisplayName("[success] result()로 result를 조회한다")
         void success_result() {
             // given
-            DeleteGroupServiceResponse response = new DeleteGroupServiceResponse(Boolean.TRUE);
+            DeleteGroupResponse response = new DeleteGroupResponse(Boolean.TRUE);
 
             // when
             Boolean result = response.result();
@@ -74,11 +74,11 @@ class DeleteGroupServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] DeleteGroupServiceResponse는 불변 객체이다")
+        @DisplayName("[success] DeleteGroupResponse는 불변 객체이다")
         void success() {
             // given
-            DeleteGroupServiceResponse response1 = new DeleteGroupServiceResponse(Boolean.TRUE);
-            DeleteGroupServiceResponse response2 = new DeleteGroupServiceResponse(Boolean.TRUE);
+            DeleteGroupResponse response1 = new DeleteGroupResponse(Boolean.TRUE);
+            DeleteGroupResponse response2 = new DeleteGroupResponse(Boolean.TRUE);
 
             // when & then
             assertThat(response1).isEqualTo(response2);
@@ -86,11 +86,11 @@ class DeleteGroupServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 값으로 생성된 DeleteGroupServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 값으로 생성된 DeleteGroupResponse는 동등하지 않다")
         void success_notEqual() {
             // given
-            DeleteGroupServiceResponse response1 = new DeleteGroupServiceResponse(Boolean.TRUE);
-            DeleteGroupServiceResponse response2 = new DeleteGroupServiceResponse(Boolean.FALSE);
+            DeleteGroupResponse response1 = new DeleteGroupResponse(Boolean.TRUE);
+            DeleteGroupResponse response2 = new DeleteGroupResponse(Boolean.FALSE);
 
             // when & then
             assertThat(response1).isNotEqualTo(response2);
@@ -105,14 +105,14 @@ class DeleteGroupServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            DeleteGroupServiceResponse response = new DeleteGroupServiceResponse(Boolean.TRUE);
+            DeleteGroupResponse response = new DeleteGroupResponse(Boolean.TRUE);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("DeleteGroupServiceResponse");
+            assertThat(result).contains("DeleteGroupResponse");
             assertThat(result).contains("true");
         }
 
@@ -120,14 +120,14 @@ class DeleteGroupServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValue() {
             // given
-            DeleteGroupServiceResponse response = new DeleteGroupServiceResponse(null);
+            DeleteGroupResponse response = new DeleteGroupResponse(null);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("DeleteGroupServiceResponse");
+            assertThat(result).contains("DeleteGroupResponse");
             assertThat(result).contains("null");
         }
     }

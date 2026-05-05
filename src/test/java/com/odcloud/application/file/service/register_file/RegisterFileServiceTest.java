@@ -86,7 +86,7 @@ class RegisterFileServiceTest {
                 .build();
 
             // when
-            RegisterFileServiceResponse response = registerFileService.register(command);
+            RegisterFileResponse response = registerFileService.register(command);
 
             // then
             assertThat(response).isNotNull();
@@ -147,7 +147,7 @@ class RegisterFileServiceTest {
             long totalSize = file1.getSize() + file2.getSize() + file3.getSize();
 
             // when
-            RegisterFileServiceResponse response = registerFileService.register(command);
+            RegisterFileResponse response = registerFileService.register(command);
 
             // then
             assertThat(response).isNotNull();
@@ -259,7 +259,7 @@ class RegisterFileServiceTest {
                 .build();
 
             // when
-            RegisterFileServiceResponse response = registerFileService.register(command);
+            RegisterFileResponse response = registerFileService.register(command);
 
             // then
             assertThat(response).isNotNull();

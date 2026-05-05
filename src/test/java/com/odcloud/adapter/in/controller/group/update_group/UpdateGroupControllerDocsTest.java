@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.UpdateGroupUseCase;
-import com.odcloud.application.group.service.update_group.UpdateGroupServiceResponse;
+import com.odcloud.application.group.service.update_group.UpdateGroupResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -69,11 +69,11 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .ownerEmail("newowner@example.com")
                 .build();
 
-            UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
+            UpdateGroupResponse Response = new UpdateGroupResponse(
                 Boolean.TRUE
             );
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(),
@@ -97,11 +97,11 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .name("New Group Name")
                 .build();
 
-            UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
+            UpdateGroupResponse Response = new UpdateGroupResponse(
                 Boolean.TRUE
             );
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(),
@@ -126,11 +126,11 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 .name("New Group Name")
                 .build();
 
-            UpdateGroupServiceResponse serviceResponse = new UpdateGroupServiceResponse(
+            UpdateGroupResponse Response = new UpdateGroupResponse(
                 Boolean.TRUE
             );
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(),
@@ -238,7 +238,8 @@ class UpdateGroupControllerDocsTest extends RestDocsSupport {
                 resource(ResourceSnippetParameters.builder()
                     .tag("Group")
                     .summary("그룹 정보 수정 API")
-                    .description("그룹의 소유자(ownerEmail) 또는 그룹명(name)을 수정하는 API입니다. 두 값 모두 선택적(optional)이며, 변경하고자 하는 값만 전달하면 됩니다.")
+                    .description(
+                        "그룹의 소유자(ownerEmail) 또는 그룹명(name)을 수정하는 API입니다. 두 값 모두 선택적(optional)이며, 변경하고자 하는 값만 전달하면 됩니다.")
                     .pathParameters(
                         parameterWithName("groupId").description("수정할 그룹 ID")
                     )

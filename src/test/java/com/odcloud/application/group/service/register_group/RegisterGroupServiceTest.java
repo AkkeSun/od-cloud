@@ -50,7 +50,6 @@ class RegisterGroupServiceTest {
                 .id(1L)
                 .email("owner@example.com")
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(owner);
@@ -119,7 +118,6 @@ class RegisterGroupServiceTest {
                 .id(1L)
                 .email("owner@example.com")
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(owner);
@@ -154,7 +152,6 @@ class RegisterGroupServiceTest {
                 .id(1L)
                 .email("owner@example.com")
                 .nickname("Owner")
-                .name("오너")
                 .groups(new ArrayList<>())
                 .build();
             fakeAccountStoragePort.database.add(owner);

@@ -226,21 +226,6 @@ class GroupAccountTest {
         }
 
         @Test
-        @DisplayName("[success] getName()으로 name을 조회한다")
-        void success_getName() {
-            // given
-            GroupAccount groupAccount = GroupAccount.builder()
-                .name("홍길동")
-                .build();
-
-            // when
-            String name = groupAccount.getName();
-
-            // then
-            assertThat(name).isEqualTo("홍길동");
-        }
-
-        @Test
         @DisplayName("[success] getNickName()으로 nickName을 조회한다")
         void success_getNickName() {
             // given
@@ -363,7 +348,6 @@ class GroupAccountTest {
                 1L,
                 123L,
                 100L,
-                "홍길동",
                 "테스터",
                 "test@example.com",
                 "https://example.com/test.jpg",
@@ -378,7 +362,6 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isEqualTo(1L);
             assertThat(groupAccount.getGroupId()).isEqualTo(123L);
             assertThat(groupAccount.getAccountId()).isEqualTo(100L);
-            assertThat(groupAccount.getName()).isEqualTo("홍길동");
             assertThat(groupAccount.getNickName()).isEqualTo("테스터");
             assertThat(groupAccount.getEmail()).isEqualTo("test@example.com");
             assertThat(groupAccount.getPicture()).isEqualTo("https://example.com/test.jpg");
@@ -393,7 +376,7 @@ class GroupAccountTest {
         void success_nullValues() {
             // when
             GroupAccount groupAccount = new GroupAccount(
-                null, null, null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null
             );
 
             // then
@@ -401,7 +384,6 @@ class GroupAccountTest {
             assertThat(groupAccount.getId()).isNull();
             assertThat(groupAccount.getGroupId()).isNull();
             assertThat(groupAccount.getAccountId()).isNull();
-            assertThat(groupAccount.getName()).isNull();
             assertThat(groupAccount.getNickName()).isNull();
             assertThat(groupAccount.getEmail()).isNull();
             assertThat(groupAccount.getPicture()).isNull();

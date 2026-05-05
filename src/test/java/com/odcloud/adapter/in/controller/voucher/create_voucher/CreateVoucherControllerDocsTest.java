@@ -84,8 +84,8 @@ class CreateVoucherControllerDocsTest extends RestDocsSupport {
                 .memo("프리미엄 플랜 구매")
                 .build();
 
-            CreateVoucherResponse serviceResponse = CreateVoucherResponse.ofSuccess();
-            given(useCase.create(any())).willReturn(serviceResponse);
+            CreateVoucherResponse Response = CreateVoucherResponse.ofSuccess();
+            given(useCase.create(any())).willReturn(Response);
 
             // when & then
             performDocument(request, "Bearer test", status().isOk(), "success", "success",

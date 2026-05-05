@@ -752,7 +752,6 @@ class FolderStorageAdapterTest extends IntegrationTestSupport {
             FindFilesCommand command = FindFilesCommand.builder()
                 .account(account)
                 .folderId(parentFolder.getId())
-                .groupId(1L)
                 .sortType("NAME_ASC")
                 .build();
 

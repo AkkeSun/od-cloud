@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
-import com.odcloud.application.file.service.download_files.DownloadFilesServiceResponse;
 import com.odcloud.application.file.port.in.DownloadFilesUseCase;
+import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.nio.charset.StandardCharsets;
@@ -94,10 +94,10 @@ class DownloadFilesControllerDocsTest extends RestDocsSupport {
                 .filename(filename, StandardCharsets.UTF_8)
                 .build());
 
-            DownloadFilesServiceResponse serviceResponse =
-                new DownloadFilesServiceResponse(resource, headers);
+            DownloadFilesResponse Response =
+                new DownloadFilesResponse(resource, headers);
 
-            given(useCase.download(any())).willReturn(serviceResponse);
+            given(useCase.download(any())).willReturn(Response);
 
             // when & then
             performDocument(status().isOk(), fileIds, "success", authorization);

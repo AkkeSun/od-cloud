@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class UpdateGroupServiceResponseTest {
+class UpdateGroupResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 UpdateGroupServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 UpdateGroupResponse를 생성한다")
         void success() {
             // when
-            UpdateGroupServiceResponse response = new UpdateGroupServiceResponse(
+            UpdateGroupResponse response = new UpdateGroupResponse(
                 Boolean.TRUE
             );
 
@@ -26,10 +26,10 @@ class UpdateGroupServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 UpdateGroupServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 UpdateGroupResponse를 생성한다")
         void success_nullValue() {
             // when
-            UpdateGroupServiceResponse response = new UpdateGroupServiceResponse(
+            UpdateGroupResponse response = new UpdateGroupResponse(
                 null
             );
 

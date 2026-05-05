@@ -60,8 +60,8 @@ class DeleteAccountControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 계정을 삭제한다")
         void success_deleteAccount() throws Exception {
             // given
-            DeleteAccountResponse serviceResponse = DeleteAccountResponse.ofSuccess();
-            given(useCase.delete(any())).willReturn(serviceResponse);
+            DeleteAccountResponse Response = DeleteAccountResponse.ofSuccess();
+            given(useCase.delete(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", status().isOk(),

@@ -1,5 +1,7 @@
 package com.odcloud.application.question.service.find_questions;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.odcloud.application.question.service.find_question.FindQuestionsCommand;
 import com.odcloud.domain.model.Question;
 import com.odcloud.fakeClass.FakeQuestionStoragePort;
@@ -47,7 +49,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response).isNotNull();
@@ -81,7 +83,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.pageNumber()).isEqualTo(1);
@@ -100,7 +102,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.pageNumber()).isEqualTo(0);
@@ -145,7 +147,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.questions()).hasSize(2);
@@ -178,7 +180,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.pageSize()).isEqualTo(5);
@@ -220,7 +222,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.questions()).hasSize(2);
@@ -250,7 +252,7 @@ class FindQuestionsServiceTest {
                 .build();
 
             // when
-            FindQuestionsServiceResponse response = findQuestionsService.findQuestions(command);
+            FindQuestionsResponse response = findQuestionsService.findQuestions(command);
 
             // then
             assertThat(response.pageNumber()).isEqualTo(10);

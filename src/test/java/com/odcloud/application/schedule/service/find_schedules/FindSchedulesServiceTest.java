@@ -1,5 +1,7 @@
 package com.odcloud.application.schedule.service.find_schedules;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -158,7 +160,6 @@ class FindSchedulesServiceTest {
             .id(1L)
             .email(email)
             .nickname("User")
-            .name("사용자")
             .groups(groups)
             .build();
     }

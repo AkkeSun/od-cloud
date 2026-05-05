@@ -73,10 +73,10 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
                 .notificationDt("2025-01-02 13:50:00")
                 .build();
 
-            UpdateScheduleResponse serviceResponse =
+            UpdateScheduleResponse Response =
                 UpdateScheduleResponse.ofSuccess();
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(1L, request, "Bearer test", status().isOk(), "success", "success",
@@ -100,10 +100,10 @@ class UpdateScheduleControllerDocsTest extends RestDocsSupport {
                 .startDt("2025-01-02 14:00:00")
                 .build();
 
-            UpdateScheduleResponse serviceResponse =
+            UpdateScheduleResponse Response =
                 UpdateScheduleResponse.ofSuccess();
 
-            given(useCase.update(any())).willReturn(serviceResponse);
+            given(useCase.update(any())).willReturn(Response);
 
             // when & then
             performDocument(2L, request, "Bearer test", status().isOk(),

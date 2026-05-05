@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.JoinGroupUseCase;
-import com.odcloud.application.group.service.join_group.JoinGroupServiceResponse;
+import com.odcloud.application.group.service.join_group.JoinGroupResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -73,8 +73,8 @@ class JoinGroupControllerDocsTest extends RestDocsSupport {
         void success() throws Exception {
             // given
             Long groupId = 1L;
-            JoinGroupServiceResponse serviceResponse = JoinGroupServiceResponse.ofSuccess();
-            given(useCase.join(any(), any())).willReturn(serviceResponse);
+            JoinGroupResponse Response = JoinGroupResponse.ofSuccess();
+            given(useCase.join(any(), any())).willReturn(Response);
 
             // when & then
             performDocument(groupId, "Bearer test", status().isOk(), "success", "success",

@@ -9,14 +9,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class FindGroupAccountListServiceResponseTest {
+class FindGroupAccountListResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 FindGroupAccountListResponse를 생성한다")
         void success() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
@@ -24,7 +24,7 @@ class FindGroupAccountListServiceResponseTest {
             groupAccounts.add(GroupAccount.builder().id(2L).build());
 
             // when
-            FindGroupAccountListServiceResponse response = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response = new FindGroupAccountListResponse(
                 groupAccounts);
 
             // then
@@ -35,13 +35,13 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 빈 리스트로 Constructor로 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] 빈 리스트로 Constructor로 FindGroupAccountListResponse를 생성한다")
         void success_emptyList() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
 
             // when
-            FindGroupAccountListServiceResponse response = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response = new FindGroupAccountListResponse(
                 groupAccounts);
 
             // then
@@ -50,10 +50,10 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 FindGroupAccountListResponse를 생성한다")
         void success_nullValue() {
             // when
-            FindGroupAccountListServiceResponse response = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response = new FindGroupAccountListResponse(
                 null);
 
             // then
@@ -67,14 +67,14 @@ class FindGroupAccountListServiceResponseTest {
     class Describe_builder {
 
         @Test
-        @DisplayName("[success] Builder로 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 FindGroupAccountListResponse를 생성한다")
         void success() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
             groupAccounts.add(GroupAccount.builder().id(1L).build());
 
             // when
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.builder()
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.builder()
                 .groupAccounts(groupAccounts)
                 .build();
 
@@ -85,10 +85,10 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] Builder로 null 값을 가진 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 null 값을 가진 FindGroupAccountListResponse를 생성한다")
         void success_nullValue() {
             // when
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.builder()
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.builder()
                 .groupAccounts(null)
                 .build();
 
@@ -103,7 +103,7 @@ class FindGroupAccountListServiceResponseTest {
     class Describe_of {
 
         @Test
-        @DisplayName("[success] of()로 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] of()로 FindGroupAccountListResponse를 생성한다")
         void success() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
@@ -111,7 +111,7 @@ class FindGroupAccountListServiceResponseTest {
             groupAccounts.add(GroupAccount.builder().id(2L).groupId(1L).build());
 
             // when
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.of(
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.of(
                 groupAccounts);
 
             // then
@@ -124,13 +124,13 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] of()로 빈 리스트를 가진 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] of()로 빈 리스트를 가진 FindGroupAccountListResponse를 생성한다")
         void success_emptyList() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
 
             // when
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.of(
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.of(
                 groupAccounts);
 
             // then
@@ -139,10 +139,10 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] of()로 null을 가진 FindGroupAccountListServiceResponse를 생성한다")
+        @DisplayName("[success] of()로 null을 가진 FindGroupAccountListResponse를 생성한다")
         void success_null() {
             // when
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.of(
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.of(
                 null);
 
             // then
@@ -161,7 +161,7 @@ class FindGroupAccountListServiceResponseTest {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
             groupAccounts.add(GroupAccount.builder().id(1L).build());
-            FindGroupAccountListServiceResponse response = FindGroupAccountListServiceResponse.builder()
+            FindGroupAccountListResponse response = FindGroupAccountListResponse.builder()
                 .groupAccounts(groupAccounts)
                 .build();
 
@@ -179,15 +179,15 @@ class FindGroupAccountListServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] FindGroupAccountListServiceResponse는 불변 객체이다")
+        @DisplayName("[success] FindGroupAccountListResponse는 불변 객체이다")
         void success() {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
             groupAccounts.add(GroupAccount.builder().id(1L).build());
 
-            FindGroupAccountListServiceResponse response1 = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response1 = new FindGroupAccountListResponse(
                 groupAccounts);
-            FindGroupAccountListServiceResponse response2 = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response2 = new FindGroupAccountListResponse(
                 groupAccounts);
 
             // when & then
@@ -196,7 +196,7 @@ class FindGroupAccountListServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 값으로 생성된 FindGroupAccountListServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 값으로 생성된 FindGroupAccountListResponse는 동등하지 않다")
         void success_notEqual() {
             // given
             List<GroupAccount> groupAccounts1 = new ArrayList<>();
@@ -205,9 +205,9 @@ class FindGroupAccountListServiceResponseTest {
             List<GroupAccount> groupAccounts2 = new ArrayList<>();
             groupAccounts2.add(GroupAccount.builder().id(2L).build());
 
-            FindGroupAccountListServiceResponse response1 = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response1 = new FindGroupAccountListResponse(
                 groupAccounts1);
-            FindGroupAccountListServiceResponse response2 = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response2 = new FindGroupAccountListResponse(
                 groupAccounts2);
 
             // when & then
@@ -225,7 +225,7 @@ class FindGroupAccountListServiceResponseTest {
             // given
             List<GroupAccount> groupAccounts = new ArrayList<>();
             groupAccounts.add(GroupAccount.builder().id(1L).build());
-            FindGroupAccountListServiceResponse response = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response = new FindGroupAccountListResponse(
                 groupAccounts);
 
             // when
@@ -233,7 +233,7 @@ class FindGroupAccountListServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("FindGroupAccountListServiceResponse");
+            assertThat(result).contains("FindGroupAccountListResponse");
             assertThat(result).contains("groupAccounts");
         }
 
@@ -241,7 +241,7 @@ class FindGroupAccountListServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValue() {
             // given
-            FindGroupAccountListServiceResponse response = new FindGroupAccountListServiceResponse(
+            FindGroupAccountListResponse response = new FindGroupAccountListResponse(
                 null);
 
             // when
@@ -249,7 +249,7 @@ class FindGroupAccountListServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("FindGroupAccountListServiceResponse");
+            assertThat(result).contains("FindGroupAccountListResponse");
             assertThat(result).contains("null");
         }
     }

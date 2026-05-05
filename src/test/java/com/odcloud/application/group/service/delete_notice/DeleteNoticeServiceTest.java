@@ -84,7 +84,7 @@ class DeleteNoticeServiceTest {
                 .build();
 
             // when
-            DeleteNoticeServiceResponse response = deleteNoticeService.delete(command);
+            DeleteNoticeResponse response = deleteNoticeService.delete(command);
 
             // then
             assertThat(response.result()).isTrue();

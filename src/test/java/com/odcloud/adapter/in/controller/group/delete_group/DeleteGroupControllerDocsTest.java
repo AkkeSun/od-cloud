@@ -12,7 +12,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
-import com.odcloud.application.group.service.delete_group.DeleteGroupServiceResponse;
+import com.odcloud.application.group.service.delete_group.DeleteGroupResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -50,7 +49,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
         void error_unauthorized() throws Exception {
             // given
             String authorization = "error token";
-            given(useCase.delete(any())).willThrow(
+            given(useCase.delete(any(), any())).willThrow(
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when & then
@@ -62,8 +61,8 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[success] 그룹을 삭제한다")
         void success_deleteGroup() throws Exception {
             // given
-            DeleteGroupServiceResponse serviceResponse = DeleteGroupServiceResponse.ofSuccess();
-            given(useCase.delete(any())).willReturn(serviceResponse);
+            DeleteGroupResponse Response = DeleteGroupResponse.ofSuccess();
+            given(useCase.delete(any(), any())).willReturn(Response);
 
             // when & then
             performDocument(1L, "Bearer test", status().isOk(),
@@ -83,7 +82,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 그룹 소유자가 아닌 경우 500 에러를 반환한다")
         void error_notGroupOwner() throws Exception {
             // given
-            given(useCase.delete(any()))
+            given(useCase.delete(any(), any()))
                 .willThrow(new CustomBusinessException(ErrorCode.Business_INVALID_GROUP_OWNER));
 
             // when & then
@@ -95,7 +94,7 @@ class DeleteGroupControllerDocsTest extends RestDocsSupport {
         @DisplayName("[error] 존재하지 않는 그룹 ID인 경우 500 에러를 반환한다")
         void error_groupNotFound() throws Exception {
             // given
-            given(useCase.delete(any()))
+            given(useCase.delete(any(), any()))
                 .willThrow(new CustomBusinessException(ErrorCode.Business_DoesNotExists_GROUP));
 
             // when & then

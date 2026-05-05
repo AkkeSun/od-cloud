@@ -83,7 +83,7 @@ class DeleteFileServiceTest {
                 .build();
 
             // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+            DeleteFileResponse response = deleteFileService.deleteFile(command);
 
             // then
             assertThat(response.result()).isFalse();
@@ -125,7 +125,7 @@ class DeleteFileServiceTest {
                 .build();
 
             // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+            DeleteFileResponse response = deleteFileService.deleteFile(command);
 
             // then
             assertThat(response.result()).isFalse();
@@ -149,7 +149,7 @@ class DeleteFileServiceTest {
                 .build();
 
             // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+            DeleteFileResponse response = deleteFileService.deleteFile(command);
 
             // then
             assertThat(response.result()).isFalse();
@@ -199,7 +199,7 @@ class DeleteFileServiceTest {
                 .build();
 
             // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+            DeleteFileResponse response = deleteFileService.deleteFile(command);
 
             // then
             assertThat(response.result()).isTrue();
@@ -259,7 +259,7 @@ class DeleteFileServiceTest {
                 .build();
 
             // when
-            DeleteFileServiceResponse response = deleteFileService.deleteFile(command);
+            DeleteFileResponse response = deleteFileService.deleteFile(command);
 
             // then
             assertThat(response.result()).isTrue();

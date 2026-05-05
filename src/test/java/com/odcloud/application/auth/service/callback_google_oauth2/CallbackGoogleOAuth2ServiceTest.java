@@ -35,7 +35,7 @@ class CallbackGoogleOAuth2ServiceTest {
         @DisplayName("[success] 정상적으로 googleAccessToken과 redirectUri를 반환한다")
         void success() {
             // when
-            CallbackGoogleOAuth2ServiceResponse response =
+            CallbackGoogleOAuth2Response response =
                 callbackGoogleOAuth2Service.callback("test-authorization-code");
 
             // then
@@ -58,7 +58,7 @@ class CallbackGoogleOAuth2ServiceTest {
             );
 
             // when
-            CallbackGoogleOAuth2ServiceResponse response =
+            CallbackGoogleOAuth2Response response =
                 callbackGoogleOAuth2Service.callback("test-code");
 
             // then

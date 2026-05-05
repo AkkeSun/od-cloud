@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class UpdateFolderServiceResponseTest {
+class UpdateFolderResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 UpdateFolderServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 UpdateFolderResponse를 생성한다")
         void success() {
             // when
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(Boolean.TRUE);
+            UpdateFolderResponse response = new UpdateFolderResponse(Boolean.TRUE);
 
             // then
             assertThat(response).isNotNull();
@@ -24,10 +24,10 @@ class UpdateFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] false 값으로 Constructor로 UpdateFolderServiceResponse를 생성한다")
+        @DisplayName("[success] false 값으로 Constructor로 UpdateFolderResponse를 생성한다")
         void success_false() {
             // when
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(Boolean.FALSE);
+            UpdateFolderResponse response = new UpdateFolderResponse(Boolean.FALSE);
 
             // then
             assertThat(response).isNotNull();
@@ -35,10 +35,10 @@ class UpdateFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 UpdateFolderServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 UpdateFolderResponse를 생성한다")
         void success_nullValue() {
             // when
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(null);
+            UpdateFolderResponse response = new UpdateFolderResponse(null);
 
             // then
             assertThat(response).isNotNull();
@@ -54,7 +54,7 @@ class UpdateFolderServiceResponseTest {
         @DisplayName("[success] ofSuccess()로 성공 응답을 생성한다")
         void success() {
             // when
-            UpdateFolderServiceResponse response = UpdateFolderServiceResponse.ofSuccess();
+            UpdateFolderResponse response = UpdateFolderResponse.ofSuccess();
 
             // then
             assertThat(response).isNotNull();
@@ -70,7 +70,7 @@ class UpdateFolderServiceResponseTest {
         @DisplayName("[success] result()로 result를 조회한다")
         void success() {
             // given
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(Boolean.TRUE);
+            UpdateFolderResponse response = new UpdateFolderResponse(Boolean.TRUE);
 
             // when
             Boolean result = response.result();
@@ -85,11 +85,11 @@ class UpdateFolderServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] UpdateFolderServiceResponse는 불변 객체이다")
+        @DisplayName("[success] UpdateFolderResponse는 불변 객체이다")
         void success() {
             // given
-            UpdateFolderServiceResponse response1 = new UpdateFolderServiceResponse(Boolean.TRUE);
-            UpdateFolderServiceResponse response2 = new UpdateFolderServiceResponse(Boolean.TRUE);
+            UpdateFolderResponse response1 = new UpdateFolderResponse(Boolean.TRUE);
+            UpdateFolderResponse response2 = new UpdateFolderResponse(Boolean.TRUE);
 
             // when & then
             assertThat(response1).isEqualTo(response2);
@@ -97,11 +97,11 @@ class UpdateFolderServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 값으로 생성된 UpdateFolderServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 값으로 생성된 UpdateFolderResponse는 동등하지 않다")
         void success_notEqual() {
             // given
-            UpdateFolderServiceResponse response1 = new UpdateFolderServiceResponse(Boolean.TRUE);
-            UpdateFolderServiceResponse response2 = new UpdateFolderServiceResponse(Boolean.FALSE);
+            UpdateFolderResponse response1 = new UpdateFolderResponse(Boolean.TRUE);
+            UpdateFolderResponse response2 = new UpdateFolderResponse(Boolean.FALSE);
 
             // when & then
             assertThat(response1).isNotEqualTo(response2);
@@ -116,14 +116,14 @@ class UpdateFolderServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(Boolean.TRUE);
+            UpdateFolderResponse response = new UpdateFolderResponse(Boolean.TRUE);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("UpdateFolderServiceResponse");
+            assertThat(result).contains("UpdateFolderResponse");
             assertThat(result).contains("true");
         }
 
@@ -131,14 +131,14 @@ class UpdateFolderServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValue() {
             // given
-            UpdateFolderServiceResponse response = new UpdateFolderServiceResponse(null);
+            UpdateFolderResponse response = new UpdateFolderResponse(null);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("UpdateFolderServiceResponse");
+            assertThat(result).contains("UpdateFolderResponse");
             assertThat(result).contains("null");
         }
     }

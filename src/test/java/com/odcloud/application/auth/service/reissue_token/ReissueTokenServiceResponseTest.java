@@ -6,17 +6,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class ReissueTokenServiceResponseTest {
+class ReissueTokenResponseTest {
 
     @Nested
     @DisplayName("[constructor] Constructor 테스트")
     class Describe_constructor {
 
         @Test
-        @DisplayName("[success] Constructor로 ReissueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Constructor로 ReissueTokenResponse를 생성한다")
         void success() {
             // when
-            ReissueTokenServiceResponse response = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -28,10 +28,10 @@ class ReissueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] null 값으로 Constructor로 ReissueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] null 값으로 Constructor로 ReissueTokenResponse를 생성한다")
         void success_nullValues() {
             // when
-            ReissueTokenServiceResponse response = new ReissueTokenServiceResponse(null, null);
+            ReissueTokenResponse response = new ReissueTokenResponse(null, null);
 
             // then
             assertThat(response.accessToken()).isNull();
@@ -44,10 +44,10 @@ class ReissueTokenServiceResponseTest {
     class Describe_builder {
 
         @Test
-        @DisplayName("[success] Builder로 ReissueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 ReissueTokenResponse를 생성한다")
         void success() {
             // when
-            ReissueTokenServiceResponse response = ReissueTokenServiceResponse.builder()
+            ReissueTokenResponse response = ReissueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -59,10 +59,10 @@ class ReissueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] Builder로 null 값을 가진 ReissueTokenServiceResponse를 생성한다")
+        @DisplayName("[success] Builder로 null 값을 가진 ReissueTokenResponse를 생성한다")
         void success_nullValues() {
             // when
-            ReissueTokenServiceResponse response = ReissueTokenServiceResponse.builder()
+            ReissueTokenResponse response = ReissueTokenResponse.builder()
                 .accessToken(null)
                 .refreshToken(null)
                 .build();
@@ -82,7 +82,7 @@ class ReissueTokenServiceResponseTest {
         @DisplayName("[success] accessToken()으로 accessToken을 조회한다")
         void success_accessToken() {
             // given
-            ReissueTokenServiceResponse response = ReissueTokenServiceResponse.builder()
+            ReissueTokenResponse response = ReissueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -98,7 +98,7 @@ class ReissueTokenServiceResponseTest {
         @DisplayName("[success] refreshToken()으로 refreshToken을 조회한다")
         void success_refreshToken() {
             // given
-            ReissueTokenServiceResponse response = ReissueTokenServiceResponse.builder()
+            ReissueTokenResponse response = ReissueTokenResponse.builder()
                 .accessToken("access-token-123")
                 .refreshToken("refresh-token-456")
                 .build();
@@ -116,14 +116,14 @@ class ReissueTokenServiceResponseTest {
     class Describe_immutability {
 
         @Test
-        @DisplayName("[success] ReissueTokenServiceResponse는 불변 객체이다")
+        @DisplayName("[success] ReissueTokenResponse는 불변 객체이다")
         void success() {
             // given
-            ReissueTokenServiceResponse response1 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response1 = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            ReissueTokenServiceResponse response2 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response2 = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -134,14 +134,14 @@ class ReissueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 accessToken을 가진 ReissueTokenServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 accessToken을 가진 ReissueTokenResponse는 동등하지 않다")
         void success_differentAccessToken() {
             // given
-            ReissueTokenServiceResponse response1 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response1 = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            ReissueTokenServiceResponse response2 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response2 = new ReissueTokenResponse(
                 "access-token-789",
                 "refresh-token-456"
             );
@@ -151,14 +151,14 @@ class ReissueTokenServiceResponseTest {
         }
 
         @Test
-        @DisplayName("[success] 다른 refreshToken을 가진 ReissueTokenServiceResponse는 동등하지 않다")
+        @DisplayName("[success] 다른 refreshToken을 가진 ReissueTokenResponse는 동등하지 않다")
         void success_differentRefreshToken() {
             // given
-            ReissueTokenServiceResponse response1 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response1 = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
-            ReissueTokenServiceResponse response2 = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response2 = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-789"
             );
@@ -176,7 +176,7 @@ class ReissueTokenServiceResponseTest {
         @DisplayName("[success] toString()으로 문자열 표현을 반환한다")
         void success() {
             // given
-            ReissueTokenServiceResponse response = new ReissueTokenServiceResponse(
+            ReissueTokenResponse response = new ReissueTokenResponse(
                 "access-token-123",
                 "refresh-token-456"
             );
@@ -186,7 +186,7 @@ class ReissueTokenServiceResponseTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("ReissueTokenServiceResponse");
+            assertThat(result).contains("ReissueTokenResponse");
             assertThat(result).contains("access-token-123");
             assertThat(result).contains("refresh-token-456");
         }
@@ -195,14 +195,14 @@ class ReissueTokenServiceResponseTest {
         @DisplayName("[success] null 값을 포함한 toString()을 반환한다")
         void success_nullValues() {
             // given
-            ReissueTokenServiceResponse response = new ReissueTokenServiceResponse(null, null);
+            ReissueTokenResponse response = new ReissueTokenResponse(null, null);
 
             // when
             String result = response.toString();
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).contains("ReissueTokenServiceResponse");
+            assertThat(result).contains("ReissueTokenResponse");
             assertThat(result).contains("null");
         }
     }

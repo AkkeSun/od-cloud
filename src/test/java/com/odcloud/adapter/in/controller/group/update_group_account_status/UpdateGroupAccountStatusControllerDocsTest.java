@@ -19,7 +19,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.group.port.in.UpdateGroupAccountStatusUseCase;
-import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusServiceResponse;
+import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusResponse;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -73,10 +73,10 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                 .memo(null)
                 .build();
 
-            UpdateGroupAccountStatusServiceResponse serviceResponse =
-                UpdateGroupAccountStatusServiceResponse.ofSuccess();
+            UpdateGroupAccountStatusResponse Response =
+                UpdateGroupAccountStatusResponse.ofSuccess();
 
-            given(useCase.updateStatus(any())).willReturn(serviceResponse);
+            given(useCase.updateStatus(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, accountId, request, status().isOk(),
@@ -103,10 +103,10 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                 .memo("그룹 가입 요건을 충족하지 못했습니다.")
                 .build();
 
-            UpdateGroupAccountStatusServiceResponse serviceResponse =
-                UpdateGroupAccountStatusServiceResponse.ofSuccess();
+            UpdateGroupAccountStatusResponse Response =
+                UpdateGroupAccountStatusResponse.ofSuccess();
 
-            given(useCase.updateStatus(any())).willReturn(serviceResponse);
+            given(useCase.updateStatus(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, accountId, request, status().isOk(),
@@ -133,10 +133,10 @@ class UpdateGroupAccountStatusControllerDocsTest extends RestDocsSupport {
                 .memo("부적절한 행동으로 차단되었습니다.")
                 .build();
 
-            UpdateGroupAccountStatusServiceResponse serviceResponse =
-                UpdateGroupAccountStatusServiceResponse.ofSuccess();
+            UpdateGroupAccountStatusResponse Response =
+                UpdateGroupAccountStatusResponse.ofSuccess();
 
-            given(useCase.updateStatus(any())).willReturn(serviceResponse);
+            given(useCase.updateStatus(any())).willReturn(Response);
 
             // when & then
             performDocument("Bearer test", groupId, accountId, request, status().isOk(),

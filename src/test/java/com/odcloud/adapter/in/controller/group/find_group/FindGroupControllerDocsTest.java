@@ -3,6 +3,7 @@ package com.odcloud.adapter.in.controller.group.find_group;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -12,7 +13,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odcloud.application.group.port.in.FindGroupUseCase;
-import com.odcloud.application.group.service.find_group.FindGroupServiceResponse;
+import com.odcloud.application.group.service.find_group.FindGroupResponse;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import com.odcloud.infrastructure.exception.ExceptionAdvice;
@@ -73,42 +73,42 @@ class FindGroupControllerDocsTest {
             // given
             Long groupId = 1L;
 
-            FindGroupServiceResponse.MemberInfo manager =
-                FindGroupServiceResponse.MemberInfo.builder()
+            FindGroupResponse.MemberInfo manager =
+                FindGroupResponse.MemberInfo.builder()
                     .nickname("Manager")
                     .email("manager@example.com")
                     .picture("https://example.com/manager.jpg")
                     .build();
 
-            FindGroupServiceResponse.MemberInfo member1 =
-                FindGroupServiceResponse.MemberInfo.builder()
+            FindGroupResponse.MemberInfo member1 =
+                FindGroupResponse.MemberInfo.builder()
                     .nickname("Member1")
                     .email("member1@example.com")
                     .picture("https://example.com/member1.jpg")
                     .build();
 
-            FindGroupServiceResponse.MemberInfo member2 =
-                FindGroupServiceResponse.MemberInfo.builder()
+            FindGroupResponse.MemberInfo member2 =
+                FindGroupResponse.MemberInfo.builder()
                     .nickname("Member2")
                     .email("member2@example.com")
                     .picture("https://example.com/member2.jpg")
                     .build();
 
-            FindGroupServiceResponse.NoticeInfo notice1 =
-                FindGroupServiceResponse.NoticeInfo.builder()
+            FindGroupResponse.NoticeInfo notice1 =
+                FindGroupResponse.NoticeInfo.builder()
                     .id(5L)
                     .title("12월 27일 공지사항")
                     .content("공지사항 내용입니다.")
                     .build();
 
-            FindGroupServiceResponse.NoticeInfo notice2 =
-                FindGroupServiceResponse.NoticeInfo.builder()
+            FindGroupResponse.NoticeInfo notice2 =
+                FindGroupResponse.NoticeInfo.builder()
                     .id(4L)
                     .title("중요 공지")
                     .content("중요한 내용입니다.")
                     .build();
 
-            FindGroupServiceResponse response = FindGroupServiceResponse.builder()
+            FindGroupResponse response = FindGroupResponse.builder()
                 .id(groupId)
                 .name("My Team")
                 .manager(manager)
