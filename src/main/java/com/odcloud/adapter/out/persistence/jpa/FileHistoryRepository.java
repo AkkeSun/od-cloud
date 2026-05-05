@@ -26,17 +26,6 @@ class FileHistoryRepository {
         entityManager.persist(FileHistoryEntity.of(history));
     }
 
-    public List<FileHistory> findByFileId(Long fileId) {
-        return queryFactory
-            .selectFrom(fileHistoryEntity)
-            .where(fileHistoryEntity.fileId.eq(fileId))
-            .orderBy(fileHistoryEntity.regDt.desc())
-            .fetch()
-            .stream()
-            .map(this::toModel)
-            .toList();
-    }
-
     public List<FileHistory> findByGroupId(Long groupId) {
         return queryFactory
             .selectFrom(fileHistoryEntity)
@@ -46,13 +35,6 @@ class FileHistoryRepository {
             .stream()
             .map(this::toModel)
             .toList();
-    }
-
-    @Transactional
-    public void deleteByFileId(Long fileId) {
-        queryFactory.delete(fileHistoryEntity)
-            .where(fileHistoryEntity.fileId.eq(fileId))
-            .execute();
     }
 
     private FileHistory toModel(FileHistoryEntity entity) {
