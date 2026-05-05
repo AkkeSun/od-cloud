@@ -26,7 +26,8 @@ import lombok.NoArgsConstructor;
     indexes = {
         @Index(name = "idx_file_history_file_id", columnList = "file_id"),
         @Index(name = "idx_file_history_group_id", columnList = "group_id"),
-        @Index(name = "idx_file_history_file_reg", columnList = "file_id, reg_dt")
+        @Index(name = "idx_file_history_file_reg", columnList = "file_id, reg_dt"),
+        @Index(name = "idx_file_history_group_reg", columnList = "group_id, reg_dt")
     }
 )
 class FileHistoryEntity {
@@ -61,8 +62,14 @@ class FileHistoryEntity {
     @Column(name = "after_folder_id")
     private Long afterFolderId;
 
+    @Column(name = "file_loc")
+    private String fileLoc;
+
     @Column(name = "file_size")
     private Long fileSize;
+
+    @Column(name = "backup_dt")
+    private LocalDateTime backupDt;
 
     @Column(name = "reg_dt", nullable = false)
     private LocalDateTime regDt;
@@ -77,7 +84,9 @@ class FileHistoryEntity {
             .afterFileName(history.getAfterFileName())
             .beforeFolderId(history.getBeforeFolderId())
             .afterFolderId(history.getAfterFolderId())
+            .fileLoc(history.getFileLoc())
             .fileSize(history.getFileSize())
+            .backupDt(history.getBackupDt())
             .regDt(history.getRegDt())
             .build();
     }

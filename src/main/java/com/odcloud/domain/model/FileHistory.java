@@ -22,7 +22,9 @@ public class FileHistory {
     private String afterFileName;
     private Long beforeFolderId;
     private Long afterFolderId;
+    private String fileLoc;
     private Long fileSize;
+    private LocalDateTime backupDt;
     private LocalDateTime regDt;
 
     public static FileHistory ofUpload(FileInfo file, String actorEmail) {
@@ -33,6 +35,7 @@ public class FileHistory {
             .actorEmail(actorEmail)
             .afterFileName(file.getFileName())
             .afterFolderId(file.getFolderId())
+            .fileLoc(file.getFileLoc())
             .fileSize(file.getFileSize())
             .regDt(LocalDateTime.now())
             .build();
@@ -48,6 +51,7 @@ public class FileHistory {
             .afterFileName(fileAfter.getFileName())
             .beforeFolderId(fileAfter.getFolderId())
             .afterFolderId(fileAfter.getFolderId())
+            .fileLoc(fileAfter.getFileLoc())
             .fileSize(fileAfter.getFileSize())
             .regDt(LocalDateTime.now())
             .build();
@@ -63,6 +67,7 @@ public class FileHistory {
             .afterFileName(fileAfter.getFileName())
             .beforeFolderId(beforeFolderId)
             .afterFolderId(fileAfter.getFolderId())
+            .fileLoc(fileAfter.getFileLoc())
             .fileSize(fileAfter.getFileSize())
             .regDt(LocalDateTime.now())
             .build();
@@ -76,6 +81,7 @@ public class FileHistory {
             .actorEmail(actorEmail)
             .beforeFileName(file.getFileName())
             .beforeFolderId(file.getFolderId())
+            .fileLoc(file.getFileLoc())
             .fileSize(file.getFileSize())
             .regDt(LocalDateTime.now())
             .build();

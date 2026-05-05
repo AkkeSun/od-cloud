@@ -66,7 +66,9 @@ class FileHistoryRepository {
             .afterFileName(entity.getAfterFileName())
             .beforeFolderId(entity.getBeforeFolderId())
             .afterFolderId(entity.getAfterFolderId())
+            .fileLoc(entity.getFileLoc())
             .fileSize(entity.getFileSize())
+            .backupDt(entity.getBackupDt())
             .regDt(entity.getRegDt())
             .build();
     }

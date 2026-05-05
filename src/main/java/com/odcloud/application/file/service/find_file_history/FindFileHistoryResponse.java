@@ -1,6 +1,7 @@
 package com.odcloud.application.file.service.find_file_history;
 
 import com.odcloud.domain.model.FileHistory;
+import com.odcloud.infrastructure.util.DateUtil;
 import java.util.List;
 import lombok.Builder;
 
@@ -26,7 +27,9 @@ public record FindFileHistoryResponse(
         String afterFileName,
         Long beforeFolderId,
         Long afterFolderId,
+        String fileLoc,
         Long fileSize,
+        String backupDt,
         String regDt
     ) {
 
@@ -41,7 +44,9 @@ public record FindFileHistoryResponse(
                 .afterFileName(history.getAfterFileName())
                 .beforeFolderId(history.getBeforeFolderId())
                 .afterFolderId(history.getAfterFolderId())
+                .fileLoc(history.getFileLoc())
                 .fileSize(history.getFileSize())
+                .backupDt(DateUtil.formatDateTime(history.getBackupDt()))
                 .regDt(history.getRegDtString())
                 .build();
         }
