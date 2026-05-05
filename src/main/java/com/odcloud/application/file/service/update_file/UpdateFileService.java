@@ -4,8 +4,10 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_DoesNotExi
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FILE_NAME;
 
 import com.odcloud.application.file.port.in.UpdateFileUseCase;
+import com.odcloud.application.file.port.out.FileHistoryStoragePort;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FileHistory;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 class UpdateFileService implements UpdateFileUseCase {
 
     private final FileInfoStoragePort fileStoragePort;
+    private final FileHistoryStoragePort fileHistoryStoragePort;
     private final FolderInfoStoragePort folderStoragePort;
 
     @Override
     @Transactional
     public UpdateFileResponse update(UpdateFileCommand command) {
         FileInfo file = fileStoragePort.findById(command.fileId());
+        String actorEmail = command.account().getEmail();
 
         if (command.isFileNameUpdate(file.getFileName())) {
             Long targetFolderId =
@@ -34,7 +38,9 @@ class UpdateFileService implements UpdateFileUseCase {
                 throw new CustomBusinessException(Business_SAVED_FILE_NAME);
             }
 
+            String beforeFileName = file.getFileName();
             file.updateFileName(command.fileName());
+            fileHistoryStoragePort.save(FileHistory.ofRename(file, beforeFileName, actorEmail));
         }
 
         if (command.isFileLocUpdate(file.getFolderId())) {
@@ -48,7 +54,9 @@ class UpdateFileService implements UpdateFileUseCase {
                 throw new CustomBusinessException(Business_SAVED_FILE_NAME);
             }
 
+            Long beforeFolderId = file.getFolderId();
             file.updateFolderId(command.folderId());
+            fileHistoryStoragePort.save(FileHistory.ofMove(file, beforeFolderId, actorEmail));
         }
 
         fileStoragePort.save(file);

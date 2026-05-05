@@ -4,9 +4,11 @@ import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
 
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.DeleteFileUseCase;
+import com.odcloud.application.file.port.out.FileHistoryStoragePort;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
+import com.odcloud.domain.model.FileHistory;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
@@ -23,6 +25,7 @@ class DeleteFileService implements DeleteFileUseCase {
 
     private final FilePort filePort;
     private final FileInfoStoragePort fileInfoStoragePort;
+    private final FileHistoryStoragePort fileHistoryStoragePort;
     private final GroupStoragePort groupStoragePort;
     private final RedisStoragePort redisStoragePort;
 
@@ -39,6 +42,8 @@ class DeleteFileService implements DeleteFileUseCase {
                     throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
                 }
 
+                fileHistoryStoragePort.save(
+                    FileHistory.ofDelete(file, command.account().getEmail()));
                 fileInfoStoragePort.delete(file);
                 redisStoragePort.executeWithLock(GROUP_LOCK + file.getGroupId(), () -> {
                     Group group = groupStoragePort.findById(file.getGroupId());

@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
 import com.odcloud.application.file.service.register_file.RegisterFileCommand;
+import com.odcloud.domain.model.Account;
 import com.odcloud.infrastructure.util.StringUtil;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
@@ -19,9 +20,10 @@ class RegisterFileRequest {
     @NotEmpty(message = "파일은 필수값 입니다")
     private List<MultipartFile> files;
 
-    RegisterFileCommand toCommand(Long folderId) {
+    RegisterFileCommand toCommand(Long folderId, Account account) {
         return RegisterFileCommand.builder()
             .folderId(folderId)
+            .account(account)
             .files(files)
             .build();
     }

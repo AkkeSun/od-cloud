@@ -5,10 +5,12 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_STORAGE_LI
 
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.in.RegisterFileUseCase;
+import com.odcloud.application.file.port.out.FileHistoryStoragePort;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.out.GroupStoragePort;
+import com.odcloud.domain.model.FileHistory;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
@@ -28,6 +30,7 @@ class RegisterFileService implements RegisterFileUseCase {
     private final FilePort filePort;
     private final ProfileConstant constant;
     private final FileInfoStoragePort fileStoragePort;
+    private final FileHistoryStoragePort fileHistoryStoragePort;
     private final FolderInfoStoragePort folderStoragePort;
     private final GroupStoragePort groupStoragePort;
     private final RedisStoragePort redisStoragePort;
@@ -60,6 +63,8 @@ class RegisterFileService implements RegisterFileUseCase {
 
                 fileStoragePort.save(file);
                 filePort.uploadFile(file);
+                fileHistoryStoragePort.save(
+                    FileHistory.ofUpload(file, command.account().getEmail()));
             }
         } catch (Exception e) {
             redisStoragePort.executeWithLock(GROUP_LOCK + folder.getGroupId(), () -> {
