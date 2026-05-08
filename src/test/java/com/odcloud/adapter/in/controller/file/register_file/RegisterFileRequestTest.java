@@ -1,6 +1,7 @@
 package com.odcloud.adapter.in.controller.file.register_file;
 
 import com.odcloud.application.file.service.register_file.RegisterFileCommand;
+import com.odcloud.domain.model.Account;
 import java.util.ArrayList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,15 +18,17 @@ class RegisterFileRequestTest {
         void success() {
             // given
             Long folderId = 1L;
+            Account account = Account.builder().email("test@test.com").build();
             RegisterFileRequest request = RegisterFileRequest.builder()
                 .files(new ArrayList<>())
                 .build();
 
             // when
-            RegisterFileCommand command = request.toCommand(folderId);
+            RegisterFileCommand command = request.toCommand(folderId, account);
 
             // then
             assert command.folderId().equals(folderId);
+            assert command.account().equals(account);
         }
     }
 }

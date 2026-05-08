@@ -61,10 +61,10 @@ class RegisterFileService implements RegisterFileUseCase {
                     file.addFileNameNumber(++fileNumber);
                 }
 
-                fileStoragePort.save(file);
-                filePort.uploadFile(file);
+                FileInfo savedFile = fileStoragePort.save(file);
+                filePort.uploadFile(savedFile);
                 fileHistoryStoragePort.save(
-                    FileHistory.ofUpload(file, command.account().getEmail()));
+                    FileHistory.ofUpload(savedFile, command.account().getEmail()));
             }
         } catch (Exception e) {
             redisStoragePort.executeWithLock(GROUP_LOCK + folder.getGroupId(), () -> {

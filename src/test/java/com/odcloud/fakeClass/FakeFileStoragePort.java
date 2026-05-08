@@ -14,14 +14,27 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
 
     public List<FileInfo> database = new ArrayList<>();
     public boolean shouldThrowException = false;
+    private Long idSequence = 1L;
 
     @Override
-    public void save(FileInfo file) {
+    public FileInfo save(FileInfo file) {
         if (shouldThrowException) {
             throw new RuntimeException("Storage failure");
         }
-        database.add(file);
-        log.info("FakeFileStoragePort saved file: name={}", file.getFileName());
+        FileInfo savedFile = FileInfo.builder()
+            .id(idSequence++)
+            .folderId(file.getFolderId())
+            .groupId(file.getGroupId())
+            .fileName(file.getFileName())
+            .fileLoc(file.getFileLoc())
+            .fileSize(file.getFileSize())
+            .multipartFile(file.getMultipartFile())
+            .regDt(file.getRegDt())
+            .modDt(file.getModDt())
+            .build();
+        database.add(savedFile);
+        log.info("FakeFileStoragePort saved file: name={}", savedFile.getFileName());
+        return savedFile;
     }
 
     @Override
@@ -111,5 +124,6 @@ public class FakeFileStoragePort implements FileInfoStoragePort {
     public void reset() {
         database.clear();
         shouldThrowException = false;
+        idSequence = 1L;
     }
 }

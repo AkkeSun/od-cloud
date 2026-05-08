@@ -7,6 +7,7 @@ import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.fakeClass.FakeFileHistoryStoragePort;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
 class DeleteFileServiceTest {
 
     private FakeFileStoragePort fakeFileStoragePort;
+    private FakeFileHistoryStoragePort fakeFileHistoryStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
     private FakeGroupStoragePort fakeGroupStoragePort;
     private DeleteFileService deleteFileService;
@@ -28,14 +30,15 @@ class DeleteFileServiceTest {
     @BeforeEach
     void setUp() {
         fakeFileStoragePort = new FakeFileStoragePort();
+        fakeFileHistoryStoragePort = new FakeFileHistoryStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeGroupStoragePort = new FakeGroupStoragePort();
         deleteFileService = new DeleteFileService(
             new FakeFilePort(),
             fakeFileStoragePort,
+            fakeFileHistoryStoragePort,
             fakeGroupStoragePort,
             new FakeRedisStoragePort()
-
         );
     }
 

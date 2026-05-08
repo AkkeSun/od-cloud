@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FileInfoStoragePort {
 
-    void save(FileInfo file);
+    FileInfo save(FileInfo file);
 
     FileInfo findById(Long id);
 

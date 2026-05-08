@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
+import com.odcloud.fakeClass.FakeFileHistoryStoragePort;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 class UpdateFileServiceTest {
 
     private FakeFileStoragePort fakeFileStoragePort;
+    private FakeFileHistoryStoragePort fakeFileHistoryStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
     private FakeFilePort fakeFilePort;
     private UpdateFileService updateFileService;
@@ -27,10 +29,12 @@ class UpdateFileServiceTest {
     @BeforeEach
     void setUp() {
         fakeFileStoragePort = new FakeFileStoragePort();
+        fakeFileHistoryStoragePort = new FakeFileHistoryStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeFilePort = new FakeFilePort();
         updateFileService = new UpdateFileService(
             fakeFileStoragePort,
+            fakeFileHistoryStoragePort,
             fakeFolderStoragePort
         );
     }

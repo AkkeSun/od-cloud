@@ -17,8 +17,8 @@ class FileInfoStorageAdapter implements FileInfoStoragePort {
     private final FileInfoRepository fileRepository;
 
     @Override
-    public void save(FileInfo file) {
-        fileRepository.save(file);
+    public FileInfo save(FileInfo file) {
+        return fileRepository.save(file);
     }
 
     @Override

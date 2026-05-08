@@ -4,8 +4,10 @@ import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.fakeClass.FakeFileHistoryStoragePort;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
@@ -24,6 +26,7 @@ class RegisterFileServiceTest {
 
     private FakeFilePort fakeFilePort;
     private FakeFileStoragePort fakeFileStoragePort;
+    private FakeFileHistoryStoragePort fakeFileHistoryStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
     private FakeGroupStoragePort fakeGroupStoragePort;
     private RegisterFileService registerFileService;
@@ -32,6 +35,7 @@ class RegisterFileServiceTest {
     void setUp() {
         fakeFilePort = new FakeFilePort();
         fakeFileStoragePort = new FakeFileStoragePort();
+        fakeFileHistoryStoragePort = new FakeFileHistoryStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeGroupStoragePort = new FakeGroupStoragePort();
         com.odcloud.infrastructure.constant.ProfileConstant.FileUpload fileUpload =
@@ -44,6 +48,7 @@ class RegisterFileServiceTest {
             fakeFilePort,
             profileConstant,
             fakeFileStoragePort,
+            fakeFileHistoryStoragePort,
             fakeFolderStoragePort,
             fakeGroupStoragePort,
             new FakeRedisStoragePort()
@@ -82,6 +87,7 @@ class RegisterFileServiceTest {
 
             RegisterFileCommand command = RegisterFileCommand.builder()
                 .folderId(1L)
+                .account(Account.builder().email("test@test.com").build())
                 .files(List.of(file))
                 .build();
 
@@ -141,6 +147,7 @@ class RegisterFileServiceTest {
 
             RegisterFileCommand command = RegisterFileCommand.builder()
                 .folderId(1L)
+                .account(Account.builder().email("test@test.com").build())
                 .files(List.of(file1, file2, file3))
                 .build();
 
@@ -174,6 +181,7 @@ class RegisterFileServiceTest {
 
             RegisterFileCommand command = RegisterFileCommand.builder()
                 .folderId(999L)
+                .account(Account.builder().email("test@test.com").build())
                 .files(List.of(file))
                 .build();
 
@@ -214,6 +222,7 @@ class RegisterFileServiceTest {
 
             RegisterFileCommand command = RegisterFileCommand.builder()
                 .folderId(1L)
+                .account(Account.builder().email("test@test.com").build())
                 .files(List.of(file))
                 .build();
 
@@ -255,6 +264,7 @@ class RegisterFileServiceTest {
 
             RegisterFileCommand command = RegisterFileCommand.builder()
                 .folderId(1L)
+                .account(Account.builder().email("test@test.com").build())
                 .files(List.of(file))
                 .build();
 

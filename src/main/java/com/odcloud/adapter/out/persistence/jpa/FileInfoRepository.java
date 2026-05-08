@@ -38,12 +38,24 @@ class FileInfoRepository {
     }
 
     @Transactional
-    public void save(FileInfo file) {
+    public FileInfo save(FileInfo file) {
+        FileInfoEntity entity = FileInfoEntity.of(file);
         if (file.getId() == null) {
-            entityManager.persist(FileInfoEntity.of(file));
+            entityManager.persist(entity);
         } else {
-            entityManager.merge(FileInfoEntity.of(file));
+            entity = entityManager.merge(entity);
         }
+        return FileInfo.builder()
+            .id(entity.getId())
+            .folderId(entity.getFolderId())
+            .groupId(entity.getGroupId())
+            .fileName(entity.getFileName())
+            .fileLoc(entity.getFileLoc())
+            .fileSize(entity.getFileSize())
+            .modDt(entity.getModDt())
+            .regDt(entity.getRegDt())
+            .multipartFile(file.getMultipartFile())
+            .build();
     }
 
     public Optional<FileInfo> findById(Long id) {
