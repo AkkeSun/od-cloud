@@ -2,7 +2,6 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -82,9 +81,7 @@ class GroupAccountTest {
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            groupAccount.updateStatus(UpdateGroupAccountStatusCommand.builder()
-                .status("ACTIVE")
-                .build());
+            groupAccount.updateStatus("ACTIVE", null);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);

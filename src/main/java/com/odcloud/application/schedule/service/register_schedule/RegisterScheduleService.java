@@ -12,6 +12,7 @@ import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,15 @@ class RegisterScheduleService implements RegisterSchedulerUseCase {
             throw new CustomAuthenticationException(ACCESS_DENIED);
         }
 
-        scheduleStoragePort.save(Schedule.of(command));
+        scheduleStoragePort.save(Schedule.builder()
+            .writerEmail(command.account().getEmail())
+            .content(command.content())
+            .startDt(command.startDt())
+            .groupId(command.groupId())
+            .notificationDt(command.notificationDt())
+            .notificationYn("N")
+            .regDt(LocalDateTime.now())
+            .build());
         if (command.isGroupSchedule()) {
             List<AccountDevice> devices = accountDeviceStoragePort
                 .findByGroupIdForPush(command.groupId())

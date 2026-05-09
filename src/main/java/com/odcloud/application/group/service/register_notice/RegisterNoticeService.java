@@ -12,6 +12,7 @@ import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,13 @@ class RegisterNoticeService implements RegisterNoticeUseCase {
             throw new CustomBusinessException(Business_INVALID_GROUP_OWNER);
         }
 
-        Notice savedNotice = noticeStoragePort.save(Notice.of(command));
+        Notice savedNotice = noticeStoragePort.save(Notice.builder()
+            .groupId(command.groupId())
+            .title(command.title())
+            .content(command.content())
+            .writerEmail(command.account().getEmail())
+            .regDt(LocalDateTime.now())
+            .build());
         List<AccountDevice> devices = accountDeviceStoragePort
             .findByGroupIdForPush(command.groupId())
             .stream()

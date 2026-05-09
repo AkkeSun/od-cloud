@@ -9,8 +9,11 @@ import com.odcloud.application.voucher.port.out.PaymentStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Payment;
+import com.odcloud.domain.model.PaymentStatus;
 import com.odcloud.domain.model.Voucher;
+import com.odcloud.domain.model.VoucherStatus;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +29,26 @@ class CreateVoucherService implements CreateVoucherUseCase {
     @Override
     @Transactional
     public CreateVoucherResponse create(CreateVoucherCommand command) {
-        Payment savedPayment = paymentStoragePort.save(Payment.create(command));
-        voucherStoragePort.save(Voucher.create(savedPayment.getId(), command));
+        Payment savedPayment = paymentStoragePort.save(Payment.builder()
+            .accountId(command.accountId())
+            .storeType(command.storeType())
+            .subscriptionKey(command.subscriptionKey())
+            .orderTxId(command.orderTxId())
+            .status(PaymentStatus.PAID)
+            .storeProcessDt(command.storeProcessDt())
+            .regDt(LocalDateTime.now())
+            .build());
+        LocalDateTime voucherStartAt = LocalDateTime.now();
+        voucherStoragePort.save(Voucher.builder()
+            .paymentId(savedPayment.getId())
+            .voucherType(command.voucherType())
+            .status(VoucherStatus.ACTIVE)
+            .accountId(command.accountId())
+            .memo(command.memo())
+            .startAt(voucherStartAt)
+            .endDt(command.voucherType().calculateEndDt(voucherStartAt))
+            .regDt(LocalDateTime.now())
+            .build());
 
         if (command.voucherType().isStorageVoucher()) {
             for (Group group : groupStoragePort.findByOwnerId(command.accountId())) {

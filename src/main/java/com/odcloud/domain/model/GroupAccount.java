@@ -1,6 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.group.service.update_group_account_status.UpdateGroupAccountStatusCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,9 +62,9 @@ public class GroupAccount {
             .build();
     }
 
-    public void updateStatus(UpdateGroupAccountStatusCommand command) {
-        this.status = command.status();
-        this.memo = command.memo();
+    public void updateStatus(String status, String memo) {
+        this.status = status;
+        this.memo = memo;
         this.modDt = LocalDateTime.now();
     }
 

@@ -2,8 +2,6 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.file.service.register_folder.RegisterFolderCommand;
-import com.odcloud.application.group.service.register_group.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,22 +10,22 @@ import org.junit.jupiter.api.Test;
 class FolderTest {
 
     @Nested
-    @DisplayName("[ofRootFolder] RegisterGroupCommand로부터 루트 폴더를 생성하는 정적 팩토리 메서드")
+    @DisplayName("[ofRootFolder] Group으로부터 루트 폴더를 생성하는 정적 팩토리 메서드")
     class Describe_ofRootFolder {
 
         @Test
-        @DisplayName("[success] RegisterGroupCommand로부터 루트 폴더를 생성한다")
+        @DisplayName("[success] Group으로부터 루트 폴더를 생성한다")
         void success() {
             // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                "테스트 그룹",
-                "owner@example.com"
-            );
+            Group group = Group.builder()
+                .name("테스트 그룹")
+                .ownerEmail("owner@example.com")
+                .build();
 
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            FolderInfo folder = FolderInfo.ofRootFolder(Group.of(command));
+            FolderInfo folder = FolderInfo.ofRootFolder(group);
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -41,16 +39,16 @@ class FolderTest {
         }
 
         @Test
-        @DisplayName("[success] null 값을 포함한 RegisterGroupCommand로부터 루트 폴더를 생성한다")
+        @DisplayName("[success] null 값을 포함한 Group으로부터 루트 폴더를 생성한다")
         void success_nullValues() {
             // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                null,
-                null
-            );
+            Group group = Group.builder()
+                .name(null)
+                .ownerEmail(null)
+                .build();
 
             // when
-            FolderInfo folder = FolderInfo.ofRootFolder(Group.of(command));
+            FolderInfo folder = FolderInfo.ofRootFolder(group);
 
             // then
             assertThat(folder).isNotNull();
@@ -58,99 +56,6 @@ class FolderTest {
             assertThat(folder.getName()).isNull();
             assertThat(folder.getOwner()).isNull();
         }
-    }
-
-    @Nested
-    @DisplayName("[createSubFolder] RegisterFolderCommand로부터 서브 폴더를 생성하는 정적 팩토리 메서드")
-    class Describe_createSubFolder {
-
-        @Test
-        @DisplayName("[success] RegisterFolderCommand로부터 서브 폴더를 생성한다")
-        void success() {
-            // given
-            RegisterFolderCommand command = new RegisterFolderCommand(
-                1L,
-                1L,
-                "서브 폴더",
-                "owner@example.com"
-            );
-            String parentPath = "/group-123";
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            FolderInfo folder = FolderInfo.createSubFolder(command);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(folder).isNotNull();
-            assertThat(folder.getParentId()).isEqualTo(1L);
-            assertThat(folder.getGroupId()).isEqualTo(1L);
-            assertThat(folder.getName()).isEqualTo("서브 폴더");
-            assertThat(folder.getOwner()).isEqualTo("owner@example.com");
-            assertThat(folder.getRegDt()).isAfter(before);
-            assertThat(folder.getRegDt()).isBefore(after);
-        }
-
-        @Test
-        @DisplayName("[success] 루트 경로에서 서브 폴더를 생성한다")
-        void success_rootPath() {
-            // given
-            RegisterFolderCommand command = new RegisterFolderCommand(
-                1L,
-                1L,
-                "서브 폴더",
-                "owner@example.com");
-            String parentPath = "/test";
-
-            // when
-            FolderInfo folder = FolderInfo.createSubFolder(command);
-
-            // then
-            assertThat(folder).isNotNull();
-        }
-
-        @Test
-        @DisplayName("[success] 깊은 경로에서 서브 폴더를 생성한다")
-        void success_deepPath() {
-            // given
-            RegisterFolderCommand command = new RegisterFolderCommand(
-                3L,
-                1L,
-                "서브 폴더",
-                "owner@example.com");
-            String parentPath = "/group-123/folder1/folder2";
-
-            // when
-            FolderInfo folder = FolderInfo.createSubFolder(command);
-
-            // then
-            assertThat(folder).isNotNull();
-        }
-
-        @Test
-        @DisplayName("[success] null 값을 포함한 RegisterFolderCommand로부터 서브 폴더를 생성한다")
-        void success_nullValues() {
-            // given
-            RegisterFolderCommand command = new RegisterFolderCommand(
-                null,
-                null,
-                null,
-                null);
-            String parentPath = "/group-123";
-
-            // when
-            FolderInfo folder = FolderInfo.createSubFolder(command);
-
-            // then
-            assertThat(folder).isNotNull();
-            assertThat(folder.getParentId()).isNull();
-            assertThat(folder.getGroupId()).isNull();
-            assertThat(folder.getName()).isNull();
-            assertThat(folder.getOwner()).isNull();
-        }
-
     }
 
     @Nested

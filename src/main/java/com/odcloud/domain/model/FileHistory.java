@@ -1,6 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +40,8 @@ public class FileHistory {
             .build();
     }
 
-    public static FileHistory ofRename(FileInfo fileAfter, String beforeFileName, String actorEmail) {
+    public static FileHistory ofRename(FileInfo fileAfter, String beforeFileName,
+        String actorEmail) {
         return FileHistory.builder()
             .fileId(fileAfter.getId())
             .groupId(fileAfter.getGroupId())
@@ -85,9 +85,5 @@ public class FileHistory {
             .fileSize(file.getFileSize())
             .regDt(LocalDateTime.now())
             .build();
-    }
-
-    public String getRegDtString() {
-        return DateUtil.formatDateTime(regDt);
     }
 }

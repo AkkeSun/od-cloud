@@ -3,7 +3,6 @@ package com.odcloud.application.schedule.service.delete_schedule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
@@ -46,13 +45,13 @@ class DeleteScheduleServiceTest {
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
 
-            RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
-                .account(account)
+            Schedule schedule = Schedule.builder()
+                .writerEmail(account.getEmail())
                 .content("개인 회의")
                 .startDt(startDt)
+                .notificationYn("N")
+                .regDt(LocalDateTime.now())
                 .build();
-
-            Schedule schedule = Schedule.of(registerCommand);
             fakeScheduleStoragePort.save(schedule);
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
@@ -84,14 +83,14 @@ class DeleteScheduleServiceTest {
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
 
-            RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
-                .account(account)
+            Schedule schedule = Schedule.builder()
+                .writerEmail(account.getEmail())
                 .content("그룹 회의")
                 .startDt(startDt)
                 .groupId(1L)
+                .notificationYn("N")
+                .regDt(LocalDateTime.now())
                 .build();
-
-            Schedule schedule = Schedule.of(registerCommand);
             fakeScheduleStoragePort.save(schedule);
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
@@ -124,13 +123,13 @@ class DeleteScheduleServiceTest {
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
 
-            RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
-                .account(owner)
+            Schedule schedule = Schedule.builder()
+                .writerEmail(owner.getEmail())
                 .content("개인 회의")
                 .startDt(startDt)
+                .notificationYn("N")
+                .regDt(LocalDateTime.now())
                 .build();
-
-            Schedule schedule = Schedule.of(registerCommand);
             fakeScheduleStoragePort.save(schedule);
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
@@ -168,14 +167,14 @@ class DeleteScheduleServiceTest {
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
 
-            RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
-                .account(member)
+            Schedule schedule = Schedule.builder()
+                .writerEmail(member.getEmail())
                 .content("그룹 회의")
                 .startDt(startDt)
                 .groupId(1L)
+                .notificationYn("N")
+                .regDt(LocalDateTime.now())
                 .build();
-
-            Schedule schedule = Schedule.of(registerCommand);
             fakeScheduleStoragePort.save(schedule);
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 
@@ -229,14 +228,14 @@ class DeleteScheduleServiceTest {
 
             LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
 
-            RegisterScheduleCommand registerCommand = RegisterScheduleCommand.builder()
-                .account(creator)
+            Schedule schedule = Schedule.builder()
+                .writerEmail(creator.getEmail())
                 .content("그룹 회의")
                 .startDt(startDt)
                 .groupId(1L)
+                .notificationYn("N")
+                .regDt(LocalDateTime.now())
                 .build();
-
-            Schedule schedule = Schedule.of(registerCommand);
             fakeScheduleStoragePort.save(schedule);
             Long scheduleId = fakeScheduleStoragePort.database.get(0).getId();
 

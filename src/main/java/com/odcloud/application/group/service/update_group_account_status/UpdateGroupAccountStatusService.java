@@ -36,7 +36,7 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
 
         GroupAccount groupAccount = groupStoragePort.findGroupAccountByGroupIdAndAccountId(
             command.groupId(), command.accountId());
-        groupAccount.updateStatus(command);
+        groupAccount.updateStatus(command.status(), command.memo());
         groupStoragePort.save(groupAccount);
 
         if (!groupAccount.isBlock()) {

@@ -1,6 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.file.service.register_folder.RegisterFolderCommand;
 import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -32,16 +31,6 @@ public class FolderInfo {
             .build();
     }
 
-
-    public static FolderInfo createSubFolder(RegisterFolderCommand command) {
-        return FolderInfo.builder()
-            .parentId(command.parentId())
-            .groupId(command.groupId())
-            .name(command.name())
-            .owner(command.owner())
-            .regDt(LocalDateTime.now())
-            .build();
-    }
 
     public String getRegDtString() {
         return DateUtil.formatDateTime(regDt);

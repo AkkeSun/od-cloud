@@ -7,6 +7,7 @@ import com.odcloud.application.file.port.in.RegisterFolderUseCase;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDateTime;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,13 @@ class RegisterFolderService implements RegisterFolderUseCase {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
 
-        FolderInfo folder = FolderInfo.createSubFolder(command);
+        FolderInfo folder = FolderInfo.builder()
+            .parentId(command.parentId())
+            .groupId(command.groupId())
+            .name(command.name())
+            .owner(command.owner())
+            .regDt(LocalDateTime.now())
+            .build();
         folderStoragePort.save(folder);
 
         return RegisterFolderResponse.ofSuccess();

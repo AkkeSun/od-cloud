@@ -3,6 +3,7 @@ package com.odcloud.application.question.service.register_question;
 import com.odcloud.application.question.port.in.RegisterQuestionUseCase;
 import com.odcloud.application.question.port.out.QuestionStoragePort;
 import com.odcloud.domain.model.Question;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,14 @@ class RegisterQuestionService implements RegisterQuestionUseCase {
     @Override
     @Transactional
     public RegisterQuestionResponse registerQuestion(RegisterQuestionCommand command) {
-        questionStoragePort.save(Question.create(command));
+        questionStoragePort.save(Question.builder()
+            .writerEmail(command.account().getEmail())
+            .writerNickname(command.account().getNickname())
+            .title(command.title())
+            .content(command.content())
+            .answered(false)
+            .regDt(LocalDateTime.now())
+            .build());
         return RegisterQuestionResponse.ofSuccess();
     }
 }

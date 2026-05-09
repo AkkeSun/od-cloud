@@ -1,137 +1,13 @@
 package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class ScheduleTest {
-
-    @Nested
-    @DisplayName("[of] RegisterScheduleCommand로부터 Schedule을 생성하는 정적 팩토리 메서드")
-    class Describe_of {
-
-        @Test
-        @DisplayName("[success] 개인 스케줄 Command로부터 Schedule을 생성한다")
-        void success_personalSchedule() {
-            // given
-            Account account = mock(Account.class);
-            given(account.getEmail()).willReturn("user@example.com");
-
-            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-            LocalDateTime notificationDt = LocalDateTime.of(2025, 1, 1, 9, 50);
-
-            RegisterScheduleCommand command = RegisterScheduleCommand.builder()
-                .account(account)
-                .content("개인 회의")
-                .startDt(startDt)
-                .notificationDt(notificationDt)
-                .build();
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            Schedule schedule = Schedule.of(command);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(schedule).isNotNull();
-            assertThat(schedule.getWriterEmail()).isEqualTo("user@example.com");
-            assertThat(schedule.getContent()).isEqualTo("개인 회의");
-            assertThat(schedule.getStartDt()).isEqualTo(startDt);
-            assertThat(schedule.getNotificationDt()).isEqualTo(notificationDt);
-            assertThat(schedule.getNotificationYn()).isEqualTo("N");
-            assertThat(schedule.getGroupId()).isNull();
-            assertThat(schedule.getRegDt()).isAfter(before);
-            assertThat(schedule.getRegDt()).isBefore(after);
-        }
-
-        @Test
-        @DisplayName("[success] 그룹 스케줄 Command로부터 Schedule을 생성한다")
-        void success_groupSchedule() {
-            // given
-            Account account = mock(Account.class);
-            given(account.getEmail()).willReturn("user@example.com");
-
-            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 14, 0);
-
-            RegisterScheduleCommand command = RegisterScheduleCommand.builder()
-                .account(account)
-                .content("그룹 회의")
-                .startDt(startDt)
-                .groupId(1L)
-                .build();
-
-            // when
-            Schedule schedule = Schedule.of(command);
-
-            // then
-            assertThat(schedule).isNotNull();
-            assertThat(schedule.getGroupId()).isEqualTo(1L);
-            assertThat(schedule.getContent()).isEqualTo("그룹 회의");
-            assertThat(schedule.getNotificationYn()).isEqualTo("N");
-        }
-
-        @Test
-        @DisplayName("[success] 알림 시간 없이 Schedule을 생성한다")
-        void success_withoutNotification() {
-            // given
-            Account account = mock(Account.class);
-            given(account.getEmail()).willReturn("user@example.com");
-
-            LocalDateTime startDt = LocalDateTime.of(2025, 1, 1, 10, 0);
-
-            RegisterScheduleCommand command = RegisterScheduleCommand.builder()
-                .account(account)
-                .content("회의")
-                .startDt(startDt)
-                .notificationDt(null)
-                .build();
-
-            // when
-            Schedule schedule = Schedule.of(command);
-
-            // then
-            assertThat(schedule).isNotNull();
-            assertThat(schedule.getNotificationDt()).isNull();
-            assertThat(schedule.getNotificationYn()).isEqualTo("N");
-        }
-
-        @Test
-        @DisplayName("[success] null 값을 포함한 Command로부터 Schedule을 생성한다")
-        void success_withNullValues() {
-            // given
-            Account account = Account.builder()
-                .email(null)
-                .build();
-
-            RegisterScheduleCommand command = RegisterScheduleCommand.builder()
-                .account(account)
-                .content(null)
-                .startDt(null)
-                .groupId(null)
-                .notificationDt(null)
-                .build();
-
-            // when
-            Schedule schedule = Schedule.of(command);
-
-            // then
-            assertThat(schedule).isNotNull();
-            assertThat(schedule.getWriterEmail()).isNull();
-            assertThat(schedule.getContent()).isNull();
-            assertThat(schedule.getStartDt()).isNull();
-            assertThat(schedule.getGroupId()).isNull();
-            assertThat(schedule.getNotificationDt()).isNull();
-            assertThat(schedule.getNotificationYn()).isEqualTo("N");
-        }
-    }
 
     @Nested
     @DisplayName("[getter] Getter 메서드 테스트")

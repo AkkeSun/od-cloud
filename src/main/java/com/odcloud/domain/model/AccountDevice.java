@@ -1,7 +1,6 @@
 package com.odcloud.domain.model;
 
 import com.google.gson.JsonObject;
-import com.odcloud.application.device.service.register_device.RegisterDeviceCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,19 +34,6 @@ public class AccountDevice {
         this.appVersion = appVersion;
     }
 
-    public static AccountDevice of(RegisterDeviceCommand command) {
-        return AccountDevice.builder()
-            .accountId(command.accountId())
-            .osType(command.osType())
-            .deviceId(command.deviceId())
-            .appVersion(command.appVersion())
-            .fcmToken(command.fcmToken())
-            .pushYn("Y")
-            .lastLoginDt(LocalDateTime.now())
-            .regDt(LocalDateTime.now())
-            .build();
-    }
-
     public void updateLastLoginDt() {
         this.lastLoginDt = LocalDateTime.now();
     }
@@ -56,14 +42,14 @@ public class AccountDevice {
         return !this.fcmToken.equals(fcmToken) || !this.appVersion.equals(appVersion);
     }
 
-    public void updateDeviceInfo(RegisterDeviceCommand command) {
+    public void updateDeviceInfo(String fcmToken, String appVersion) {
         lastLoginDt = LocalDateTime.now();
-        if (!this.fcmToken.equals(command.fcmToken())) {
-            this.fcmToken = command.fcmToken();
+        if (!this.fcmToken.equals(fcmToken)) {
+            this.fcmToken = fcmToken;
             this.modDt = LocalDateTime.now();
         }
-        if (!this.appVersion.equals(command.appVersion())) {
-            this.appVersion = command.appVersion();
+        if (!this.appVersion.equals(appVersion)) {
+            this.appVersion = appVersion;
             this.modDt = LocalDateTime.now();
         }
     }

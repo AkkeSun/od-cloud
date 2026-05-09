@@ -1,95 +1,13 @@
 package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import com.odcloud.application.question.service.register_question.RegisterQuestionCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class QuestionTest {
-
-    @Nested
-    @DisplayName("[create] RegisterQuestionCommand로부터 Question을 생성하는 정적 팩토리 메서드")
-    class Describe_create {
-
-        @Test
-        @DisplayName("[success] RegisterQuestionCommand로부터 Question을 생성한다")
-        void success() {
-            // given
-            Account account = Account.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .build();
-
-            RegisterQuestionCommand command = mock(RegisterQuestionCommand.class);
-            when(command.account()).thenReturn(account);
-            when(command.title()).thenReturn("테스트 제목");
-            when(command.content()).thenReturn("테스트 내용");
-
-            // when
-            Question question = Question.create(command);
-
-            // then
-            assertThat(question).isNotNull();
-            assertThat(question.getWriterEmail()).isEqualTo("test@example.com");
-            assertThat(question.getWriterNickname()).isEqualTo("tester");
-            assertThat(question.getTitle()).isEqualTo("테스트 제목");
-            assertThat(question.getContent()).isEqualTo("테스트 내용");
-            assertThat(question.getAnswered()).isFalse();
-            assertThat(question.getRegDt()).isNotNull();
-            assertThat(question.getId()).isNull();
-            assertThat(question.getModDt()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] 생성된 Question의 answered는 false이다")
-        void success_answeredIsFalse() {
-            // given
-            Account account = Account.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .build();
-
-            RegisterQuestionCommand command = mock(RegisterQuestionCommand.class);
-            when(command.account()).thenReturn(account);
-            when(command.title()).thenReturn("테스트 제목");
-            when(command.content()).thenReturn("테스트 내용");
-
-            // when
-            Question question = Question.create(command);
-
-            // then
-            assertThat(question.getAnswered()).isFalse();
-        }
-
-        @Test
-        @DisplayName("[success] 생성된 Question의 regDt는 현재 시각이다")
-        void success_regDtIsNow() {
-            // given
-            LocalDateTime beforeCreate = LocalDateTime.now().minusSeconds(1);
-            Account account = Account.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .build();
-
-            RegisterQuestionCommand command = mock(RegisterQuestionCommand.class);
-            when(command.account()).thenReturn(account);
-            when(command.title()).thenReturn("테스트 제목");
-            when(command.content()).thenReturn("테스트 내용");
-
-            // when
-            Question question = Question.create(command);
-            LocalDateTime afterCreate = LocalDateTime.now().plusSeconds(1);
-
-            // then
-            assertThat(question.getRegDt()).isAfter(beforeCreate);
-            assertThat(question.getRegDt()).isBefore(afterCreate);
-        }
-    }
 
     @Nested
     @DisplayName("[markAsAnswered] 질문에 답변이 달렸음을 표시하는 메서드")

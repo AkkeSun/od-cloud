@@ -2,7 +2,6 @@ package com.odcloud.domain.model;
 
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 
-import com.odcloud.application.group.service.register_group.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -40,16 +39,6 @@ public class Group {
         this.storageUsed = storageUsed;
         this.storageTotal = storageTotal;
         this.regDt = regDt;
-    }
-
-    public static Group of(RegisterGroupCommand command) {
-        return Group.builder()
-            .name(command.name())
-            .ownerEmail(command.ownerEmail())
-            .storageUsed(0L)
-            .storageTotal(DEFAULT_STORAGE_TOTAL)
-            .regDt(LocalDateTime.now())
-            .build();
     }
 
     public static Group of(String name, String ownerEmail) {

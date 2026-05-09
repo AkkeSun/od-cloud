@@ -57,7 +57,7 @@ class HandleGooglePlayWebhookService implements HandleGooglePlayWebhookUseCase {
         }
 
         Payment payment = existingPayment.get();
-        Payment savedPayment = paymentStoragePort.save(payment.createRenewal(command));
+        Payment savedPayment = paymentStoragePort.save(payment.createRenewal(command.subscriptionId(), command.storeProcessDt()));
 
         Voucher voucher = voucherStoragePort.findByPaymentId(payment.getId());
         voucher.updateSubscription(savedPayment.getId());

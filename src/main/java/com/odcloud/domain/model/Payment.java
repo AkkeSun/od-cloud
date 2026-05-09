@@ -1,7 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.voucher.service.create_voucher.CreateVoucherCommand;
-import com.odcloud.application.webhook.service.googleplay.GooglePlayNotificationCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,28 +21,14 @@ public class Payment {
     private LocalDateTime storeProcessDt;
     private LocalDateTime regDt;
 
-    public static Payment create(CreateVoucherCommand command) {
-        return Payment.builder()
-            .accountId(command.accountId())
-            .storeType(command.storeType())
-            .subscriptionKey(command.subscriptionKey())
-            .orderTxId(command.orderTxId())
-            .status(PaymentStatus.PAID)
-            .storeProcessDt(command.storeProcessDt())
-            .regDt(LocalDateTime.now())
-            .build();
-    }
-
-    public Payment createRenewal(
-        GooglePlayNotificationCommand command
-    ) {
+    public Payment createRenewal(String subscriptionId, LocalDateTime storeProcessDt) {
         return Payment.builder()
             .accountId(accountId)
             .storeType(storeType)
             .subscriptionKey(subscriptionKey)
-            .orderTxId(command.subscriptionId())
+            .orderTxId(subscriptionId)
             .status(PaymentStatus.PAID)
-            .storeProcessDt(command.storeProcessDt())
+            .storeProcessDt(storeProcessDt)
             .regDt(LocalDateTime.now())
             .build();
     }

@@ -1,7 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.schedule.service.register_schedule.RegisterScheduleCommand;
-import com.odcloud.application.schedule.service.update_schedule.UpdateScheduleCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,26 +22,14 @@ public class Schedule {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
-    public static Schedule of(RegisterScheduleCommand command) {
-        return Schedule.builder()
-            .writerEmail(command.account().getEmail())
-            .content(command.content())
-            .startDt(command.startDt())
-            .groupId(command.groupId())
-            .notificationDt(command.notificationDt())
-            .notificationYn("N")
-            .regDt(LocalDateTime.now())
-            .build();
-    }
-
     public boolean isGroupSchedule() {
         return groupId != null;
     }
 
-    public void update(UpdateScheduleCommand command) {
-        this.content = command.content();
-        this.startDt = command.startDt();
-        this.notificationDt = command.notificationDt();
+    public void update(String content, LocalDateTime startDt, LocalDateTime notificationDt) {
+        this.content = content;
+        this.startDt = startDt;
+        this.notificationDt = notificationDt;
         this.modDt = LocalDateTime.now();
     }
 }

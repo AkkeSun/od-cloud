@@ -5,6 +5,7 @@ import com.odcloud.application.question.port.out.AnswerStoragePort;
 import com.odcloud.application.question.port.out.QuestionStoragePort;
 import com.odcloud.domain.model.Answer;
 import com.odcloud.domain.model.Question;
+import java.time.LocalDateTime;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,13 @@ class RegisterAnswerService implements RegisterAnswerUseCase {
             throw new CustomBusinessException(ErrorCode.Business_ALREADY_EXISTS_ANSWER);
         }
 
-        answerStoragePort.save(Answer.create(command));
+        answerStoragePort.save(Answer.builder()
+            .questionId(command.questionId())
+            .writerEmail(command.account().getEmail())
+            .writerNickname(command.account().getNickname())
+            .content(command.content())
+            .regDt(LocalDateTime.now())
+            .build());
         question.markAsAnswered();
         questionStoragePort.save(question);
 

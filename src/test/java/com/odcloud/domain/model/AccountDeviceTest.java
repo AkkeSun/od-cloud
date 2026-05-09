@@ -2,51 +2,12 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.device.service.register_device.RegisterDeviceCommand;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class AccountDeviceTest {
-
-    @Nested
-    @DisplayName("[of] RegisterDeviceCommand로 AccountDevice를 생성하는 메서드")
-    class Describe_of {
-
-        @Test
-        @DisplayName("[success] Command로 AccountDevice를 생성한다")
-        void success() {
-            // given
-            RegisterDeviceCommand command = RegisterDeviceCommand.builder()
-                .accountId(1L)
-                .osType("iOS")
-                .deviceId("device-123")
-                .appVersion("1.0.0")
-                .fcmToken("fcm-token-123")
-                .build();
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            AccountDevice device = AccountDevice.of(command);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(device).isNotNull();
-            assertThat(device.getAccountId()).isEqualTo(1L);
-            assertThat(device.getOsType()).isEqualTo("iOS");
-            assertThat(device.getDeviceId()).isEqualTo("device-123");
-            assertThat(device.getAppVersion()).isEqualTo("1.0.0");
-            assertThat(device.getFcmToken()).isEqualTo("fcm-token-123");
-            assertThat(device.getPushYn()).isEqualTo("Y");
-            assertThat(device.getLastLoginDt()).isAfter(before);
-            assertThat(device.getLastLoginDt()).isBefore(after);
-            assertThat(device.getRegDt()).isAfter(before);
-            assertThat(device.getRegDt()).isBefore(after);
-        }
-    }
 
     @Nested
     @DisplayName("[updateLastLoginDt] 마지막 로그인 시간을 업데이트하는 메서드")
@@ -162,15 +123,10 @@ class AccountDeviceTest {
                 .modDt(initialModDt)
                 .build();
 
-            RegisterDeviceCommand command = RegisterDeviceCommand.builder()
-                .fcmToken("new-fcm-token")
-                .appVersion("2.0.0")
-                .build();
-
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            device.updateDeviceInfo(command);
+            device.updateDeviceInfo("new-fcm-token", "2.0.0");
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -197,15 +153,10 @@ class AccountDeviceTest {
                 .modDt(initialModDt)
                 .build();
 
-            RegisterDeviceCommand command = RegisterDeviceCommand.builder()
-                .fcmToken("new-fcm-token")
-                .appVersion("1.0.0")
-                .build();
-
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            device.updateDeviceInfo(command);
+            device.updateDeviceInfo("new-fcm-token", "1.0.0");
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -232,15 +183,10 @@ class AccountDeviceTest {
                 .modDt(initialModDt)
                 .build();
 
-            RegisterDeviceCommand command = RegisterDeviceCommand.builder()
-                .fcmToken("fcm-token")
-                .appVersion("2.0.0")
-                .build();
-
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            device.updateDeviceInfo(command);
+            device.updateDeviceInfo("fcm-token", "2.0.0");
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
@@ -264,15 +210,10 @@ class AccountDeviceTest {
                 .lastLoginDt(initialLastLoginDt)
                 .build();
 
-            RegisterDeviceCommand command = RegisterDeviceCommand.builder()
-                .fcmToken("fcm-token")
-                .appVersion("1.0.0")
-                .build();
-
             LocalDateTime before = LocalDateTime.now().minusSeconds(1);
 
             // when
-            device.updateDeviceInfo(command);
+            device.updateDeviceInfo("fcm-token", "1.0.0");
 
             // then
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);

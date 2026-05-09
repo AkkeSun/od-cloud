@@ -31,7 +31,7 @@ class UpdateNoticeService implements UpdateNoticeUseCase {
             throw new CustomBusinessException(ErrorCode.Business_NOT_FOUND_NOTICE);
         }
 
-        notice.update(command);
+        notice.update(command.title(), command.content());
         noticeStoragePort.update(notice);
         return UpdateNoticeResponse.ofSuccess();
     }

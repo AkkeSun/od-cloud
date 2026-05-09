@@ -1,5 +1,6 @@
 package com.odcloud.application.group.service.register_group;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GROUP_LIMIT_EXCEEDED;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_GROUP;
 
@@ -13,6 +14,7 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,13 @@ class RegisterGroupService implements RegisterGroupUseCase {
             throw new CustomBusinessException(Business_GROUP_LIMIT_EXCEEDED);
         }
 
-        Group group = groupStoragePort.save(Group.of(command));
+        Group group = groupStoragePort.save(Group.builder()
+            .name(command.name())
+            .ownerEmail(command.ownerEmail())
+            .storageUsed(0L)
+            .storageTotal(DEFAULT_STORAGE_TOTAL)
+            .regDt(LocalDateTime.now())
+            .build());
         Account account = accountStoragePort.findByEmail(command.ownerEmail());
         groupStoragePort.save(GroupAccount.ofGroupOwner(group, account));
 

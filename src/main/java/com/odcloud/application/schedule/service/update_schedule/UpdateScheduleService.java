@@ -29,7 +29,7 @@ class UpdateScheduleService implements UpdateScheduleUseCase {
             throw new CustomAuthorizationException(ACCESS_DENIED);
         }
 
-        schedule.update(command);
+        schedule.update(command.content(), command.startDt(), command.notificationDt());
         scheduleStoragePort.save(schedule);
 
         if (schedule.isGroupSchedule()) {

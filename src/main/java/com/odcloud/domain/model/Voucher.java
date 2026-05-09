@@ -1,6 +1,5 @@
 package com.odcloud.domain.model;
 
-import com.odcloud.application.voucher.service.create_voucher.CreateVoucherCommand;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,20 +22,6 @@ public class Voucher {
     private LocalDateTime endDt;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
-
-    public static Voucher create(Long paymentId, CreateVoucherCommand command) {
-        LocalDateTime startAt = LocalDateTime.now();
-        return Voucher.builder()
-            .paymentId(paymentId)
-            .voucherType(command.voucherType())
-            .status(VoucherStatus.ACTIVE)
-            .accountId(command.accountId())
-            .memo(command.memo())
-            .startAt(startAt)
-            .endDt(command.voucherType().calculateEndDt(startAt))
-            .regDt(LocalDateTime.now())
-            .build();
-    }
 
     public void expire() {
         this.status = VoucherStatus.EXPIRED;

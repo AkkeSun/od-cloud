@@ -3,7 +3,6 @@ package com.odcloud.domain.model;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.odcloud.application.group.service.register_group.RegisterGroupCommand;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -12,73 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class GroupTest {
-
-    @Nested
-    @DisplayName("[of] RegisterGroupCommand로부터 Group을 생성하는 정적 팩토리 메서드")
-    class Describe_of_fromCommand {
-
-        @Test
-        @DisplayName("[success] RegisterGroupCommand로부터 Group을 생성한다")
-        void success() {
-            // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                "테스트 그룹",
-                "owner@example.com"
-            );
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            Group group = Group.of(command);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(group).isNotNull();
-            assertThat(group.getOwnerEmail()).isEqualTo("owner@example.com");
-            assertThat(group.getName()).isEqualTo("테스트 그룹");
-            assertThat(group.getStorageUsed()).isEqualTo(0L);
-            assertThat(group.getStorageTotal()).isEqualTo(DEFAULT_STORAGE_TOTAL);
-            assertThat(group.getRegDt()).isAfter(before);
-            assertThat(group.getRegDt()).isBefore(after);
-        }
-
-        @Test
-        @DisplayName("[success] null 값을 포함한 RegisterGroupCommand로부터 Group을 생성한다")
-        void success_nullValues() {
-            // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                null,
-                null
-            );
-
-            // when
-            Group group = Group.of(command);
-
-            // then
-            assertThat(group).isNotNull();
-            assertThat(group.getOwnerEmail()).isNull();
-            assertThat(group.getName()).isNull();
-        }
-
-        @Test
-        @DisplayName("[success] 빈 문자열을 포함한 RegisterGroupCommand로부터 Group을 생성한다")
-        void success_emptyStrings() {
-            // given
-            RegisterGroupCommand command = new RegisterGroupCommand(
-                "",
-                ""
-            );
-
-            // when
-            Group group = Group.of(command);
-
-            // then
-            assertThat(group).isNotNull();
-            assertThat(group.getOwnerEmail()).isEmpty();
-            assertThat(group.getName()).isEmpty();
-        }
-    }
 
     @Nested
     @DisplayName("[of] Long id로부터 Group을 생성하는 정적 팩토리 메서드")
