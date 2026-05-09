@@ -3,7 +3,6 @@ package com.odcloud.application.auth.service.callback_google_oauth2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.adapter.out.client.google.GoogleTokenResponse;
 import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
 import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -48,14 +47,7 @@ class CallbackGoogleOAuth2ServiceTest {
         @DisplayName("[success] 커스텀 토큰 응답으로 정상 처리한다")
         void success_customTokenResponse() {
             // given
-            fakeGoogleOAuth2Port.mockTokenResponse = new GoogleTokenResponse(
-                "custom-access-token",
-                "custom-id-token",
-                "custom-refresh-token",
-                "openid profile",
-                "Bearer",
-                7200L
-            );
+            fakeGoogleOAuth2Port.mockAccessToken = "custom-access-token";
 
             // when
             CallbackGoogleOAuth2Response response =

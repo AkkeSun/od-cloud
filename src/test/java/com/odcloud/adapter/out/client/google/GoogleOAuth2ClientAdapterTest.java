@@ -3,6 +3,7 @@ package com.odcloud.adapter.out.client.google;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.constant.ProfileConstant.GoogleOAuth2;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -47,7 +48,7 @@ class GoogleOAuth2ClientAdapterTest {
     class Describe_getToken {
 
         @Test
-        @DisplayName("[success] 정상적으로 토큰을 발급받는다")
+        @DisplayName("[success] 정상적으로 액세스 토큰을 발급받는다")
         void success()  {
             // given
             String code = "test-authorization-code";
@@ -68,16 +69,10 @@ class GoogleOAuth2ClientAdapterTest {
                 .addHeader("Content-Type", "application/json"));
 
             // when
-            GoogleTokenResponse tokenResponse = adapter.getToken(code);
+            String accessToken = adapter.getToken(code);
 
             // then
-            assertThat(tokenResponse).isNotNull();
-            assertThat(tokenResponse.access_token()).isEqualTo("test-access-token");
-            assertThat(tokenResponse.id_token()).isEqualTo("test-id-token");
-            assertThat(tokenResponse.refresh_token()).isEqualTo("test-refresh-token");
-            assertThat(tokenResponse.scope()).isEqualTo("openid profile email");
-            assertThat(tokenResponse.token_type()).isEqualTo("Bearer");
-            assertThat(tokenResponse.expires_in()).isEqualTo(3600L);
+            assertThat(accessToken).isEqualTo("test-access-token");
         }
 
         @Test
@@ -127,7 +122,7 @@ class GoogleOAuth2ClientAdapterTest {
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
         }
-        
+
         @Test
         @DisplayName("[failure] 잘못된 JSON 응답 시 예외가 발생한다")
         void failure_invalidJson() {
@@ -171,16 +166,13 @@ class GoogleOAuth2ClientAdapterTest {
                 .addHeader("Content-Type", "application/json"));
 
             // when
-            GoogleUserInfoResponse userInfoResponse = adapter.getUserInfo(accessToken);
+            GoogleUserInfo userInfo = adapter.getUserInfo(accessToken);
 
             // then
-            assertThat(userInfoResponse).isNotNull();
-            assertThat(userInfoResponse.sub()).isEqualTo("123456789");
-            assertThat(userInfoResponse.name()).isEqualTo("홍길동");
-            assertThat(userInfoResponse.given_name()).isEqualTo("길동");
-            assertThat(userInfoResponse.picture()).isEqualTo("https://example.com/photo.jpg");
-            assertThat(userInfoResponse.email()).isEqualTo("test@example.com");
-            assertThat(userInfoResponse.email_verified()).isTrue();
+            assertThat(userInfo).isNotNull();
+            assertThat(userInfo.email()).isEqualTo("test@example.com");
+            assertThat(userInfo.name()).isEqualTo("홍길동");
+            assertThat(userInfo.picture()).isEqualTo("https://example.com/photo.jpg");
         }
 
         @Test
@@ -232,35 +224,6 @@ class GoogleOAuth2ClientAdapterTest {
         }
 
         @Test
-        @DisplayName("[success] email_verified가 false인 경우에도 정상 처리한다")
-        void success_emailNotVerified() {
-            // given
-            String accessToken = "Bearer test-token";
-            String responseBody = """
-                {
-                    "sub": "123456789",
-                    "name": "홍길동",
-                    "given_name": "길동",
-                    "picture": "https://example.com/photo.jpg",
-                    "email": "test@example.com",
-                    "email_verified": false
-                }
-                """;
-
-            mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(responseBody)
-                .addHeader("Content-Type", "application/json"));
-
-            // when
-            GoogleUserInfoResponse userInfoResponse = adapter.getUserInfo(accessToken);
-
-            // then
-            assertThat(userInfoResponse).isNotNull();
-            assertThat(userInfoResponse.email_verified()).isFalse();
-        }
-
-        @Test
         @DisplayName("[success] 일부 필드가 null인 경우에도 정상 처리한다")
         void success_partialNullFields() {
             // given
@@ -279,15 +242,13 @@ class GoogleOAuth2ClientAdapterTest {
                 .addHeader("Content-Type", "application/json"));
 
             // when
-            GoogleUserInfoResponse userInfoResponse = adapter.getUserInfo(accessToken);
+            GoogleUserInfo userInfo = adapter.getUserInfo(accessToken);
 
             // then
-            assertThat(userInfoResponse).isNotNull();
-            assertThat(userInfoResponse.sub()).isEqualTo("123456789");
-            assertThat(userInfoResponse.email()).isEqualTo("test@example.com");
-            assertThat(userInfoResponse.name()).isNull();
-            assertThat(userInfoResponse.given_name()).isNull();
-            assertThat(userInfoResponse.picture()).isNull();
+            assertThat(userInfo).isNotNull();
+            assertThat(userInfo.email()).isEqualTo("test@example.com");
+            assertThat(userInfo.name()).isNull();
+            assertThat(userInfo.picture()).isNull();
         }
     }
 }

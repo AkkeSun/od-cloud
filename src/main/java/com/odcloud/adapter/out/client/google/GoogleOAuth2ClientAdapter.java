@@ -3,6 +3,7 @@ package com.odcloud.adapter.out.client.google;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_USER_INFO_ERROR;
 
 import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
+import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.Duration;
@@ -50,14 +51,14 @@ class GoogleOAuth2ClientAdapter implements GoogleOAuth2Port {
     }
 
     @Override
-    public GoogleTokenResponse getToken(String code) {
+    public String getToken(String code) {
         try {
             return tokenClient.getToken(code,
                 constant.googleOAuth2().clientId(),
                 constant.googleOAuth2().clientSecret(),
                 constant.googleOAuth2().redirectUri(),
                 "authorization_code"
-            );
+            ).access_token();
         } catch (Exception e) {
             log.error("GoogleOAuth2ClientAdapter getToken - {}", e.getMessage());
             throw new CustomBusinessException(Business_GOOGLE_USER_INFO_ERROR);
@@ -65,9 +66,10 @@ class GoogleOAuth2ClientAdapter implements GoogleOAuth2Port {
     }
 
     @Override
-    public GoogleUserInfoResponse getUserInfo(String googleAccessToken) {
+    public GoogleUserInfo getUserInfo(String googleAccessToken) {
         try {
-            return userInfoClient.getUserInfo(googleAccessToken);
+            GoogleUserInfoResponse response = userInfoClient.getUserInfo(googleAccessToken);
+            return new GoogleUserInfo(response.email(), response.name(), response.picture());
         } catch (Exception e) {
             log.error("GoogleOAuth2ClientAdapter getUserInfo - {}", e.getMessage());
             throw new CustomBusinessException(Business_GOOGLE_USER_INFO_ERROR);

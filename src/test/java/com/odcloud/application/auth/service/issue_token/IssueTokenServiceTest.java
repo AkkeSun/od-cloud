@@ -3,7 +3,7 @@ package com.odcloud.application.auth.service.issue_token;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
+import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
@@ -57,12 +57,8 @@ class IssueTokenServiceTest {
         @DisplayName("[success] 정상적으로 토큰을 발급한다")
         void success() {
             // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("user@example.com")
-                .name("사용자")
-                .picture("https://example.com/photo.jpg")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "user@example.com", "사용자", "https://example.com/photo.jpg");
 
             Group group = Group.builder()
                 .id(1L)
@@ -93,11 +89,8 @@ class IssueTokenServiceTest {
         @DisplayName("[failure] 존재하지 않는 계정은 토큰 발급에 실패한다")
         void failure_nonExistentAccount() {
             // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("nonexistent@example.com")
-                .name("없는 사용자")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "nonexistent@example.com", "없는 사용자", null);
 
             String googleAuthorization = "Bearer test-google-token";
             String deviceId = "device-abc123";
@@ -131,11 +124,8 @@ class IssueTokenServiceTest {
         @DisplayName("[success] Refresh Token이 Redis에 deviceId 키로 정상적으로 저장된다")
         void success_refreshTokenStoredInRedis() {
             // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("user@example.com")
-                .name("사용자")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "user@example.com", "사용자", null);
 
             Group group = Group.builder()
                 .id(1L)
@@ -170,11 +160,8 @@ class IssueTokenServiceTest {
         @DisplayName("[success] 여러 그룹에 속한 계정도 토큰을 발급받을 수 있다")
         void success_multipleGroups() {
             // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("user@example.com")
-                .name("사용자")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "user@example.com", "사용자", null);
 
             Group group1 = Group.builder().id(1L).build();
             Group group2 = Group.builder().id(2L).build();

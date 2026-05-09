@@ -3,8 +3,13 @@ package com.odcloud.infrastructure.resolver;
 import static com.odcloud.infrastructure.exception.ErrorCode.INVALID_ACCESS_TOKEN;
 
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -29,9 +34,25 @@ public class LoginAccountResolver implements HandlerMethodArgumentResolver {
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = webRequest.getHeader("Authorization");
         try {
-            return Account.of(jwtUtil.getClaims(token));
+            return fromClaims(jwtUtil.getClaims(token));
         } catch (Exception e) {
             throw new CustomAuthenticationException(INVALID_ACCESS_TOKEN);
         }
+    }
+
+    private Account fromClaims(Claims claims) {
+        List<Map<String, Object>> groupsInfo = (List<Map<String, Object>>) claims.get("groups");
+        return Account.builder()
+            .email(claims.getSubject())
+            .id(((Number) claims.get("id")).longValue())
+            .nickname(claims.get("nickname").toString())
+            .picture(claims.get("picture").toString())
+            .groups(groupsInfo.stream()
+                .map(groupInfo -> Group.builder()
+                    .id(((Number) groupInfo.get("id")).longValue())
+                    .name(groupInfo.get("name").toString())
+                    .build())
+                .collect(Collectors.toList()))
+            .build();
     }
 }

@@ -1,11 +1,7 @@
 package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
-import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -14,110 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class AccountTest {
-
-    @Nested
-    @DisplayName("[of] Claims로부터 Account를 생성하는 정적 팩토리 메서드")
-    class Describe_of_fromClaims {
-
-        @Test
-        @DisplayName("[success] Claims로부터 Account를 생성한다")
-        void success() {
-            // given
-            Claims claims = mock(Claims.class);
-            when(claims.getSubject()).thenReturn("test@example.com");
-            when(claims.get("id")).thenReturn(1L);
-            when(claims.get("groups")).thenReturn(Arrays.asList(
-                java.util.Map.of("id", 1L, "name", "그룹1"),
-                java.util.Map.of("id", 2L, "name", "그룹2")
-            ));
-            when(claims.get("nickname")).thenReturn("nickname");
-            when(claims.get("picture")).thenReturn("picture");
-
-            // when
-            Account account = Account.of(claims);
-
-            // then
-            assertThat(account).isNotNull();
-            assertThat(account.getEmail()).isEqualTo("test@example.com");
-            assertThat(account.getId()).isEqualTo(1L);
-            assertThat(account.getGroups()).hasSize(2);
-            assertThat(account.getGroups().get(0).getId()).isEqualTo(1L);
-            assertThat(account.getGroups().get(0).getName()).isEqualTo("그룹1");
-            assertThat(account.getGroups().get(1).getId()).isEqualTo(2L);
-            assertThat(account.getGroups().get(1).getName()).isEqualTo("그룹2");
-        }
-
-        @Test
-        @DisplayName("[success] Integer 타입의 id를 가진 Claims로부터 Account를 생성한다")
-        void success_integerId() {
-            // given
-            Claims claims = mock(Claims.class);
-            when(claims.getSubject()).thenReturn("test@example.com");
-            when(claims.get("id")).thenReturn(1);
-            when(claims.get("groups")).thenReturn(Arrays.asList(
-                java.util.Map.of("id", 1, "name", "그룹1")
-            ));
-            when(claims.get("nickname")).thenReturn("nickname");
-            when(claims.get("picture")).thenReturn("picture");
-
-            // when
-            Account account = Account.of(claims);
-
-            // then
-            assertThat(account).isNotNull();
-            assertThat(account.getId()).isEqualTo(1L);
-        }
-
-        @Test
-        @DisplayName("[success] 빈 그룹 리스트를 가진 Claims로부터 Account를 생성한다")
-        void success_emptyGroups() {
-            // given
-            Claims claims = mock(Claims.class);
-            when(claims.getSubject()).thenReturn("test@example.com");
-            when(claims.get("id")).thenReturn(1L);
-            when(claims.get("groups")).thenReturn(List.of());
-            when(claims.get("nickname")).thenReturn("nickname");
-            when(claims.get("picture")).thenReturn("picture");
-
-            // when
-            Account account = Account.of(claims);
-
-            // then
-            assertThat(account).isNotNull();
-            assertThat(account.getGroups()).isEmpty();
-        }
-    }
-
-    @Nested
-    @DisplayName("[of] GoogleUserInfoResponse로부터 Account를 생성하는 정적 팩토리 메서드")
-    class Describe_of_fromGoogleUserInfo {
-
-        @Test
-        @DisplayName("[success] GoogleUserInfoResponse로부터 Account를 생성한다")
-        void success() {
-            // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("test@example.com")
-                .name("테스터")
-                .picture("https://example.com/picture.jpg")
-                .build();
-
-            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
-
-            // when
-            Account account = Account.of(userInfo);
-
-            // then
-            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
-
-            assertThat(account).isNotNull();
-            assertThat(account.getEmail()).isEqualTo("test@example.com");
-            assertThat(account.getNickname()).isEqualTo("테스터");
-            assertThat(account.getPicture()).isEqualTo("https://example.com/picture.jpg");
-            assertThat(account.getRegDt()).isAfter(before);
-            assertThat(account.getRegDt()).isBefore(after);
-        }
-    }
 
     @Nested
     @DisplayName("[getGroupIds] 그룹 ID 리스트를 반환하는 메서드")

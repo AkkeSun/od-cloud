@@ -1,9 +1,9 @@
 package com.odcloud.application.auth.service.issue_token;
 
-import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
 import com.odcloud.application.account.port.out.AccountStoragePort;
 import com.odcloud.application.auth.port.in.IssueTokenUseCase;
 import com.odcloud.application.auth.port.out.GoogleOAuth2Port;
+import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Account;
@@ -27,7 +27,7 @@ class IssueTokenService implements IssueTokenUseCase {
 
     @Override
     public IssueTokenResponse issue(String googleAuthorization, String deviceId) {
-        GoogleUserInfoResponse userInfo = googleOAuth2Port.getUserInfo(googleAuthorization);
+        GoogleUserInfo userInfo = googleOAuth2Port.getUserInfo(googleAuthorization);
         Account account = accountStoragePort.findByEmail(userInfo.email());
 
         List<Voucher> vouchers = voucherStoragePort.findActiveByAccountId(account.getId());

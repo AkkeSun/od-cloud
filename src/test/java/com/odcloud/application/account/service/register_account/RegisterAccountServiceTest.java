@@ -3,7 +3,7 @@ package com.odcloud.application.account.service.register_account;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.odcloud.adapter.out.client.google.GoogleUserInfoResponse;
+import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
@@ -83,12 +83,8 @@ class RegisterAccountServiceTest {
         @DisplayName("[failure] 이미 존재하는 이메일로 등록 시도하면 예외가 발생한다")
         void failure_existingEmail() {
             // given
-            GoogleUserInfoResponse userInfo = GoogleUserInfoResponse.builder()
-                .email("existing@example.com")
-                .name("기존 사용자")
-                .picture("https://example.com/photo.jpg")
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = userInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "existing@example.com", "기존 사용자", "https://example.com/photo.jpg");
 
             fakeAccountStoragePort.database.add(
                 com.odcloud.domain.model.Account.builder()
@@ -171,15 +167,8 @@ class RegisterAccountServiceTest {
         @DisplayName("[success] 다양한 사용자 정보로 계정을 등록한다")
         void success_variousUserInfo() {
             // given
-            GoogleUserInfoResponse customUserInfo = GoogleUserInfoResponse.builder()
-                .sub("custom-sub-456")
-                .name("커스텀 사용자")
-                .given_name("사용자")
-                .picture("https://custom.example.com/avatar.png")
-                .email("custom@example.com")
-                .email_verified(true)
-                .build();
-            fakeGoogleOAuth2Port.mockUserInfoResponse = customUserInfo;
+            fakeGoogleOAuth2Port.mockUserInfoResponse = new GoogleUserInfo(
+                "custom@example.com", "커스텀 사용자", "https://custom.example.com/avatar.png");
 
             Long groupId = 1L;
             Group group = Group.builder()
