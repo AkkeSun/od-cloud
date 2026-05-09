@@ -1,6 +1,6 @@
 package com.odcloud.application.file.port.out;
 
-import com.odcloud.adapter.out.file.FileResponse;
+import com.odcloud.application.file.port.out.dto.FileResponse;
 import com.odcloud.domain.model.FileInfo;
 import java.util.List;
 

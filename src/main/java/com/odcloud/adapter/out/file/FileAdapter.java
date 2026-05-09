@@ -4,6 +4,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_DOWNL
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_FILE_UPLOAD_ERROR;
 
 import com.odcloud.application.file.port.out.FilePort;
+import com.odcloud.application.file.port.out.dto.FileResponse;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;

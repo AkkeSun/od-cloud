@@ -5,6 +5,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
 
 import com.odcloud.application.util.port.out.MailPort;
+import com.odcloud.application.util.port.out.dto.Attachment;
+import com.odcloud.application.util.port.out.dto.MailRequest;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

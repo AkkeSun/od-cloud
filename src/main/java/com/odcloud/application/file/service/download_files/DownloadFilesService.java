@@ -1,6 +1,6 @@
 package com.odcloud.application.file.service.download_files;
 
-import com.odcloud.adapter.out.file.FileResponse;
+import com.odcloud.application.file.port.out.dto.FileResponse;
 import com.odcloud.application.file.port.in.DownloadFilesUseCase;
 import com.odcloud.application.file.port.out.FileInfoStoragePort;
 import com.odcloud.application.file.port.out.FilePort;

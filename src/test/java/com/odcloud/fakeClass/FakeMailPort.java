@@ -1,6 +1,6 @@
 package com.odcloud.fakeClass;
 
-import com.odcloud.adapter.out.mail.MailRequest;
+import com.odcloud.application.util.port.out.dto.MailRequest;
 import com.odcloud.application.util.port.out.MailPort;
 import java.util.ArrayList;
 import java.util.List;

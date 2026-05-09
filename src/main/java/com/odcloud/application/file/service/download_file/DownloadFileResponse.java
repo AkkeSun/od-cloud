@@ -1,6 +1,6 @@
 package com.odcloud.application.file.service.download_file;
 
-import com.odcloud.adapter.out.file.FileResponse;
+import com.odcloud.application.file.port.out.dto.FileResponse;
 import lombok.Builder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

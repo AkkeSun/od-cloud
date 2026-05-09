@@ -1,4 +1,4 @@
-package com.odcloud.adapter.out.mail;
+package com.odcloud.application.util.port.out.dto;
 
 import lombok.Builder;
 import org.springframework.core.io.Resource;

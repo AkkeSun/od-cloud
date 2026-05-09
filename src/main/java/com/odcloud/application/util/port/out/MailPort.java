@@ -1,6 +1,6 @@
 package com.odcloud.application.util.port.out;
 
-import com.odcloud.adapter.out.mail.MailRequest;
+import com.odcloud.application.util.port.out.dto.MailRequest;
 
 public interface MailPort {
 
