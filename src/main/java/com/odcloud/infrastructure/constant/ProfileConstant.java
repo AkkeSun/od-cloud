@@ -101,7 +101,9 @@ public record ProfileConstant(
         @NotBlank
         String serviceAccountKeyJson,
         String shareEmail,
-        String userRefreshToken
+        String userRefreshToken,
+        String clientId,
+        String clientSecret
     ) {
 
     }

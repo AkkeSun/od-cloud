@@ -94,6 +94,8 @@ service-constant:
     service-account-key-json: ${GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY_JSON}
     share-email: akkessun@gmail.com
     user-refresh-token: ${GOOGLE_DRIVE_USER_REFRESH_TOKEN}
+    client-id: ${GOOGLE_DRIVE_CLIENT_ID}
+    client-secret: ${GOOGLE_DRIVE_CLIENT_SECRET}
 
   profile: dev
   web-server-host: http://192.168.219.109:8080

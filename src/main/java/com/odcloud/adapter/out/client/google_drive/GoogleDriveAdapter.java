@@ -44,8 +44,8 @@ class GoogleDriveAdapter implements GoogleDrivePort {
         GoogleCredentials credentials;
         if (userRefreshToken != null && !userRefreshToken.isBlank()) {
             credentials = UserCredentials.newBuilder()
-                .setClientId(profileConstant.googleOAuth2().clientId())
-                .setClientSecret(profileConstant.googleOAuth2().clientSecret())
+                .setClientId(profileConstant.googleDrive().clientId())
+                .setClientSecret(profileConstant.googleDrive().clientSecret())
                 .setRefreshToken(userRefreshToken)
                 .build();
         } else {
