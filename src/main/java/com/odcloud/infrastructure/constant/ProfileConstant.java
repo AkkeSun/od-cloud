@@ -100,7 +100,8 @@ public record ProfileConstant(
     public record GoogleDrive(
         @NotBlank
         String serviceAccountKeyJson,
-        String shareEmail
+        String shareEmail,
+        String userRefreshToken
     ) {
 
     }

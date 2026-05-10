@@ -14,6 +14,7 @@ import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.UserCredentials;
 import com.odcloud.application.file.port.out.GoogleDrivePort;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -38,11 +39,22 @@ class GoogleDriveAdapter implements GoogleDrivePort {
     private final String shareEmail;
 
     GoogleDriveAdapter(ProfileConstant profileConstant) throws IOException, GeneralSecurityException {
-        byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
-            .getBytes(StandardCharsets.UTF_8);
-        GoogleCredentials credentials = GoogleCredentials
-            .fromStream(new ByteArrayInputStream(keyBytes))
-            .createScoped(Collections.singletonList(DriveScopes.DRIVE));
+        String userRefreshToken = profileConstant.googleDrive().userRefreshToken();
+
+        GoogleCredentials credentials;
+        if (userRefreshToken != null && !userRefreshToken.isBlank()) {
+            credentials = UserCredentials.newBuilder()
+                .setClientId(profileConstant.googleOAuth2().clientId())
+                .setClientSecret(profileConstant.googleOAuth2().clientSecret())
+                .setRefreshToken(userRefreshToken)
+                .build();
+        } else {
+            byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
+                .getBytes(StandardCharsets.UTF_8);
+            credentials = GoogleCredentials
+                .fromStream(new ByteArrayInputStream(keyBytes))
+                .createScoped(Collections.singletonList(DriveScopes.DRIVE));
+        }
 
         this.driveService = new Drive.Builder(
             GoogleNetHttpTransport.newTrustedTransport(),

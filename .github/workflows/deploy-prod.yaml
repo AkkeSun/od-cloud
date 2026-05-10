@@ -95,5 +95,6 @@ jobs:
             export PROD_AES_SECRET="${{ secrets.PROD_AES_SECRET }}"
             export FRONTEND_ALLOWED_ORIGIN="${{ secrets.FRONTEND_ALLOWED_ORIGIN }}"
             export GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY_JSON='${{ secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY_JSON }}'
+            export GOOGLE_DRIVE_USER_REFRESH_TOKEN="${{ secrets.GOOGLE_DRIVE_USER_REFRESH_TOKEN }}"
             cd ${{ env.SERVICE_PATH }}
             /home/od/moimism/deploy.sh
