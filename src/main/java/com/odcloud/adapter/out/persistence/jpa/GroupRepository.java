@@ -115,10 +115,34 @@ class GroupRepository {
                 groupEntity.id,
                 groupEntity.ownerEmail,
                 groupEntity.name,
+                groupEntity.driveFolderId,
                 groupEntity.regDt
             ))
             .from(groupEntity)
             .fetch();
+    }
+
+    List<Group> findAllEnabledForBackup() {
+        return queryFactory
+            .select(Projections.constructor(
+                Group.class,
+                groupEntity.id,
+                groupEntity.ownerEmail,
+                groupEntity.name,
+                groupEntity.driveFolderId,
+                groupEntity.regDt
+            ))
+            .from(groupEntity)
+            .where(groupEntity.backupYn.eq("Y"))
+            .fetch();
+    }
+
+    @Transactional
+    void updateDriveFolderId(Long groupId, String driveFolderId) {
+        queryFactory.update(groupEntity)
+            .set(groupEntity.driveFolderId, driveFolderId)
+            .where(groupEntity.id.eq(groupId))
+            .execute();
     }
 
     List<Group> findByKeyword(String keyword) {

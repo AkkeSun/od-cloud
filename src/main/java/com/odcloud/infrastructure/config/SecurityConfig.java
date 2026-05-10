@@ -51,6 +51,8 @@ public class SecurityConfig {
                     .requestMatchers("/policy").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/webhook/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/files/backup").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/groups/{groupId}/drive/upload").permitAll()
                     .requestMatchers("/accounts/{username}/approval").hasRole("ADMIN")
                     .anyRequest().authenticated();
             })

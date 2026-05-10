@@ -38,6 +38,12 @@ class GroupEntity {
     @Column(name = "storage_total")
     private Long storageTotal;
 
+    @Column(name = "drive_folder_id")
+    private String driveFolderId;
+
+    @Column(name = "backup_yn")
+    private String backupYn;
+
     @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
@@ -51,6 +57,8 @@ class GroupEntity {
             .name(group.getName())
             .storageUsed(group.getStorageUsed())
             .storageTotal(group.getStorageTotal())
+            .driveFolderId(group.getDriveFolderId())
+            .backupYn(group.getBackupYn())
             .modDt(group.getModDt())
             .regDt(group.getRegDt())
             .build();
@@ -63,6 +71,8 @@ class GroupEntity {
             .name(name)
             .storageUsed(storageUsed)
             .storageTotal(storageTotal)
+            .driveFolderId(driveFolderId)
+            .backupYn(backupYn)
             .modDt(modDt)
             .regDt(regDt)
             .build();

@@ -71,6 +71,13 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
+    public List<Group> findAllEnabledForBackup() {
+        return groupDatabase.stream()
+            .filter(group -> "Y".equals(group.getBackupYn()))
+            .toList();
+    }
+
+    @Override
     public List<Group> findByKeyword(String keyword) {
         return groupDatabase.stream()
             .filter(group -> group.getName().contains(keyword))
@@ -166,5 +173,17 @@ public class FakeGroupStoragePort implements GroupStoragePort {
                 break;
             }
         }
+    }
+
+    @Override
+    public void updateDriveFolderId(Long groupId, String driveFolderId) {
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            Group group = groupDatabase.get(i);
+            if (group.getId() != null && group.getId().equals(groupId)) {
+                group.updateDriveFolderId(driveFolderId);
+                break;
+            }
+        }
+        log.info("FakeGroupStoragePort updateDriveFolderId: groupId={}, driveFolderId={}", groupId, driveFolderId);
     }
 }

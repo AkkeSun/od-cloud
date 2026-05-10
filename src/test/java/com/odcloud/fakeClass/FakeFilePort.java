@@ -5,7 +5,9 @@ import com.odcloud.application.file.port.out.FilePort;
 import com.odcloud.domain.model.FileInfo;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -22,6 +24,11 @@ public class FakeFilePort implements FilePort {
     public int readFileCallCount = 0;
     public int readFilesCallCount = 0;
     public List<String> deletedFiles = new ArrayList<>();
+    private final Set<String> failPaths = new HashSet<>();
+
+    public void addFailPath(String fileLoc) {
+        failPaths.add(fileLoc);
+    }
 
     @Override
     public void uploadFile(FileInfo file) {
@@ -46,6 +53,9 @@ public class FakeFilePort implements FilePort {
     public FileResponse readFile(FileInfo fileInfo) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
+        }
+        if (failPaths.contains(fileInfo.getFileLoc())) {
+            throw new RuntimeException("File read failure: " + fileInfo.getFileLoc());
         }
         readFileCallCount++;
 
@@ -96,5 +106,6 @@ public class FakeFilePort implements FilePort {
         readFileCallCount = 0;
         readFilesCallCount = 0;
         deletedFiles.clear();
+        failPaths.clear();
     }
 }
