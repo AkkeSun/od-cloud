@@ -99,7 +99,8 @@ public record ProfileConstant(
     @Builder
     public record GoogleDrive(
         @NotBlank
-        String serviceAccountKeyJson
+        String serviceAccountKeyJson,
+        String shareEmail
     ) {
 
     }

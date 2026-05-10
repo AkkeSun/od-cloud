@@ -11,6 +11,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.api.services.drive.model.Permission;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.odcloud.application.file.port.out.GoogleDrivePort;
@@ -34,6 +35,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
     private static final String APPLICATION_NAME = "od-cloud-backup";
 
     private final Drive driveService;
+    private final String shareEmail;
 
     GoogleDriveAdapter(ProfileConstant profileConstant) throws IOException, GeneralSecurityException {
         byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
@@ -47,6 +49,26 @@ class GoogleDriveAdapter implements GoogleDrivePort {
             GsonFactory.getDefaultInstance(),
             new HttpCredentialsAdapter(credentials)
         ).setApplicationName(APPLICATION_NAME).build();
+
+        this.shareEmail = profileConstant.googleDrive().shareEmail();
+    }
+
+    private void shareWithEmail(String folderId) {
+        if (shareEmail == null || shareEmail.isBlank()) {
+            return;
+        }
+        try {
+            Permission permission = new Permission()
+                .setType("user")
+                .setRole("writer")
+                .setEmailAddress(shareEmail);
+            driveService.permissions().create(folderId, permission)
+                .setSendNotificationEmail(false)
+                .execute();
+            log.info("[GoogleDriveAdapter] 폴더 공유 완료 - folderId={}, email={}", folderId, shareEmail);
+        } catch (IOException e) {
+            log.warn("[GoogleDriveAdapter] 폴더 공유 실패 - folderId={}, email={}, error={}", folderId, shareEmail, e.getMessage());
+        }
     }
 
     @Override
@@ -79,6 +101,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
             log.info("[GoogleDriveAdapter] Drive 폴더 신규 생성 - folderName={}, folderId={}",
                 folderName, createdFolder.getId());
+            shareWithEmail(createdFolder.getId());
             return createdFolder.getId();
 
         } catch (IOException e) {
@@ -119,6 +142,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
             log.info("[GoogleDriveAdapter] Drive 서브폴더 신규 생성 - parentId={}, folderName={}, folderId={}",
                 parentFolderId, folderName, createdFolder.getId());
+            shareWithEmail(createdFolder.getId());
             return createdFolder.getId();
 
         } catch (IOException e) {
