@@ -43,7 +43,7 @@ jobs:
           PROD_AES_SECRET: ${{ secrets.PROD_AES_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-
+          GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY_JSON }}
       - name: Checkout repository
         uses: actions/checkout@v4
 
