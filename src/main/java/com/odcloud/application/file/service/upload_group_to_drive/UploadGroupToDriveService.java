@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -31,7 +32,8 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
     private final GoogleDrivePort googleDrivePort;
 
     @Override
-    public UploadGroupToDriveResponse upload(Long groupId) {
+    @Async
+    public void upload(Long groupId) {
         Group group = groupStoragePort.findById(groupId);
 
         String groupFolderId = group.getDriveFolderId();
@@ -51,7 +53,8 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
         String resolvedGroupFolderId = groupFolderId;
 
         for (FileInfo file : files) {
-            String targetFolderId = resolveTargetFolder(file.getFolderId(), resolvedGroupFolderId, subFolderIdCache);
+            String targetFolderId = resolveTargetFolder(file.getFolderId(), resolvedGroupFolderId,
+                subFolderIdCache);
             if (targetFolderId == null) {
                 failedCount++;
                 continue;
@@ -59,7 +62,8 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
 
             try {
                 if (googleDrivePort.fileExists(targetFolderId, file.getFileName())) {
-                    log.info("[UploadGroupToDriveService] 동일 파일명 존재 - skip: folderId={}, fileName={}",
+                    log.info(
+                        "[UploadGroupToDriveService] 동일 파일명 존재 - skip: folderId={}, fileName={}",
                         targetFolderId, file.getFileName());
                     skippedCount++;
                     continue;
@@ -86,13 +90,6 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
                 failedCount++;
             }
         }
-
-        return UploadGroupToDriveResponse.builder()
-            .totalFiles(totalFiles)
-            .uploadedCount(uploadedCount)
-            .skippedCount(skippedCount)
-            .failedCount(failedCount)
-            .build();
     }
 
     private String resolveTargetFolder(Long appFolderId, String groupFolderId,
