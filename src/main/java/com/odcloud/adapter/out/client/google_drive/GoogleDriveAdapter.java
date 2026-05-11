@@ -5,6 +5,7 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRI
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_UPLOAD_ERROR;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -35,37 +36,61 @@ class GoogleDriveAdapter implements GoogleDrivePort {
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
     private static final String APPLICATION_NAME = "od-cloud-backup";
 
-    private final Drive driveService;
+    private final HttpTransport httpTransport;
     private final String shareEmail;
+    private final String clientId;
+    private final String clientSecret;
+    private final String refreshToken;
+    private final Drive serviceAccountDrive;
 
     GoogleDriveAdapter(ProfileConstant profileConstant) throws IOException, GeneralSecurityException {
-        String userRefreshToken = profileConstant.googleDrive().userRefreshToken();
+        this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        this.shareEmail = profileConstant.googleDrive().shareEmail();
 
-        GoogleCredentials credentials;
+        String userRefreshToken = profileConstant.googleDrive().userRefreshToken();
         if (userRefreshToken != null && !userRefreshToken.isBlank()) {
-            credentials = UserCredentials.newBuilder()
-                .setClientId(profileConstant.googleDrive().clientId())
-                .setClientSecret(profileConstant.googleDrive().clientSecret())
-                .setRefreshToken(userRefreshToken)
-                .build();
+            this.clientId = profileConstant.googleDrive().clientId();
+            this.clientSecret = profileConstant.googleDrive().clientSecret();
+            this.refreshToken = userRefreshToken;
+            this.serviceAccountDrive = null;
         } else {
+            this.clientId = null;
+            this.clientSecret = null;
+            this.refreshToken = null;
             byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
                 .getBytes(StandardCharsets.UTF_8);
-            credentials = GoogleCredentials
+            GoogleCredentials credentials = GoogleCredentials
                 .fromStream(new ByteArrayInputStream(keyBytes))
                 .createScoped(Collections.singletonList(DriveScopes.DRIVE));
+            this.serviceAccountDrive = new Drive.Builder(
+                httpTransport,
+                GsonFactory.getDefaultInstance(),
+                new HttpCredentialsAdapter(credentials)
+            ).setApplicationName(APPLICATION_NAME).build();
         }
-
-        this.driveService = new Drive.Builder(
-            GoogleNetHttpTransport.newTrustedTransport(),
-            GsonFactory.getDefaultInstance(),
-            new HttpCredentialsAdapter(credentials)
-        ).setApplicationName(APPLICATION_NAME).build();
-
-        this.shareEmail = profileConstant.googleDrive().shareEmail();
     }
 
-    private void shareWithEmail(String folderId) {
+    /**
+     * Refresh Token 방식: 호출마다 새로운 UserCredentials 생성 → Access Token 신규 발급
+     * Service Account 방식: 기존 Drive 인스턴스 재사용
+     */
+    private Drive getDriveService() {
+        if (refreshToken != null) {
+            UserCredentials freshCredentials = UserCredentials.newBuilder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRefreshToken(refreshToken)
+                .build();
+            return new Drive.Builder(
+                httpTransport,
+                GsonFactory.getDefaultInstance(),
+                new HttpCredentialsAdapter(freshCredentials)
+            ).setApplicationName(APPLICATION_NAME).build();
+        }
+        return serviceAccountDrive;
+    }
+
+    private void shareWithEmail(Drive drive, String folderId) {
         if (shareEmail == null || shareEmail.isBlank()) {
             return;
         }
@@ -74,7 +99,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
                 .setType("user")
                 .setRole("writer")
                 .setEmailAddress(shareEmail);
-            driveService.permissions().create(folderId, permission)
+            drive.permissions().create(folderId, permission)
                 .setSendNotificationEmail(false)
                 .execute();
             log.info("[GoogleDriveAdapter] 폴더 공유 완료 - folderId={}, email={}", folderId, shareEmail);
@@ -85,13 +110,14 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public String ensureFolder(String folderName) {
+        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and trashed=false",
                 folderName, FOLDER_MIME_TYPE
             );
 
-            FileList result = driveService.files().list()
+            FileList result = drive.files().list()
                 .setQ(query)
                 .setFields("files(id, name)")
                 .execute();
@@ -107,13 +133,13 @@ class GoogleDriveAdapter implements GoogleDrivePort {
             folderMetadata.setName(folderName);
             folderMetadata.setMimeType(FOLDER_MIME_TYPE);
 
-            File createdFolder = driveService.files().create(folderMetadata)
+            File createdFolder = drive.files().create(folderMetadata)
                 .setFields("id")
                 .execute();
 
             log.info("[GoogleDriveAdapter] Drive 폴더 신규 생성 - folderName={}, folderId={}",
                 folderName, createdFolder.getId());
-            shareWithEmail(createdFolder.getId());
+            shareWithEmail(drive, createdFolder.getId());
             return createdFolder.getId();
 
         } catch (IOException e) {
@@ -125,13 +151,14 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public String ensureSubFolder(String parentFolderId, String folderName) {
+        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and '%s' in parents and trashed=false",
                 folderName, FOLDER_MIME_TYPE, parentFolderId
             );
 
-            FileList result = driveService.files().list()
+            FileList result = drive.files().list()
                 .setQ(query)
                 .setFields("files(id, name)")
                 .execute();
@@ -148,13 +175,13 @@ class GoogleDriveAdapter implements GoogleDrivePort {
             folderMetadata.setMimeType(FOLDER_MIME_TYPE);
             folderMetadata.setParents(Collections.singletonList(parentFolderId));
 
-            File createdFolder = driveService.files().create(folderMetadata)
+            File createdFolder = drive.files().create(folderMetadata)
                 .setFields("id")
                 .execute();
 
             log.info("[GoogleDriveAdapter] Drive 서브폴더 신규 생성 - parentId={}, folderName={}, folderId={}",
                 parentFolderId, folderName, createdFolder.getId());
-            shareWithEmail(createdFolder.getId());
+            shareWithEmail(drive, createdFolder.getId());
             return createdFolder.getId();
 
         } catch (IOException e) {
@@ -166,6 +193,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void uploadFile(String folderId, String driveFileName, InputStream content, long fileSize) {
+        Drive drive = getDriveService();
         try {
             File fileMetadata = new File();
             fileMetadata.setName(driveFileName);
@@ -176,7 +204,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
             );
             mediaContent.setLength(fileSize);
 
-            driveService.files().create(fileMetadata, mediaContent)
+            drive.files().create(fileMetadata, mediaContent)
                 .setFields("id")
                 .execute();
 
@@ -192,13 +220,14 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public boolean fileExists(String folderId, String fileName) {
+        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and '%s' in parents and trashed=false",
                 fileName, folderId
             );
 
-            FileList result = driveService.files().list()
+            FileList result = drive.files().list()
                 .setQ(query)
                 .setFields("files(id)")
                 .execute();
@@ -215,13 +244,14 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void deleteFile(String folderId, String fileName) {
+        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and '%s' in parents and trashed=false",
                 fileName, folderId
             );
 
-            FileList result = driveService.files().list()
+            FileList result = drive.files().list()
                 .setQ(query)
                 .setFields("files(id)")
                 .execute();
@@ -233,7 +263,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
                 return;
             }
 
-            driveService.files().delete(files.get(0).getId()).execute();
+            drive.files().delete(files.get(0).getId()).execute();
             log.info("[GoogleDriveAdapter] Drive 파일 삭제 완료 - folderId={}, fileName={}",
                 folderId, fileName);
 
