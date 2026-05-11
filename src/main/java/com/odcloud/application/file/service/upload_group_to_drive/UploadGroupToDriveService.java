@@ -110,6 +110,11 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
         try {
             FolderInfo folderInfo = folderInfoStoragePort.findById(appFolderId);
 
+            if (folderInfo.getParentId() == null) {
+                subFolderIdCache.put(appFolderId, groupFolderId);
+                return groupFolderId;
+            }
+
             String parentDriveFolderId = resolveTargetFolder(
                 folderInfo.getParentId(), groupFolderId, subFolderIdCache
             );
