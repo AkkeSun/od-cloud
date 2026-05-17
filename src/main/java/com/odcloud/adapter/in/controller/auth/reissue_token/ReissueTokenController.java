@@ -42,14 +42,13 @@ class ReissueTokenController {
     }
 
     private void setTokenCookies(HttpServletResponse response, String accessToken, String refreshToken) {
-        boolean isSecure = "prod".equals(constant.profile());
         long accessMaxAge = constant.getAccessTokenTtl() / 1000;
         long refreshMaxAge = constant.getRefreshTokenTtl() / 1000;
 
         response.addHeader(HttpHeaders.SET_COOKIE,
             ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(isSecure)
+                .secure(true)
                 .path("/")
                 .sameSite("Lax")
                 .maxAge(accessMaxAge)
@@ -58,7 +57,7 @@ class ReissueTokenController {
         response.addHeader(HttpHeaders.SET_COOKIE,
             ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(isSecure)
+                .secure(true)
                 .path("/")
                 .sameSite("Lax")
                 .maxAge(refreshMaxAge)
