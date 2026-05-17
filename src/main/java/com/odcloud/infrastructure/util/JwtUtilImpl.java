@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 public class JwtUtilImpl implements JwtUtil {
 
     private final ProfileConstant constant;
-    private final CookieUtil cookieUtil;
 
     @Override
     public String createAccessToken(Account account) {
@@ -84,7 +83,7 @@ public class JwtUtilImpl implements JwtUtil {
 
     @Override
     public ObjectNode getAccountInfo(HttpServletRequest request) {
-        String token = cookieUtil.getAccessToken(request);
+        String token = request.getHeader("Authorization");
         if (token == null) {
             return new ObjectMapper().createObjectNode();
         }

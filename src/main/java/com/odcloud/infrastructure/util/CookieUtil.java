@@ -1,5 +1,6 @@
 package com.odcloud.infrastructure.util;
 
+import com.odcloud.infrastructure.constant.ProfileConstant;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-import com.odcloud.infrastructure.constant.ProfileConstant;
 
 @Component
 @RequiredArgsConstructor
@@ -16,20 +16,15 @@ public class CookieUtil {
 
     private final ProfileConstant constant;
 
-    public String getAccessToken(HttpServletRequest request) {
-        return getCookieValue(request, "accessToken");
-    }
-
     public String getRefreshToken(HttpServletRequest request) {
         return getCookieValue(request, "refreshToken");
     }
 
-    public void setTokenCookies(HttpServletResponse response, String accessToken, String refreshToken) {
+    public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         boolean isSecure = "prod".equals(constant.profile());
-        response.addHeader(HttpHeaders.SET_COOKIE, buildCookie("accessToken", accessToken,
-            constant.getAccessTokenTtl() / 1000, isSecure));
-        response.addHeader(HttpHeaders.SET_COOKIE, buildCookie("refreshToken", refreshToken,
-            constant.getRefreshTokenTtl() / 1000, isSecure));
+        long maxAge = constant.getRefreshTokenTtl() / 1000;
+        response.addHeader(HttpHeaders.SET_COOKIE,
+            buildCookie("refreshToken", refreshToken, maxAge, isSecure));
     }
 
     private String getCookieValue(HttpServletRequest request, String name) {

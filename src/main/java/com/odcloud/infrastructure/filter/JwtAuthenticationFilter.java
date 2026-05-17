@@ -1,6 +1,5 @@
 package com.odcloud.infrastructure.filter;
 
-import com.odcloud.infrastructure.util.CookieUtil;
 import com.odcloud.infrastructure.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,14 +20,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            String token = cookieUtil.getAccessToken(request);
+            String token = request.getHeader("Authorization");
             if (jwtUtil.validateTokenExceptExpiration(token)) {
                 SecurityContextHolder.getContext().setAuthentication(makeAuthToken(token));
             }
@@ -44,4 +42,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }
-

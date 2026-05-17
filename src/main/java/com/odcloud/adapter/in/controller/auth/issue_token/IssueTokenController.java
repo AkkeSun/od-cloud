@@ -3,7 +3,6 @@ package com.odcloud.adapter.in.controller.auth.issue_token;
 import com.odcloud.application.auth.port.in.IssueTokenUseCase;
 import com.odcloud.application.auth.service.issue_token.IssueTokenResponse;
 import com.odcloud.infrastructure.response.ApiResponse;
-import com.odcloud.infrastructure.response.BooleanResponse;
 import com.odcloud.infrastructure.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +19,13 @@ class IssueTokenController {
     private final CookieUtil cookieUtil;
 
     @PostMapping("/auth")
-    ApiResponse<BooleanResponse> issue(
+    ApiResponse<AccessTokenResponse> issue(
         @RequestHeader String googleAuthorization,
         @RequestBody IssueTokenRequest request,
         HttpServletResponse response
     ) {
         IssueTokenResponse tokenResponse = useCase.issue(googleAuthorization, request.deviceId());
-        cookieUtil.setTokenCookies(response, tokenResponse.accessToken(), tokenResponse.refreshToken());
-        return ApiResponse.ok(BooleanResponse.success());
+        cookieUtil.setRefreshTokenCookie(response, tokenResponse.refreshToken());
+        return ApiResponse.ok(new AccessTokenResponse(tokenResponse.accessToken()));
     }
 }

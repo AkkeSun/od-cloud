@@ -7,10 +7,8 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Voucher;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
-import com.odcloud.infrastructure.util.CookieUtil;
 import com.odcloud.infrastructure.util.JwtUtil;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +25,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class LoginAccountResolver implements HandlerMethodArgumentResolver {
 
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,8 +34,7 @@ public class LoginAccountResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = cookieUtil.getAccessToken(request);
+        String token = webRequest.getHeader("Authorization");
         try {
             return fromClaims(jwtUtil.getClaims(token));
         } catch (Exception e) {
