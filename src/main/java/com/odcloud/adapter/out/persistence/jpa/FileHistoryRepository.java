@@ -5,6 +5,7 @@ import static com.odcloud.adapter.out.persistence.jpa.QFileHistoryEntity.fileHis
 import com.odcloud.domain.model.FileHistory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,28 @@ class FileHistoryRepository {
             .stream()
             .map(this::toModel)
             .toList();
+    }
+
+    List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId) {
+        return queryFactory
+            .selectFrom(fileHistoryEntity)
+            .where(
+                fileHistoryEntity.groupId.eq(groupId),
+                fileHistoryEntity.backupDt.isNull()
+            )
+            .orderBy(fileHistoryEntity.regDt.asc())
+            .fetch()
+            .stream()
+            .map(this::toModel)
+            .toList();
+    }
+
+    @Transactional
+    void updateBackupDt(List<Long> ids, LocalDateTime backupDt) {
+        queryFactory.update(fileHistoryEntity)
+            .set(fileHistoryEntity.backupDt, backupDt)
+            .where(fileHistoryEntity.id.in(ids))
+            .execute();
     }
 
     private FileHistory toModel(FileHistoryEntity entity) {

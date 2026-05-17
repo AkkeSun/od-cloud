@@ -16,6 +16,8 @@ public interface GroupStoragePort {
 
     List<Group> findAll();
 
+    List<Group> findAllEnabledForBackup();
+
     List<Group> findByKeyword(String keyword);
 
     List<Group> findByOwnerId(Long ownerId);
@@ -39,5 +41,7 @@ public interface GroupStoragePort {
     void updateStorageTotal(Group group);
 
     void updateStorageUsed(Group group);
+
+    void updateDriveFolderId(Long groupId, String driveFolderId);
 
 }

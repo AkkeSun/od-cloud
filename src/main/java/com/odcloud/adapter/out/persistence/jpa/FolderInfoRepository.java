@@ -168,4 +168,5 @@ class FolderInfoRepository {
             .where(folderInfoEntity.groupId.eq(groupId))
             .execute();
     }
+
 }

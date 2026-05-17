@@ -46,4 +46,5 @@ public class FolderInfo {
     public void updateParentId(Long parentId) {
         this.parentId = parentId;
     }
+
 }

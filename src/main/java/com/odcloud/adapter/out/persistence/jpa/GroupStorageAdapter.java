@@ -43,6 +43,11 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public List<Group> findAllEnabledForBackup() {
+        return queryDsl.findAllEnabledForBackup();
+    }
+
+    @Override
     public List<Group> findByKeyword(String keyword) {
         return queryDsl.findByKeyword(keyword);
     }
@@ -105,5 +110,10 @@ class GroupStorageAdapter implements GroupStoragePort {
     @Override
     public void updateStorageUsed(Group group) {
         queryDsl.updateStorageUsed(group);
+    }
+
+    @Override
+    public void updateDriveFolderId(Long groupId, String driveFolderId) {
+        queryDsl.updateDriveFolderId(groupId, driveFolderId);
     }
 }

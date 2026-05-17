@@ -16,6 +16,7 @@ public record ProfileConstant(
     FileUpload fileUpload,
     ApplePayment applePayment,
     GooglePlayPayment googlePlayPayment,
+    GoogleDrive googleDrive,
     @NotBlank
     String webServerHost,
     @NotBlank
@@ -91,6 +92,18 @@ public record ProfileConstant(
         String verifyPurchaseApi,
         @NotBlank
         String packageName
+    ) {
+
+    }
+
+    @Builder
+    public record GoogleDrive(
+        @NotBlank
+        String serviceAccountKeyJson,
+        String shareEmail,
+        String userRefreshToken,
+        String clientId,
+        String clientSecret
     ) {
 
     }

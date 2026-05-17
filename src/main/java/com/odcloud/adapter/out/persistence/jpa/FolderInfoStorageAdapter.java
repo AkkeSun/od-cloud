@@ -67,4 +67,5 @@ class FolderInfoStorageAdapter implements FolderInfoStoragePort {
     public void deleteByGroupId(Long groupId) {
         folderRepository.deleteByGroupId(groupId);
     }
+
 }

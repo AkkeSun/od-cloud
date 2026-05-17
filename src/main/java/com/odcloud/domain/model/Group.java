@@ -20,6 +20,8 @@ public class Group {
     private String ownerEmail;
     private Long storageUsed;
     private Long storageTotal;
+    private String driveFolderId;
+    private String backupYn;
     private List<GroupAccount> groupMembers;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
@@ -28,6 +30,14 @@ public class Group {
         this.id = id;
         this.ownerEmail = ownerEmail;
         this.name = name;
+        this.regDt = regDt;
+    }
+
+    public Group(Long id, String ownerEmail, String name, String driveFolderId, LocalDateTime regDt) {
+        this.id = id;
+        this.ownerEmail = ownerEmail;
+        this.name = name;
+        this.driveFolderId = driveFolderId;
         this.regDt = regDt;
     }
 
@@ -47,6 +57,7 @@ public class Group {
             .ownerEmail(ownerEmail)
             .storageUsed(0L)
             .storageTotal(DEFAULT_STORAGE_TOTAL)
+            .backupYn("N")
             .regDt(LocalDateTime.now())
             .build();
     }
@@ -95,6 +106,16 @@ public class Group {
 
     public void updateName(String name) {
         this.name = name;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void updateDriveFolderId(String driveFolderId) {
+        this.driveFolderId = driveFolderId;
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void updateBackupYn(String backupYn) {
+        this.backupYn = backupYn;
         this.modDt = LocalDateTime.now();
     }
 }
