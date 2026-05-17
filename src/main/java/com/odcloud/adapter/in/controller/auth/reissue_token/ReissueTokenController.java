@@ -4,6 +4,7 @@ import com.odcloud.application.auth.port.in.ReissueTokenUseCase;
 import com.odcloud.application.auth.service.reissue_token.ReissueTokenResponse;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.response.ApiResponse;
+import com.odcloud.infrastructure.response.BooleanResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,11 +23,11 @@ class ReissueTokenController {
     private final ProfileConstant constant;
 
     @PutMapping("/auth")
-    ApiResponse<Boolean> update(HttpServletRequest request, HttpServletResponse response) {
+    ApiResponse<BooleanResponse> update(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractTokenFromCookie(request);
         ReissueTokenResponse tokenResponse = useCase.reissueToken(refreshToken);
         setTokenCookies(response, tokenResponse.accessToken(), tokenResponse.refreshToken());
-        return ApiResponse.ok(true);
+        return ApiResponse.ok(BooleanResponse.success());
     }
 
     private String extractTokenFromCookie(HttpServletRequest request) {

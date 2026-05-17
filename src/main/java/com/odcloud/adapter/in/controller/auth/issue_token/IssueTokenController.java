@@ -4,6 +4,7 @@ import com.odcloud.application.auth.port.in.IssueTokenUseCase;
 import com.odcloud.application.auth.service.issue_token.IssueTokenResponse;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.response.ApiResponse;
+import com.odcloud.infrastructure.response.BooleanResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,14 +22,14 @@ class IssueTokenController {
     private final ProfileConstant constant;
 
     @PostMapping("/auth")
-    ApiResponse<Boolean> issue(
+    ApiResponse<BooleanResponse> issue(
         @RequestHeader String googleAuthorization,
         @RequestBody IssueTokenRequest request,
         HttpServletResponse response
     ) {
         IssueTokenResponse tokenResponse = useCase.issue(googleAuthorization, request.deviceId());
         setTokenCookies(response, tokenResponse.accessToken(), tokenResponse.refreshToken());
-        return ApiResponse.ok(true);
+        return ApiResponse.ok(BooleanResponse.success());
     }
 
     private void setTokenCookies(HttpServletResponse response, String accessToken, String refreshToken) {
