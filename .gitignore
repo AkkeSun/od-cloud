@@ -48,3 +48,5 @@ HEXAGONAL_TEST_GUIDE.md
 *.jpeg
 *.png
 *.pdf
+
+.claude/
