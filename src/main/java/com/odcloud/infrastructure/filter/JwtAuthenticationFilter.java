@@ -3,9 +3,11 @@ package com.odcloud.infrastructure.filter;
 import com.odcloud.infrastructure.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            String token = request.getHeader("Authorization");
+            String token = extractTokenFromCookie(request);
             if (jwtUtil.validateTokenExceptExpiration(token)) {
                 SecurityContextHolder.getContext().setAuthentication(makeAuthToken(token));
             }
@@ -35,6 +37,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String extractTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+        return Arrays.stream(cookies)
+            .filter(c -> "accessToken".equals(c.getName()))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElse(null);
     }
 
     private Authentication makeAuthToken(String token) {
