@@ -7,11 +7,10 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Voucher;
 import com.odcloud.domain.model.VoucherType;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
+import com.odcloud.infrastructure.util.CookieUtil;
 import com.odcloud.infrastructure.util.JwtUtil;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +27,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class LoginAccountResolver implements HandlerMethodArgumentResolver {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -38,24 +38,12 @@ public class LoginAccountResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = extractTokenFromCookie(request);
+        String token = cookieUtil.getAccessToken(request);
         try {
             return fromClaims(jwtUtil.getClaims(token));
         } catch (Exception e) {
             throw new CustomAuthenticationException(INVALID_ACCESS_TOKEN);
         }
-    }
-
-    private String extractTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
-        return Arrays.stream(cookies)
-            .filter(c -> "accessToken".equals(c.getName()))
-            .map(Cookie::getValue)
-            .findFirst()
-            .orElse(null);
     }
 
     private Account fromClaims(Claims claims) {
