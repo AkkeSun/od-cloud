@@ -89,6 +89,27 @@ await fetch('/auth', {
 });
 ```
 
+> **⚠️ 주의 — 토큰 재발급 후 사용자 정보 갱신 필요**  
+> 토큰 재발급 시 accessToken이 새로 발급되며, 이 안에 담긴 사용자 정보(그룹, 바우처 등)도 갱신될 수 있습니다.  
+> `PUT /auth` 성공 후 반드시 `GET /accounts/self`를 호출하여 클라이언트의 사용자 정보를 최신 상태로 업데이트해야 합니다.
+
+```js
+// 토큰 재발급 후 사용자 정보 갱신 패턴
+async function reissueAndRefreshUserInfo() {
+  await fetch('/auth', {
+    method: 'PUT',
+    credentials: 'include',
+  });
+
+  const res = await fetch('/accounts/self', {
+    credentials: 'include',
+  });
+  const userInfo = await res.json();
+  // 전역 상태(store 등)에 사용자 정보 업데이트
+  store.setUser(userInfo.data);
+}
+```
+
 ---
 
 ## 3. 인증이 필요한 모든 API
@@ -154,4 +175,5 @@ const { id, email, nickname, picture, groups, vouchers } = res.data;
 - [ ] `localStorage`에서 토큰 저장/읽기 코드 제거
 - [ ] `Authorization` 헤더에 토큰 직접 세팅하는 코드 제거
 - [ ] 토큰 디코딩으로 사용자 정보 파싱하던 코드 → `GET /accounts/self` 로 대체
+- [ ] `PUT /auth` (토큰 재발급) 성공 후 `GET /accounts/self` 호출하여 사용자 정보 갱신
 - [ ] axios 사용 시 전역 설정: `axios.defaults.withCredentials = true`
