@@ -14,8 +14,6 @@ public record ProfileConstant(
     GoogleOAuth2 googleOAuth2,
     RedisKey redisKey,
     FileUpload fileUpload,
-    ApplePayment applePayment,
-    GooglePlayPayment googlePlayPayment,
     GoogleDrive googleDrive,
     @NotBlank
     String webServerHost,
@@ -75,26 +73,6 @@ public record ProfileConstant(
 
     }
 
-
-    @Builder
-    public record ApplePayment(
-        @NotBlank
-        String verifyReceiptApi,
-        @NotBlank
-        String password
-    ) {
-
-    }
-
-    @Builder
-    public record GooglePlayPayment(
-        @NotBlank
-        String verifyPurchaseApi,
-        @NotBlank
-        String packageName
-    ) {
-
-    }
 
     @Builder
     public record GoogleDrive(

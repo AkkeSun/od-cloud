@@ -2,7 +2,6 @@ package com.odcloud.application.account.service.delete_account;
 
 import com.odcloud.application.account.port.in.DeleteAccountUseCase;
 import com.odcloud.application.account.port.out.AccountStoragePort;
-import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 class DeleteAccountService implements DeleteAccountUseCase {
 
     private final AccountStoragePort accountStoragePort;
-    private final AccountDeviceStoragePort accountDeviceStoragePort;
     private final ScheduleStoragePort scheduleStoragePort;
     private final GroupStoragePort groupStoragePort;
     private final DeleteGroupUseCase deleteGroupUseCase;
@@ -26,8 +24,6 @@ class DeleteAccountService implements DeleteAccountUseCase {
     @Override
     @Transactional
     public DeleteAccountResponse delete(Account account) {
-        accountDeviceStoragePort.deleteByAccountId(account.getId());
-
         for (Schedule schedule : scheduleStoragePort.findByPersonalSchedules(account.getEmail())) {
             scheduleStoragePort.delete(schedule);
         }

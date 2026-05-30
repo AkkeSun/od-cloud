@@ -28,7 +28,7 @@ public class JwtUtilImpl implements JwtUtil {
         claims.put("groups", account.getGroupsInfo());
         claims.put("nickname", account.getNickname());
         claims.put("picture", account.getPicture());
-        claims.put("vouchers", account.getVouchersInfo());
+        
         return "Bearer " + Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)

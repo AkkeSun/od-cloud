@@ -2,13 +2,9 @@ package com.odcloud.application.schedule.service.register_schedule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 
-import com.odcloud.application.device.port.in.PushFcmUseCase;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
-import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
-import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakeScheduleStoragePort;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -21,23 +17,14 @@ import org.junit.jupiter.api.Test;
 
 class RegisterScheduleServiceTest {
 
-    private PushFcmUseCase pushFcmUseCase;
-    private FakeGroupStoragePort fakeGroupStoragePort;
     private FakeScheduleStoragePort fakeScheduleStoragePort;
-    private FakeAccountDeviceStoragePort fakeAccountDeviceStoragePort;
     private RegisterScheduleService registerScheduleService;
 
     @BeforeEach
     void setUp() {
-        pushFcmUseCase = mock(PushFcmUseCase.class);
-        fakeGroupStoragePort = new FakeGroupStoragePort();
         fakeScheduleStoragePort = new FakeScheduleStoragePort();
-        fakeAccountDeviceStoragePort = new FakeAccountDeviceStoragePort();
         registerScheduleService = new RegisterScheduleService(
-            pushFcmUseCase,
-            fakeGroupStoragePort,
-            fakeScheduleStoragePort,
-            fakeAccountDeviceStoragePort
+            fakeScheduleStoragePort
         );
     }
 

@@ -5,12 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.application.auth.port.out.GoogleUserInfo;
 import com.odcloud.domain.model.Group;
-import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
-import com.odcloud.fakeClass.FakePushFcmUseCase;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,26 +18,20 @@ import org.junit.jupiter.api.Test;
 
 class RegisterAccountServiceTest {
 
-    private FakePushFcmUseCase fakePushFcmUseCase;
     private FakeGroupStoragePort fakeGroupStoragePort;
     private FakeGoogleOAuth2Port fakeGoogleOAuth2Port;
     private FakeAccountStoragePort fakeAccountStoragePort;
-    private FakeAccountDeviceStoragePort fakeAccountDeviceStoragePort;
     private RegisterAccountService registerAccountService;
 
     @BeforeEach
     void setUp() {
-        fakePushFcmUseCase = new FakePushFcmUseCase();
         fakeGroupStoragePort = new FakeGroupStoragePort();
         fakeGoogleOAuth2Port = new FakeGoogleOAuth2Port();
         fakeAccountStoragePort = new FakeAccountStoragePort();
-        fakeAccountDeviceStoragePort = new FakeAccountDeviceStoragePort();
         registerAccountService = new RegisterAccountService(
-            fakePushFcmUseCase,
             fakeGroupStoragePort,
             fakeGoogleOAuth2Port,
             fakeAccountStoragePort,
-            fakeAccountDeviceStoragePort,
             new FakeFolderStoragePort()
         );
     }
@@ -76,7 +68,6 @@ class RegisterAccountServiceTest {
             assertThat(fakeGroupStoragePort.groupAccountDatabase).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "PENDING");
-            assertThat(fakePushFcmUseCase.sentCommands).hasSize(1);
         }
 
         @Test
@@ -113,7 +104,6 @@ class RegisterAccountServiceTest {
 
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase).isEmpty();
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
         @Test
@@ -132,7 +122,6 @@ class RegisterAccountServiceTest {
 
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase).isEmpty();
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
         @Test
@@ -160,7 +149,6 @@ class RegisterAccountServiceTest {
                     ErrorCode.Business_GOOGLE_USER_INFO_ERROR);
 
             assertThat(fakeAccountStoragePort.database).isEmpty();
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
         @Test
@@ -221,7 +209,6 @@ class RegisterAccountServiceTest {
             assertThat(fakeAccountStoragePort.database).hasSize(1);
             assertThat(fakeGroupStoragePort.groupDatabase).hasSize(1);
             assertThat(fakeGroupStoragePort.groupAccountDatabase).isEmpty();
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
     }
 }

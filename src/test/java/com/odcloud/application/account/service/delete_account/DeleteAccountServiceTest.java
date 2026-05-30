@@ -6,14 +6,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.odcloud.application.group.port.in.DeleteGroupUseCase;
 import com.odcloud.application.group.service.delete_group.DeleteGroupResponse;
 import com.odcloud.domain.model.Account;
-import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.domain.model.Schedule;
-import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFileStoragePort;
@@ -32,7 +30,6 @@ class DeleteAccountServiceTest {
 
     private DeleteAccountService service;
     private FakeAccountStoragePort accountStoragePort;
-    private FakeAccountDeviceStoragePort accountDeviceStoragePort;
     private FakeScheduleStoragePort scheduleStoragePort;
     private FakeGroupStoragePort groupStoragePort;
     private FakeFolderStoragePort folderInfoStoragePort;
@@ -43,7 +40,6 @@ class DeleteAccountServiceTest {
     @BeforeEach
     void setUp() {
         accountStoragePort = new FakeAccountStoragePort();
-        accountDeviceStoragePort = new FakeAccountDeviceStoragePort();
         scheduleStoragePort = new FakeScheduleStoragePort();
         groupStoragePort = new FakeGroupStoragePort();
         folderInfoStoragePort = new FakeFolderStoragePort();
@@ -62,7 +58,6 @@ class DeleteAccountServiceTest {
 
         service = new DeleteAccountService(
             accountStoragePort,
-            accountDeviceStoragePort,
             scheduleStoragePort,
             groupStoragePort,
             deleteGroupUseCase
@@ -143,29 +138,6 @@ class DeleteAccountServiceTest {
                 .build();
             accountStoragePort.save(account);
 
-            // Create devices
-            AccountDevice device1 = AccountDevice.builder()
-                .id(1L)
-                .accountId(account.getId())
-                .osType("ANDROID")
-                .deviceId("device-1")
-                .fcmToken("token-1")
-                .pushYn("Y")
-                .regDt(LocalDateTime.now())
-                .build();
-            accountDeviceStoragePort.save(device1);
-
-            AccountDevice device2 = AccountDevice.builder()
-                .id(2L)
-                .accountId(account.getId())
-                .osType("IOS")
-                .deviceId("device-2")
-                .fcmToken("token-2")
-                .pushYn("Y")
-                .regDt(LocalDateTime.now())
-                .build();
-            accountDeviceStoragePort.save(device2);
-
             // Create personal schedules
             Schedule personalSchedule = Schedule.builder()
                 .id(1L)
@@ -242,9 +214,6 @@ class DeleteAccountServiceTest {
             // then
             assertThat(response).isNotNull();
             assertThat(response.result()).isTrue();
-
-            // Verify devices are deleted
-            assertThat(accountDeviceStoragePort.database).isEmpty();
 
             // Verify personal schedules are deleted
             assertThat(scheduleStoragePort.database).isEmpty();

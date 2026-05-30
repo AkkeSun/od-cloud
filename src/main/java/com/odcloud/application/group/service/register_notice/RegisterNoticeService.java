@@ -2,18 +2,13 @@ package com.odcloud.application.group.service.register_notice;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
-import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
-import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.in.RegisterNoticeUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.group.port.out.NoticeStoragePort;
-import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Notice;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class RegisterNoticeService implements RegisterNoticeUseCase {
 
-    private final PushFcmUseCase pushFcmUseCase;
     private final GroupStoragePort groupStoragePort;
     private final NoticeStoragePort noticeStoragePort;
-    private final AccountDeviceStoragePort accountDeviceStoragePort;
 
     @Override
     @Transactional
@@ -42,15 +35,6 @@ class RegisterNoticeService implements RegisterNoticeUseCase {
             .writerEmail(command.account().getEmail())
             .regDt(LocalDateTime.now())
             .build());
-        List<AccountDevice> devices = accountDeviceStoragePort
-            .findByGroupIdForPush(command.groupId())
-            .stream()
-            .filter(device -> !device.getAccountId().equals(command.account().getId()))
-            .toList();
-
-        if (!devices.isEmpty()) {
-            pushFcmUseCase.pushAsync(PushFcmCommand.ofNotice(devices, group, savedNotice));
-        }
 
         return RegisterNoticeResponse.ofSuccess();
     }

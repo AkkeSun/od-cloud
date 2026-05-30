@@ -11,7 +11,6 @@ import com.odcloud.fakeClass.FakeGoogleOAuth2Port;
 import com.odcloud.fakeClass.FakeJwtUtil;
 import com.odcloud.fakeClass.FakeProfileConstant;
 import com.odcloud.fakeClass.FakeRedisStoragePort;
-import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.constant.ProfileConstant;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -28,7 +27,6 @@ class IssueTokenServiceTest {
     private FakeGoogleOAuth2Port fakeGoogleOAuth2Port;
     private FakeRedisStoragePort fakeRedisStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
-    private FakeVoucherStoragePort fakeVoucherStoragePort;
     private IssueTokenService issueTokenService;
 
     @BeforeEach
@@ -38,14 +36,12 @@ class IssueTokenServiceTest {
         fakeGoogleOAuth2Port = new FakeGoogleOAuth2Port();
         fakeRedisStoragePort = new FakeRedisStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
-        fakeVoucherStoragePort = new FakeVoucherStoragePort();
         issueTokenService = new IssueTokenService(
             fakeJwtUtil,
             profileConstant,
             fakeGoogleOAuth2Port,
             fakeRedisStoragePort,
-            fakeAccountStoragePort,
-            fakeVoucherStoragePort
+            fakeAccountStoragePort
         );
     }
 

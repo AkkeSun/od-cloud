@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
-import com.odcloud.fakeClass.FakeAccountDeviceStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
-import com.odcloud.fakeClass.FakePushFcmUseCase;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.util.ArrayList;
@@ -18,20 +16,14 @@ import org.junit.jupiter.api.Test;
 
 class JoinGroupServiceTest {
 
-    private FakePushFcmUseCase fakePushFcmUseCase;
     private FakeGroupStoragePort fakeGroupStoragePort;
-    private FakeAccountDeviceStoragePort fakeAccountDeviceStoragePort;
     private JoinGroupService joinGroupService;
 
     @BeforeEach
     void setUp() {
-        fakePushFcmUseCase = new FakePushFcmUseCase();
         fakeGroupStoragePort = new FakeGroupStoragePort();
-        fakeAccountDeviceStoragePort = new FakeAccountDeviceStoragePort();
         joinGroupService = new JoinGroupService(
-            fakePushFcmUseCase,
-            fakeGroupStoragePort,
-            fakeAccountDeviceStoragePort
+            fakeGroupStoragePort
         );
     }
 

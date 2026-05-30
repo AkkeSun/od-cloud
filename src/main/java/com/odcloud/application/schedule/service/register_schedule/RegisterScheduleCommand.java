@@ -17,11 +17,7 @@ public record RegisterScheduleCommand(
 
     LocalDateTime notificationDt
 ) {
-
-    public boolean isGroupSchedule() {
-        return groupId != null;
-    }
-
+    
     public boolean groupAccessDenied() {
         return groupId != null && !account().getGroupIds().contains(groupId);
     }

@@ -1,6 +1,5 @@
 package com.odcloud.application.group.service.update_group;
 
-import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
 import static com.odcloud.infrastructure.constant.CommonConstant.GROUP_LOCK;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GROUP_LIMIT_EXCEEDED;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
@@ -11,7 +10,6 @@ import com.odcloud.application.auth.port.out.RedisStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
 import com.odcloud.application.group.port.in.UpdateGroupUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
-import com.odcloud.application.voucher.port.out.VoucherStoragePort;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
@@ -28,7 +26,6 @@ class UpdateGroupService implements UpdateGroupUseCase {
     private final GroupStoragePort groupStoragePort;
     private final AccountStoragePort accountStoragePort;
     private final FolderInfoStoragePort folderInfoStoragePort;
-    private final VoucherStoragePort voucherStoragePort;
     private final RedisStoragePort redisStoragePort;
 
     @Override
@@ -56,15 +53,6 @@ class UpdateGroupService implements UpdateGroupUseCase {
                     });
 
                 group.updateOwnerEmail(command.newOwnerEmail());
-                voucherStoragePort.findActiveByAccountId(newOwner.getId())
-                    .stream()
-                    .filter(voucher -> voucher.getVoucherType().isStorageVoucher())
-                    .findFirst()
-                    .ifPresentOrElse(
-                        voucher -> group.updateStorageTotal(
-                            voucher.getVoucherType().getStorageIncreaseSize()),
-                        () -> group.updateStorageTotal(DEFAULT_STORAGE_TOTAL)
-                    );
             }
 
             if (group.needsNameUpdate(command.name())) {

@@ -2,16 +2,11 @@ package com.odcloud.application.group.service.update_group_account_status;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_INVALID_GROUP_OWNER;
 
-import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
-import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
 import com.odcloud.application.group.port.in.UpdateGroupAccountStatusUseCase;
 import com.odcloud.application.group.port.out.GroupStoragePort;
-import com.odcloud.domain.model.AccountDevice;
 import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.GroupAccount;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase {
 
-    private final PushFcmUseCase pushFcmUseCase;
     private final GroupStoragePort groupStoragePort;
-    private final AccountDeviceStoragePort accountDeviceStoragePort;
 
     @Override
     @Transactional
@@ -38,16 +31,6 @@ class UpdateGroupAccountStatusService implements UpdateGroupAccountStatusUseCase
             command.groupId(), command.accountId());
         groupAccount.updateStatus(command.status(), command.memo());
         groupStoragePort.save(groupAccount);
-
-        if (!groupAccount.isBlock()) {
-            List<AccountDevice> devices = accountDeviceStoragePort.findByAccountEmailForPush(
-                groupAccount.getEmail());
-
-            if (!devices.isEmpty()) {
-                pushFcmUseCase.pushAsync(
-                    PushFcmCommand.ofUpdateGroupStatus(devices, command, group));
-            }
-        }
 
         return UpdateGroupAccountStatusResponse.ofSuccess();
     }

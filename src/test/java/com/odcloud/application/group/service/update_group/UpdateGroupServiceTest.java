@@ -12,7 +12,6 @@ import com.odcloud.fakeClass.FakeAccountStoragePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakeRedisStoragePort;
-import com.odcloud.fakeClass.FakeVoucherStoragePort;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import java.time.LocalDateTime;
@@ -27,7 +26,6 @@ class UpdateGroupServiceTest {
     private FakeGroupStoragePort fakeGroupStoragePort;
     private FakeAccountStoragePort fakeAccountStoragePort;
     private FakeFolderStoragePort fakeFolderStoragePort;
-    private FakeVoucherStoragePort fakeVoucherStoragePort;
     private UpdateGroupService updateGroupService;
 
     @BeforeEach
@@ -35,12 +33,10 @@ class UpdateGroupServiceTest {
         fakeGroupStoragePort = new FakeGroupStoragePort();
         fakeAccountStoragePort = new FakeAccountStoragePort();
         fakeFolderStoragePort = new FakeFolderStoragePort();
-        fakeVoucherStoragePort = new FakeVoucherStoragePort();
         updateGroupService = new UpdateGroupService(
             fakeGroupStoragePort,
             fakeAccountStoragePort,
             fakeFolderStoragePort,
-            fakeVoucherStoragePort,
             new FakeRedisStoragePort()
         );
     }

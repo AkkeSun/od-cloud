@@ -2,18 +2,11 @@ package com.odcloud.application.schedule.service.register_schedule;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.ACCESS_DENIED;
 
-import com.odcloud.application.device.port.in.PushFcmUseCase;
-import com.odcloud.application.device.port.out.AccountDeviceStoragePort;
-import com.odcloud.application.device.service.push_fcm.PushFcmCommand;
-import com.odcloud.application.group.port.out.GroupStoragePort;
 import com.odcloud.application.schedule.port.in.RegisterSchedulerUseCase;
 import com.odcloud.application.schedule.port.out.ScheduleStoragePort;
-import com.odcloud.domain.model.AccountDevice;
-import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Schedule;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class RegisterScheduleService implements RegisterSchedulerUseCase {
 
-    private final PushFcmUseCase pushFcmUseCase;
-    private final GroupStoragePort groupStoragePort;
     private final ScheduleStoragePort scheduleStoragePort;
-    private final AccountDeviceStoragePort accountDeviceStoragePort;
 
     @Override
     @Transactional
@@ -45,19 +35,6 @@ class RegisterScheduleService implements RegisterSchedulerUseCase {
             .notificationYn("N")
             .regDt(LocalDateTime.now())
             .build());
-        if (command.isGroupSchedule()) {
-            List<AccountDevice> devices = accountDeviceStoragePort
-                .findByGroupIdForPush(command.groupId())
-                .stream()
-                .filter(device -> !device.getAccountId().equals(command.account().getId()))
-                .toList();
-
-            if (!devices.isEmpty()) {
-                Group group = groupStoragePort.findById(command.groupId());
-                pushFcmUseCase.pushAsync(
-                    PushFcmCommand.ofNewSchedule(devices, group, command.startDt()));
-            }
-        }
 
         return RegisterScheduleResponse.ofSuccess();
     }
