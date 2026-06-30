@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -32,8 +31,7 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
     private final GoogleDrivePort googleDrivePort;
 
     @Override
-    @Async
-    public void upload(Long groupId) {
+    public UploadGroupToDriveResponse upload(Long groupId) {
         Group group = groupStoragePort.findById(groupId);
 
         String groupFolderId = group.getDriveFolderId();
@@ -90,6 +88,13 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
                 failedCount++;
             }
         }
+
+        return UploadGroupToDriveResponse.builder()
+            .totalFiles(totalFiles)
+            .uploadedCount(uploadedCount)
+            .skippedCount(skippedCount)
+            .failedCount(failedCount)
+            .build();
     }
 
     private String resolveTargetFolder(Long appFolderId, String groupFolderId,
@@ -107,14 +112,9 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
         try {
             FolderInfo folderInfo = folderInfoStoragePort.findById(appFolderId);
 
-            if (folderInfo.getParentId() == null) {
-                subFolderIdCache.put(appFolderId, groupFolderId);
-                return groupFolderId;
-            }
-
-            String parentDriveFolderId = resolveTargetFolder(
-                folderInfo.getParentId(), groupFolderId, subFolderIdCache
-            );
+            String parentDriveFolderId = folderInfo.getParentId() == null
+                ? groupFolderId
+                : resolveTargetFolder(folderInfo.getParentId(), groupFolderId, subFolderIdCache);
 
             String subFolderDriveId = googleDrivePort.ensureSubFolder(
                 parentDriveFolderId, folderInfo.getName()

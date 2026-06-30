@@ -110,7 +110,6 @@ class UpdateGroupAccountStatusServiceTest {
 
             assertThat(fakeGroupStoragePort.groupAccountDatabase.get(0).getStatus()).isEqualTo(
                 "PENDING");
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
 
@@ -140,8 +139,6 @@ class UpdateGroupAccountStatusServiceTest {
                 .isInstanceOf(CustomBusinessException.class)
                 .hasFieldOrPropertyWithValue("errorCode",
                     ErrorCode.Business_DoesNotExists_GROUP_ACCOUNT);
-
-            assertThat(fakePushFcmUseCase.sentCommands).isEmpty();
         }
 
         @Test

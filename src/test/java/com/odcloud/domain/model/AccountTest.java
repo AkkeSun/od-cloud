@@ -291,7 +291,6 @@ class AccountTest {
                 "테스터",
                 "https://example.com/picture.jpg",
                 groups,
-                null,
                 now,
                 now
             );

@@ -186,19 +186,14 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
         try {
             FolderInfo folderInfo = folderInfoStoragePort.findById(appFolderId);
 
-            if (folderInfo.getParentId() == null) {
-                subFolderIdCache.put(appFolderId, groupFolderId);
-                return groupFolderId;
-            }
+            String parentDriveFolderId = folderInfo.getParentId() == null
+                ? groupFolderId
+                : resolveTargetFolder(folderInfo.getParentId(), groupFolderId, subFolderIdCache);
 
-            String parentDriveFolderId = resolveTargetFolder(
-                folderInfo.getParentId(), groupFolderId, subFolderIdCache
+            String subFolderDriveId = googleDrivePort.ensureSubFolder(
+                parentDriveFolderId, folderInfo.getName()
             );
-
-            String subFolderName = folderInfo.getName();
-            String subFolderDriveId = googleDrivePort.ensureSubFolder(parentDriveFolderId,
-                subFolderName);
-            subFolderIdCache.put(appFolderId, subFolderDriveId);  // sentinel → 실제 Drive ID로 교체
+            subFolderIdCache.put(appFolderId, subFolderDriveId);
             return subFolderDriveId;
 
         } catch (Exception e) {
