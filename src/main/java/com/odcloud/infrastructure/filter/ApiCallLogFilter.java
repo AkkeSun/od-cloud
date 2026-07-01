@@ -36,10 +36,6 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 public class ApiCallLogFilter extends OncePerRequestFilter {
 
     private static final String API_INFO_CACHE_KEY = "api:info:all";
-    private static final List<String> SKIP_RESPONSE_BODY_URIS = List.of(
-        "GET /files/download", "GET /files/*/download"
-    );
-
     private final JwtUtil jwtUtil;
     private final ApiInfoStoragePort apiInfoStoragePort;
     private final ApiCallLogStoragePort apiCallLogStoragePort;
@@ -51,26 +47,12 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
-        boolean skipResponseBody = SKIP_RESPONSE_BODY_URIS.stream()
-            .anyMatch(entry -> {
-                String[] parts = entry.split(" ", 2);
-                return parts[0].equalsIgnoreCase(request.getMethod())
-                    && matcher.match(parts[1], request.getRequestURI());
-            });
+        filterChain.doFilter(wrappedRequest, wrappedResponse);
 
-        String responseBody;
-        if (skipResponseBody) {
-            filterChain.doFilter(wrappedRequest, response);
-            responseBody = "";
-        } else {
-            ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(
-                response);
-            filterChain.doFilter(wrappedRequest, wrappedResponse);
-            responseBody = new String(wrappedResponse.getContentAsByteArray(),
-                StandardCharsets.UTF_8);
-            wrappedResponse.copyBodyToResponse();
-        }
+        String responseBody = new String(wrappedResponse.getContentAsByteArray(),
+            StandardCharsets.UTF_8);
 
         try {
             String errorCode = extractJsonField(responseBody, "data", "errorCode");
