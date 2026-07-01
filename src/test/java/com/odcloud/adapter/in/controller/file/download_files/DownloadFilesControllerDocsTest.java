@@ -19,30 +19,18 @@ import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.file.port.in.DownloadFilesUseCase;
 import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
+import com.odcloud.application.file.service.download_files.DownloadFilesResponse.DownloadFileItem;
+import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 class DownloadFilesControllerDocsTest extends RestDocsSupport {
 
@@ -54,50 +42,38 @@ class DownloadFilesControllerDocsTest extends RestDocsSupport {
         return new DownloadFilesController(useCase);
     }
 
-    @BeforeEach
-    void setUp(RestDocumentationContextProvider provider) {
-        this.objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
-        this.objectMapper.registerModule(
-            new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        this.objectMapper.disable(
-            com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
-            .setControllerAdvice(new com.odcloud.infrastructure.exception.ExceptionAdvice())
-            .setMessageConverters(
-                new ResourceHttpMessageConverter(),
-                new MappingJackson2HttpMessageConverter(objectMapper)
-            )
-            .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
-            .build();
-    }
-
     @Nested
-    @DisplayName("[downloadFiles] 여러 파일을 압축하여 다운로드 API")
+    @DisplayName("[downloadFiles] 여러 파일 다운로드 API")
     class Describe_downloadFiles {
 
         @Test
-        @DisplayName("[success] 여러 파일을 ZIP으로 압축하여 다운로드한다")
+        @DisplayName("[success] 접근 권한 검증 후 파일 URL 목록을 응답한다")
         void success() throws Exception {
             // given
             String authorization = "Bearer test";
             List<Long> fileIds = List.of(1L, 2L, 3L);
-            Resource resource = new ByteArrayResource("Mock ZIP content".getBytes());
 
-            String timestamp = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            String filename = "files_" + timestamp + ".zip";
+            DownloadFilesResponse response = DownloadFilesResponse.builder()
+                .files(List.of(
+                    DownloadFileItem.builder()
+                        .fileId(1L)
+                        .fileName("test1.txt")
+                        .fileUrl("https://moimism.odlab.kr/test-group/folder1/test1.txt")
+                        .build(),
+                    DownloadFileItem.builder()
+                        .fileId(2L)
+                        .fileName("test2.pdf")
+                        .fileUrl("https://moimism.odlab.kr/test-group/folder1/test2.pdf")
+                        .build(),
+                    DownloadFileItem.builder()
+                        .fileId(3L)
+                        .fileName("test3.jpg")
+                        .fileUrl("https://moimism.odlab.kr/test-group/folder1/test3.jpg")
+                        .build()
+                ))
+                .build();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDisposition(ContentDisposition.attachment()
-                .filename(filename, StandardCharsets.UTF_8)
-                .build());
-
-            DownloadFilesResponse Response =
-                new DownloadFilesResponse(resource, headers);
-
-            given(useCase.download(any())).willReturn(Response);
+            given(useCase.download(any())).willReturn(response);
 
             // when & then
             performDocument(status().isOk(), fileIds, "success", authorization);
@@ -129,16 +105,16 @@ class DownloadFilesControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 파일 다운로드 오류 시 500 코드와 에러 메시지를 응답한다")
-        void error_downloadError() throws Exception {
+        @DisplayName("[error] 접근 권한이 없는 파일이 포함된 경우 에러 메시지를 응답한다")
+        void error_accessDenied() throws Exception {
             // given
             String authorization = "Bearer test";
 
             given(useCase.download(any()))
-                .willThrow(new CustomBusinessException(ErrorCode.Business_FILE_DOWNLOAD_ERROR));
+                .willThrow(new CustomAuthorizationException(ErrorCode.ACCESS_DENIED));
 
             // when & then
-            performErrorDocument(status().isInternalServerError(), List.of(1L, 2L), "파일 다운로드 에러",
+            performErrorDocument(status().isForbidden(), List.of(1L, 2L), "접근 권한 없음",
                 authorization);
         }
     }
@@ -167,15 +143,31 @@ class DownloadFilesControllerDocsTest extends RestDocsSupport {
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
                         .tag("File")
-                        .summary("파일 목록 다운로드 API")
-                        .description("파일 목록을 ZIP으로 압축하여 다운로드하는 API 입니다. <br>"
-                            + "압축 파일명 형식: files_yyyyMMdd_HHmmss.zip <br>"
+                        .summary("여러 파일 다운로드 API")
+                        .description("여러 파일에 대한 접근 권한을 검증하고, 클라이언트가 직접 다운로드할 수 있는 "
+                            + "파일 URL 목록을 응답하는 API 입니다. <br>"
                             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다.")
                         .queryParameters(
                             parameterWithName("fileIds").description("다운로드할 파일 ID 목록 (최소 1개 이상)")
                         )
                         .requestHeaders(
                             headerWithName("Authorization").description("인증 토큰")
+                        )
+                        .responseFields(
+                            fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
+                                .description("상태 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING)
+                                .description("상태 메시지"),
+                            fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                .description("응답 데이터"),
+                            fieldWithPath("data.files").type(JsonFieldType.ARRAY)
+                                .description("파일 목록"),
+                            fieldWithPath("data.files[].fileId").type(JsonFieldType.NUMBER)
+                                .description("파일 ID"),
+                            fieldWithPath("data.files[].fileName").type(JsonFieldType.STRING)
+                                .description("파일명"),
+                            fieldWithPath("data.files[].fileUrl").type(JsonFieldType.STRING)
+                                .description("파일 다운로드 URL")
                         )
                         .requestSchema(Schema.schema("[request] " + apiName))
                         .responseSchema(Schema.schema("[response] " + docIdentifier))
@@ -208,9 +200,9 @@ class DownloadFilesControllerDocsTest extends RestDocsSupport {
                     preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder()
                         .tag("File")
-                        .summary("파일 목록 다운로드 API")
-                        .description("파일 목록을 ZIP으로 압축하여 다운로드하는 API 입니다. <br>"
-                            + "압축 파일명 형식: files_yyyyMMdd_HHmmss.zip <br>"
+                        .summary("여러 파일 다운로드 API")
+                        .description("여러 파일에 대한 접근 권한을 검증하고, 클라이언트가 직접 다운로드할 수 있는 "
+                            + "파일 URL 목록을 응답하는 API 입니다. <br>"
                             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다.")
                         .queryParameters(
                             parameterWithName("fileIds").description("다운로드할 파일 ID 목록 (최소 1개 이상)")

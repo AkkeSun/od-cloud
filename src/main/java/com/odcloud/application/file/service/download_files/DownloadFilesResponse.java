@@ -1,13 +1,19 @@
 package com.odcloud.application.file.service.download_files;
 
+import java.util.List;
 import lombok.Builder;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 
 @Builder
 public record DownloadFilesResponse(
-    Resource resource,
-    HttpHeaders headers
+    List<DownloadFileItem> files
 ) {
 
+    @Builder
+    public record DownloadFileItem(
+        Long fileId,
+        String fileName,
+        String fileUrl
+    ) {
+
+    }
 }

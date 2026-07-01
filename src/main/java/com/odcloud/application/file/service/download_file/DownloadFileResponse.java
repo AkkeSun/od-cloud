@@ -1,20 +1,18 @@
 package com.odcloud.application.file.service.download_file;
 
-import com.odcloud.application.file.port.out.dto.FileResponse;
+import com.odcloud.domain.model.FileInfo;
 import lombok.Builder;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 
 @Builder
 public record DownloadFileResponse(
-    Resource resource,
-    HttpHeaders headers
+    String fileName,
+    String fileUrl
 ) {
 
-    public static DownloadFileResponse of(FileResponse fileResponse) {
+    public static DownloadFileResponse of(FileInfo file, String webServerHost) {
         return DownloadFileResponse.builder()
-            .resource(fileResponse.resource())
-            .headers(fileResponse.headers())
+            .fileName(file.getFileName())
+            .fileUrl(webServerHost + file.getFileLoc())
             .build();
     }
 }

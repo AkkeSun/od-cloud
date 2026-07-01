@@ -3,6 +3,7 @@ package com.odcloud.adapter.in.controller.file.download_file;
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -18,26 +19,15 @@ import com.epages.restdocs.apispec.Schema;
 import com.odcloud.RestDocsSupport;
 import com.odcloud.application.file.port.in.DownloadFileUseCase;
 import com.odcloud.application.file.service.download_file.DownloadFileResponse;
+import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
-import java.nio.charset.StandardCharsets;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 class DownloadFileControllerDocsTest extends RestDocsSupport {
 
@@ -49,48 +39,23 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
         return new DownloadFileController(useCase);
     }
 
-    @BeforeEach
-    void setUp(RestDocumentationContextProvider provider) {
-        this.objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
-        this.objectMapper.registerModule(
-            new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        this.objectMapper.disable(
-            com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
-            .setControllerAdvice(new com.odcloud.infrastructure.exception.ExceptionAdvice())
-            .setMessageConverters(
-                new ResourceHttpMessageConverter(),
-                new MappingJackson2HttpMessageConverter(objectMapper)
-            )
-            .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
-            .build();
-    }
-
     @Nested
     @DisplayName("[downloadFile] 단일 파일 다운로드 API")
     class Describe_downloadFile {
 
         @Test
-        @DisplayName("[success] 파일 다운로드에 성공한다")
+        @DisplayName("[success] 접근 권한 검증 후 파일 URL을 응답한다")
         void success() throws Exception {
             // given
             Long fileId = 1L;
             String authorization = "Bearer test";
 
-            byte[] fileContent = "Test file content".getBytes();
-            Resource resource = new ByteArrayResource(fileContent);
+            DownloadFileResponse response = DownloadFileResponse.builder()
+                .fileName("test.txt")
+                .fileUrl("https://moimism.odlab.kr/test-group/folder1/test.txt")
+                .build();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentDisposition(ContentDisposition.attachment()
-                .filename("test.txt", StandardCharsets.UTF_8)
-                .build());
-            headers.setContentType(MediaType.TEXT_PLAIN);
-            headers.setContentLength(fileContent.length);
-
-            DownloadFileResponse Response = new DownloadFileResponse(resource, headers);
-
-            given(useCase.downloadFile(fileId)).willReturn(Response);
+            given(useCase.downloadFile(any())).willReturn(response);
 
             // when & then
             performDocument(fileId, status().isOk(), "success", authorization);
@@ -103,7 +68,7 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
             Long fileId = 999L;
             String authorization = "Bearer test";
 
-            given(useCase.downloadFile(fileId))
+            given(useCase.downloadFile(any()))
                 .willThrow(new CustomBusinessException(ErrorCode.Business_DoesNotExists_FILE));
 
             // when & then
@@ -112,18 +77,17 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 파일 다운로드 오류 시 500 코드와 에러 메시지를 응답한다")
-        void error_downloadError() throws Exception {
+        @DisplayName("[error] 접근 권한이 없는 파일 다운로드 시 에러 메시지를 응답한다")
+        void error_accessDenied() throws Exception {
             // given
             Long fileId = 1L;
             String authorization = "Bearer test";
 
-            given(useCase.downloadFile(fileId))
-                .willThrow(new CustomBusinessException(ErrorCode.Business_FILE_DOWNLOAD_ERROR));
+            given(useCase.downloadFile(any()))
+                .willThrow(new CustomAuthorizationException(ErrorCode.ACCESS_DENIED));
 
             // when & then
-            performErrorDocument(fileId, status().isInternalServerError(), "파일 다운로드 에러",
-                authorization);
+            performErrorDocument(fileId, status().isForbidden(), "접근 권한 없음", authorization);
         }
     }
 
@@ -144,13 +108,25 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
                     resource(ResourceSnippetParameters.builder()
                         .tag("File")
                         .summary("파일 다운로드 API")
-                        .description("파일을 다운로드하는 API 입니다. <br>"
+                        .description("파일에 대한 접근 권한을 검증하고, 클라이언트가 직접 다운로드할 수 있는 파일 URL을 응답하는 API 입니다. <br>"
                             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다.")
                         .pathParameters(
                             parameterWithName("fileId").description("다운로드할 파일 ID")
                         )
                         .requestHeaders(
                             headerWithName("Authorization").description("인증 토큰")
+                        )
+                        .responseFields(
+                            fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
+                                .description("상태 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING)
+                                .description("상태 메시지"),
+                            fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                .description("응답 데이터"),
+                            fieldWithPath("data.fileName").type(JsonFieldType.STRING)
+                                .description("파일명"),
+                            fieldWithPath("data.fileUrl").type(JsonFieldType.STRING)
+                                .description("파일 다운로드 URL")
                         )
                         .requestSchema(Schema.schema("[request] " + apiName))
                         .responseSchema(Schema.schema("[response] " + docIdentifier))
@@ -177,7 +153,7 @@ class DownloadFileControllerDocsTest extends RestDocsSupport {
                     resource(ResourceSnippetParameters.builder()
                         .tag("File")
                         .summary("파일 다운로드 API")
-                        .description("파일을 다운로드하는 API 입니다. <br>"
+                        .description("파일에 대한 접근 권한을 검증하고, 클라이언트가 직접 다운로드할 수 있는 파일 URL을 응답하는 API 입니다. <br>"
                             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다.")
                         .pathParameters(
                             parameterWithName("fileId").description("다운로드할 파일 ID")

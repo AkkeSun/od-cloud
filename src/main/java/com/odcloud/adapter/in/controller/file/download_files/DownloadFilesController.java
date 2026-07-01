@@ -1,11 +1,12 @@
 package com.odcloud.adapter.in.controller.file.download_files;
 
-import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
 import com.odcloud.application.file.port.in.DownloadFilesUseCase;
+import com.odcloud.application.file.service.download_files.DownloadFilesResponse;
+import com.odcloud.domain.model.Account;
+import com.odcloud.infrastructure.resolver.LoginAccount;
+import com.odcloud.infrastructure.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,10 @@ class DownloadFilesController {
     private final DownloadFilesUseCase useCase;
 
     @GetMapping("/files/download")
-    ResponseEntity<Resource> downloadFiles(@Valid DownloadFilesRequest request) {
-        DownloadFilesResponse response = useCase.download(request.getFileIds());
-        return ResponseEntity.ok()
-            .headers(response.headers())
-            .body(response.resource());
+    ApiResponse<DownloadFilesResponse> downloadFiles(
+        @Valid DownloadFilesRequest request,
+        @LoginAccount Account account
+    ) {
+        return ApiResponse.ok(useCase.download(request.toCommand(account)));
     }
 }
