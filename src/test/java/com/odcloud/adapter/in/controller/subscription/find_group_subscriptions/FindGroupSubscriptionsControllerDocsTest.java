@@ -1,4 +1,4 @@
-package com.odcloud.adapter.in.controller.voucher.find_group_vouchers;
+package com.odcloud.adapter.in.controller.subscription.find_group_subscriptions;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
@@ -18,8 +18,8 @@ import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.odcloud.application.voucher.port.in.FindGroupVouchersUseCase;
-import com.odcloud.application.voucher.service.find_group_vouchers.FindGroupVouchersResponse;
+import com.odcloud.application.subscription.port.in.FindGroupSubscriptionsUseCase;
+import com.odcloud.application.subscription.service.find_group_subscriptions.FindGroupSubscriptionsResponse;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.infrastructure.exception.ExceptionAdvice;
@@ -44,11 +44,11 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(RestDocumentationExtension.class)
-class FindGroupVouchersControllerDocsTest {
+class FindGroupSubscriptionsControllerDocsTest {
 
-    private final FindGroupVouchersUseCase useCase = mock(FindGroupVouchersUseCase.class);
+    private final FindGroupSubscriptionsUseCase useCase = mock(FindGroupSubscriptionsUseCase.class);
     private final JwtUtil jwtUtil = mock(JwtUtil.class);
-    private final String apiName = "그룹 바우처 조회 API";
+    private final String apiName = "그룹 구독 조회 API";
 
     protected MockMvc mockMvc;
     protected ObjectMapper objectMapper;
@@ -80,7 +80,7 @@ class FindGroupVouchersControllerDocsTest {
         ));
 
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new FindGroupVouchersController(useCase))
+            .standaloneSetup(new FindGroupSubscriptionsController(useCase))
             .setControllerAdvice(new ExceptionAdvice())
             .setCustomArgumentResolvers(new LoginAccountResolver(jwtUtil))
             .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
@@ -89,47 +89,47 @@ class FindGroupVouchersControllerDocsTest {
     }
 
     @Nested
-    @DisplayName("[find] 그룹별 활성 바우처 조회 API")
+    @DisplayName("[find] 그룹별 활성 구독 조회 API")
     class Describe_find {
 
         @Test
-        @DisplayName("[success] 그룹별 바우처 목록을 조회한다")
+        @DisplayName("[success] 그룹별 구독 목록을 조회한다")
         void success() throws Exception {
             // given
-            FindGroupVouchersResponse.VoucherItem voucher1 =
-                FindGroupVouchersResponse.VoucherItem.builder()
-                    .voucherName("CLOUD_100GB")
-                    .payer("홍길동")
-                    .expiredAt("2025-12-31T00:00:00")
+            FindGroupSubscriptionsResponse.SubscriptionItem subscription1 =
+                FindGroupSubscriptionsResponse.SubscriptionItem.builder()
+                    .productName("CLOUD_100GB")
+                    .buyer("홍길동")
+                    .nextBillingDate("2025-12-31")
                     .build();
 
-            FindGroupVouchersResponse.VoucherItem voucher2 =
-                FindGroupVouchersResponse.VoucherItem.builder()
-                    .voucherName("CLOUD_50GB")
-                    .payer("김철수")
-                    .expiredAt(null)
+            FindGroupSubscriptionsResponse.SubscriptionItem subscription2 =
+                FindGroupSubscriptionsResponse.SubscriptionItem.builder()
+                    .productName("CLOUD_50GB")
+                    .buyer("김철수")
+                    .nextBillingDate(null)
                     .build();
 
-            FindGroupVouchersResponse.GroupVouchers devGroup =
-                FindGroupVouchersResponse.GroupVouchers.builder()
+            FindGroupSubscriptionsResponse.GroupSubscriptions devGroup =
+                FindGroupSubscriptionsResponse.GroupSubscriptions.builder()
                     .groupName("개발팀")
-                    .vouchers(List.of(voucher1, voucher2))
+                    .subscriptions(List.of(subscription1, subscription2))
                     .build();
 
-            FindGroupVouchersResponse.GroupVouchers marketingGroup =
-                FindGroupVouchersResponse.GroupVouchers.builder()
+            FindGroupSubscriptionsResponse.GroupSubscriptions marketingGroup =
+                FindGroupSubscriptionsResponse.GroupSubscriptions.builder()
                     .groupName("마케팅팀")
-                    .vouchers(List.of())
+                    .subscriptions(List.of())
                     .build();
 
-            FindGroupVouchersResponse response = FindGroupVouchersResponse.builder()
+            FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.builder()
                 .groups(List.of(devGroup, marketingGroup))
                 .build();
 
             given(useCase.find(any())).willReturn(response);
 
             // when & then
-            performDocument("그룹 바우처 조회 성공", "success", status().isOk(),
+            performDocument("그룹 구독 조회 성공", "success", status().isOk(),
                 fieldWithPath("httpStatus")
                     .type(JsonFieldType.NUMBER).description("상태 코드"),
                 fieldWithPath("message")
@@ -137,17 +137,17 @@ class FindGroupVouchersControllerDocsTest {
                 fieldWithPath("data")
                     .type(JsonFieldType.OBJECT).description("응답 데이터"),
                 fieldWithPath("data.groups")
-                    .type(JsonFieldType.ARRAY).description("그룹별 바우처 목록"),
+                    .type(JsonFieldType.ARRAY).description("그룹별 구독 목록"),
                 fieldWithPath("data.groups[].groupName")
                     .type(JsonFieldType.STRING).description("그룹명"),
-                fieldWithPath("data.groups[].vouchers")
-                    .type(JsonFieldType.ARRAY).description("바우처 목록 (바우처가 없으면 빈 배열)"),
-                fieldWithPath("data.groups[].vouchers[].voucherName")
-                    .type(JsonFieldType.STRING).description("바우처명").optional(),
-                fieldWithPath("data.groups[].vouchers[].payer")
-                    .type(JsonFieldType.STRING).description("결제자 닉네임").optional(),
-                fieldWithPath("data.groups[].vouchers[].expiredAt")
-                    .type(JsonFieldType.STRING).description("만료일시 (null 가능)").optional()
+                fieldWithPath("data.groups[].subscriptions")
+                    .type(JsonFieldType.ARRAY).description("구독 목록 (구독이 없으면 빈 배열)"),
+                fieldWithPath("data.groups[].subscriptions[].productName")
+                    .type(JsonFieldType.STRING).description("상품명").optional(),
+                fieldWithPath("data.groups[].subscriptions[].buyer")
+                    .type(JsonFieldType.STRING).description("구매자 닉네임").optional(),
+                fieldWithPath("data.groups[].subscriptions[].nextBillingDate")
+                    .type(JsonFieldType.STRING).description("다음 결제일 (null 가능)").optional()
             );
         }
     }
@@ -156,7 +156,7 @@ class FindGroupVouchersControllerDocsTest {
         String identifier, String responseSchema, ResultMatcher status,
         FieldDescriptor... responseFields) throws Exception {
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/vouchers/active")
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/subscriptions/active")
                 .header("Authorization", "Bearer test-token-123"))
             .andDo(print())
             .andExpect(status)
@@ -164,10 +164,10 @@ class FindGroupVouchersControllerDocsTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 resource(ResourceSnippetParameters.builder()
-                    .tag("Voucher")
-                    .summary("그룹 바우처 조회 API")
-                    .description("로그인한 사용자가 속한 그룹별 활성 바우처 목록을 조회합니다.<br><br>"
-                        + "- 바우처가 없는 그룹도 빈 배열로 응답됩니다.<br>"
+                    .tag("Subscription")
+                    .summary("그룹 구독 조회 API")
+                    .description("로그인한 사용자가 속한 그룹별 활성 구독 목록을 조회합니다.<br><br>"
+                        + "- 구독이 없는 그룹도 빈 배열로 응답됩니다.<br>"
                         + "- 인증 토큰(JWT)이 필수입니다.")
                     .requestHeaders(
                         headerWithName("Authorization")

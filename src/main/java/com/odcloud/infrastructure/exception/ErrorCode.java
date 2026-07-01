@@ -47,7 +47,7 @@ public enum ErrorCode {
     Business_GROUP_LIMIT_EXCEEDED(4025, "사용자당 최대 3개의 그룹만 생성할 수 있습니다"),
     Business_STORAGE_LIMIT_EXCEEDED(4026, "그룹 스토리지 용량이 부족합니다"),
     Business_NOT_FOUND_PAYMENT(4027, "조회된 결제 정보가 없습니다"),
-    Business_NOT_FOUND_VOUCHER(4028, "조회된 바우처 정보가 없습니다"),
+    Business_NOT_FOUND_SUBSCRIPTION(4028, "조회된 구독 정보가 없습니다"),
     Business_LOCK_ACQUISITION_FAILED(4029, "분산락 획득에 실패했습니다"),
     Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR(4030, "Google Drive 폴더 생성/조회 중 오류가 발생했습니다"),
     Business_GOOGLE_DRIVE_UPLOAD_ERROR(4031, "Google Drive 파일 업로드 중 오류가 발생했습니다"),

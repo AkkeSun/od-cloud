@@ -1,5 +1,6 @@
 package com.odcloud.domain.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,16 +11,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Voucher {
+public class Subscription {
 
     private Long id;
-    private Long paymentId;
-    private String voucherType;
-    private String status;
+    private Long productId;
     private Long groupId;
-    private String memo;
-    private LocalDateTime startAt;
-    private LocalDateTime endDt;
+    private Long buyerId;
+    private String status;
+    private String billingKey;
+    private LocalDate nextBillingDate;
+    private LocalDate expiredDate;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 

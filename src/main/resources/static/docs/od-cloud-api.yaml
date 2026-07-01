@@ -4287,14 +4287,14 @@ paths:
                         "errorMessage" : "조회된 스케줄이 없습니다"
                       }
                     }
-  /vouchers:
+  /subscriptions:
     post:
       tags:
-      - Voucher
-      summary: 바우처 생성 API
-      description: "바우처를 생성하는 API 입니다. 스토리지 바우처(STORAGE_BASIC, STORAGE_PLUS)인 경우 groupId가\
+      - Subscription
+      summary: 구독 생성 API
+      description: "구독을 생성하는 API 입니다. 스토리지 구독(STORAGE_BASIC, STORAGE_PLUS)인 경우 groupId가\
         \ 필수입니다."
-      operationId: "[바우처 생성 API] "
+      operationId: "[구독 생성 API] "
       parameters:
       - name: Authorization
         in: header
@@ -4307,95 +4307,87 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/[request] 바우처 생성 API"
+              $ref: "#/components/schemas/[request] 구독 생성 API"
             examples:
-              '[바우처 생성 API] success':
+              '[구독 생성 API] success':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_apple_123",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:30:00",
-                    "voucherType" : "STORAGE_PLUS",
-                    "groupId" : 1,
-                    "memo" : "프리미엄 플랜 구매"
+                    "productId" : 1,
+                    "groupId" : 1
                   }
-              '[바우처 생성 API] storeTxId 미입력':
+              '[구독 생성 API] storeTxId 미입력':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_test",
                     "orderTxId" : "",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 10,
-                    "memo" : null
+                    "productId" : 1,
+                    "groupId" : 10
                   }
-              '[바우처 생성 API] 존재하지 않는 그룹 ID 입력':
+              '[구독 생성 API] 존재하지 않는 그룹 ID 입력':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_test",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 9999,
-                    "memo" : null
+                    "productId" : 1,
+                    "groupId" : 9999
                   }
-              '[바우처 생성 API] voucherType 미입력':
+              '[구독 생성 API] productId 미입력':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_test",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : null,
-                    "groupId" : 10,
-                    "memo" : null
+                    "productId" : null,
+                    "groupId" : 10
                   }
-              '[바우처 생성 API] purchasedAt 미입력':
+              '[구독 생성 API] purchasedAt 미입력':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_test",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 10,
-                    "memo" : null
+                    "productId" : 1,
+                    "groupId" : 10
                   }
-              '[바우처 생성 API] 스토리지 바우처 groupId 미입력':
+              '[구독 생성 API] 스토리지 구독 groupId 미입력':
                 value: |-
                   {
                     "storeType" : "GOOGLE",
                     "subscriptionKey" : "sub_plus",
                     "orderTxId" : "GOOGLE_TX_PLUS",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_PLUS",
-                    "groupId" : null,
-                    "memo" : null
+                    "productId" : 2,
+                    "groupId" : null
                   }
-              '[바우처 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+              '[구독 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                 value: |-
                   {
                     "storeType" : "APPLE",
                     "subscriptionKey" : "sub_apple_123",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 10,
-                    "memo" : null
+                    "productId" : 1,
+                    "groupId" : 10
                   }
-              '[바우처 생성 API] storeType 미입력':
+              '[구독 생성 API] storeType 미입력':
                 value: |-
                   {
                     "storeType" : null,
                     "subscriptionKey" : "sub_test",
                     "orderTxId" : "APPLE_TX_12345",
                     "storeProcessDt" : "2026-01-09 10:00:00",
-                    "voucherType" : "STORAGE_BASIC",
-                    "groupId" : 10,
-                    "memo" : null
+                    "productId" : 1,
+                    "groupId" : 10
                   }
       responses:
         "200":
@@ -4405,7 +4397,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
-                '[바우처 생성 API] success':
+                '[구독 생성 API] success':
                   value: |-
                     {
                       "httpStatus" : 200,
@@ -4421,7 +4413,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
-                '[바우처 생성 API] storeTxId 미입력':
+                '[구독 생성 API] storeTxId 미입력':
                   value: |-
                     {
                       "httpStatus" : 400,
@@ -4431,17 +4423,17 @@ paths:
                         "errorMessage" : "결제 단위 트랜젝션 아이디는 필수값 입니다"
                       }
                     }
-                '[바우처 생성 API] voucherType 미입력':
+                '[구독 생성 API] productId 미입력':
                   value: |-
                     {
                       "httpStatus" : 400,
                       "message" : "BAD_REQUEST",
                       "data" : {
                         "errorCode" : 1099,
-                        "errorMessage" : "바우처 타입은 필수값 입니다"
+                        "errorMessage" : "상품 ID는 필수값 입니다"
                       }
                     }
-                '[바우처 생성 API] purchasedAt 미입력':
+                '[구독 생성 API] purchasedAt 미입력':
                   value: |-
                     {
                       "httpStatus" : 400,
@@ -4451,17 +4443,17 @@ paths:
                         "errorMessage" : "스토어 처리 일시는 필수값 입니다"
                       }
                     }
-                '[바우처 생성 API] 스토리지 바우처 groupId 미입력':
+                '[구독 생성 API] 스토리지 구독 groupId 미입력':
                   value: |-
                     {
                       "httpStatus" : 400,
                       "message" : "BAD_REQUEST",
                       "data" : {
                         "errorCode" : 1099,
-                        "errorMessage" : "스토리지 바우처인 경우 groupId는 필수값 입니다"
+                        "errorMessage" : "스토리지 구독인 경우 groupId는 필수값 입니다"
                       }
                     }
-                '[바우처 생성 API] storeType 미입력':
+                '[구독 생성 API] storeType 미입력':
                   value: |-
                     {
                       "httpStatus" : 400,
@@ -4478,7 +4470,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
-                '[바우처 생성 API] 존재하지 않는 그룹 ID 입력':
+                '[구독 생성 API] 존재하지 않는 그룹 ID 입력':
                   value: |-
                     {
                       "httpStatus" : 500,
@@ -4495,7 +4487,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
-                '[바우처 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
+                '[구독 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
                   value: |-
                     {
                       "httpStatus" : 401,
@@ -5169,14 +5161,14 @@ components:
           oneOf:
           - type: string
           - null
-    '[request] 바우처 생성 API':
-      title: "[request] 바우처 생성 API"
+    '[request] 구독 생성 API':
+      title: "[request] 구독 생성 API"
       required:
       - orderTxId
       - storeProcessDt
       - storeType
       - subscriptionKey
-      - voucherType
+      - productId
       type: object
       properties:
         storeType:
@@ -5187,27 +5179,20 @@ components:
         orderTxId:
           type: string
           description: 결제 단위 트랜젝션 아이디
-        voucherType:
-          description: "바우처 타입 (STORAGE_BASIC, STORAGE_PLUS, ADVERTISE_30, ADVERTISE_90,\
-            \ ADVERTISE_365)"
+        productId:
+          description: 상품 ID
           oneOf:
-          - type: string
+          - type: number
           - null
         storeProcessDt:
           type: string
           description: 스토어 처리 일시 (yyyy-MM-dd HH:mm:ss)
         groupId:
-          description: 그룹 ID (스토리지 바우처인 경우 필수)
+          description: 그룹 ID (스토리지 구독인 경우 필수)
           nullable: true
           oneOf:
           - type: number
           - null
-        memo:
-          description: 메모
-          nullable: true
-          oneOf:
-          - null
-          - type: string
         subscriptionKey:
           type: string
           description: 구독 고유키
