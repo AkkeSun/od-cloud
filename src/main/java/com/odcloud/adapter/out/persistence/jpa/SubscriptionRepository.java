@@ -35,7 +35,7 @@ class SubscriptionRepository {
             .innerJoin(productEntity).on(subscriptionEntity.productId.eq(productEntity.id))
             .innerJoin(buyerAccount).on(subscriptionEntity.buyerId.eq(buyerAccount.id))
             .where(subscriptionEntity.groupId.in(groupIds)
-                .and(subscriptionEntity.status.eq("ACTIVE")))
+                .and(subscriptionEntity.status.in("ACTIVE", "EXP_PENDING")))
             .fetch();
     }
 }

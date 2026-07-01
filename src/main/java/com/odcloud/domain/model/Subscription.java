@@ -20,7 +20,6 @@ public class Subscription {
     private String status;
     private String billingKey;
     private LocalDate nextBillingDate;
-    private LocalDate expiredDate;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
