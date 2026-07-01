@@ -1,12 +1,12 @@
 package com.odcloud.application.subscription.port.out;
 
-import java.time.LocalDate;
-
 public record SubscriptionDetail(
+    Long groupId,
     String groupName,
     String productName,
+    Long buyerId,
     String buyerNickname,
-    LocalDate nextBillingDate
+    String status
 ) {
 
 }

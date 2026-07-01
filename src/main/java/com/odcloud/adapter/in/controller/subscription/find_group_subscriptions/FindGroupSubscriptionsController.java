@@ -18,12 +18,12 @@ class FindGroupSubscriptionsController {
     private final FindGroupSubscriptionsUseCase useCase;
 
     @GetMapping("/subscriptions/active")
-    ApiResponse<FindGroupSubscriptionsResponse> find(@LoginAccount Account account) {
+    ApiResponse<List<FindGroupSubscriptionsResponse>> find(@LoginAccount Account account) {
         return ApiResponse.ok(useCase.find(account));
     }
 
     @GetMapping("/test/subscriptions/active")
-    ApiResponse<FindGroupSubscriptionsResponse> findForTest(List<Long> groupIds) {
+    ApiResponse<List<FindGroupSubscriptionsResponse>> findForTest(List<Long> groupIds) {
         return ApiResponse.ok(useCase.find(Account.builder()
                 .groups(groupIds.stream()
                 .map(id -> Group.builder().id(id).build())

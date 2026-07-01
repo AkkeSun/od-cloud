@@ -3,8 +3,6 @@ package com.odcloud.application.subscription.service.find_group_subscriptions;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.application.subscription.port.out.SubscriptionDetail;
-import com.odcloud.domain.model.Group;
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,142 +11,92 @@ import org.junit.jupiter.api.Test;
 class FindGroupSubscriptionsResponseTest {
 
     @Nested
-    @DisplayName("[of] 그룹 목록과 구독 상세 목록으로 Response 생성")
+    @DisplayName("[of] 구독 상세 목록으로 Response 생성")
     class Describe_of {
 
         @Test
-        @DisplayName("[success] 각 그룹의 구독이 올바르게 매핑된다")
+        @DisplayName("[success] 구독이 상품별로 올바르게 매핑된다")
         void success_withSubscriptions() {
             // given
-            LocalDate nextBillingDate = LocalDate.of(2025, 12, 31);
-
-            List<Group> groups = List.of(
-                Group.builder().id(1L).name("개발팀").build(),
-                Group.builder().id(2L).name("마케팅팀").build()
-            );
-
             List<SubscriptionDetail> details = List.of(
-                new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", nextBillingDate),
-                new SubscriptionDetail("개발팀", "CLOUD_50GB", "김철수", null),
-                new SubscriptionDetail("마케팅팀", "CLOUD_100GB", "이영희", nextBillingDate)
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE"),
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_50GB", 10L, "홍길동", "ACTIVE"),
+                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_100GB", 20L, "이영희", "EXP_PENDING")
             );
 
             // when
-            FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.of(groups, details);
+            List<FindGroupSubscriptionsResponse> response = FindGroupSubscriptionsResponse.of(details);
 
             // then
-            assertThat(response.groups()).hasSize(2);
+            assertThat(response).hasSize(2);
 
-            FindGroupSubscriptionsResponse.GroupSubscriptions devGroup = response.groups().get(0);
-            assertThat(devGroup.groupName()).isEqualTo("개발팀");
-            assertThat(devGroup.subscriptions()).hasSize(2);
-            assertThat(devGroup.subscriptions().get(0).productName()).isEqualTo("CLOUD_100GB");
-            assertThat(devGroup.subscriptions().get(0).buyer()).isEqualTo("홍길동");
-            assertThat(devGroup.subscriptions().get(0).nextBillingDate()).isNotNull();
-            assertThat(devGroup.subscriptions().get(1).productName()).isEqualTo("CLOUD_50GB");
-            assertThat(devGroup.subscriptions().get(1).nextBillingDate()).isNull();
+            FindGroupSubscriptionsResponse cloud100 = response.get(0);
+            assertThat(cloud100.productName()).isEqualTo("CLOUD_100GB");
+            assertThat(cloud100.groups()).hasSize(2);
+            assertThat(cloud100.groups().get(0).groupId()).isEqualTo(1L);
+            assertThat(cloud100.groups().get(0).groupName()).isEqualTo("개발팀");
+            assertThat(cloud100.groups().get(0).buyerId()).isEqualTo(10L);
+            assertThat(cloud100.groups().get(0).buyer()).isEqualTo("홍길동");
+            assertThat(cloud100.groups().get(0).status()).isEqualTo("ACTIVE");
+            assertThat(cloud100.groups().get(1).groupName()).isEqualTo("마케팅팀");
+            assertThat(cloud100.groups().get(1).status()).isEqualTo("EXP_PENDING");
 
-            FindGroupSubscriptionsResponse.GroupSubscriptions marketingGroup = response.groups().get(1);
-            assertThat(marketingGroup.groupName()).isEqualTo("마케팅팀");
-            assertThat(marketingGroup.subscriptions()).hasSize(1);
-            assertThat(marketingGroup.subscriptions().get(0).buyer()).isEqualTo("이영희");
+            FindGroupSubscriptionsResponse cloud50 = response.get(1);
+            assertThat(cloud50.productName()).isEqualTo("CLOUD_50GB");
+            assertThat(cloud50.groups()).hasSize(1);
+            assertThat(cloud50.groups().get(0).groupName()).isEqualTo("개발팀");
         }
 
         @Test
-        @DisplayName("[success] 구독이 없는 그룹은 빈 subscriptions 리스트를 가진다")
-        void success_groupWithNoSubscriptions() {
-            // given
-            List<Group> groups = List.of(
-                Group.builder().id(1L).name("개발팀").build(),
-                Group.builder().id(2L).name("구독없는팀").build()
-            );
-
-            List<SubscriptionDetail> details = List.of(
-                new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", null)
-            );
-
-            // when
-            FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.of(groups, details);
-
-            // then
-            assertThat(response.groups()).hasSize(2);
-
-            FindGroupSubscriptionsResponse.GroupSubscriptions groupWithSubscription = response.groups().get(0);
-            assertThat(groupWithSubscription.groupName()).isEqualTo("개발팀");
-            assertThat(groupWithSubscription.subscriptions()).hasSize(1);
-
-            FindGroupSubscriptionsResponse.GroupSubscriptions groupWithoutSubscription = response.groups().get(1);
-            assertThat(groupWithoutSubscription.groupName()).isEqualTo("구독없는팀");
-            assertThat(groupWithoutSubscription.subscriptions()).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 그룹 목록이 비어있으면 빈 groups 리스트를 반환한다")
-        void success_emptyGroups() {
-            // given
-            List<Group> groups = List.of();
-            List<SubscriptionDetail> details = List.of();
-
-            // when
-            FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.of(groups, details);
-
-            // then
-            assertThat(response.groups()).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 구독 목록이 비어있으면 모든 그룹이 빈 subscriptions 리스트를 가진다")
+        @DisplayName("[success] 구독 목록이 비어있으면 빈 리스트를 반환한다")
         void success_emptySubscriptions() {
             // given
-            List<Group> groups = List.of(
-                Group.builder().id(1L).name("개발팀").build(),
-                Group.builder().id(2L).name("마케팅팀").build()
-            );
             List<SubscriptionDetail> details = List.of();
 
             // when
-            FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.of(groups, details);
+            List<FindGroupSubscriptionsResponse> response = FindGroupSubscriptionsResponse.of(details);
 
             // then
-            assertThat(response.groups()).hasSize(2);
-            assertThat(response.groups().get(0).subscriptions()).isEmpty();
-            assertThat(response.groups().get(1).subscriptions()).isEmpty();
+            assertThat(response).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] 구독중인 그룹이 없는 상품은 productName 만 응답하고 groups 는 빈 리스트다")
+        void success_productWithoutSubscription() {
+            // given
+            List<SubscriptionDetail> details = List.of(
+                new SubscriptionDetail(null, null, "CLOUD_100GB", null, null, null)
+            );
+
+            // when
+            List<FindGroupSubscriptionsResponse> response = FindGroupSubscriptionsResponse.of(details);
+
+            // then
+            assertThat(response).hasSize(1);
+            assertThat(response.get(0).productName()).isEqualTo("CLOUD_100GB");
+            assertThat(response.get(0).groups()).isEmpty();
         }
     }
 
     @Nested
-    @DisplayName("[SubscriptionItem.of] SubscriptionDetail로 SubscriptionItem 생성")
-    class Describe_SubscriptionItem_of {
+    @DisplayName("[GroupInfo.of] SubscriptionDetail로 GroupInfo 생성")
+    class Describe_GroupInfo_of {
 
         @Test
-        @DisplayName("[success] nextBillingDate가 있는 경우 문자열로 변환된다")
-        void success_withNextBillingDate() {
+        @DisplayName("[success] SubscriptionDetail의 필드가 그대로 매핑된다")
+        void success() {
             // given
-            LocalDate nextBillingDate = LocalDate.of(2025, 12, 31);
-            SubscriptionDetail detail = new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", nextBillingDate);
+            SubscriptionDetail detail = new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE");
 
             // when
-            FindGroupSubscriptionsResponse.SubscriptionItem item = FindGroupSubscriptionsResponse.SubscriptionItem.of(detail);
+            FindGroupSubscriptionsResponse.GroupInfo groupInfo = FindGroupSubscriptionsResponse.GroupInfo.of(detail);
 
             // then
-            assertThat(item.productName()).isEqualTo("CLOUD_100GB");
-            assertThat(item.buyer()).isEqualTo("홍길동");
-            assertThat(item.nextBillingDate()).isEqualTo(nextBillingDate.toString());
-        }
-
-        @Test
-        @DisplayName("[success] nextBillingDate가 null인 경우 null이다")
-        void success_nullNextBillingDate() {
-            // given
-            SubscriptionDetail detail = new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", null);
-
-            // when
-            FindGroupSubscriptionsResponse.SubscriptionItem item = FindGroupSubscriptionsResponse.SubscriptionItem.of(detail);
-
-            // then
-            assertThat(item.productName()).isEqualTo("CLOUD_100GB");
-            assertThat(item.buyer()).isEqualTo("홍길동");
-            assertThat(item.nextBillingDate()).isNull();
+            assertThat(groupInfo.groupId()).isEqualTo(1L);
+            assertThat(groupInfo.groupName()).isEqualTo("개발팀");
+            assertThat(groupInfo.buyerId()).isEqualTo(10L);
+            assertThat(groupInfo.buyer()).isEqualTo("홍길동");
+            assertThat(groupInfo.status()).isEqualTo("ACTIVE");
         }
     }
 }

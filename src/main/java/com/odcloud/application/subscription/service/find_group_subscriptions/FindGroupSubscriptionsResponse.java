@@ -1,7 +1,7 @@
 package com.odcloud.application.subscription.service.find_group_subscriptions;
 
 import com.odcloud.application.subscription.port.out.SubscriptionDetail;
-import com.odcloud.domain.model.Group;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,48 +9,45 @@ import lombok.Builder;
 
 @Builder
 public record FindGroupSubscriptionsResponse(
-    List<GroupSubscriptions> groups
+    String productName,
+    List<GroupInfo> groups
 ) {
 
-    public static FindGroupSubscriptionsResponse of(List<Group> groups, List<SubscriptionDetail> details) {
-        Map<String, List<SubscriptionItem>> subscriptionsByGroup = details.stream()
+    public static List<FindGroupSubscriptionsResponse> of(List<SubscriptionDetail> details) {
+        Map<String, List<GroupInfo>> groupsByProduct = details.stream()
             .collect(Collectors.groupingBy(
-                SubscriptionDetail::groupName,
-                Collectors.mapping(SubscriptionItem::of, Collectors.toList())
+                SubscriptionDetail::productName,
+                LinkedHashMap::new,
+                Collectors.filtering(
+                    detail -> detail.groupId() != null,
+                    Collectors.mapping(GroupInfo::of, Collectors.toList())
+                )
             ));
 
-        List<GroupSubscriptions> result = groups.stream()
-            .map(group -> GroupSubscriptions.builder()
-                .groupName(group.getName())
-                .subscriptions(subscriptionsByGroup.getOrDefault(group.getName(), List.of()))
+        return groupsByProduct.entrySet().stream()
+            .map(entry -> FindGroupSubscriptionsResponse.builder()
+                .productName(entry.getKey())
+                .groups(entry.getValue())
                 .build())
             .toList();
-
-        return FindGroupSubscriptionsResponse.builder()
-            .groups(result)
-            .build();
     }
 
     @Builder
-    public record GroupSubscriptions(
+    public record GroupInfo(
+        Long groupId,
         String groupName,
-        List<SubscriptionItem> subscriptions
-    ) {
-
-    }
-
-    @Builder
-    public record SubscriptionItem(
-        String productName,
+        Long buyerId,
         String buyer,
-        String nextBillingDate
+        String status
     ) {
 
-        static SubscriptionItem of(SubscriptionDetail detail) {
-            return SubscriptionItem.builder()
-                .productName(detail.productName())
+        static GroupInfo of(SubscriptionDetail detail) {
+            return GroupInfo.builder()
+                .groupId(detail.groupId())
+                .groupName(detail.groupName())
+                .buyerId(detail.buyerId())
                 .buyer(detail.buyerNickname())
-                .nextBillingDate(detail.nextBillingDate() != null ? detail.nextBillingDate().toString() : null)
+                .status(detail.status())
                 .build();
         }
     }

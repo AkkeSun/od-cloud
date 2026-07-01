@@ -93,61 +93,56 @@ class FindGroupSubscriptionsControllerDocsTest {
     class Describe_find {
 
         @Test
-        @DisplayName("[success] 그룹별 구독 목록을 조회한다")
+        @DisplayName("[success] 상품별 구독 목록을 조회한다")
         void success() throws Exception {
             // given
-            FindGroupSubscriptionsResponse.SubscriptionItem subscription1 =
-                FindGroupSubscriptionsResponse.SubscriptionItem.builder()
-                    .productName("CLOUD_100GB")
-                    .buyer("홍길동")
-                    .nextBillingDate("2025-12-31")
-                    .build();
-
-            FindGroupSubscriptionsResponse.SubscriptionItem subscription2 =
-                FindGroupSubscriptionsResponse.SubscriptionItem.builder()
-                    .productName("CLOUD_50GB")
-                    .buyer("김철수")
-                    .nextBillingDate(null)
-                    .build();
-
-            FindGroupSubscriptionsResponse.GroupSubscriptions devGroup =
-                FindGroupSubscriptionsResponse.GroupSubscriptions.builder()
+            FindGroupSubscriptionsResponse.GroupInfo devGroup =
+                FindGroupSubscriptionsResponse.GroupInfo.builder()
+                    .groupId(1L)
                     .groupName("개발팀")
-                    .subscriptions(List.of(subscription1, subscription2))
+                    .buyerId(10L)
+                    .buyer("홍길동")
+                    .status("ACTIVE")
                     .build();
 
-            FindGroupSubscriptionsResponse.GroupSubscriptions marketingGroup =
-                FindGroupSubscriptionsResponse.GroupSubscriptions.builder()
+            FindGroupSubscriptionsResponse.GroupInfo marketingGroup =
+                FindGroupSubscriptionsResponse.GroupInfo.builder()
+                    .groupId(2L)
                     .groupName("마케팅팀")
-                    .subscriptions(List.of())
+                    .buyerId(20L)
+                    .buyer("김철수")
+                    .status("EXP_PENDING")
                     .build();
 
             FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.builder()
+                .productName("CLOUD_100GB")
                 .groups(List.of(devGroup, marketingGroup))
                 .build();
 
-            given(useCase.find(any())).willReturn(response);
+            given(useCase.find(any())).willReturn(List.of(response));
 
             // when & then
-            performDocument("그룹 구독 조회 성공", "success", status().isOk(),
+            performDocument("상품별 구독 조회 성공", "success", status().isOk(),
                 fieldWithPath("httpStatus")
                     .type(JsonFieldType.NUMBER).description("상태 코드"),
                 fieldWithPath("message")
                     .type(JsonFieldType.STRING).description("상태 메시지"),
                 fieldWithPath("data")
-                    .type(JsonFieldType.OBJECT).description("응답 데이터"),
-                fieldWithPath("data.groups")
-                    .type(JsonFieldType.ARRAY).description("그룹별 구독 목록"),
-                fieldWithPath("data.groups[].groupName")
+                    .type(JsonFieldType.ARRAY).description("응답 데이터"),
+                fieldWithPath("data[].productName")
+                    .type(JsonFieldType.STRING).description("상품명"),
+                fieldWithPath("data[].groups")
+                    .type(JsonFieldType.ARRAY).description("해당 상품을 구독중인 그룹 목록"),
+                fieldWithPath("data[].groups[].groupId")
+                    .type(JsonFieldType.NUMBER).description("그룹 ID"),
+                fieldWithPath("data[].groups[].groupName")
                     .type(JsonFieldType.STRING).description("그룹명"),
-                fieldWithPath("data.groups[].subscriptions")
-                    .type(JsonFieldType.ARRAY).description("구독 목록 (구독이 없으면 빈 배열)"),
-                fieldWithPath("data.groups[].subscriptions[].productName")
-                    .type(JsonFieldType.STRING).description("상품명").optional(),
-                fieldWithPath("data.groups[].subscriptions[].buyer")
-                    .type(JsonFieldType.STRING).description("구매자 닉네임").optional(),
-                fieldWithPath("data.groups[].subscriptions[].nextBillingDate")
-                    .type(JsonFieldType.STRING).description("다음 결제일 (null 가능)").optional()
+                fieldWithPath("data[].groups[].buyerId")
+                    .type(JsonFieldType.NUMBER).description("구매자 ID"),
+                fieldWithPath("data[].groups[].buyer")
+                    .type(JsonFieldType.STRING).description("구매자 닉네임"),
+                fieldWithPath("data[].groups[].status")
+                    .type(JsonFieldType.STRING).description("구독 상태 (ACTIVE, EXP_PENDING)")
             );
         }
     }
@@ -166,8 +161,8 @@ class FindGroupSubscriptionsControllerDocsTest {
                 resource(ResourceSnippetParameters.builder()
                     .tag("Subscription")
                     .summary("그룹 구독 조회 API")
-                    .description("로그인한 사용자가 속한 그룹별 활성 구독 목록을 조회합니다.<br><br>"
-                        + "- 구독이 없는 그룹도 빈 배열로 응답됩니다.<br>"
+                    .description("로그인한 사용자가 속한 그룹의 활성 구독 목록을 상품 기준으로 조회합니다.<br><br>"
+                        + "- 각 상품마다 해당 상품을 구독중인 그룹 목록이 포함됩니다.<br>"
                         + "- 인증 토큰(JWT)이 필수입니다.")
                     .requestHeaders(
                         headerWithName("Authorization")

@@ -25,17 +25,19 @@ class SubscriptionRepository {
         return queryFactory
             .select(Projections.constructor(
                 SubscriptionDetail.class,
+                groupEntity.id,
                 groupEntity.name,
                 productEntity.productName,
+                buyerAccount.id,
                 buyerAccount.nickname,
-                subscriptionEntity.nextBillingDate
+                subscriptionEntity.status
             ))
-            .from(subscriptionEntity)
-            .innerJoin(groupEntity).on(subscriptionEntity.groupId.eq(groupEntity.id))
-            .innerJoin(productEntity).on(subscriptionEntity.productId.eq(productEntity.id))
-            .innerJoin(buyerAccount).on(subscriptionEntity.buyerId.eq(buyerAccount.id))
-            .where(subscriptionEntity.groupId.in(groupIds)
+            .from(productEntity)
+            .leftJoin(subscriptionEntity).on(subscriptionEntity.productId.eq(productEntity.id)
+                .and(subscriptionEntity.groupId.in(groupIds))
                 .and(subscriptionEntity.status.in("ACTIVE", "EXP_PENDING")))
+            .leftJoin(groupEntity).on(subscriptionEntity.groupId.eq(groupEntity.id))
+            .leftJoin(buyerAccount).on(subscriptionEntity.buyerId.eq(buyerAccount.id))
             .fetch();
     }
 }

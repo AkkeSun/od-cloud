@@ -6,7 +6,6 @@ import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,11 +28,9 @@ class FindGroupSubscriptionsServiceTest {
     class Describe_find {
 
         @Test
-        @DisplayName("[success] 각 그룹의 활성 구독이 그룹별로 조회된다")
+        @DisplayName("[success] 활성 구독이 상품별로 조회된다")
         void success_withSubscriptions() {
             // given
-            LocalDate nextBillingDate = LocalDate.of(2025, 12, 31);
-
             Group groupA = Group.builder().id(1L).name("개발팀").build();
             Group groupB = Group.builder().id(2L).name("마케팅팀").build();
 
@@ -44,76 +41,34 @@ class FindGroupSubscriptionsServiceTest {
                 .build();
 
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", nextBillingDate));
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE"));
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail("마케팅팀", "CLOUD_50GB", "김철수", null));
+                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_50GB", 20L, "김철수", "ACTIVE"));
 
             // when
-            FindGroupSubscriptionsResponse response = findGroupSubscriptionsService.find(account);
+            List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
 
             // then
-            assertThat(response.groups()).hasSize(2);
+            assertThat(response).hasSize(2);
 
-            FindGroupSubscriptionsResponse.GroupSubscriptions devGroup = response.groups().get(0);
-            assertThat(devGroup.groupName()).isEqualTo("개발팀");
-            assertThat(devGroup.subscriptions()).hasSize(1);
-            assertThat(devGroup.subscriptions().get(0).productName()).isEqualTo("CLOUD_100GB");
+            FindGroupSubscriptionsResponse cloud100 = response.get(0);
+            assertThat(cloud100.productName()).isEqualTo("CLOUD_100GB");
+            assertThat(cloud100.groups()).hasSize(1);
+            assertThat(cloud100.groups().get(0).groupId()).isEqualTo(1L);
+            assertThat(cloud100.groups().get(0).groupName()).isEqualTo("개발팀");
+            assertThat(cloud100.groups().get(0).buyerId()).isEqualTo(10L);
+            assertThat(cloud100.groups().get(0).buyer()).isEqualTo("홍길동");
+            assertThat(cloud100.groups().get(0).status()).isEqualTo("ACTIVE");
 
-            FindGroupSubscriptionsResponse.GroupSubscriptions marketingGroup = response.groups().get(1);
-            assertThat(marketingGroup.groupName()).isEqualTo("마케팅팀");
-            assertThat(marketingGroup.subscriptions()).hasSize(1);
-            assertThat(marketingGroup.subscriptions().get(0).productName()).isEqualTo("CLOUD_50GB");
+            FindGroupSubscriptionsResponse cloud50 = response.get(1);
+            assertThat(cloud50.productName()).isEqualTo("CLOUD_50GB");
+            assertThat(cloud50.groups()).hasSize(1);
+            assertThat(cloud50.groups().get(0).groupName()).isEqualTo("마케팅팀");
         }
 
         @Test
-        @DisplayName("[success] 구독이 없는 그룹은 빈 subscriptions 리스트로 응답된다")
-        void success_groupWithNoSubscriptions() {
-            // given
-            Group groupA = Group.builder().id(1L).name("개발팀").build();
-            Group groupB = Group.builder().id(2L).name("구독없는팀").build();
-
-            Account account = Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(List.of(groupA, groupB))
-                .build();
-
-            fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail("개발팀", "CLOUD_100GB", "홍길동", null));
-
-            // when
-            FindGroupSubscriptionsResponse response = findGroupSubscriptionsService.find(account);
-
-            // then
-            assertThat(response.groups()).hasSize(2);
-
-            assertThat(response.groups().get(0).groupName()).isEqualTo("개발팀");
-            assertThat(response.groups().get(0).subscriptions()).hasSize(1);
-
-            assertThat(response.groups().get(1).groupName()).isEqualTo("구독없는팀");
-            assertThat(response.groups().get(1).subscriptions()).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 가입된 그룹이 없으면 빈 groups 리스트를 반환한다")
-        void success_noGroups() {
-            // given
-            Account account = Account.builder()
-                .id(1L)
-                .email("user@example.com")
-                .groups(List.of())
-                .build();
-
-            // when
-            FindGroupSubscriptionsResponse response = findGroupSubscriptionsService.find(account);
-
-            // then
-            assertThat(response.groups()).isEmpty();
-        }
-
-        @Test
-        @DisplayName("[success] 그룹은 있지만 활성 구독이 전혀 없으면 모든 그룹이 빈 subscriptions 리스트를 가진다")
-        void success_allGroupsWithNoSubscriptions() {
+        @DisplayName("[success] 같은 상품을 여러 그룹이 구독중이면 하나의 상품에 그룹이 모인다")
+        void success_multipleGroupsForSameProduct() {
             // given
             Account account = Account.builder()
                 .id(1L)
@@ -124,13 +79,60 @@ class FindGroupSubscriptionsServiceTest {
                 ))
                 .build();
 
+            fakeSubscriptionStoragePort.database.add(
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE"));
+            fakeSubscriptionStoragePort.database.add(
+                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_100GB", 20L, "김철수", "EXP_PENDING"));
+
             // when
-            FindGroupSubscriptionsResponse response = findGroupSubscriptionsService.find(account);
+            List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
 
             // then
-            assertThat(response.groups()).hasSize(2);
-            assertThat(response.groups().get(0).subscriptions()).isEmpty();
-            assertThat(response.groups().get(1).subscriptions()).isEmpty();
+            assertThat(response).hasSize(1);
+            assertThat(response.get(0).productName()).isEqualTo("CLOUD_100GB");
+            assertThat(response.get(0).groups()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("[success] 가입된 그룹이 없으면 빈 리스트를 반환한다")
+        void success_noGroups() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of())
+                .build();
+
+            // when
+            List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
+
+            // then
+            assertThat(response).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] 그룹은 있지만 활성 구독이 전혀 없어도 상품명은 응답하고 groups 는 빈 리스트다")
+        void success_noSubscriptions() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .email("user@example.com")
+                .groups(List.of(
+                    Group.builder().id(1L).name("개발팀").build(),
+                    Group.builder().id(2L).name("마케팅팀").build()
+                ))
+                .build();
+
+            fakeSubscriptionStoragePort.database.add(
+                new SubscriptionDetail(null, null, "CLOUD_100GB", null, null, null));
+
+            // when
+            List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
+
+            // then
+            assertThat(response).hasSize(1);
+            assertThat(response.get(0).productName()).isEqualTo("CLOUD_100GB");
+            assertThat(response.get(0).groups()).isEmpty();
         }
     }
 }

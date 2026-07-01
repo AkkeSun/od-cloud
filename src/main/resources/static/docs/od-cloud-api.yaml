@@ -25,63 +25,49 @@ paths:
         example: Bearer google-token-123
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 계정 등록 API"
             examples:
               '[계정 등록 API] 이미 존재하는 그룹명 입력':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : null,
                     "newGroupName" : "기존 그룹"
                   }
               '[계정 등록 API] success':
                 value: |-
                   {
-                    "name" : "홍길동",
-                    "groupId" : 1,
-                    "newGroupName" : null
-                  }
-              '[계정 등록 API] 이름 미입력':
-                value: |-
-                  {
-                    "name" : null,
                     "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 구글 사용자 정보 조회 오류':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 등록되지 않은 그룹명 입력':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 이미 등록된 사용자 정보 입력':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] 유효하지 않은 구글 토큰 입력':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : 1,
                     "newGroupName" : null
                   }
               '[계정 등록 API] success_with_new_group':
                 value: |-
                   {
-                    "name" : "홍길동",
                     "groupId" : null,
                     "newGroupName" : "새로운 그룹"
                   }
@@ -89,7 +75,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -136,7 +122,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -158,27 +144,10 @@ paths:
                         "result" : true
                       }
                     }
-        "400":
-          description: "400"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[계정 등록 API] 이름 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "이름은 필수값 입니다"
-                      }
-                    }
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -210,7 +179,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -226,7 +195,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -243,7 +212,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -279,7 +248,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -296,7 +265,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -313,7 +282,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -324,8 +293,8 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "result" : true,
-                        "nickName" : "새닉네임",
-                        "pictureFile" : "http://localhost:8080/picture/profile.png"
+                        "nickname" : "새닉네임",
+                        "picture" : "http://localhost:8080/picture/profile.png"
                       }
                     }
                 '[계정 정보 수정 API] 프로필 사진만 수정':
@@ -335,8 +304,8 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "result" : true,
-                        "nickName" : "기존닉네임",
-                        "pictureFile" : "http://localhost:8080/picture/profile.png"
+                        "nickname" : "기존닉네임",
+                        "picture" : "http://localhost:8080/picture/profile.png"
                       }
                     }
                 '[계정 정보 수정 API] 닉네임만 수정':
@@ -346,14 +315,14 @@ paths:
                       "message" : "OK",
                       "data" : {
                         "result" : true,
-                        "nickName" : "새닉네임",
-                        "pictureFile" : "http://localhost:8080/picture/old.png"
+                        "nickname" : "새닉네임",
+                        "picture" : "http://localhost:8080/picture/old.png"
                       }
                     }
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -386,7 +355,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -413,7 +382,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -430,7 +399,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -460,7 +429,7 @@ paths:
         example: Bearer google-token-123
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 토큰 발급 API"
             examples:
@@ -493,7 +462,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -530,7 +499,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -547,7 +516,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -572,14 +541,14 @@ paths:
       - name: code
         in: query
         description: 구글 OAuth2 인증 코드 (필수)
-        required: true
+        required: false
         schema:
           type: string
       responses:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -593,470 +562,8 @@ paths:
                         "errorMessage" : "구글 인증코드는 필수값 입니다"
                       }
                     }
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] success"
-              examples:
-                '[구글 OAuth2 콜백 API] success':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "googleAccessToken" : "google-access-token-123"
-                      }
-                    }
-  /devices:
-    post:
-      tags:
-      - Device
-      summary: 디바이스 등록 API
-      description: "사용자의 디바이스 정보를 등록하거나 업데이트합니다.<br><br>- 동일한 accountId, osType, deviceId\
-        \ 조합이 존재하면 정보를 업데이트합니다.<br>- FCM 토큰이나 앱 버전이 변경된 경우 업데이트됩니다.<br>- 마지막 로그인 시\
-        간(lastLoginDt)은 항상 갱신됩니다."
-      operationId: "[디바이스 등록 API] "
-      parameters:
-      - name: Authorization
-        in: header
-        description: 인증 토큰
-        required: true
-        schema:
-          type: string
-        example: error token
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[request] 디바이스 등록 API"
-            examples:
-              '[디바이스 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "appVersion" : "1.0.0",
-                    "fcmToken" : "fcm-token-123"
-                  }
-              '[디바이스 등록 API] success':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "appVersion" : "1.0.0",
-                    "fcmToken" : "fcm-token-123"
-                  }
-              '[디바이스 등록 API] appVersion 미입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "appVersion" : null,
-                    "fcmToken" : "fcm-token-123"
-                  }
-              '[디바이스 등록 API] fcmToken 미입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "appVersion" : "1.0.0",
-                    "fcmToken" : null
-                  }
-              '[디바이스 등록 API] osType 미입력':
-                value: |-
-                  {
-                    "osType" : null,
-                    "deviceId" : "device-123",
-                    "appVersion" : "1.0.0",
-                    "fcmToken" : "fcm-token-123"
-                  }
-              '[디바이스 등록 API] deviceId 미입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : null,
-                    "appVersion" : "1.0.0",
-                    "fcmToken" : "fcm-token-123"
-                  }
-      responses:
-        "401":
-          description: "401"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 등록 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 401,
-                      "message" : "UNAUTHORIZED",
-                      "data" : {
-                        "errorCode" : 2099,
-                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
-                      }
-                    }
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] success"
-              examples:
-                '[디바이스 등록 API] success':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true,
-                        "accountId" : 123,
-                        "osType" : "iOS",
-                        "deviceId" : "device-123",
-                        "appVersion" : "1.0.0",
-                        "fcmToken" : "fcm-token-123",
-                        "pushYn" : "Y"
-                      }
-                    }
-        "400":
-          description: "400"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 등록 API] appVersion 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "appVersion은 필수값 입니다"
-                      }
-                    }
-                '[디바이스 등록 API] fcmToken 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "fcmToken은 필수값 입니다"
-                      }
-                    }
-                '[디바이스 등록 API] osType 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "osType은 필수값 입니다"
-                      }
-                    }
-                '[디바이스 등록 API] deviceId 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "deviceId는 필수값 입니다"
-                      }
-                    }
-    patch:
-      tags:
-      - Device
-      summary: 디바이스 정보 수정 API
-      description: "사용자의 디바이스 정보를 수정합니다.<br><br>- pushYn: 푸시 알림 수신 여부 (Y/N)<br>- fcmToken:\
-        \ FCM 푸시 토큰<br>- 두 필드 모두 선택적이며, 제공된 필드만 업데이트됩니다.<br>- osType과 deviceId로 대상\
-        \ 디바이스를 식별합니다."
-      operationId: "[디바이스 정보 수정 API] "
-      parameters:
-      - name: Authorization
-        in: header
-        description: 인증 토큰
-        required: true
-        schema:
-          type: string
-        example: Bearer test
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[request] 디바이스 정보 수정 API"
-            examples:
-              '[디바이스 정보 수정 API] deviceId 미입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : null,
-                    "pushYn" : "N",
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] osType 미입력':
-                value: |-
-                  {
-                    "osType" : null,
-                    "deviceId" : "device-123",
-                    "pushYn" : "N",
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "pushYn" : "N",
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] success fcmToken only':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "pushYn" : null,
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] 디바이스 존재하지 않음':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "non-existent-device",
-                    "pushYn" : "N",
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] success':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "pushYn" : "N",
-                    "fcmToken" : "new-fcm-token"
-                  }
-              '[디바이스 정보 수정 API] success pushYn only':
-                value: |-
-                  {
-                    "osType" : "iOS",
-                    "deviceId" : "device-123",
-                    "pushYn" : "N",
-                    "fcmToken" : null
-                  }
-      responses:
-        "400":
-          description: "400"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 정보 수정 API] deviceId 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "deviceId는 필수값 입니다"
-                      }
-                    }
-                '[디바이스 정보 수정 API] osType 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "osType은 필수값 입니다"
-                      }
-                    }
-        "401":
-          description: "401"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 정보 수정 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 401,
-                      "message" : "UNAUTHORIZED",
-                      "data" : {
-                        "errorCode" : 2099,
-                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
-                      }
-                    }
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] success"
-              examples:
-                '[디바이스 정보 수정 API] success fcmToken only':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[디바이스 정보 수정 API] success':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-                '[디바이스 정보 수정 API] success pushYn only':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : true
-                      }
-                    }
-        "500":
-          description: "500"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[디바이스 정보 수정 API] 디바이스 존재하지 않음':
-                  value: |-
-                    {
-                      "httpStatus" : 500,
-                      "message" : "INTERNAL_SERVER_ERROR",
-                      "data" : {
-                        "errorCode" : 4023,
-                        "errorMessage" : "조회된 디바이스가 없습니다"
-                      }
-                    }
-  /devices/test-push:
-    post:
-      tags:
-      - Device
-      summary: 테스트 푸시 알림 API
-      description: 특정 계정의 디바이스로 테스트 푸시 알림을 전송하는 API 입니다. 인증이 필요하지 않습니다.
-      operationId: "[테스트 푸시 알림 API] "
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[request] 테스트 푸시 알림 API"
-            examples:
-              '[테스트 푸시 알림 API] 기본 메시지로 전송':
-                value: |-
-                  {
-                    "email" : "test@example.com",
-                    "title" : null,
-                    "body" : null
-                  }
-              '[테스트 푸시 알림 API] 이메일 미입력':
-                value: |-
-                  {
-                    "email" : "",
-                    "title" : "테스트",
-                    "body" : "테스트 내용"
-                  }
-              '[테스트 푸시 알림 API] 이메일 null':
-                value: |-
-                  {
-                    "email" : null,
-                    "title" : "테스트",
-                    "body" : "테스트 내용"
-                  }
-              '[테스트 푸시 알림 API] 정상 전송':
-                value: |-
-                  {
-                    "email" : "test@example.com",
-                    "title" : "테스트",
-                    "body" : "테스트 내용"
-                  }
-              '[테스트 푸시 알림 API] 디바이스 없음':
-                value: |-
-                  {
-                    "email" : "test@example.com",
-                    "title" : "테스트",
-                    "body" : "테스트 내용"
-                  }
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] default-message"
-              examples:
-                '[테스트 푸시 알림 API] 기본 메시지로 전송':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : "SUCCESS",
-                        "email" : "test@example.com",
-                        "deviceCount" : 1
-                      }
-                    }
-                '[테스트 푸시 알림 API] 정상 전송':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : "SUCCESS",
-                        "email" : "test@example.com",
-                        "deviceCount" : 2
-                      }
-                    }
-                '[테스트 푸시 알림 API] 디바이스 없음':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "result" : "NO_DEVICE",
-                        "email" : "test@example.com",
-                        "deviceCount" : 0
-                      }
-                    }
-        "400":
-          description: "400"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[테스트 푸시 알림 API] 이메일 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "must not be blank"
-                      }
-                    }
-                '[테스트 푸시 알림 API] 이메일 null':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "must not be blank"
-                      }
-                    }
+        "302":
+          description: "302"
   /files:
     get:
       tags:
@@ -1104,7 +611,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success-by-folderId"
               examples:
@@ -1142,7 +649,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1159,7 +666,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1191,7 +698,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 파일 삭제 API"
             examples:
@@ -1229,7 +736,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1310,7 +817,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1322,6 +829,75 @@ paths:
                       "data" : {
                         "errorCode" : 2099,
                         "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+  /files/backup:
+    post:
+      tags:
+      - File
+      summary: 그룹 파일 Google Drive 백업 API - 서버 오류
+      description: UseCase 레벨에서 처리되지 않은 예외 발생 시 500을 반환합니다. 정상적으로는 그룹 단위 격리 처리로 500이
+        발생하지 않습니다.
+      operationId: "[그룹 파일 Google Drive 백업 API] "
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 파일 Google Drive 백업 API] error - unexpected exception':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4030,
+                        "errorMessage" : "Google Drive 폴더 생성/조회 중 오류가 발생했습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] 그룹 파일 Google Drive 백업 API"
+              examples:
+                '[그룹 파일 Google Drive 백업 API] success - partial failure':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalGroups" : 5,
+                        "successCount" : 3,
+                        "failCount" : 2,
+                        "skipCount" : 0
+                      }
+                    }
+                '[그룹 파일 Google Drive 백업 API] success - no groups':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalGroups" : 0,
+                        "successCount" : 0,
+                        "failCount" : 0,
+                        "skipCount" : 0
+                      }
+                    }
+                '[그룹 파일 Google Drive 백업 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalGroups" : 3,
+                        "successCount" : 2,
+                        "failCount" : 0,
+                        "skipCount" : 1
                       }
                     }
   /files/download:
@@ -1426,7 +1002,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 파일 정보 수정 API"
             examples:
@@ -1470,7 +1046,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -1486,7 +1062,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1503,7 +1079,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1623,7 +1199,7 @@ paths:
         example: error token
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 폴더 등록 API"
             examples:
@@ -1680,7 +1256,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1697,7 +1273,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1724,7 +1300,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1761,7 +1337,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -1797,7 +1373,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 폴더 정보 수정 API"
             examples:
@@ -1859,7 +1435,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -1893,7 +1469,7 @@ paths:
         "403":
           description: "403"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1910,7 +1486,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1957,7 +1533,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -1996,7 +1572,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2013,7 +1589,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2030,7 +1606,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2046,7 +1622,7 @@ paths:
         "403":
           description: "403"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2088,7 +1664,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2115,7 +1691,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2132,7 +1708,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2164,7 +1740,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success_all"
               examples:
@@ -2227,7 +1803,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 그룹 등록 API"
             examples:
@@ -2255,7 +1831,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2271,7 +1847,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2288,7 +1864,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2305,7 +1881,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2340,7 +1916,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2357,7 +1933,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success-empty"
               examples:
@@ -2382,13 +1958,11 @@ paths:
                           "pendingAccounts" : [ {
                             "accountId" : 10,
                             "nickname" : "User1",
-                            "name" : "홍길동",
                             "email" : "user1@example.com",
                             "requestDate" : "2025-01-01T10:00:00"
                           }, {
                             "accountId" : 11,
                             "nickname" : "User2",
-                            "name" : "김철수",
                             "email" : "user2@example.com",
                             "requestDate" : "2025-01-02T11:00:00"
                           } ]
@@ -2398,7 +1972,6 @@ paths:
                           "pendingAccounts" : [ {
                             "accountId" : 12,
                             "nickname" : "User3",
-                            "name" : "이영희",
                             "email" : "user3@example.com",
                             "requestDate" : "2025-01-03T12:00:00"
                           } ]
@@ -2442,6 +2015,7 @@ paths:
                         "activeGroups" : [ {
                           "id" : 1,
                           "name" : "My Team",
+                          "folderId" : null,
                           "manager" : {
                             "nickname" : "Manager",
                             "email" : "manager@example.com"
@@ -2450,6 +2024,7 @@ paths:
                         }, {
                           "id" : 2,
                           "name" : "Development Team",
+                          "folderId" : null,
                           "manager" : {
                             "nickname" : "OtherManager",
                             "email" : "other@example.com"
@@ -2567,7 +2142,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2583,7 +2158,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2610,7 +2185,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2647,7 +2222,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 그룹 수정 API"
             examples:
@@ -2703,7 +2278,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2737,7 +2312,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2784,7 +2359,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2823,7 +2398,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2837,29 +2412,41 @@ paths:
                           "id" : 1,
                           "groupId" : 1,
                           "accountId" : 100,
-                          "name" : "홍길동",
+                          "groupName" : null,
+                          "groupOwner" : null,
                           "nickName" : "gildong",
                           "email" : "hong@example.com",
+                          "picture" : null,
                           "status" : "ACTIVE",
-                          "updateDt" : "2025-11-14T10:00:00",
-                          "regDt" : "2025-11-09T10:00:00"
+                          "memo" : null,
+                          "showYn" : null,
+                          "modDt" : "2025-11-14T10:00:00",
+                          "regDt" : "2025-11-09T10:00:00",
+                          "active" : true,
+                          "block" : false
                         }, {
                           "id" : 2,
                           "groupId" : 1,
                           "accountId" : 200,
-                          "name" : "김철수",
+                          "groupName" : null,
+                          "groupOwner" : null,
                           "nickName" : "chulsoo",
                           "email" : "kim@example.com",
+                          "picture" : null,
                           "status" : "PENDING",
-                          "updateDt" : "2025-11-13T10:00:00",
-                          "regDt" : "2025-11-12T10:00:00"
+                          "memo" : null,
+                          "showYn" : null,
+                          "modDt" : "2025-11-13T10:00:00",
+                          "regDt" : "2025-11-12T10:00:00",
+                          "active" : false,
+                          "block" : false
                         } ]
                       }
                     }
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2898,7 +2485,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2915,7 +2502,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -2931,7 +2518,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -2968,7 +2555,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 그룹 공지사항 등록 API"
             examples:
@@ -3006,7 +2593,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3031,7 +2618,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3048,7 +2635,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3065,7 +2652,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3102,7 +2689,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 그룹 계정 노출 여부 변경 API"
             examples:
@@ -3140,7 +2727,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3165,7 +2752,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3182,7 +2769,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3199,7 +2786,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3221,6 +2808,81 @@ paths:
                       "data" : {
                         "errorCode" : 1099,
                         "errorMessage" : "노출 유무는 필수값 입니다"
+                      }
+                    }
+  /groups/{groupId}/drive/upload:
+    post:
+      tags:
+      - File
+      summary: 그룹 파일 Google Drive 전체 업로드 API - 그룹 없음
+      description: 존재하지 않는 그룹 ID로 요청 시 오류를 반환합니다.
+      operationId: "[그룹 파일 Google Drive 전체 업로드 API] "
+      parameters:
+      - name: groupId
+        in: path
+        description: 업로드할 그룹 ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[그룹 파일 Google Drive 전체 업로드 API] error - group not found':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4009,
+                        "errorMessage" : "등록되지 않은 그룹 입니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] 그룹 파일 Google Drive 전체 업로드 API"
+              examples:
+                '[그룹 파일 Google Drive 전체 업로드 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalFiles" : 5,
+                        "uploadedCount" : 5,
+                        "skippedCount" : 0,
+                        "failedCount" : 0
+                      }
+                    }
+                '[그룹 파일 Google Drive 전체 업로드 API] success - skipped':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalFiles" : 5,
+                        "uploadedCount" : 3,
+                        "skippedCount" : 2,
+                        "failedCount" : 0
+                      }
+                    }
+                '[그룹 파일 Google Drive 전체 업로드 API] success - no files':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "totalFiles" : 0,
+                        "uploadedCount" : 0,
+                        "skippedCount" : 0,
+                        "failedCount" : 0
                       }
                     }
   /groups/{groupId}/notices/{noticeId}:
@@ -3245,7 +2907,7 @@ paths:
           type: string
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 공지사항 수정 API"
             examples:
@@ -3271,7 +2933,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3287,7 +2949,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3334,7 +2996,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3350,7 +3012,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3403,7 +3065,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 그룹 계정 상태 변경 API"
             examples:
@@ -3459,7 +3121,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3486,7 +3148,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3520,7 +3182,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3537,7 +3199,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3585,7 +3247,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/FindQuestionsResponse'
               examples:
@@ -3601,9 +3263,12 @@ paths:
                         "totalPages" : 1,
                         "questions" : [ {
                           "id" : 1,
+                          "writerEmail" : "user@test.com",
                           "writerNickname" : "테스터",
                           "title" : "API 사용 문의",
+                          "content" : "API 사용 방법을 알고 싶습니다.",
                           "answered" : false,
+                          "modDt" : null,
                           "regDt" : "2025-01-20T10:00:00"
                         } ]
                       }
@@ -3624,7 +3289,7 @@ paths:
         example: Bearer test-token
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: '#/components/schemas/RegisterQuestionRequest'
             examples:
@@ -3638,7 +3303,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/RegisterQuestionResponse'
               examples:
@@ -3669,7 +3334,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/FindQuestionResponse'
               examples:
@@ -3681,16 +3346,21 @@ paths:
                       "data" : {
                         "question" : {
                           "id" : 1,
+                          "writerEmail" : "user@test.com",
                           "writerNickname" : "테스터",
                           "title" : "API 사용 문의",
                           "content" : "API 사용 방법을 알고 싶습니다.",
                           "answered" : true,
+                          "modDt" : null,
                           "regDt" : "2025-01-20T10:00:00"
                         },
                         "answer" : {
                           "id" : 1,
+                          "questionId" : 1,
+                          "writerEmail" : "admin@test.com",
                           "writerNickname" : "관리자",
                           "content" : "API 사용 방법은 다음과 같습니다...",
+                          "modDt" : null,
                           "regDt" : "2025-01-20T15:30:00"
                         }
                       }
@@ -3718,7 +3388,7 @@ paths:
         example: Bearer test-token
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: '#/components/schemas/RegisterAnswerRequest'
             examples:
@@ -3731,7 +3401,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/RegisterAnswerResponse'
               examples:
@@ -3775,7 +3445,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -3791,21 +3461,21 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-02-20T13:04:14.187055"
+                          "notificationDt" : "2026-07-01T15:02:21.562746"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-02-20T13:04:14.187069"
+                          "notificationDt" : "2026-07-01T15:02:21.562773"
                         } ]
                       }
                     }
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3822,7 +3492,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3852,7 +3522,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 스케줄 등록 API"
             examples:
@@ -3908,7 +3578,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3945,7 +3615,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -3972,7 +3642,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -4010,7 +3680,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4027,7 +3697,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -4043,7 +3713,7 @@ paths:
         "403":
           description: "403"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4060,7 +3730,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4096,7 +3766,7 @@ paths:
         example: Bearer test
       requestBody:
         content:
-          application/json:
+          application/json;charset=UTF-8:
             schema:
               $ref: "#/components/schemas/[request] 스케줄 수정 API"
             examples:
@@ -4167,7 +3837,7 @@ paths:
         "200":
           description: "200"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
@@ -4192,7 +3862,7 @@ paths:
         "403":
           description: "403"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4219,7 +3889,7 @@ paths:
         "400":
           description: "400"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4256,7 +3926,7 @@ paths:
         "401":
           description: "401"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4273,7 +3943,7 @@ paths:
         "500":
           description: "500"
           content:
-            application/json:
+            application/json;charset=UTF-8:
               schema:
                 $ref: "#/components/schemas/[response] error"
               examples:
@@ -4287,108 +3957,22 @@ paths:
                         "errorMessage" : "조회된 스케줄이 없습니다"
                       }
                     }
-  /subscriptions:
-    post:
+  /subscriptions/active:
+    get:
       tags:
       - Subscription
-      summary: 구독 생성 API
-      description: "구독을 생성하는 API 입니다. 스토리지 구독(STORAGE_BASIC, STORAGE_PLUS)인 경우 groupId가\
-        \ 필수입니다."
-      operationId: "[구독 생성 API] "
+      summary: 그룹 구독 조회 API
+      description: 로그인한 사용자가 속한 그룹의 활성 구독 목록을 상품 기준으로 조회합니다.<br><br>- 각 상품마다 해당 상품을
+        구독중인 그룹 목록이 포함됩니다.<br>- 인증 토큰(JWT)이 필수입니다.
+      operationId: "[그룹 구독 조회 API] "
       parameters:
       - name: Authorization
         in: header
-        description: 인증 토큰
+        description: "인증 토큰 (Bearer {token})"
         required: true
         schema:
           type: string
-        example: Bearer test
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[request] 구독 생성 API"
-            examples:
-              '[구독 생성 API] success':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_apple_123",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "2026-01-09 10:30:00",
-                    "productId" : 1,
-                    "groupId" : 1
-                  }
-              '[구독 생성 API] storeTxId 미입력':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_test",
-                    "orderTxId" : "",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : 1,
-                    "groupId" : 10
-                  }
-              '[구독 생성 API] 존재하지 않는 그룹 ID 입력':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_test",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : 1,
-                    "groupId" : 9999
-                  }
-              '[구독 생성 API] productId 미입력':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_test",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : null,
-                    "groupId" : 10
-                  }
-              '[구독 생성 API] purchasedAt 미입력':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_test",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "",
-                    "productId" : 1,
-                    "groupId" : 10
-                  }
-              '[구독 생성 API] 스토리지 구독 groupId 미입력':
-                value: |-
-                  {
-                    "storeType" : "GOOGLE",
-                    "subscriptionKey" : "sub_plus",
-                    "orderTxId" : "GOOGLE_TX_PLUS",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : 2,
-                    "groupId" : null
-                  }
-              '[구독 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                value: |-
-                  {
-                    "storeType" : "APPLE",
-                    "subscriptionKey" : "sub_apple_123",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : 1,
-                    "groupId" : 10
-                  }
-              '[구독 생성 API] storeType 미입력':
-                value: |-
-                  {
-                    "storeType" : null,
-                    "subscriptionKey" : "sub_test",
-                    "orderTxId" : "APPLE_TX_12345",
-                    "storeProcessDt" : "2026-01-09 10:00:00",
-                    "productId" : 1,
-                    "groupId" : 10
-                  }
+        example: Bearer test-token-123
       responses:
         "200":
           description: "200"
@@ -4397,213 +3981,202 @@ paths:
               schema:
                 $ref: "#/components/schemas/[response] success"
               examples:
-                '[구독 생성 API] success':
+                '[그룹 구독 조회 API] 상품별 구독 조회 성공':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : [ {
+                        "productName" : "CLOUD_100GB",
+                        "groups" : [ {
+                          "groupId" : 1,
+                          "groupName" : "개발팀",
+                          "buyerId" : 10,
+                          "buyer" : "홍길동",
+                          "status" : "ACTIVE"
+                        }, {
+                          "groupId" : 2,
+                          "groupName" : "마케팅팀",
+                          "buyerId" : 20,
+                          "buyer" : "김철수",
+                          "status" : "EXP_PENDING"
+                        } ]
+                      } ]
+                    }
+                '[그룹 구독 조회 API] 그룹 구독 조회 성공':
                   value: |-
                     {
                       "httpStatus" : 200,
                       "message" : "OK",
                       "data" : {
-                        "result" : true
+                        "groups" : [ {
+                          "groupName" : "개발팀",
+                          "subscriptions" : [ {
+                            "productName" : "CLOUD_100GB",
+                            "buyer" : "홍길동",
+                            "nextBillingDate" : "2025-12-31"
+                          }, {
+                            "productName" : "CLOUD_50GB",
+                            "buyer" : "김철수",
+                            "nextBillingDate" : null
+                          } ]
+                        }, {
+                          "groupName" : "마케팅팀",
+                          "subscriptions" : [ ]
+                        } ]
                       }
                     }
-        "400":
-          description: "400"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[구독 생성 API] storeTxId 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "결제 단위 트랜젝션 아이디는 필수값 입니다"
-                      }
-                    }
-                '[구독 생성 API] productId 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "상품 ID는 필수값 입니다"
-                      }
-                    }
-                '[구독 생성 API] purchasedAt 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "스토어 처리 일시는 필수값 입니다"
-                      }
-                    }
-                '[구독 생성 API] 스토리지 구독 groupId 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "스토리지 구독인 경우 groupId는 필수값 입니다"
-                      }
-                    }
-                '[구독 생성 API] storeType 미입력':
-                  value: |-
-                    {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
-                      "data" : {
-                        "errorCode" : 1099,
-                        "errorMessage" : "스토어 타입은 필수값 입니다"
-                      }
-                    }
-        "500":
-          description: "500"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[구독 생성 API] 존재하지 않는 그룹 ID 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 500,
-                      "message" : "INTERNAL_SERVER_ERROR",
-                      "data" : {
-                        "errorCode" : 4009,
-                        "errorMessage" : "등록되지 않은 그룹 입니다"
-                      }
-                    }
-        "401":
-          description: "401"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[구독 생성 API] 인증 토큰 미입력 혹은 만료된 토큰 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 401,
-                      "message" : "UNAUTHORIZED",
-                      "data" : {
-                        "errorCode" : 2099,
-                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
-                      }
-                    }
-  /webhook/googleplay:
-    post:
-      tags:
-      - Webhook
-      summary: Google Play Webhook API - Error
-      description: 결제 정보 없음
-      operationId: "[Google Play Webhook API] "
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[request] Google Play Webhook API"
-            examples:
-              '[Google Play Webhook API] 결제 정보 없음':
-                value: |-
-                  {
-                    "message" : {
-                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAidW5rbm93bl90b2tlbiIsInN1YnNjcmlwdGlvbklkIjogInN1YnNjcmlwdGlvbiJ9fQ==",
-                      "messageId" : "msg_1771560254559",
-                      "publishTime" : "2024-01-01T00:00:00Z"
-                    },
-                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
-                  }
-              '[Google Play Webhook API] success-refund':
-                value: |-
-                  {
-                    "message" : {
-                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDEyLCJwdXJjaGFzZVRva2VuIjogInJldm9rZWRfdG9rZW5fNDU2In19",
-                      "messageId" : "msg_1771560254553",
-                      "publishTime" : "2024-01-01T00:00:00Z"
-                    },
-                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
-                  }
-              '[Google Play Webhook API] success-voided':
-                value: |-
-                  {
-                    "message" : {
-                      "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInZvaWRlZFB1cmNoYXNlTm90aWZpY2F0aW9uIjogewogICAgICAgICJwdXJjaGFzZVRva2VuIjogInZvaWRlZF90b2tlbiIsCiAgICAgICAgIm9yZGVySWQiOiAiR1BBLjEyMzQtNTY3OC05MDEyIiwKICAgICAgICAicmVmdW5kVHlwZSI6IDEKICAgIH0KfQo=",
-                      "messageId" : "msg_1771560254566",
-                      "publishTime" : "2024-01-01T00:00:00Z"
-                    },
-                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
-                  }
-              '[Google Play Webhook API] success-renewal':
-                value: |-
-                  {
-                    "message" : {
-                      "data" : "eyJwYWNrYWdlTmFtZSI6ICJjb20ub2RjbG91ZC5hcHAiLCJldmVudFRpbWVNaWxsaXMiOiAiMTcwNDA2NzIwMDAwMCIsInN1YnNjcmlwdGlvbk5vdGlmaWNhdGlvbiI6IHsibm90aWZpY2F0aW9uVHlwZSI6IDIsInB1cmNoYXNlVG9rZW4iOiAicHVyY2hhc2VfdG9rZW5fMTIzIiwic3Vic2NyaXB0aW9uSWQiOiAibW9udGhseV9zdWJzY3JpcHRpb24ifX0=",
-                      "messageId" : "msg_1771560254542",
-                      "publishTime" : "2024-01-01T00:00:00Z"
-                    },
-                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
-                  }
-              '[Google Play Webhook API] success-test':
-                value: |-
-                  {
-                    "message" : {
-                      "data" : "ewogICAgInBhY2thZ2VOYW1lIjogImNvbS5vZGNsb3VkLmFwcCIsCiAgICAiZXZlbnRUaW1lTWlsbGlzIjogIjE3MDQwNjcyMDAwMDAiLAogICAgInRlc3ROb3RpZmljYXRpb24iOiB7CiAgICAgICAgInZlcnNpb24iOiAiMS4wIgogICAgfQp9Cg==",
-                      "messageId" : "msg_1771560254571",
-                      "publishTime" : "2024-01-01T00:00:00Z"
-                    },
-                    "subscription" : "projects/odcloud/subscriptions/play-webhook"
-                  }
-      responses:
-        "500":
-          description: "500"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[response] error"
-              examples:
-                '[Google Play Webhook API] 결제 정보 없음':
-                  value: |-
-                    {
-                      "httpStatus" : 500,
-                      "message" : "INTERNAL_SERVER_ERROR",
-                      "data" : {
-                        "errorCode" : 4027,
-                        "errorMessage" : "조회된 결제 정보가 없습니다"
-                      }
-                    }
-        "200":
-          description: "200"
 components:
   schemas:
-    '[request] 계정 등록 API':
-      title: "[request] 계정 등록 API"
+    '[request] 폴더 등록 API':
+      title: "[request] 폴더 등록 API"
       required:
       - groupId
       - name
-      - newGroupName
+      - parentId
       type: object
       properties:
-        newGroupName:
-          description: 신규 그룹 이름
-          oneOf:
-          - type: string
-          - null
         groupId:
           description: 그룹 ID
           oneOf:
-          - null
           - type: number
+          - null
         name:
-          description: 사용자 이름
+          description: 폴더명
           oneOf:
+          - null
           - type: string
+        parentId:
+          description: 부모 폴더 ID
+          oneOf:
+          - type: number
+          - null
+    '[response] 그룹 파일 Google Drive 백업 API':
+      title: "[response] 그룹 파일 Google Drive 백업 API"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - failCount
+          - skipCount
+          - successCount
+          - totalGroups
+          type: object
+          properties:
+            failCount:
+              type: number
+              description: 백업 실패가 발생한 그룹 수
+            successCount:
+              type: number
+              description: 백업 완료된 그룹 수
+            totalGroups:
+              type: number
+              description: 백업 활성화된 전체 그룹 수
+            skipCount:
+              type: number
+              description: 미백업 이력이 없어 건너뛴 그룹 수
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: HTTP 상태 코드
+        message:
+          type: string
+          description: 응답 메시지
+    FindQuestionsResponse:
+      title: FindQuestionsResponse
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - pageNumber
+          - pageSize
+          - questions
+          - totalElements
+          - totalPages
+          type: object
+          properties:
+            pageNumber:
+              type: number
+              description: 현재 페이지 번호
+            questions:
+              type: array
+              description: 문의 게시글 목록
+              items:
+                required:
+                - answered
+                - content
+                - id
+                - regDt
+                - title
+                - writerEmail
+                - writerNickname
+                type: object
+                properties:
+                  regDt:
+                    type: string
+                    description: 등록일시
+                  modDt:
+                    type: string
+                    description: 수정일시
+                    nullable: true
+                  writerNickname:
+                    type: string
+                    description: 작성자 닉네임
+                  writerEmail:
+                    type: string
+                    description: 작성자 이메일
+                  answered:
+                    type: boolean
+                    description: 답변 완료 여부
+                  id:
+                    type: number
+                    description: 문의 ID
+                  title:
+                    type: string
+                    description: 제목
+                  content:
+                    type: string
+                    description: 내용
+            totalPages:
+              type: number
+              description: 전체 페이지 수
+            pageSize:
+              type: number
+              description: 페이지 크기
+            totalElements:
+              type: number
+              description: 전체 데이터 개수
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[request] 폴더 정보 수정 API':
+      title: "[request] 폴더 정보 수정 API"
+      required:
+      - name
+      - parentId
+      type: object
+      properties:
+        name:
+          description: 폴더명 (선택)
+          oneOf:
+          - null
+          - type: string
+        parentId:
+          description: 상위 폴더 ID (선택)
+          oneOf:
+          - type: number
           - null
     '[response] success':
       title: "[response] success"
@@ -4620,7 +4193,7 @@ components:
           properties:
             result:
               type: boolean
-              description: 상태 변경 성공 여부
+              description: 삭제 성공 여부
           description: 응답 데이터
         httpStatus:
           type: number
@@ -4705,8 +4278,37 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[response] success-empty':
-      title: "[response] success-empty"
+    '[request] 스케줄 등록 API':
+      title: "[request] 스케줄 등록 API"
+      required:
+      - content
+      - groupId
+      - notificationDt
+      - startDt
+      type: object
+      properties:
+        groupId:
+          description: 그룹 ID (선택)
+          oneOf:
+          - null
+          - type: number
+        notificationDt:
+          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
+          oneOf:
+          - null
+          - type: string
+        startDt:
+          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
+          oneOf:
+          - null
+          - type: string
+        content:
+          description: 스케줄 내용
+          oneOf:
+          - type: string
+          - null
+    FindQuestionResponse:
+      title: FindQuestionResponse
       required:
       - data
       - httpStatus
@@ -4715,52 +4317,80 @@ components:
       properties:
         data:
           required:
-          - groups
+          - answer
+          - question
           type: object
           properties:
-            groups:
-              type: array
-              description: PENDING 상태 사용자가 있는 그룹 목록
-              items:
-                required:
-                - groupId
-                - groupName
-                - pendingAccounts
-                type: object
-                properties:
-                  pendingAccounts:
-                    type: array
-                    description: PENDING 상태 사용자 목록
-                    items:
-                      required:
-                      - accountId
-                      - email
-                      - name
-                      - nickname
-                      - requestDate
-                      type: object
-                      properties:
-                        accountId:
-                          type: number
-                          description: 사용자 ID
-                        requestDate:
-                          type: string
-                          description: 가입 요청 날짜
-                        nickname:
-                          type: string
-                          description: 사용자 닉네임
-                        name:
-                          type: string
-                          description: 사용자 이름
-                        email:
-                          type: string
-                          description: 사용자 이메일
-                  groupName:
-                    type: string
-                    description: 그룹명
-                  groupId:
-                    type: number
-                    description: 그룹 ID
+            answer:
+              required:
+              - content
+              - id
+              - questionId
+              - regDt
+              - writerEmail
+              - writerNickname
+              type: object
+              properties:
+                regDt:
+                  type: string
+                  description: 답변 등록일시
+                modDt:
+                  type: string
+                  description: 답변 수정일시
+                  nullable: true
+                writerNickname:
+                  type: string
+                  description: 답변 작성자 닉네임
+                writerEmail:
+                  type: string
+                  description: 답변 작성자 이메일
+                questionId:
+                  type: number
+                  description: 문의 ID
+                id:
+                  type: number
+                  description: 답변 ID
+                content:
+                  type: string
+                  description: 답변 내용
+              description: 답변 정보 (답변이 없는 경우 null)
+            question:
+              required:
+              - answered
+              - content
+              - id
+              - regDt
+              - title
+              - writerEmail
+              - writerNickname
+              type: object
+              properties:
+                regDt:
+                  type: string
+                  description: 등록일시
+                modDt:
+                  type: string
+                  description: 수정일시
+                  nullable: true
+                writerNickname:
+                  type: string
+                  description: 작성자 닉네임
+                writerEmail:
+                  type: string
+                  description: 작성자 이메일
+                answered:
+                  type: boolean
+                  description: 답변 완료 여부
+                id:
+                  type: number
+                  description: 문의 ID
+                title:
+                  type: string
+                  description: 제목
+                content:
+                  type: string
+                  description: 내용
+              description: 문의 정보
           description: 응답 데이터
         httpStatus:
           type: number
@@ -4768,6 +4398,60 @@ components:
         message:
           type: string
           description: 상태 메시지
+    '[request] 파일 정보 수정 API':
+      title: "[request] 파일 정보 수정 API"
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: 변경할 파일명 (옵션)
+          nullable: true
+        folderId:
+          type: number
+          description: 이동할 폴더 ID (옵션)
+          nullable: true
+    '[response] error':
+      title: "[response] error"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - errorCode
+          - errorMessage
+          type: object
+          properties:
+            errorMessage:
+              type: string
+              description: 에러 메시지
+            errorCode:
+              type: number
+              description: 에러 코드
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[request] 파일 삭제 API':
+      title: "[request] 파일 삭제 API"
+      required:
+      - fileIds
+      type: object
+      properties:
+        fileIds:
+          type: array
+          description: 삭제할 파일 ID 목록
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
     '[response] success-by-folderId':
       title: "[response] success-by-folderId"
       required:
@@ -4839,48 +4523,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[response] error':
-      title: "[response] error"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - errorCode
-          - errorMessage
-          type: object
-          properties:
-            errorMessage:
-              type: string
-              description: 에러 메시지
-            errorCode:
-              type: number
-              description: 에러 코드
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
-    '[request] 파일 삭제 API':
-      title: "[request] 파일 삭제 API"
-      required:
-      - fileIds
-      type: object
-      properties:
-        fileIds:
-          type: array
-          description: 삭제할 파일 ID 목록
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
     RegisterQuestionRequest:
       title: RegisterQuestionRequest
       required:
@@ -4894,351 +4536,6 @@ components:
         content:
           type: string
           description: 문의 내용
-    '[request] 토큰 발급 API':
-      title: "[request] 토큰 발급 API"
-      required:
-      - deviceId
-      type: object
-      properties:
-        deviceId:
-          type: string
-          description: 디바이스 ID (필수)
-    FindQuestionResponse:
-      title: FindQuestionResponse
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - answer
-          - question
-          type: object
-          properties:
-            answer:
-              required:
-              - content
-              - id
-              - regDt
-              - writerNickname
-              type: object
-              properties:
-                regDt:
-                  type: string
-                  description: 답변 등록일시
-                writerNickname:
-                  type: string
-                  description: 답변 작성자 닉네임
-                id:
-                  type: number
-                  description: 답변 ID
-                content:
-                  type: string
-                  description: 답변 내용
-              description: 답변 정보 (답변이 없는 경우 null)
-            question:
-              required:
-              - answered
-              - content
-              - id
-              - regDt
-              - title
-              - writerNickname
-              type: object
-              properties:
-                regDt:
-                  type: string
-                  description: 등록일시
-                writerNickname:
-                  type: string
-                  description: 작성자 닉네임
-                answered:
-                  type: boolean
-                  description: 답변 완료 여부
-                id:
-                  type: number
-                  description: 문의 ID
-                title:
-                  type: string
-                  description: 제목
-                content:
-                  type: string
-                  description: 내용
-              description: 문의 정보
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
-    '[request] 디바이스 등록 API':
-      title: "[request] 디바이스 등록 API"
-      type: object
-      properties:
-        appVersion:
-          type: string
-          description: 앱 버전
-          nullable: true
-        osType:
-          type: string
-          description: "OS 타입 (iOS, Android 등)"
-          nullable: true
-        fcmToken:
-          type: string
-          description: FCM 푸시 토큰
-          nullable: true
-        deviceId:
-          type: string
-          description: 디바이스 고유 ID
-          nullable: true
-    '[request] Google Play Webhook API':
-      title: "[request] Google Play Webhook API"
-      required:
-      - message
-      - subscription
-      type: object
-      properties:
-        subscription:
-          type: string
-          description: Pub/Sub 구독 경로
-        message:
-          required:
-          - data
-          - messageId
-          - publishTime
-          type: object
-          properties:
-            publishTime:
-              type: string
-              description: 메시지 발행 시간
-            data:
-              type: string
-              description: Base64 인코딩된 알림 데이터
-            messageId:
-              type: string
-              description: 메시지 고유 ID
-          description: Pub/Sub 메시지 객체
-    '[request] 그룹 수정 API':
-      title: "[request] 그룹 수정 API"
-      type: object
-      properties:
-        name:
-          description: 변경할 그룹명 (선택)
-          nullable: true
-          oneOf:
-          - type: string
-          - null
-        ownerEmail:
-          description: 변경할 소유자 이메일 (선택)
-          nullable: true
-          oneOf:
-          - null
-          - type: string
-    '[request] 그룹 계정 상태 변경 API':
-      title: "[request] 그룹 계정 상태 변경 API"
-      required:
-      - status
-      type: object
-      properties:
-        memo:
-          type: string
-          description: 메모 (status가 DENIED 또는 BLOCK인 경우 사용)
-          nullable: true
-        status:
-          description: 계정 상태 (ACTIVE / DENIED / BLOCK)
-          oneOf:
-          - type: string
-          - null
-    '[request] 그룹 공지사항 등록 API':
-      title: "[request] 그룹 공지사항 등록 API"
-      required:
-      - content
-      - title
-      type: object
-      properties:
-        title:
-          description: 공지사항 제목
-          oneOf:
-          - type: string
-          - null
-        content:
-          description: 공지사항 내용
-          oneOf:
-          - type: string
-          - null
-    '[request] 폴더 등록 API':
-      title: "[request] 폴더 등록 API"
-      required:
-      - groupId
-      - name
-      - parentId
-      type: object
-      properties:
-        groupId:
-          description: 그룹 ID
-          oneOf:
-          - type: number
-          - null
-        name:
-          description: 폴더명
-          oneOf:
-          - null
-          - type: string
-        parentId:
-          description: 부모 폴더 ID
-          oneOf:
-          - type: number
-          - null
-    '[request] 폴더 정보 수정 API':
-      title: "[request] 폴더 정보 수정 API"
-      required:
-      - name
-      - parentId
-      type: object
-      properties:
-        name:
-          description: 폴더명 (선택)
-          oneOf:
-          - null
-          - type: string
-        parentId:
-          description: 상위 폴더 ID (선택)
-          oneOf:
-          - type: number
-          - null
-    '[request] 스케줄 등록 API':
-      title: "[request] 스케줄 등록 API"
-      required:
-      - content
-      - groupId
-      - notificationDt
-      - startDt
-      type: object
-      properties:
-        groupId:
-          description: 그룹 ID (선택)
-          oneOf:
-          - null
-          - type: number
-        notificationDt:
-          description: "알림일시 (선택, yyyy-MM-dd HH:mm:ss)"
-          oneOf:
-          - null
-          - type: string
-        startDt:
-          description: 시작일시 (yyyy-MM-dd HH:mm:ss)
-          oneOf:
-          - null
-          - type: string
-        content:
-          description: 스케줄 내용
-          oneOf:
-          - type: string
-          - null
-    '[request] 테스트 푸시 알림 API':
-      title: "[request] 테스트 푸시 알림 API"
-      required:
-      - body
-      - email
-      - title
-      type: object
-      properties:
-        body:
-          description: "푸시 내용 (선택, 미입력 시 '테스트 푸시 알림입니다.')"
-          oneOf:
-          - type: string
-          - null
-        title:
-          description: "푸시 제목 (선택, 미입력 시 '테스트 푸시')"
-          oneOf:
-          - type: string
-          - null
-        email:
-          description: 대상 이메일
-          oneOf:
-          - type: string
-          - null
-    '[request] 구독 생성 API':
-      title: "[request] 구독 생성 API"
-      required:
-      - orderTxId
-      - storeProcessDt
-      - storeType
-      - subscriptionKey
-      - productId
-      type: object
-      properties:
-        storeType:
-          description: "스토어 타입 (APPLE, GOOGLE)"
-          oneOf:
-          - null
-          - type: string
-        orderTxId:
-          type: string
-          description: 결제 단위 트랜젝션 아이디
-        productId:
-          description: 상품 ID
-          oneOf:
-          - type: number
-          - null
-        storeProcessDt:
-          type: string
-          description: 스토어 처리 일시 (yyyy-MM-dd HH:mm:ss)
-        groupId:
-          description: 그룹 ID (스토리지 구독인 경우 필수)
-          nullable: true
-          oneOf:
-          - type: number
-          - null
-        subscriptionKey:
-          type: string
-          description: 구독 고유키
-    '[request] 파일 정보 수정 API':
-      title: "[request] 파일 정보 수정 API"
-      type: object
-      properties:
-        fileName:
-          type: string
-          description: 변경할 파일명 (옵션)
-          nullable: true
-        folderId:
-          type: number
-          description: 이동할 폴더 ID (옵션)
-          nullable: true
-    '[response] default-message':
-      title: "[response] default-message"
-      required:
-      - data
-      - httpStatus
-      - message
-      type: object
-      properties:
-        data:
-          required:
-          - deviceCount
-          - email
-          - result
-          type: object
-          properties:
-            result:
-              type: string
-              description: "전송 결과 (SUCCESS, NO_DEVICE)"
-            deviceCount:
-              type: number
-              description: 디바이스 개수
-            email:
-              type: string
-              description: 대상 이메일
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
     RegisterAnswerRequest:
       title: RegisterAnswerRequest
       required:
@@ -5248,6 +4545,109 @@ components:
         content:
           type: string
           description: 답변 내용
+    '[response] 그룹 파일 Google Drive 전체 업로드 API':
+      title: "[response] 그룹 파일 Google Drive 전체 업로드 API"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - failedCount
+          - skippedCount
+          - totalFiles
+          - uploadedCount
+          type: object
+          properties:
+            uploadedCount:
+              type: number
+              description: Drive에 업로드된 파일 수
+            failedCount:
+              type: number
+              description: 업로드 실패한 파일 수
+            skippedCount:
+              type: number
+              description: 동일한 이름의 파일이 이미 존재하여 건너뛴 파일 수
+            totalFiles:
+              type: number
+              description: 그룹 전체 파일 수
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: HTTP 상태 코드
+        message:
+          type: string
+          description: 응답 메시지
+    '[request] 토큰 발급 API':
+      title: "[request] 토큰 발급 API"
+      required:
+      - deviceId
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: 디바이스 ID (필수)
+    '[response] success-empty':
+      title: "[response] success-empty"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - groups
+          type: object
+          properties:
+            groups:
+              type: array
+              description: PENDING 상태 사용자가 있는 그룹 목록
+              items:
+                required:
+                - groupId
+                - groupName
+                - pendingAccounts
+                type: object
+                properties:
+                  pendingAccounts:
+                    type: array
+                    description: PENDING 상태 사용자 목록
+                    items:
+                      required:
+                      - accountId
+                      - email
+                      - nickname
+                      - requestDate
+                      type: object
+                      properties:
+                        accountId:
+                          type: number
+                          description: 사용자 ID
+                        requestDate:
+                          type: string
+                          description: 가입 요청 날짜
+                        nickname:
+                          type: string
+                          description: 사용자 닉네임
+                        email:
+                          type: string
+                          description: 사용자 이메일
+                  groupName:
+                    type: string
+                    description: 그룹명
+                  groupId:
+                    type: number
+                    description: 그룹 ID
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
     RegisterAnswerResponse:
       title: RegisterAnswerResponse
       required:
@@ -5294,26 +4694,6 @@ components:
         message:
           type: string
           description: 상태 메시지
-    '[request] 디바이스 정보 수정 API':
-      title: "[request] 디바이스 정보 수정 API"
-      type: object
-      properties:
-        osType:
-          type: string
-          description: "OS 타입 (iOS, Android 등)"
-          nullable: true
-        pushYn:
-          type: string
-          description: 푸시 알림 수신 여부 (Y/N)
-          nullable: true
-        fcmToken:
-          type: string
-          description: FCM 푸시 토큰
-          nullable: true
-        deviceId:
-          type: string
-          description: 디바이스 고유 ID
-          nullable: true
     '[request] 공지사항 수정 API':
       title: "[request] 공지사항 수정 API"
       required:
@@ -5327,69 +4707,39 @@ components:
         content:
           type: string
           description: 수정할 내용
-    FindQuestionsResponse:
-      title: FindQuestionsResponse
-      required:
-      - data
-      - httpStatus
-      - message
+    '[request] 그룹 수정 API':
+      title: "[request] 그룹 수정 API"
       type: object
       properties:
-        data:
-          required:
-          - pageNumber
-          - pageSize
-          - questions
-          - totalElements
-          - totalPages
-          type: object
-          properties:
-            pageNumber:
-              type: number
-              description: 현재 페이지 번호
-            questions:
-              type: array
-              description: 문의 게시글 목록
-              items:
-                required:
-                - answered
-                - id
-                - regDt
-                - title
-                - writerNickname
-                type: object
-                properties:
-                  regDt:
-                    type: string
-                    description: 등록일시
-                  writerNickname:
-                    type: string
-                    description: 작성자 닉네임
-                  answered:
-                    type: boolean
-                    description: 답변 완료 여부
-                  id:
-                    type: number
-                    description: 문의 ID
-                  title:
-                    type: string
-                    description: 제목
-            totalPages:
-              type: number
-              description: 전체 페이지 수
-            pageSize:
-              type: number
-              description: 페이지 크기
-            totalElements:
-              type: number
-              description: 전체 데이터 개수
-          description: 응답 데이터
-        httpStatus:
-          type: number
-          description: 상태 코드
-        message:
-          type: string
-          description: 상태 메시지
+        name:
+          description: 변경할 그룹명 (선택)
+          nullable: true
+          oneOf:
+          - type: string
+          - null
+        ownerEmail:
+          description: 변경할 소유자 이메일 (선택)
+          nullable: true
+          oneOf:
+          - null
+          - type: string
+    '[request] 계정 등록 API':
+      title: "[request] 계정 등록 API"
+      required:
+      - groupId
+      - newGroupName
+      type: object
+      properties:
+        newGroupName:
+          description: 신규 그룹 이름
+          oneOf:
+          - type: string
+          - null
+        groupId:
+          description: 그룹 ID
+          oneOf:
+          - null
+          - type: number
     '[request] 그룹 계정 노출 여부 변경 API':
       title: "[request] 그룹 계정 노출 여부 변경 API"
       required:
@@ -5401,6 +4751,38 @@ components:
           oneOf:
           - null
           - type: string
+    '[request] 그룹 계정 상태 변경 API':
+      title: "[request] 그룹 계정 상태 변경 API"
+      required:
+      - status
+      type: object
+      properties:
+        memo:
+          type: string
+          description: 메모 (status가 DENIED 또는 BLOCK인 경우 사용)
+          nullable: true
+        status:
+          description: 계정 상태 (ACTIVE / DENIED / BLOCK)
+          oneOf:
+          - type: string
+          - null
+    '[request] 그룹 공지사항 등록 API':
+      title: "[request] 그룹 공지사항 등록 API"
+      required:
+      - content
+      - title
+      type: object
+      properties:
+        title:
+          description: 공지사항 제목
+          oneOf:
+          - type: string
+          - null
+        content:
+          description: 공지사항 내용
+          oneOf:
+          - type: string
+          - null
 
   securitySchemes:
     APIKey:
