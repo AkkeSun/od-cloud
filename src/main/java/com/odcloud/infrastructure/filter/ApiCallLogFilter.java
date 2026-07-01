@@ -83,6 +83,8 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
             }
         } catch (Exception ignored) {
         }
+
+        wrappedResponse.copyBodyToResponse();
     }
 
     private ApiInfo findApiInfoWithCache(ApiCallLog apiCallLog) {
