@@ -45,6 +45,9 @@ class SubscriptionEntity {
     @Column(name = "next_billing_date")
     private LocalDate nextBillingDate;
 
+    @Column(name = "expired_date", nullable = false)
+    private LocalDateTime expiredDate;
+
     @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
@@ -60,6 +63,7 @@ class SubscriptionEntity {
             .status(subscription.getStatus())
             .billingKey(subscription.getBillingKey())
             .nextBillingDate(subscription.getNextBillingDate())
+            .expiredDate(subscription.getExpiredDate())
             .modDt(subscription.getModDt())
             .regDt(subscription.getRegDt())
             .build();
@@ -74,6 +78,7 @@ class SubscriptionEntity {
             .status(status)
             .billingKey(billingKey)
             .nextBillingDate(nextBillingDate)
+            .expiredDate(expiredDate)
             .modDt(modDt)
             .regDt(regDt)
             .build();

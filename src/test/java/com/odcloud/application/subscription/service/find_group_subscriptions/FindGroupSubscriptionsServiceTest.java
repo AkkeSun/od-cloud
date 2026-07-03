@@ -6,6 +6,7 @@ import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.domain.model.Account;
 import com.odcloud.domain.model.Group;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,7 @@ class FindGroupSubscriptionsServiceTest {
         @DisplayName("[success] 활성 구독이 상품별로 조회된다")
         void success_withSubscriptions() {
             // given
+            LocalDateTime expiredDate = LocalDateTime.of(2026, 8, 1, 0, 0);
             Group groupA = Group.builder().id(1L).name("개발팀").build();
             Group groupB = Group.builder().id(2L).name("마케팅팀").build();
 
@@ -41,9 +43,9 @@ class FindGroupSubscriptionsServiceTest {
                 .build();
 
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE"));
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE", expiredDate));
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_50GB", 20L, "김철수", "ACTIVE"));
+                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_50GB", 20L, "김철수", "ACTIVE", expiredDate));
 
             // when
             List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
@@ -59,6 +61,7 @@ class FindGroupSubscriptionsServiceTest {
             assertThat(cloud100.groups().get(0).buyerId()).isEqualTo(10L);
             assertThat(cloud100.groups().get(0).buyer()).isEqualTo("홍길동");
             assertThat(cloud100.groups().get(0).status()).isEqualTo("ACTIVE");
+            assertThat(cloud100.groups().get(0).expiredDate()).isEqualTo(expiredDate);
 
             FindGroupSubscriptionsResponse cloud50 = response.get(1);
             assertThat(cloud50.productName()).isEqualTo("CLOUD_50GB");
@@ -70,6 +73,7 @@ class FindGroupSubscriptionsServiceTest {
         @DisplayName("[success] 같은 상품을 여러 그룹이 구독중이면 하나의 상품에 그룹이 모인다")
         void success_multipleGroupsForSameProduct() {
             // given
+            LocalDateTime expiredDate = LocalDateTime.of(2026, 8, 1, 0, 0);
             Account account = Account.builder()
                 .id(1L)
                 .email("user@example.com")
@@ -80,9 +84,9 @@ class FindGroupSubscriptionsServiceTest {
                 .build();
 
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE"));
+                new SubscriptionDetail(1L, "개발팀", "CLOUD_100GB", 10L, "홍길동", "ACTIVE", expiredDate));
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_100GB", 20L, "김철수", "EXP_PENDING"));
+                new SubscriptionDetail(2L, "마케팅팀", "CLOUD_100GB", 20L, "김철수", "EXP_PENDING", expiredDate));
 
             // when
             List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);
@@ -124,7 +128,7 @@ class FindGroupSubscriptionsServiceTest {
                 .build();
 
             fakeSubscriptionStoragePort.database.add(
-                new SubscriptionDetail(null, null, "CLOUD_100GB", null, null, null));
+                new SubscriptionDetail(null, null, "CLOUD_100GB", null, null, null, null));
 
             // when
             List<FindGroupSubscriptionsResponse> response = findGroupSubscriptionsService.find(account);

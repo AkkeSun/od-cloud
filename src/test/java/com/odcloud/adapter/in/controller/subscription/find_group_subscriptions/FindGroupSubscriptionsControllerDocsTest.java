@@ -26,6 +26,7 @@ import com.odcloud.infrastructure.exception.ExceptionAdvice;
 import com.odcloud.infrastructure.resolver.LoginAccountResolver;
 import com.odcloud.infrastructure.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -103,6 +104,7 @@ class FindGroupSubscriptionsControllerDocsTest {
                     .buyerId(10L)
                     .buyer("홍길동")
                     .status("ACTIVE")
+                    .expiredDate(LocalDateTime.of(2026, 8, 1, 0, 0))
                     .build();
 
             FindGroupSubscriptionsResponse.GroupInfo marketingGroup =
@@ -112,6 +114,7 @@ class FindGroupSubscriptionsControllerDocsTest {
                     .buyerId(20L)
                     .buyer("김철수")
                     .status("EXP_PENDING")
+                    .expiredDate(LocalDateTime.of(2026, 8, 1, 0, 0))
                     .build();
 
             FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.builder()
@@ -142,7 +145,9 @@ class FindGroupSubscriptionsControllerDocsTest {
                 fieldWithPath("data[].groups[].buyer")
                     .type(JsonFieldType.STRING).description("구매자 닉네임"),
                 fieldWithPath("data[].groups[].status")
-                    .type(JsonFieldType.STRING).description("구독 상태 (ACTIVE, EXP_PENDING)")
+                    .type(JsonFieldType.STRING).description("구독 상태 (ACTIVE, EXP_PENDING)"),
+                fieldWithPath("data[].groups[].expiredDate")
+                    .type(JsonFieldType.STRING).description("구독 만료 일시")
             );
         }
     }
