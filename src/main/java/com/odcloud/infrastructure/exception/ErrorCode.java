@@ -54,7 +54,8 @@ public enum ErrorCode {
     Business_GOOGLE_DRIVE_DELETE_ERROR(4032, "Google Drive 파일 삭제 중 오류가 발생했습니다"),
     Business_NOT_FOUND_PRODUCT(4033, "조회된 상품 정보가 없습니다"),
     Business_ALREADY_EXISTS_SUBSCRIPTION(4034, "이미 활성화된 구독 정보가 존재합니다"),
-    Business_INVALID_BILLING_KEY(4035, "유효하지 않은 빌링키 입니다");
+    Business_INVALID_BILLING_KEY(4035, "유효하지 않은 빌링키 입니다"),
+    Business_INVALID_SUBSCRIPTION_STATUS(4036, "ACTIVE 상태의 구독만 취소할 수 있습니다");
 
     ;
 

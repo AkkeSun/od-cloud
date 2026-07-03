@@ -35,6 +35,12 @@ class SubscriptionRepository {
         return entity.toDomain();
     }
 
+    SubscriptionEntity findById(Long subscriptionId) {
+        return queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.id.eq(subscriptionId))
+            .fetchOne();
+    }
+
     boolean existsActiveByGroupIdAndProductId(Long groupId, Long productId) {
         return queryFactory.selectOne()
             .from(subscriptionEntity)

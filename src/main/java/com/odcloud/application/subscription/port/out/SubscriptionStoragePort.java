@@ -9,5 +9,7 @@ public interface SubscriptionStoragePort {
 
     boolean existsActiveByGroupIdAndProductId(Long groupId, Long productId);
 
+    Subscription findById(Long subscriptionId);
+
     Subscription save(Subscription subscription);
 }

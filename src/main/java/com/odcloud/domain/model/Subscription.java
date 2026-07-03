@@ -24,4 +24,12 @@ public class Subscription {
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
+    public boolean isActive() {
+        return "ACTIVE".equals(status);
+    }
+
+    public void cancel() {
+        this.status = "EXP_PENDING";
+        this.modDt = LocalDateTime.now();
+    }
 }

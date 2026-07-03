@@ -1,8 +1,11 @@
 package com.odcloud.fakeClass;
 
+import static com.odcloud.infrastructure.exception.ErrorCode.Business_NOT_FOUND_SUBSCRIPTION;
+
 import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
+import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,6 +31,14 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
     }
 
     @Override
+    public Subscription findById(Long subscriptionId) {
+        return subscriptionDatabase.stream()
+            .filter(subscription -> subscription.getId().equals(subscriptionId))
+            .findFirst()
+            .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_SUBSCRIPTION));
+    }
+
+    @Override
     public Subscription save(Subscription subscription) {
         Subscription saved = Subscription.builder()
             .id(subscription.getId() == null ? sequence.incrementAndGet() : subscription.getId())
@@ -41,6 +52,7 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
             .modDt(subscription.getModDt())
             .regDt(subscription.getRegDt())
             .build();
+        subscriptionDatabase.removeIf(s -> s.getId() != null && s.getId().equals(saved.getId()));
         subscriptionDatabase.add(saved);
         return saved;
     }
