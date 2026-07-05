@@ -6,6 +6,8 @@ import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,6 +35,18 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
             throw new CustomBusinessException(Business_NOT_FOUND_SUBSCRIPTION);
         }
         return entity.toDomain();
+    }
+
+    @Override
+    public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
+        LocalDate nextBillingDate) {
+        return repository.findByStatusAndNextBillingDateLoe(status, nextBillingDate);
+    }
+
+    @Override
+    public List<Subscription> findByStatusAndExpiredDateLoe(String status,
+        LocalDateTime expiredDate) {
+        return repository.findByStatusAndExpiredDateLoe(status, expiredDate);
     }
 
     @Override

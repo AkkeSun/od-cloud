@@ -6,6 +6,8 @@ import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,6 +38,26 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
             .filter(subscription -> subscription.getId().equals(subscriptionId))
             .findFirst()
             .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_SUBSCRIPTION));
+    }
+
+    @Override
+    public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
+        LocalDate nextBillingDate) {
+        return subscriptionDatabase.stream()
+            .filter(subscription -> status.equals(subscription.getStatus())
+                && subscription.getNextBillingDate() != null
+                && !subscription.getNextBillingDate().isAfter(nextBillingDate))
+            .toList();
+    }
+
+    @Override
+    public List<Subscription> findByStatusAndExpiredDateLoe(String status,
+        LocalDateTime expiredDate) {
+        return subscriptionDatabase.stream()
+            .filter(subscription -> status.equals(subscription.getStatus())
+                && subscription.getExpiredDate() != null
+                && !subscription.getExpiredDate().isAfter(expiredDate))
+            .toList();
     }
 
     @Override

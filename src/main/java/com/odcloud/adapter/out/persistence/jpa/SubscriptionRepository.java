@@ -9,6 +9,8 @@ import com.odcloud.domain.model.Subscription;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -39,6 +41,26 @@ class SubscriptionRepository {
         return queryFactory.selectFrom(subscriptionEntity)
             .where(subscriptionEntity.id.eq(subscriptionId))
             .fetchOne();
+    }
+
+    List<Subscription> findByStatusAndNextBillingDateLoe(String status, LocalDate nextBillingDate) {
+        return queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.status.eq(status)
+                .and(subscriptionEntity.nextBillingDate.loe(nextBillingDate)))
+            .fetch()
+            .stream()
+            .map(SubscriptionEntity::toDomain)
+            .toList();
+    }
+
+    List<Subscription> findByStatusAndExpiredDateLoe(String status, LocalDateTime expiredDate) {
+        return queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.status.eq(status)
+                .and(subscriptionEntity.expiredDate.loe(expiredDate)))
+            .fetch()
+            .stream()
+            .map(SubscriptionEntity::toDomain)
+            .toList();
     }
 
     boolean existsActiveByGroupIdAndProductId(Long groupId, Long productId) {

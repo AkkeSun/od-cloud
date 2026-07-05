@@ -32,4 +32,15 @@ public class Subscription {
         this.status = "EXP_PENDING";
         this.modDt = LocalDateTime.now();
     }
+
+    public void renew() {
+        this.nextBillingDate = this.nextBillingDate.plusMonths(1);
+        this.expiredDate = this.nextBillingDate.atStartOfDay();
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void expire() {
+        this.status = "EXPIRED";
+        this.modDt = LocalDateTime.now();
+    }
 }
