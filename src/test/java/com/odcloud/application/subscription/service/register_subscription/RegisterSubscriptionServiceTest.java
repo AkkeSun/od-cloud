@@ -103,9 +103,9 @@ class RegisterSubscriptionServiceTest {
             assertThat(savedSubscription.getBillingKey()).isEqualTo("billing-key-123");
             assertThat(savedSubscription.getNextBillingDate()).isNotNull();
             assertThat(savedSubscription.getExpiredDate())
-                .isEqualTo(savedSubscription.getNextBillingDate().atStartOfDay());
+                .isEqualTo(savedSubscription.getNextBillingDate());
             assertThat(savedSubscription.getExpiredDate())
-                .isEqualTo(LocalDate.now().plusMonths(1).atStartOfDay());
+                .isEqualTo(LocalDate.now().plusMonths(1));
 
             assertThat(fakePaymentStoragePort.database).hasSize(1);
             assertThat(fakePaymentStoragePort.database.get(0).getAmount())

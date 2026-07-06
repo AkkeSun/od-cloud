@@ -7,10 +7,11 @@ import static com.odcloud.adapter.out.persistence.jpa.QSubscriptionEntity.subscr
 import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.domain.model.Subscription;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -53,7 +54,7 @@ class SubscriptionRepository {
             .toList();
     }
 
-    List<Subscription> findByStatusAndExpiredDateLoe(String status, LocalDateTime expiredDate) {
+    List<Subscription> findByStatusAndExpiredDateLoe(String status, LocalDate expiredDate) {
         return queryFactory.selectFrom(subscriptionEntity)
             .where(subscriptionEntity.status.eq(status)
                 .and(subscriptionEntity.expiredDate.loe(expiredDate)))
@@ -73,20 +74,25 @@ class SubscriptionRepository {
     }
 
     List<SubscriptionDetail> findActiveByGroupIds(List<Long> groupIds) {
+        BooleanExpression groupMatch = groupIds.isEmpty()
+            ? Expressions.FALSE
+            : subscriptionEntity.groupId.in(groupIds);
+
         return queryFactory
             .select(Projections.constructor(
                 SubscriptionDetail.class,
+                productEntity.id,
+                productEntity.productName,
+                subscriptionEntity.id,
                 groupEntity.id,
                 groupEntity.name,
-                productEntity.productName,
-                buyerAccount.id,
                 buyerAccount.nickname,
                 subscriptionEntity.status,
                 subscriptionEntity.expiredDate
             ))
             .from(productEntity)
             .leftJoin(subscriptionEntity).on(subscriptionEntity.productId.eq(productEntity.id)
-                .and(subscriptionEntity.groupId.in(groupIds))
+                .and(groupMatch)
                 .and(subscriptionEntity.status.in("ACTIVE", "EXP_PENDING")))
             .leftJoin(groupEntity).on(subscriptionEntity.groupId.eq(groupEntity.id))
             .leftJoin(buyerAccount).on(subscriptionEntity.buyerId.eq(buyerAccount.id))

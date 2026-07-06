@@ -7,7 +7,6 @@ import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,7 +51,7 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
 
     @Override
     public List<Subscription> findByStatusAndExpiredDateLoe(String status,
-        LocalDateTime expiredDate) {
+        LocalDate expiredDate) {
         return subscriptionDatabase.stream()
             .filter(subscription -> status.equals(subscription.getStatus())
                 && subscription.getExpiredDate() != null

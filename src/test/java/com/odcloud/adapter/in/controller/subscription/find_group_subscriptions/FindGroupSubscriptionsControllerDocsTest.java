@@ -26,7 +26,7 @@ import com.odcloud.infrastructure.exception.ExceptionAdvice;
 import com.odcloud.infrastructure.resolver.LoginAccountResolver;
 import com.odcloud.infrastructure.util.JwtUtil;
 import io.jsonwebtoken.Claims;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -101,23 +101,24 @@ class FindGroupSubscriptionsControllerDocsTest {
                 FindGroupSubscriptionsResponse.GroupInfo.builder()
                     .groupId(1L)
                     .groupName("개발팀")
-                    .buyerId(10L)
+                    .subscriptionId(1000L)
                     .buyer("홍길동")
                     .status("ACTIVE")
-                    .expiredDate(LocalDateTime.of(2026, 8, 1, 0, 0))
+                    .expiredDate(LocalDate.of(2026, 8, 1))
                     .build();
 
             FindGroupSubscriptionsResponse.GroupInfo marketingGroup =
                 FindGroupSubscriptionsResponse.GroupInfo.builder()
                     .groupId(2L)
                     .groupName("마케팅팀")
-                    .buyerId(20L)
+                    .subscriptionId(1001L)
                     .buyer("김철수")
                     .status("EXP_PENDING")
-                    .expiredDate(LocalDateTime.of(2026, 8, 1, 0, 0))
+                    .expiredDate(LocalDate.of(2026, 8, 1))
                     .build();
 
             FindGroupSubscriptionsResponse response = FindGroupSubscriptionsResponse.builder()
+                .productId(100L)
                 .productName("CLOUD_100GB")
                 .groups(List.of(devGroup, marketingGroup))
                 .build();
@@ -132,6 +133,8 @@ class FindGroupSubscriptionsControllerDocsTest {
                     .type(JsonFieldType.STRING).description("상태 메시지"),
                 fieldWithPath("data")
                     .type(JsonFieldType.ARRAY).description("응답 데이터"),
+                fieldWithPath("data[].productId")
+                    .type(JsonFieldType.NUMBER).description("상품 ID"),
                 fieldWithPath("data[].productName")
                     .type(JsonFieldType.STRING).description("상품명"),
                 fieldWithPath("data[].groups")
@@ -140,8 +143,8 @@ class FindGroupSubscriptionsControllerDocsTest {
                     .type(JsonFieldType.NUMBER).description("그룹 ID"),
                 fieldWithPath("data[].groups[].groupName")
                     .type(JsonFieldType.STRING).description("그룹명"),
-                fieldWithPath("data[].groups[].buyerId")
-                    .type(JsonFieldType.NUMBER).description("구매자 ID"),
+                fieldWithPath("data[].groups[].subscriptionId")
+                    .type(JsonFieldType.NUMBER).description("구독 ID"),
                 fieldWithPath("data[].groups[].buyer")
                     .type(JsonFieldType.STRING).description("구매자 닉네임"),
                 fieldWithPath("data[].groups[].status")

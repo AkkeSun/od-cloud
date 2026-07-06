@@ -3,7 +3,7 @@ package com.odcloud.application.subscription.service.expire_subscriptions;
 import com.odcloud.application.subscription.port.in.ExpireSubscriptionsUseCase;
 import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ class ExpireSubscriptionsService implements ExpireSubscriptionsUseCase {
     @Transactional
     public ExpireSubscriptionsResponse expire() {
         List<Subscription> targets =
-            subscriptionStoragePort.findByStatusAndExpiredDateLoe("EXP_PENDING", LocalDateTime.now());
+            subscriptionStoragePort.findByStatusAndExpiredDateLoe("EXP_PENDING", LocalDate.now());
 
         int successCount = 0;
         int failCount = 0;

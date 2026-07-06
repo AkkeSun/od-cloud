@@ -1,7 +1,7 @@
 package com.odcloud.application.subscription.service.find_group_subscriptions;
 
 import com.odcloud.application.subscription.port.out.SubscriptionDetail;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,22 +10,24 @@ import lombok.Builder;
 
 @Builder
 public record FindGroupSubscriptionsResponse(
+    Long productId,
     String productName,
     List<GroupInfo> groups
 ) {
 
     public static List<FindGroupSubscriptionsResponse> of(List<SubscriptionDetail> details) {
-        Map<String, List<SubscriptionDetail>> detailsByProduct = details.stream()
+        Map<Long, List<SubscriptionDetail>> detailsByProduct = details.stream()
             .collect(Collectors.groupingBy(
-                SubscriptionDetail::productName,
+                SubscriptionDetail::productId,
                 LinkedHashMap::new,
                 Collectors.toList()
             ));
 
-        return detailsByProduct.entrySet().stream()
-            .map(entry -> FindGroupSubscriptionsResponse.builder()
-                .productName(entry.getKey())
-                .groups(toGroupInfos(entry.getValue()))
+        return detailsByProduct.values().stream()
+            .map(productDetails -> FindGroupSubscriptionsResponse.builder()
+                .productId(productDetails.get(0).productId())
+                .productName(productDetails.get(0).productName())
+                .groups(toGroupInfos(productDetails))
                 .build())
             .toList();
     }
@@ -48,17 +50,17 @@ public record FindGroupSubscriptionsResponse(
     public record GroupInfo(
         Long groupId,
         String groupName,
-        Long buyerId,
+        Long subscriptionId,
         String buyer,
         String status,
-        LocalDateTime expiredDate
+        LocalDate expiredDate
     ) {
 
         static GroupInfo of(SubscriptionDetail detail) {
             return GroupInfo.builder()
                 .groupId(detail.groupId())
                 .groupName(detail.groupName())
-                .buyerId(detail.buyerId())
+                .subscriptionId(detail.subscriptionId())
                 .buyer(detail.buyerNickname())
                 .status(detail.status())
                 .expiredDate(detail.expiredDate())

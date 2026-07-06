@@ -20,7 +20,7 @@ public class Subscription {
     private String status;
     private String billingKey;
     private LocalDate nextBillingDate;
-    private LocalDateTime expiredDate;
+    private LocalDate expiredDate;
     private LocalDateTime modDt;
     private LocalDateTime regDt;
 
@@ -35,7 +35,7 @@ public class Subscription {
 
     public void renew() {
         this.nextBillingDate = this.nextBillingDate.plusMonths(1);
-        this.expiredDate = this.nextBillingDate.atStartOfDay();
+        this.expiredDate = this.nextBillingDate;
         this.modDt = LocalDateTime.now();
     }
 

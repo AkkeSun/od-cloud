@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +21,7 @@ class ExpireSubscriptionsServiceTest {
         service = new ExpireSubscriptionsService(fakeSubscriptionStoragePort);
     }
 
-    private Subscription subscription(Long id, String status, LocalDateTime expiredDate) {
+    private Subscription subscription(Long id, String status, LocalDate expiredDate) {
         return Subscription.builder()
             .id(id)
             .productId(100L)
@@ -41,7 +41,7 @@ class ExpireSubscriptionsServiceTest {
         void success() {
             // given
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
-                subscription(1L, "EXP_PENDING", LocalDateTime.now().minusMinutes(1)));
+                subscription(1L, "EXP_PENDING", LocalDate.now().minusDays(1)));
 
             // when
             ExpireSubscriptionsResponse response = service.expire();
@@ -58,9 +58,9 @@ class ExpireSubscriptionsServiceTest {
         void skip_notTarget() {
             // given
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
-                subscription(1L, "EXP_PENDING", LocalDateTime.now().plusDays(1)));
+                subscription(1L, "EXP_PENDING", LocalDate.now().plusDays(1)));
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
-                subscription(2L, "ACTIVE", LocalDateTime.now().minusDays(1)));
+                subscription(2L, "ACTIVE", LocalDate.now().minusDays(1)));
 
             // when
             ExpireSubscriptionsResponse response = service.expire();

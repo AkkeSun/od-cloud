@@ -7,7 +7,6 @@ import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -45,7 +44,7 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
 
     @Override
     public List<Subscription> findByStatusAndExpiredDateLoe(String status,
-        LocalDateTime expiredDate) {
+        LocalDate expiredDate) {
         return repository.findByStatusAndExpiredDateLoe(status, expiredDate);
     }
 

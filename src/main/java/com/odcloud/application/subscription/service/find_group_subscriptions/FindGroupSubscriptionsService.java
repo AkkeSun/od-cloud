@@ -16,9 +16,6 @@ class FindGroupSubscriptionsService implements FindGroupSubscriptionsUseCase {
 
     @Override
     public List<FindGroupSubscriptionsResponse> find(Account account) {
-        if (account.getGroups().isEmpty()) {
-            return List.of();
-        }
         List<SubscriptionDetail> details = subscriptionStoragePort.findActiveByGroupIds(account.getGroupIds());
         return FindGroupSubscriptionsResponse.of(details);
     }

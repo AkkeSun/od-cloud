@@ -51,7 +51,7 @@ class RenewSubscriptionsServiceTest {
             .status("ACTIVE")
             .billingKey("billing-key-" + id)
             .nextBillingDate(nextBillingDate)
-            .expiredDate(nextBillingDate.atStartOfDay())
+            .expiredDate(nextBillingDate)
             .build();
     }
 
@@ -83,7 +83,7 @@ class RenewSubscriptionsServiceTest {
             Subscription updated = fakeSubscriptionStoragePort.findById(1L);
             assertThat(updated.getStatus()).isEqualTo("ACTIVE");
             assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusMonths(1));
-            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusMonths(1).atStartOfDay());
+            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusMonths(1));
         }
 
         @Test

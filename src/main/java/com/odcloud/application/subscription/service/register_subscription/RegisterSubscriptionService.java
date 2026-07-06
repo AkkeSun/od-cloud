@@ -54,7 +54,6 @@ class RegisterSubscriptionService implements RegisterSubscriptionUseCase {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDate nextBillingDate = LocalDate.now().plusMonths(1);
-        LocalDateTime expiredDate = nextBillingDate.atStartOfDay();
 
         Subscription savedSubscription = subscriptionStoragePort.save(Subscription.builder()
             .productId(command.productId())
@@ -63,7 +62,7 @@ class RegisterSubscriptionService implements RegisterSubscriptionUseCase {
             .status("ACTIVE")
             .billingKey(command.billingKey())
             .nextBillingDate(nextBillingDate)
-            .expiredDate(expiredDate)
+            .expiredDate(nextBillingDate)
             .regDt(now)
             .build());
 

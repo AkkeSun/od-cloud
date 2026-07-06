@@ -46,7 +46,7 @@ class SubscriptionEntity {
     private LocalDate nextBillingDate;
 
     @Column(name = "expired_date", nullable = false)
-    private LocalDateTime expiredDate;
+    private LocalDate expiredDate;
 
     @Column(name = "mod_dt")
     private LocalDateTime modDt;

@@ -43,7 +43,7 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
             .status(status)
             .billingKey("billing-key-123")
             .nextBillingDate(nextBillingDate)
-            .expiredDate(nextBillingDate.atStartOfDay())
+            .expiredDate(nextBillingDate)
             .regDt(now)
             .build();
         entityManager.persist(entity);

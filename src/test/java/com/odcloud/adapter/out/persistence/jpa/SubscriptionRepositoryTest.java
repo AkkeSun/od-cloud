@@ -40,7 +40,7 @@ class SubscriptionRepositoryTest extends IntegrationTestSupport {
             // given
             LocalDateTime now = LocalDateTime.now();
             LocalDate nextBillingDate = LocalDate.now().plusMonths(1);
-            LocalDateTime expiredDate = nextBillingDate.atStartOfDay();
+            LocalDate expiredDate = nextBillingDate;
 
             Subscription subscription = Subscription.builder()
                 .productId(100L)
@@ -73,7 +73,7 @@ class SubscriptionRepositoryTest extends IntegrationTestSupport {
         void success_readBack() {
             // given
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime expiredDate = LocalDate.now().plusMonths(1).atStartOfDay();
+            LocalDate expiredDate = LocalDate.now().plusMonths(1);
 
             SubscriptionEntity existing = SubscriptionEntity.builder()
                 .productId(100L)
