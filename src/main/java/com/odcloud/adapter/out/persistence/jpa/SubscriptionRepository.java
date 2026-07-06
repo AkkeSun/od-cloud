@@ -60,9 +60,9 @@ class SubscriptionRepository {
             .fetchOne();
     }
 
-    List<Subscription> findByStatusAndNextBillingDateLoe(String status, LocalDate nextBillingDate) {
+    List<Subscription> findByRenewTargets(List<String> status, LocalDate nextBillingDate) {
         return queryFactory.selectFrom(subscriptionEntity)
-            .where(subscriptionEntity.status.eq(status)
+            .where(subscriptionEntity.status.in(status)
                 .and(subscriptionEntity.nextBillingDate.loe(nextBillingDate)))
             .fetch()
             .stream()

@@ -46,9 +46,8 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     }
 
     @Override
-    public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
-        LocalDate nextBillingDate) {
-        return repository.findByStatusAndNextBillingDateLoe(status, nextBillingDate);
+    public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
+        return repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), nextBillingDate);
     }
 
     @Override

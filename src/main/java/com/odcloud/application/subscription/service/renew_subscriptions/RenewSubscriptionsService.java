@@ -30,7 +30,7 @@ class RenewSubscriptionsService implements RenewSubscriptionsUseCase {
     @Transactional
     public RenewSubscriptionsResponse renew() {
         List<Subscription> targets =
-            subscriptionStoragePort.findByStatusAndNextBillingDateLoe("ACTIVE", LocalDate.now());
+            subscriptionStoragePort.findByRenewTargets(LocalDate.now());
 
         int successCount = 0;
         int failCount = 0;
