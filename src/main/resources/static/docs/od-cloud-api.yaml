@@ -3530,14 +3530,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-07-06T10:16:37.855686"
+                          "notificationDt" : "2026-07-06T12:16:34.218027"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-07-06T10:16:37.855704"
+                          "notificationDt" : "2026-07-06T12:16:34.218053"
                         } ]
                       }
                     }
@@ -4210,6 +4210,244 @@ paths:
                           "groupName" : "마케팅팀",
                           "subscriptions" : [ ]
                         } ]
+                      }
+                    }
+  /subscriptions/plans:
+    patch:
+      tags:
+      - Subscription
+      summary: 구독 플랜 변경 API
+      description: "그룹이 이미 보유한 활성 구독의 상품(플랜)을 다른 상품으로 변경하는 API 입니다.<br><br>- 신규 상품\
+        가가 더 비싸면 업그레이드(즉시 전환 + 잔여가치를 정산한 차액 결제)로 처리합니다.<br>- 신규 상품가가 더 저렴하면 다운그레이드\
+        (현재 구독은 해지 예약, 신규 구독은 예약 등록)로 처리합니다.<br>- 구독의 buyerId 와 로그인 사용자가 다르면 접근 권한\
+        \ 예외가 발생합니다.<br>- 구독 상태가 ACTIVE 가 아니면 예외가 발생합니다.<br>- 신규 상품가가 기존 상품가와 동일하면\
+        \ 예외가 발생합니다.<br>- 그룹 내에 신규 상품에 대한 활성 구독이 이미 존재하면 예외가 발생합니다."
+      operationId: "[구독 플랜 변경 API] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/[request] 구독 플랜 변경 API"
+            examples:
+              '[구독 플랜 변경 API] success-upgrade':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] 존재하지 않는 구독':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 999,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] success-downgrade':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 50
+                  }
+              '[구독 플랜 변경 API] 구독 소유자가 아님':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] 차액 결제 실패':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] 현재 구독 ID 미입력':
+                value: |-
+                  {
+                    "currentSubscriptionId" : null,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] 존재하지 않는 상품':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 999
+                  }
+              '[구독 플랜 변경 API] 신규 상품 ID 미입력':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : null
+                  }
+              '[구독 플랜 변경 API] ACTIVE 상태가 아닌 구독':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 200
+                  }
+              '[구독 플랜 변경 API] 동일한 상품가':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 100
+                  }
+              '[구독 플랜 변경 API] 그룹 내 이미 활성화된 구독 존재':
+                value: |-
+                  {
+                    "currentSubscriptionId" : 1,
+                    "newProductId" : 200
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[구독 플랜 변경 API] success-upgrade':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true,
+                        "changeType" : "UPGRADE",
+                        "previousSubscriptionId" : 1,
+                        "newSubscriptionId" : 2,
+                        "paymentId" : 3,
+                        "chargedAmount" : 15000
+                      }
+                    }
+                '[구독 플랜 변경 API] success-downgrade':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true,
+                        "changeType" : "DOWNGRADE",
+                        "previousSubscriptionId" : 1,
+                        "newSubscriptionId" : 2,
+                        "paymentId" : null,
+                        "chargedAmount" : 0
+                      }
+                    }
+        "500":
+          description: "500"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구독 플랜 변경 API] 존재하지 않는 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4028,
+                        "errorMessage" : "조회된 구독 정보가 없습니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] 차액 결제 실패':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4039,
+                        "errorMessage" : "플랜 변경 차액 결제에 실패했습니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] 존재하지 않는 상품':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4033,
+                        "errorMessage" : "조회된 상품 정보가 없습니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] ACTIVE 상태가 아닌 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4037,
+                        "errorMessage" : "ACTIVE 상태의 구독만 플랜을 변경할 수 있습니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] 동일한 상품가':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4038,
+                        "errorMessage" : "변경하려는 상품이 기존 상품과 동일하거나 가격이 같습니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] 그룹 내 이미 활성화된 구독 존재':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4034,
+                        "errorMessage" : "이미 활성화된 구독 정보가 존재합니다"
+                      }
+                    }
+        "403":
+          description: "403"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구독 플랜 변경 API] 구독 소유자가 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 403,
+                      "message" : "FORBIDDEN",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+        "400":
+          description: "400"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구독 플랜 변경 API] 현재 구독 ID 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "현재 구독 ID는 필수값입니다"
+                      }
+                    }
+                '[구독 플랜 변경 API] 신규 상품 ID 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1099,
+                        "errorMessage" : "신규 상품 ID는 필수값입니다"
                       }
                     }
   /subscriptions/{subscriptionId}:
@@ -5063,6 +5301,23 @@ components:
         content:
           type: string
           description: 수정할 내용
+    '[request] 구독 플랜 변경 API':
+      title: "[request] 구독 플랜 변경 API"
+      required:
+      - currentSubscriptionId
+      - newProductId
+      type: object
+      properties:
+        newProductId:
+          description: 변경하려는 신규 상품(플랜) ID
+          oneOf:
+          - type: number
+          - null
+        currentSubscriptionId:
+          description: 변경 대상이 되는 현재 구독의 ID
+          oneOf:
+          - type: number
+          - null
     '[request] 그룹 계정 노출 여부 변경 API':
       title: "[request] 그룹 계정 노출 여부 변경 API"
       required:

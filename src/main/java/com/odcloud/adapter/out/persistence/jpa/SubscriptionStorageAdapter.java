@@ -37,6 +37,15 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     }
 
     @Override
+    public Subscription findByIdForUpdate(Long subscriptionId) {
+        SubscriptionEntity entity = repository.findByIdForUpdate(subscriptionId);
+        if (entity == null) {
+            throw new CustomBusinessException(Business_NOT_FOUND_SUBSCRIPTION);
+        }
+        return entity.toDomain();
+    }
+
+    @Override
     public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
         LocalDate nextBillingDate) {
         return repository.findByStatusAndNextBillingDateLoe(status, nextBillingDate);

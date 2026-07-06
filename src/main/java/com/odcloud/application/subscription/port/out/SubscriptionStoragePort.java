@@ -11,6 +11,8 @@ public interface SubscriptionStoragePort {
     boolean existsActiveByGroupIdAndProductId(Long groupId, Long productId);
 
     Subscription findById(Long subscriptionId);
+    
+    Subscription findByIdForUpdate(Long subscriptionId);
 
     List<Subscription> findByStatusAndNextBillingDateLoe(String status, LocalDate nextBillingDate);
 

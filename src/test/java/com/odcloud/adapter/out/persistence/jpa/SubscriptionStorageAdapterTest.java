@@ -84,6 +84,37 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
     }
 
     @Nested
+    @DisplayName("[findByIdForUpdate] 비관적 쓰기 락으로 구독을 단건 조회하는 메소드")
+    class Describe_findByIdForUpdate {
+
+        @Test
+        @DisplayName("[success] 존재하는 구독을 조회한다")
+        void success() {
+            // given
+            SubscriptionEntity entity = setUpEntity("ACTIVE");
+
+            // when
+            Subscription result = adapter.findByIdForUpdate(entity.getId());
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getId()).isEqualTo(entity.getId());
+            assertThat(result.getStatus()).isEqualTo("ACTIVE");
+            assertThat(result.getBuyerId()).isEqualTo(10L);
+        }
+
+        @Test
+        @DisplayName("[error] 존재하지 않는 구독 ID로 조회하면 예외가 발생한다")
+        void error_notFound() {
+            // when & then
+            assertThatThrownBy(() -> adapter.findByIdForUpdate(999L))
+                .isInstanceOf(CustomBusinessException.class)
+                .extracting("errorCode")
+                .isEqualTo(ErrorCode.Business_NOT_FOUND_SUBSCRIPTION);
+        }
+    }
+
+    @Nested
     @DisplayName("[save] 구독을 저장하는 메소드")
     class Describe_save {
 

@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,21 @@ class SubscriptionRepository {
     SubscriptionEntity findById(Long subscriptionId) {
         return queryFactory.selectFrom(subscriptionEntity)
             .where(subscriptionEntity.id.eq(subscriptionId))
+            .fetchOne();
+    }
+
+    /**
+     * 대상 로우에 비관적 쓰기 락(PESSIMISTIC_WRITE)을 걸고 조회한다.
+     * 동일 구독에 대한 동시 플랜 변경 요청이 서로 다른 트랜잭션(커넥션)에서 들어올 때,
+     * 뒤에 도착한 트랜잭션이 앞선 트랜잭션의 커밋을 기다리도록 강제하여 상태를 직렬화한다.
+     * (같은 영속성 컨텍스트 내 재조회로는 다른 트랜잭션의 커밋을 감지할 수 없으므로,
+     * 반드시 트랜잭션 시작 시점에 이 메소드로 대상 행을 잠가야 한다.)
+     */
+    @Transactional
+    SubscriptionEntity findByIdForUpdate(Long subscriptionId) {
+        return queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.id.eq(subscriptionId))
+            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
             .fetchOne();
     }
 

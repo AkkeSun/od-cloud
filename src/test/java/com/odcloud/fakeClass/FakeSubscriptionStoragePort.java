@@ -39,6 +39,16 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
             .orElseThrow(() -> new CustomBusinessException(Business_NOT_FOUND_SUBSCRIPTION));
     }
 
+    /**
+     * FakeClass는 단일 스레드 인메모리 리스트일 뿐이며 실제 DB 락을 모델링하지 않는다.
+     * 인터페이스 구현을 위해 findById와 동일하게 동작한다 — 실제 비관적 락 검증은
+     * SubscriptionRepository/SubscriptionStorageAdapter의 H2 통합 테스트에서 수행한다.
+     */
+    @Override
+    public Subscription findByIdForUpdate(Long subscriptionId) {
+        return findById(subscriptionId);
+    }
+
     @Override
     public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
         LocalDate nextBillingDate) {

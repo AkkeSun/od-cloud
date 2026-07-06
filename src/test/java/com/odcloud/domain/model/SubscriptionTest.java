@@ -2,6 +2,7 @@ package com.odcloud.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -82,6 +83,69 @@ class SubscriptionTest {
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
             assertThat(subscription.getStatus()).isEqualTo("EXP_PENDING");
+            assertThat(subscription.getModDt()).isAfter(before);
+            assertThat(subscription.getModDt()).isBefore(after);
+            assertThat(subscription.getModDt()).isAfter(initialModDt);
+        }
+    }
+
+    @Nested
+    @DisplayName("[terminateImmediately] 구독을 즉시 만료 처리하는 메서드")
+    class Describe_terminateImmediately {
+
+        @Test
+        @DisplayName("[success] status를 EXPIRED로 변경하고 expiredDate와 modDt를 오늘로 갱신한다")
+        void success() {
+            // given
+            LocalDateTime initialModDt = LocalDateTime.now().minusDays(1);
+            Subscription subscription = Subscription.builder()
+                .status("ACTIVE")
+                .expiredDate(LocalDate.now().plusDays(10))
+                .modDt(initialModDt)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            subscription.terminateImmediately();
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+
+            assertThat(subscription.getStatus()).isEqualTo("EXPIRED");
+            assertThat(subscription.getExpiredDate()).isEqualTo(LocalDate.now());
+            assertThat(subscription.getModDt()).isAfter(before);
+            assertThat(subscription.getModDt()).isBefore(after);
+            assertThat(subscription.getModDt()).isAfter(initialModDt);
+        }
+    }
+
+    @Nested
+    @DisplayName("[markAsDeletePending] 구독을 해지 예약 상태로 전환하는 메서드")
+    class Describe_markAsDeletePending {
+
+        @Test
+        @DisplayName("[success] status를 EXP_PENDING 변경하고 expiredDate는 유지한 채 modDt를 갱신한다")
+        void success() {
+            // given
+            LocalDate expiredDate = LocalDate.now().plusDays(15);
+            LocalDateTime initialModDt = LocalDateTime.now().minusDays(1);
+            Subscription subscription = Subscription.builder()
+                .status("ACTIVE")
+                .expiredDate(expiredDate)
+                .modDt(initialModDt)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            subscription.cancel();
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+
+            assertThat(subscription.getStatus()).isEqualTo("EXP_PENDING");
+            assertThat(subscription.getExpiredDate()).isEqualTo(expiredDate);
             assertThat(subscription.getModDt()).isAfter(before);
             assertThat(subscription.getModDt()).isBefore(after);
             assertThat(subscription.getModDt()).isAfter(initialModDt);

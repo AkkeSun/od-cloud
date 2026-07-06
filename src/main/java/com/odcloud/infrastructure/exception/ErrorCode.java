@@ -55,7 +55,10 @@ public enum ErrorCode {
     Business_NOT_FOUND_PRODUCT(4033, "조회된 상품 정보가 없습니다"),
     Business_ALREADY_EXISTS_SUBSCRIPTION(4034, "이미 활성화된 구독 정보가 존재합니다"),
     Business_INVALID_BILLING_KEY(4035, "유효하지 않은 빌링키 입니다"),
-    Business_INVALID_SUBSCRIPTION_STATUS(4036, "ACTIVE 상태의 구독만 취소할 수 있습니다");
+    Business_INVALID_SUBSCRIPTION_STATUS(4036, "ACTIVE 상태의 구독만 취소할 수 있습니다"),
+    Business_INVALID_SUBSCRIPTION_STATUS_FOR_MODIFY(4037, "ACTIVE 상태의 구독만 플랜을 변경할 수 있습니다"),
+    Business_INVALID_PLAN_CHANGE(4038, "변경하려는 상품이 기존 상품과 동일하거나 가격이 같습니다"),
+    Business_PLAN_CHANGE_PAYMENT_FAILED(4039, "플랜 변경 차액 결제에 실패했습니다");
 
     ;
 

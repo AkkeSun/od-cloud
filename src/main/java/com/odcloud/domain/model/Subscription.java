@@ -43,4 +43,10 @@ public class Subscription {
         this.status = "EXPIRED";
         this.modDt = LocalDateTime.now();
     }
+
+    public void terminateImmediately() {
+        this.status = "EXPIRED";
+        this.expiredDate = LocalDate.now();
+        this.modDt = LocalDateTime.now();
+    }
 }
