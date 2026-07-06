@@ -51,9 +51,8 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     }
 
     @Override
-    public List<Subscription> findByStatusAndExpiredDateLoe(String status,
-        LocalDate expiredDate) {
-        return repository.findByStatusAndExpiredDateLoe(status, expiredDate);
+    public List<Subscription> findExpiredTargets(LocalDate expiredDate) {
+        return repository.findExpiredTargets(List.of("EXP_PENDING", "DOWN_PENDING"), expiredDate);
     }
 
     @Override

@@ -54,7 +54,7 @@ class ExpireSubscriptionsServiceTest {
         }
 
         @Test
-        @DisplayName("[skip] 만료일이 지나지 않았거나 EXP_PENDING 이 아니면 대상이 아니다")
+        @DisplayName("[skip] 만료일이 지나지 않았거나 EXP_PENDING/DOWN_PENDING 이 아니면 대상이 아니다")
         void skip_notTarget() {
             // given
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
@@ -69,6 +69,22 @@ class ExpireSubscriptionsServiceTest {
             assertThat(response.totalCount()).isZero();
             assertThat(fakeSubscriptionStoragePort.findById(1L).getStatus()).isEqualTo("EXP_PENDING");
             assertThat(fakeSubscriptionStoragePort.findById(2L).getStatus()).isEqualTo("ACTIVE");
+        }
+
+        @Test
+        @DisplayName("[success] DOWN_PENDING 이면서 만료일이 지난 구독의 status 를 EXPIRED 로 변경한다")
+        void success_downPending() {
+            // given
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(
+                subscription(1L, "DOWN_PENDING", LocalDate.now().minusDays(1)));
+
+            // when
+            ExpireSubscriptionsResponse response = service.expire();
+
+            // then
+            assertThat(response.totalCount()).isEqualTo(1);
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakeSubscriptionStoragePort.findById(1L).getStatus()).isEqualTo("EXPIRED");
         }
     }
 }

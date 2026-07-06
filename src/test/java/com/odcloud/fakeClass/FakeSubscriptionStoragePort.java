@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
 
     private static final List<String> RENEW_TARGET_STATUSES = List.of("ACTIVE", "PENDING");
+    private static final List<String> EXPIRE_TARGET_STATUSES = List.of("EXP_PENDING", "DOWN_PENDING");
 
     public List<SubscriptionDetail> database = new ArrayList<>();
     public List<Subscription> subscriptionDatabase = new ArrayList<>();
@@ -61,10 +62,9 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
     }
 
     @Override
-    public List<Subscription> findByStatusAndExpiredDateLoe(String status,
-        LocalDate expiredDate) {
+    public List<Subscription> findExpiredTargets(LocalDate expiredDate) {
         return subscriptionDatabase.stream()
-            .filter(subscription -> status.equals(subscription.getStatus())
+            .filter(subscription -> EXPIRE_TARGET_STATUSES.contains(subscription.getStatus())
                 && subscription.getExpiredDate() != null
                 && !subscription.getExpiredDate().isAfter(expiredDate))
             .toList();

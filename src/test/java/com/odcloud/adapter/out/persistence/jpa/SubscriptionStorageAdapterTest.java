@@ -156,6 +156,43 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
     }
 
     @Nested
+    @DisplayName("[findExpiredTargets] 만료 대상 구독을 조회하는 메소드")
+    class Describe_findExpiredTargets {
+
+        @Test
+        @DisplayName("[success] EXP_PENDING, DOWN_PENDING 상태이고 expiredDate 가 기준일 이하인 구독을 조회한다")
+        void success() {
+            // given
+            LocalDate today = LocalDate.now();
+            SubscriptionEntity expPending = setUpEntity("EXP_PENDING", today);
+            SubscriptionEntity downPending = setUpEntity("DOWN_PENDING", today.minusDays(1));
+            setUpEntity("ACTIVE", today);
+            setUpEntity("EXP_PENDING", today.plusDays(1));
+
+            // when
+            List<Subscription> result = adapter.findExpiredTargets(today);
+
+            // then
+            assertThat(result)
+                .extracting(Subscription::getId)
+                .containsExactlyInAnyOrder(expPending.getId(), downPending.getId());
+        }
+
+        @Test
+        @DisplayName("[success] 대상이 없으면 빈 리스트를 응답한다")
+        void success_empty() {
+            // given
+            setUpEntity("ACTIVE", LocalDate.now());
+
+            // when
+            List<Subscription> result = adapter.findExpiredTargets(LocalDate.now());
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("[save] 구독을 저장하는 메소드")
     class Describe_save {
 

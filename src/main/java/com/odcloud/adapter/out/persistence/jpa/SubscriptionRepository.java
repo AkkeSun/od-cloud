@@ -70,9 +70,9 @@ class SubscriptionRepository {
             .toList();
     }
 
-    List<Subscription> findByStatusAndExpiredDateLoe(String status, LocalDate expiredDate) {
+    List<Subscription> findExpiredTargets(List<String> status, LocalDate expiredDate) {
         return queryFactory.selectFrom(subscriptionEntity)
-            .where(subscriptionEntity.status.eq(status)
+            .where(subscriptionEntity.status.in(status)
                 .and(subscriptionEntity.expiredDate.loe(expiredDate)))
             .fetch()
             .stream()

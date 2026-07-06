@@ -21,7 +21,7 @@ class ExpireSubscriptionsService implements ExpireSubscriptionsUseCase {
     @Transactional
     public ExpireSubscriptionsResponse expire() {
         List<Subscription> targets =
-            subscriptionStoragePort.findByStatusAndExpiredDateLoe("EXP_PENDING", LocalDate.now());
+            subscriptionStoragePort.findExpiredTargets(LocalDate.now());
 
         int successCount = 0;
         int failCount = 0;

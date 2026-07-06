@@ -16,7 +16,7 @@ public interface SubscriptionStoragePort {
 
     List<Subscription> findByRenewTargets(LocalDate nextBillingDate);
 
-    List<Subscription> findByStatusAndExpiredDateLoe(String status, LocalDate expiredDate);
+    List<Subscription> findExpiredTargets(LocalDate expiredDate);
 
     Subscription save(Subscription subscription);
 }

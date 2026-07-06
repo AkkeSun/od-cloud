@@ -165,4 +165,74 @@ class SubscriptionRepositoryTest extends IntegrationTestSupport {
             assertThat(result).isEmpty();
         }
     }
+
+    @Nested
+    @DisplayName("[findExpiredTargets] 만료 대상 구독을 조회하는 메소드")
+    class Describe_findExpiredTargets {
+
+        private SubscriptionEntity setUpEntity(String status, LocalDate expiredDate) {
+            SubscriptionEntity entity = SubscriptionEntity.builder()
+                .productId(100L)
+                .groupId(1L)
+                .buyerId(10L)
+                .status(status)
+                .billingKey("billing-key-123")
+                .nextBillingDate(expiredDate)
+                .expiredDate(expiredDate)
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+            return entity;
+        }
+
+        @Test
+        @DisplayName("[success] status 가 대상 목록에 포함되고 expiredDate 가 기준일 이하이면 조회된다")
+        void success() {
+            // given
+            LocalDate today = LocalDate.now();
+            SubscriptionEntity expPending = setUpEntity("EXP_PENDING", today);
+            SubscriptionEntity downPending = setUpEntity("DOWN_PENDING", today.minusDays(1));
+
+            // when
+            List<Subscription> result =
+                repository.findExpiredTargets(List.of("EXP_PENDING", "DOWN_PENDING"), today);
+
+            // then
+            assertThat(result)
+                .extracting(Subscription::getId)
+                .containsExactlyInAnyOrder(expPending.getId(), downPending.getId());
+        }
+
+        @Test
+        @DisplayName("[success] status 가 대상 목록에 없으면 조회되지 않는다")
+        void success_excludesStatusNotInTargets() {
+            // given
+            LocalDate today = LocalDate.now();
+            setUpEntity("ACTIVE", today);
+
+            // when
+            List<Subscription> result =
+                repository.findExpiredTargets(List.of("EXP_PENDING", "DOWN_PENDING"), today);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] expiredDate 가 기준일보다 미래이면 조회되지 않는다")
+        void success_excludesFutureExpiredDate() {
+            // given
+            LocalDate today = LocalDate.now();
+            setUpEntity("EXP_PENDING", today.plusDays(1));
+
+            // when
+            List<Subscription> result =
+                repository.findExpiredTargets(List.of("EXP_PENDING", "DOWN_PENDING"), today);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
 }
