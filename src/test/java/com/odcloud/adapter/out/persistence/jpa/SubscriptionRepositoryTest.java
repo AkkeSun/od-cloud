@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -233,6 +234,90 @@ class SubscriptionRepositoryTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("[findByGroupIdAndStatus] 그룹 ID와 status로 구독을 단건 조회하는 메소드")
+    class Describe_findByGroupIdAndStatus {
+
+        private SubscriptionEntity setUpEntity(Long groupId, String status) {
+            LocalDate date = LocalDate.now();
+            SubscriptionEntity entity = SubscriptionEntity.builder()
+                .productId(100L)
+                .groupId(groupId)
+                .buyerId(10L)
+                .status(status)
+                .billingKey("billing-key-123")
+                .nextBillingDate(date)
+                .expiredDate(date)
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+            return entity;
+        }
+
+        @Test
+        @DisplayName("[success] groupId와 status가 일치하는 구독을 조회한다")
+        void success() {
+            // given
+            SubscriptionEntity entity = setUpEntity(1L, "PENDING");
+
+            // when
+            Optional<Subscription> result = repository.findByGroupIdAndStatus(1L, "PENDING")
+                .map(SubscriptionEntity::toDomain);
+
+            // then
+            assertThat(result).isPresent();
+            assertThat(result.get().getId()).isEqualTo(entity.getId());
+        }
+
+        @Test
+        @DisplayName("[success] 일치하는 구독이 없으면 빈 Optional을 응답한다")
+        void success_empty() {
+            // given
+            setUpEntity(1L, "ACTIVE");
+
+            // when
+            Optional<Subscription> result = repository.findByGroupIdAndStatus(1L, "PENDING")
+                .map(SubscriptionEntity::toDomain);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("[deleteById] 구독을 물리 삭제하는 메소드")
+    class Describe_deleteById {
+
+        @Test
+        @DisplayName("[success] 대상 구독을 삭제한다")
+        void success() {
+            // given
+            SubscriptionEntity entity = SubscriptionEntity.builder()
+                .productId(100L)
+                .groupId(1L)
+                .buyerId(10L)
+                .status("PENDING")
+                .billingKey("billing-key-123")
+                .nextBillingDate(LocalDate.now())
+                .expiredDate(LocalDate.now())
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+
+            // when
+            repository.deleteById(entity.getId());
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            assertThat(entityManager.find(SubscriptionEntity.class, entity.getId())).isNull();
         }
     }
 }

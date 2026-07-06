@@ -61,6 +61,106 @@ class SubscriptionTest {
     }
 
     @Nested
+    @DisplayName("[isCancelable] 구독 취소가 가능한 상태인지 확인하는 메서드")
+    class Describe_isCancelable {
+
+        @Test
+        @DisplayName("[success] status가 ACTIVE면 true를 반환한다")
+        void success_active() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("ACTIVE")
+                .build();
+
+            // when
+            boolean result = subscription.isCancelable();
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] status가 DOWN_PENDING이면 true를 반환한다")
+        void success_downPending() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("DOWN_PENDING")
+                .build();
+
+            // when
+            boolean result = subscription.isCancelable();
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] status가 EXP_PENDING이면 false를 반환한다")
+        void success_expPending() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("EXP_PENDING")
+                .build();
+
+            // when
+            boolean result = subscription.isCancelable();
+
+            // then
+            assertThat(result).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] status가 null이면 false를 반환한다")
+        void success_null() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status(null)
+                .build();
+
+            // when
+            boolean result = subscription.isCancelable();
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("[isDownPending] status가 DOWN_PENDING 인지 확인하는 메서드")
+    class Describe_isDownPending {
+
+        @Test
+        @DisplayName("[success] status가 DOWN_PENDING이면 true를 반환한다")
+        void success_downPending() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("DOWN_PENDING")
+                .build();
+
+            // when
+            boolean result = subscription.isDownPending();
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] status가 ACTIVE면 false를 반환한다")
+        void success_active() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("ACTIVE")
+                .build();
+
+            // when
+            boolean result = subscription.isDownPending();
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("[cancel] 구독을 취소 대기 상태로 전환하는 메서드")
     class Describe_cancel {
 

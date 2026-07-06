@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -189,6 +190,58 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
 
             // then
             assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("[findByGroupIdAndStatus] 그룹 ID와 status로 구독을 단건 조회하는 메소드")
+    class Describe_findByGroupIdAndStatus {
+
+        @Test
+        @DisplayName("[success] groupId와 status가 일치하는 구독을 조회한다")
+        void success() {
+            // given
+            SubscriptionEntity entity = setUpEntity("PENDING");
+
+            // when
+            Optional<Subscription> result = adapter.findByGroupIdAndStatus(1L, "PENDING");
+
+            // then
+            assertThat(result).isPresent();
+            assertThat(result.get().getId()).isEqualTo(entity.getId());
+        }
+
+        @Test
+        @DisplayName("[success] 일치하는 구독이 없으면 빈 Optional을 응답한다")
+        void success_empty() {
+            // given
+            setUpEntity("ACTIVE");
+
+            // when
+            Optional<Subscription> result = adapter.findByGroupIdAndStatus(1L, "PENDING");
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("[deleteById] 구독을 물리 삭제하는 메소드")
+    class Describe_deleteById {
+
+        @Test
+        @DisplayName("[success] 대상 구독을 삭제한다")
+        void success() {
+            // given
+            SubscriptionEntity entity = setUpEntity("PENDING");
+
+            // when
+            adapter.deleteById(entity.getId());
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            assertThat(entityManager.find(SubscriptionEntity.class, entity.getId())).isNull();
         }
     }
 

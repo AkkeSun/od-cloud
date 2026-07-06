@@ -9,6 +9,7 @@ import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
@@ -53,6 +54,14 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
     }
 
     @Override
+    public Optional<Subscription> findByGroupIdAndStatus(Long groupId, String status) {
+        return subscriptionDatabase.stream()
+            .filter(subscription -> subscription.getGroupId().equals(groupId)
+                && status.equals(subscription.getStatus()))
+            .findFirst();
+    }
+
+    @Override
     public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
         return subscriptionDatabase.stream()
             .filter(subscription -> RENEW_TARGET_STATUSES.contains(subscription.getStatus())
@@ -87,5 +96,10 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
         subscriptionDatabase.removeIf(s -> s.getId() != null && s.getId().equals(saved.getId()));
         subscriptionDatabase.add(saved);
         return saved;
+    }
+
+    @Override
+    public void deleteById(Long subscriptionId) {
+        subscriptionDatabase.removeIf(s -> s.getId() != null && s.getId().equals(subscriptionId));
     }
 }

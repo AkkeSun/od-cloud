@@ -28,6 +28,14 @@ public class Subscription {
         return "ACTIVE".equals(status);
     }
 
+    public boolean isCancelable() {
+        return "ACTIVE".equals(status) || "DOWN_PENDING".equals(status);
+    }
+
+    public boolean isDownPending() {
+        return "DOWN_PENDING".equals(status);
+    }
+
     public void cancel() {
         this.status = "EXP_PENDING";
         this.modDt = LocalDateTime.now();

@@ -27,8 +27,13 @@ class CancelSubscriptionService implements CancelSubscriptionUseCase {
             throw new CustomAuthenticationException(ACCESS_DENIED);
         }
 
-        if (!subscription.isActive()) {
+        if (!subscription.isCancelable()) {
             throw new CustomBusinessException(Business_INVALID_SUBSCRIPTION_STATUS);
+        }
+
+        if (subscription.isDownPending()) {
+            subscriptionStoragePort.findByGroupIdAndStatus(subscription.getGroupId(), "PENDING")
+                .ifPresent(pending -> subscriptionStoragePort.deleteById(pending.getId()));
         }
 
         subscription.cancel();

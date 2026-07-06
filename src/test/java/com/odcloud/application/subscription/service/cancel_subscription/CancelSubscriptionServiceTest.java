@@ -26,12 +26,16 @@ class CancelSubscriptionServiceTest {
     }
 
     private Subscription setUpActiveSubscription(Long buyerId) {
+        return setUpSubscription(buyerId, "ACTIVE");
+    }
+
+    private Subscription setUpSubscription(Long buyerId, String status) {
         Subscription subscription = Subscription.builder()
             .id(1L)
             .productId(100L)
             .groupId(1L)
             .buyerId(buyerId)
-            .status("ACTIVE")
+            .status(status)
             .build();
         fakeSubscriptionStoragePort.subscriptionDatabase.add(subscription);
         return subscription;
@@ -65,6 +69,71 @@ class CancelSubscriptionServiceTest {
         }
 
         @Test
+        @DisplayName("[success] DOWN_PENDING 구독을 취소하면 EXP_PENDING 으로 전환된다")
+        void success_downPending() {
+            // given
+            Subscription subscription = setUpSubscription(10L, "DOWN_PENDING");
+            Account account = Account.builder().id(10L).build();
+
+            // when
+            CancelSubscriptionResponse response = service.cancel(command(subscription.getId(), account));
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeSubscriptionStoragePort.subscriptionDatabase.get(0).getStatus())
+                .isEqualTo("EXP_PENDING");
+        }
+
+        @Test
+        @DisplayName("[success] DOWN_PENDING 구독을 취소하면 같은 그룹의 다운그레이드 예약(PENDING) 구독을 삭제한다")
+        void success_downPending_deletesPendingDowngradeTarget() {
+            // given
+            Subscription subscription = setUpSubscription(10L, "DOWN_PENDING");
+            Subscription pendingDowngrade = Subscription.builder()
+                .id(2L)
+                .productId(2L)
+                .groupId(subscription.getGroupId())
+                .buyerId(10L)
+                .status("PENDING")
+                .build();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(pendingDowngrade);
+            Account account = Account.builder().id(10L).build();
+
+            // when
+            CancelSubscriptionResponse response = service.cancel(command(subscription.getId(), account));
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeSubscriptionStoragePort.subscriptionDatabase)
+                .extracting(Subscription::getId)
+                .containsExactly(subscription.getId());
+        }
+
+        @Test
+        @DisplayName("[success] ACTIVE 구독을 취소해도 같은 그룹의 PENDING 구독은 삭제되지 않는다")
+        void success_active_doesNotDeletePendingSubscription() {
+            // given
+            Subscription subscription = setUpActiveSubscription(10L);
+            Subscription pending = Subscription.builder()
+                .id(2L)
+                .productId(2L)
+                .groupId(subscription.getGroupId())
+                .buyerId(10L)
+                .status("PENDING")
+                .build();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(pending);
+            Account account = Account.builder().id(10L).build();
+
+            // when
+            service.cancel(command(subscription.getId(), account));
+
+            // then
+            assertThat(fakeSubscriptionStoragePort.subscriptionDatabase)
+                .extracting(Subscription::getId)
+                .containsExactlyInAnyOrder(subscription.getId(), pending.getId());
+        }
+
+        @Test
         @DisplayName("[error] 존재하지 않는 구독이면 예외가 발생한다")
         void error_notFoundSubscription() {
             // given
@@ -92,7 +161,7 @@ class CancelSubscriptionServiceTest {
         }
 
         @Test
-        @DisplayName("[error] 구독 상태가 ACTIVE가 아니면 예외가 발생한다")
+        @DisplayName("[error] 구독 상태가 ACTIVE/DOWN_PENDING이 아니면 예외가 발생한다")
         void error_invalidStatus() {
             // given
             Subscription subscription = Subscription.builder()

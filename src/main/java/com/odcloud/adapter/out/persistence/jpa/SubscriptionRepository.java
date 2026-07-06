@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,20 @@ class SubscriptionRepository {
             .where(subscriptionEntity.id.eq(subscriptionId))
             .setLockMode(LockModeType.PESSIMISTIC_WRITE)
             .fetchOne();
+    }
+
+    Optional<SubscriptionEntity> findByGroupIdAndStatus(Long groupId, String status) {
+        return Optional.ofNullable(queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.groupId.eq(groupId)
+                .and(subscriptionEntity.status.eq(status)))
+            .fetchFirst());
+    }
+
+    @Transactional
+    void deleteById(Long subscriptionId) {
+        queryFactory.delete(subscriptionEntity)
+            .where(subscriptionEntity.id.eq(subscriptionId))
+            .execute();
     }
 
     List<Subscription> findByRenewTargets(List<String> status, LocalDate nextBillingDate) {

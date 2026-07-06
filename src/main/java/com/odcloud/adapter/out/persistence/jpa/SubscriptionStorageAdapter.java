@@ -8,6 +8,7 @@ import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,12 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     }
 
     @Override
+    public Optional<Subscription> findByGroupIdAndStatus(Long groupId, String status) {
+        return repository.findByGroupIdAndStatus(groupId, status)
+            .map(SubscriptionEntity::toDomain);
+    }
+
+    @Override
     public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
         return repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), nextBillingDate);
     }
@@ -58,5 +65,10 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     @Override
     public Subscription save(Subscription subscription) {
         return repository.save(subscription);
+    }
+
+    @Override
+    public void deleteById(Long subscriptionId) {
+        repository.deleteById(subscriptionId);
     }
 }
