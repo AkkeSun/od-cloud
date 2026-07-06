@@ -49,4 +49,9 @@ public class Subscription {
         this.expiredDate = LocalDate.now();
         this.modDt = LocalDateTime.now();
     }
+
+    public void downgradePending() {
+        this.status = "DOWN_PENDING";
+        this.modDt = LocalDateTime.now();
+    }
 }

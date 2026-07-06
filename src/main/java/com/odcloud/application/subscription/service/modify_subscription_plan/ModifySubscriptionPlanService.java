@@ -125,7 +125,7 @@ class ModifySubscriptionPlanService implements ModifySubscriptionPlanUseCase {
         ModifySubscriptionPlanCommand command,
         Subscription currentSubscription
     ) {
-        currentSubscription.cancel();
+        currentSubscription.downgradePending();
         subscriptionStoragePort.save(currentSubscription);
 
         Subscription newSubscription = subscriptionStoragePort.save(Subscription.builder()

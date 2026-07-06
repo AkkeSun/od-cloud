@@ -152,7 +152,7 @@ class ModifySubscriptionPlanServiceTest {
             Subscription oldSubscription = fakeSubscriptionStoragePort.subscriptionDatabase.stream()
                 .filter(s -> s.getId().equals(subscription.getId()))
                 .findFirst().orElseThrow();
-            assertThat(oldSubscription.getStatus()).isEqualTo("EXP_PENDING");
+            assertThat(oldSubscription.getStatus()).isEqualTo("DOWN_PENDING");
             assertThat(oldSubscription.getExpiredDate()).isEqualTo(expiredDate);
 
             Subscription newSubscription = fakeSubscriptionStoragePort.subscriptionDatabase.stream()
