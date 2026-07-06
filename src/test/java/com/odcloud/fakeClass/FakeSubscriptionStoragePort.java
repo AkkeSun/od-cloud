@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
 
+    private static final List<String> RENEW_TARGET_STATUSES = List.of("ACTIVE", "PENDING");
+
     public List<SubscriptionDetail> database = new ArrayList<>();
     public List<Subscription> subscriptionDatabase = new ArrayList<>();
 
@@ -50,10 +52,9 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
     }
 
     @Override
-    public List<Subscription> findByStatusAndNextBillingDateLoe(String status,
-        LocalDate nextBillingDate) {
+    public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
         return subscriptionDatabase.stream()
-            .filter(subscription -> status.equals(subscription.getStatus())
+            .filter(subscription -> RENEW_TARGET_STATUSES.contains(subscription.getStatus())
                 && subscription.getNextBillingDate() != null
                 && !subscription.getNextBillingDate().isAfter(nextBillingDate))
             .toList();

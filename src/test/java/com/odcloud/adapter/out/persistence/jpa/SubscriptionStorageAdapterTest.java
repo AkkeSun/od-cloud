@@ -10,6 +10,7 @@ import com.odcloud.infrastructure.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,8 +35,11 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
     }
 
     private SubscriptionEntity setUpEntity(String status) {
+        return setUpEntity(status, LocalDate.now().plusMonths(1));
+    }
+
+    private SubscriptionEntity setUpEntity(String status, LocalDate nextBillingDate) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDate nextBillingDate = LocalDate.now().plusMonths(1);
         SubscriptionEntity entity = SubscriptionEntity.builder()
             .productId(100L)
             .groupId(1L)
@@ -111,6 +115,43 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
                 .isInstanceOf(CustomBusinessException.class)
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.Business_NOT_FOUND_SUBSCRIPTION);
+        }
+    }
+
+    @Nested
+    @DisplayName("[findByRenewTargets] 갱신 대상 구독을 조회하는 메소드")
+    class Describe_findByRenewTargets {
+
+        @Test
+        @DisplayName("[success] ACTIVE, PENDING 상태이고 nextBillingDate 가 기준일 이하인 구독을 조회한다")
+        void success() {
+            // given
+            LocalDate today = LocalDate.now();
+            SubscriptionEntity active = setUpEntity("ACTIVE", today);
+            SubscriptionEntity pending = setUpEntity("PENDING", today.minusDays(1));
+            setUpEntity("EXPIRED", today);
+            setUpEntity("ACTIVE", today.plusDays(1));
+
+            // when
+            List<Subscription> result = adapter.findByRenewTargets(today);
+
+            // then
+            assertThat(result)
+                .extracting(Subscription::getId)
+                .containsExactlyInAnyOrder(active.getId(), pending.getId());
+        }
+
+        @Test
+        @DisplayName("[success] 대상이 없으면 빈 리스트를 응답한다")
+        void success_empty() {
+            // given
+            setUpEntity("EXPIRED", LocalDate.now());
+
+            // when
+            List<Subscription> result = adapter.findByRenewTargets(LocalDate.now());
+
+            // then
+            assertThat(result).isEmpty();
         }
     }
 

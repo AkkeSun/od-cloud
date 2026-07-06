@@ -43,12 +43,16 @@ class RenewSubscriptionsServiceTest {
     }
 
     private Subscription activeSubscription(Long id, LocalDate nextBillingDate) {
+        return subscription(id, "ACTIVE", nextBillingDate);
+    }
+
+    private Subscription subscription(Long id, String status, LocalDate nextBillingDate) {
         return Subscription.builder()
             .id(id)
             .productId(100L)
             .groupId(1L)
             .buyerId(1L)
-            .status("ACTIVE")
+            .status(status)
             .billingKey("billing-key-" + id)
             .nextBillingDate(nextBillingDate)
             .expiredDate(nextBillingDate)
@@ -87,7 +91,7 @@ class RenewSubscriptionsServiceTest {
         }
 
         @Test
-        @DisplayName("[skip] next_billing_date 가 미래이거나 ACTIVE 가 아니면 갱신 대상이 아니다")
+        @DisplayName("[skip] next_billing_date 가 미래이거나 ACTIVE/PENDING 이 아니면 갱신 대상이 아니다")
         void skip_notDue() {
             // given
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
@@ -102,6 +106,23 @@ class RenewSubscriptionsServiceTest {
             // then
             assertThat(response.totalCount()).isZero();
             assertThat(fakePaymentStoragePort.database).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] PENDING 상태의 구독도 결제 기일이 도래하면 갱신 대상에 포함된다")
+        void success_includesPendingStatus() {
+            // given
+            LocalDate dueDate = LocalDate.now();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(
+                subscription(1L, "PENDING", dueDate));
+
+            // when
+            RenewSubscriptionsResponse response = service.renew();
+
+            // then
+            assertThat(response.totalCount()).isEqualTo(1);
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakePaymentStoragePort.database).hasSize(1);
         }
 
         @Test

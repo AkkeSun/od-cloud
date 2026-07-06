@@ -7,6 +7,7 @@ import com.odcloud.domain.model.Subscription;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -95,6 +96,73 @@ class SubscriptionRepositoryTest extends IntegrationTestSupport {
             // then
             assertThat(found).isNotNull();
             assertThat(found.toDomain().getExpiredDate()).isEqualTo(expiredDate);
+        }
+    }
+
+    @Nested
+    @DisplayName("[findByRenewTargets] 갱신 대상 구독을 조회하는 메소드")
+    class Describe_findByRenewTargets {
+
+        private SubscriptionEntity setUpEntity(String status, LocalDate nextBillingDate) {
+            SubscriptionEntity entity = SubscriptionEntity.builder()
+                .productId(100L)
+                .groupId(1L)
+                .buyerId(10L)
+                .status(status)
+                .billingKey("billing-key-123")
+                .nextBillingDate(nextBillingDate)
+                .expiredDate(nextBillingDate)
+                .regDt(LocalDateTime.now())
+                .build();
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
+            return entity;
+        }
+
+        @Test
+        @DisplayName("[success] status 가 대상 목록에 포함되고 nextBillingDate 가 기준일 이하이면 조회된다")
+        void success() {
+            // given
+            LocalDate today = LocalDate.now();
+            SubscriptionEntity active = setUpEntity("ACTIVE", today);
+            SubscriptionEntity pending = setUpEntity("PENDING", today.minusDays(1));
+
+            // when
+            List<Subscription> result = repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), today);
+
+            // then
+            assertThat(result)
+                .extracting(Subscription::getId)
+                .containsExactlyInAnyOrder(active.getId(), pending.getId());
+        }
+
+        @Test
+        @DisplayName("[success] status 가 대상 목록에 없으면 조회되지 않는다")
+        void success_excludesStatusNotInTargets() {
+            // given
+            LocalDate today = LocalDate.now();
+            setUpEntity("EXPIRED", today);
+
+            // when
+            List<Subscription> result = repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), today);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] nextBillingDate 가 기준일보다 미래이면 조회되지 않는다")
+        void success_excludesFutureNextBillingDate() {
+            // given
+            LocalDate today = LocalDate.now();
+            setUpEntity("ACTIVE", today.plusDays(1));
+
+            // when
+            List<Subscription> result = repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), today);
+
+            // then
+            assertThat(result).isEmpty();
         }
     }
 }
