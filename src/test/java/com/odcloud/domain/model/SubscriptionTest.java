@@ -161,6 +161,56 @@ class SubscriptionTest {
     }
 
     @Nested
+    @DisplayName("[isReactivatable] 재활성화가 가능한 상태인지 확인하는 메서드")
+    class Describe_isReactivatable {
+
+        @Test
+        @DisplayName("[success] status가 EXP_PENDING이면 true를 반환한다")
+        void success_expPending() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("EXP_PENDING")
+                .build();
+
+            // when
+            boolean result = subscription.isReactivatable();
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("[success] status가 ACTIVE면 false를 반환한다")
+        void success_active() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status("ACTIVE")
+                .build();
+
+            // when
+            boolean result = subscription.isReactivatable();
+
+            // then
+            assertThat(result).isFalse();
+        }
+
+        @Test
+        @DisplayName("[success] status가 null이면 false를 반환한다")
+        void success_null() {
+            // given
+            Subscription subscription = Subscription.builder()
+                .status(null)
+                .build();
+
+            // when
+            boolean result = subscription.isReactivatable();
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("[cancel] 구독을 취소 대기 상태로 전환하는 메서드")
     class Describe_cancel {
 
@@ -183,6 +233,41 @@ class SubscriptionTest {
             LocalDateTime after = LocalDateTime.now().plusSeconds(1);
 
             assertThat(subscription.getStatus()).isEqualTo("EXP_PENDING");
+            assertThat(subscription.getModDt()).isAfter(before);
+            assertThat(subscription.getModDt()).isBefore(after);
+            assertThat(subscription.getModDt()).isAfter(initialModDt);
+        }
+    }
+
+    @Nested
+    @DisplayName("[reactivate] 구독을 재활성화하는 메서드")
+    class Describe_reactivate {
+
+        @Test
+        @DisplayName("[success] status를 ACTIVE로 변경하고 modDt를 갱신한다")
+        void success() {
+            // given
+            LocalDate expiredDate = LocalDate.now().plusDays(5);
+            LocalDate nextBillingDate = LocalDate.now().plusDays(5);
+            LocalDateTime initialModDt = LocalDateTime.now().minusDays(1);
+            Subscription subscription = Subscription.builder()
+                .status("EXP_PENDING")
+                .expiredDate(expiredDate)
+                .nextBillingDate(nextBillingDate)
+                .modDt(initialModDt)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            subscription.reactivate();
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+
+            assertThat(subscription.getStatus()).isEqualTo("ACTIVE");
+            assertThat(subscription.getExpiredDate()).isEqualTo(expiredDate);
+            assertThat(subscription.getNextBillingDate()).isEqualTo(nextBillingDate);
             assertThat(subscription.getModDt()).isAfter(before);
             assertThat(subscription.getModDt()).isBefore(after);
             assertThat(subscription.getModDt()).isAfter(initialModDt);

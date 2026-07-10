@@ -36,8 +36,17 @@ public class Subscription {
         return "DOWN_PENDING".equals(status);
     }
 
+    public boolean isReactivatable() {
+        return "EXP_PENDING".equals(status);
+    }
+
     public void cancel() {
         this.status = "EXP_PENDING";
+        this.modDt = LocalDateTime.now();
+    }
+
+    public void reactivate() {
+        this.status = "ACTIVE";
         this.modDt = LocalDateTime.now();
     }
 

@@ -47,6 +47,7 @@ class ModifySubscriptionPlanService implements ModifySubscriptionPlanUseCase {
             throw new CustomAuthorizationException(ACCESS_DENIED);
         }
 
+        // todo : 조건 수정
         if (!currentSubscription.isActive()) {
             throw new CustomBusinessException(Business_INVALID_SUBSCRIPTION_STATUS_FOR_MODIFY);
         }
@@ -55,7 +56,8 @@ class ModifySubscriptionPlanService implements ModifySubscriptionPlanUseCase {
         Product newProduct = productStoragePort.findById(command.newProductId());
 
         boolean isUpgrade = calculator.isUpgrade(currentProduct.getPrice(), newProduct.getPrice());
-        boolean isDowngrade = calculator.isDowngrade(currentProduct.getPrice(), newProduct.getPrice());
+        boolean isDowngrade = calculator.isDowngrade(currentProduct.getPrice(),
+            newProduct.getPrice());
 
         if (!isUpgrade && !isDowngrade) {
             throw new CustomBusinessException(Business_INVALID_PLAN_CHANGE);
@@ -80,7 +82,8 @@ class ModifySubscriptionPlanService implements ModifySubscriptionPlanUseCase {
     ) {
         LocalDate today = LocalDate.now();
         BigDecimal remainingValue =
-            calculator.calculateRemainingValue(currentProduct.getPrice(), currentSubscription, today);
+            calculator.calculateRemainingValue(currentProduct.getPrice(), currentSubscription,
+                today);
         BigDecimal chargeAmount =
             calculator.calculateUpgradeChargeAmount(newProduct.getPrice(), remainingValue);
 
