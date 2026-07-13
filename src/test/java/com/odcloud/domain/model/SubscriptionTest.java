@@ -306,6 +306,38 @@ class SubscriptionTest {
     }
 
     @Nested
+    @DisplayName("[cancelDowngradeReservation] 다운그레이드 예약을 취소하고 ACTIVE로 되돌리는 메서드")
+    class Describe_cancelDowngradeReservation {
+
+        @Test
+        @DisplayName("[success] status를 ACTIVE로 변경하고 modDt를 갱신한다")
+        void success() {
+            // given
+            LocalDate expiredDate = LocalDate.now().plusDays(5);
+            LocalDateTime initialModDt = LocalDateTime.now().minusDays(1);
+            Subscription subscription = Subscription.builder()
+                .status("DOWN_PENDING")
+                .expiredDate(expiredDate)
+                .modDt(initialModDt)
+                .build();
+
+            LocalDateTime before = LocalDateTime.now().minusSeconds(1);
+
+            // when
+            subscription.cancelDowngradeReservation();
+
+            // then
+            LocalDateTime after = LocalDateTime.now().plusSeconds(1);
+
+            assertThat(subscription.getStatus()).isEqualTo("ACTIVE");
+            assertThat(subscription.getExpiredDate()).isEqualTo(expiredDate);
+            assertThat(subscription.getModDt()).isAfter(before);
+            assertThat(subscription.getModDt()).isBefore(after);
+            assertThat(subscription.getModDt()).isAfter(initialModDt);
+        }
+    }
+
+    @Nested
     @DisplayName("[markAsDeletePending] 구독을 해지 예약 상태로 전환하는 메서드")
     class Describe_markAsDeletePending {
 

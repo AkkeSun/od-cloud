@@ -3530,14 +3530,14 @@ paths:
                           "groupId" : null,
                           "content" : "개인 회의",
                           "startDt" : "2025-01-05T10:00:00",
-                          "notificationDt" : "2026-07-06T12:16:34.218027"
+                          "notificationDt" : "2026-07-13T10:27:54.403885"
                         }, {
                           "id" : 2,
                           "writerEmail" : "owner@example.com",
                           "groupId" : 1,
                           "content" : "그룹 회의",
                           "startDt" : "2025-01-15T14:00:00",
-                          "notificationDt" : "2026-07-06T12:16:34.218053"
+                          "notificationDt" : "2026-07-13T10:27:54.403921"
                         } ]
                       }
                     }
@@ -4532,6 +4532,176 @@ paths:
                       "data" : {
                         "errorCode" : 3001,
                         "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+  /subscriptions/{subscriptionId}/downgrade-cancellation:
+    patch:
+      tags:
+      - Subscription
+      summary: 다운그레이드 예약 취소 API
+      description: 로그인 사용자가 플랜 다운그레이드 예약(DOWN_PENDING)을 취소하고 현재 구독을 계속 ACTIVE로 유지하는
+        API 입니다.<br><br>- 구독 상태를 DOWN_PENDING 에서 ACTIVE 로 전환합니다.<br>- 같은 그룹에 예약되어
+        있던 다운그레이드 대상(PENDING) 구독을 삭제합니다.<br>- 구독의 buyerId 와 로그인 사용자가 다르면 접근 권한 예외가
+        발생합니다.<br>- 구독 상태가 DOWN_PENDING 이 아니면 예외가 발생합니다.
+      operationId: "[다운그레이드 예약 취소 API] "
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: 다운그레이드 예약을 취소할 구독 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[다운그레이드 예약 취소 API] DOWN_PENDING 상태가 아닌 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4041,
+                        "errorMessage" : "DOWN_PENDING 상태의 구독만 다운그레이드 예약을 취소할 수 있습니다"
+                      }
+                    }
+                '[다운그레이드 예약 취소 API] 존재하지 않는 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4028,
+                        "errorMessage" : "조회된 구독 정보가 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[다운그레이드 예약 취소 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
+                      }
+                    }
+        "403":
+          description: "403"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[다운그레이드 예약 취소 API] 구독 소유자가 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 403,
+                      "message" : "FORBIDDEN",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+  /subscriptions/{subscriptionId}/reactivation:
+    patch:
+      tags:
+      - Subscription
+      summary: 구독 재활성화 API
+      description: 로그인 사용자가 취소 신청(EXP_PENDING)한 본인 구독을 다시 활성화(ACTIVE)하는 API 입니다.<br><br>-
+        구독 상태를 EXP_PENDING 에서 ACTIVE 로 전환합니다.<br>- 결제/만료일/다음 결제일은 변경되지 않습니다.<br>-
+        구독의 buyerId 와 로그인 사용자가 다르면 접근 권한 예외가 발생합니다.<br>- 구독 상태가 EXP_PENDING 이 아니면
+        예외가 발생합니다.
+      operationId: "[구독 재활성화 API] "
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: 재활성화할 구독 ID
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test
+      responses:
+        "500":
+          description: "500"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구독 재활성화 API] 존재하지 않는 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4028,
+                        "errorMessage" : "조회된 구독 정보가 없습니다"
+                      }
+                    }
+                '[구독 재활성화 API] EXP_PENDING 상태가 아닌 구독':
+                  value: |-
+                    {
+                      "httpStatus" : 500,
+                      "message" : "INTERNAL_SERVER_ERROR",
+                      "data" : {
+                        "errorCode" : 4040,
+                        "errorMessage" : "EXP_PENDING 상태의 구독만 재활성화할 수 있습니다"
+                      }
+                    }
+        "403":
+          description: "403"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] error"
+              examples:
+                '[구독 재활성화 API] 구독 소유자가 아님':
+                  value: |-
+                    {
+                      "httpStatus" : 403,
+                      "message" : "FORBIDDEN",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "접근권한이 없습니다"
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/[response] success"
+              examples:
+                '[구독 재활성화 API] success':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "result" : true
                       }
                     }
 components:

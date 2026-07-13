@@ -59,7 +59,8 @@ public enum ErrorCode {
     Business_INVALID_SUBSCRIPTION_STATUS_FOR_MODIFY(4037, "ACTIVE 상태의 구독만 플랜을 변경할 수 있습니다"),
     Business_INVALID_PLAN_CHANGE(4038, "변경하려는 상품이 기존 상품과 동일하거나 가격이 같습니다"),
     Business_PLAN_CHANGE_PAYMENT_FAILED(4039, "플랜 변경 차액 결제에 실패했습니다"),
-    Business_INVALID_SUBSCRIPTION_STATUS_FOR_REACTIVATE(4040, "EXP_PENDING 상태의 구독만 재활성화할 수 있습니다");
+    Business_INVALID_SUBSCRIPTION_STATUS_FOR_REACTIVATE(4040, "EXP_PENDING 상태의 구독만 재활성화할 수 있습니다"),
+    Business_INVALID_SUBSCRIPTION_STATUS_FOR_DOWNGRADE_CANCEL(4041, "DOWN_PENDING 상태의 구독만 다운그레이드 예약을 취소할 수 있습니다");
 
     ;
 

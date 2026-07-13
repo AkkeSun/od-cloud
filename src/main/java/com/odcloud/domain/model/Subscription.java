@@ -71,4 +71,9 @@ public class Subscription {
         this.status = "DOWN_PENDING";
         this.modDt = LocalDateTime.now();
     }
+
+    public void cancelDowngradeReservation() {
+        this.status = "ACTIVE";
+        this.modDt = LocalDateTime.now();
+    }
 }
