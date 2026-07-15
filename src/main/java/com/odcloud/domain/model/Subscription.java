@@ -40,6 +40,15 @@ public class Subscription {
         return "EXP_PENDING".equals(status);
     }
 
+    public boolean isPending() {
+        return "PENDING".equals(status);
+    }
+
+    public void activate() {
+        this.status = "ACTIVE";
+        this.modDt = LocalDateTime.now();
+    }
+
     public void cancel() {
         this.status = "EXP_PENDING";
         this.modDt = LocalDateTime.now();

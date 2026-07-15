@@ -16,15 +16,44 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
 
     private static final List<String> RENEW_TARGET_STATUSES = List.of("ACTIVE", "PENDING");
     private static final List<String> EXPIRE_TARGET_STATUSES = List.of("EXP_PENDING", "DOWN_PENDING");
+    private static final List<String> ACTIVE_LIKE_STATUSES =
+        List.of("ACTIVE", "EXP_PENDING", "DOWN_PENDING");
 
+    /**
+     * find_group_subscriptions 처럼 상품명/그룹명 등 subscriptionDatabase(Subscription)에는
+     * 없는 정보 및 "구독이 아예 없는 상품" 행(subscriptionId=null)까지 임의로 구성해야 하는
+     * 테스트를 위한 수동 시딩용 저장소. findActiveByGroupIds 는 이 목록과 subscriptionDatabase
+     * 파생 결과를 합쳐서 반환한다.
+     */
     public List<SubscriptionDetail> database = new ArrayList<>();
     public List<Subscription> subscriptionDatabase = new ArrayList<>();
 
     private final AtomicLong sequence = new AtomicLong(0);
 
+    /**
+     * 실제 SubscriptionRepository.findActiveByGroupIds 의 의미(groupId 일치 + ACTIVE/EXP_PENDING/
+     * DOWN_PENDING 상태만) 를 subscriptionDatabase 의 현재 상태로부터 그대로 반영한다. 배치 처리
+     * 중 이미 EXPIRED 로 변경되어 저장된 구독은 자연히 결과에서 제외된다.
+     */
     @Override
     public List<SubscriptionDetail> findActiveByGroupIds(List<Long> groupIds) {
-        return new ArrayList<>(database);
+        List<SubscriptionDetail> derived = subscriptionDatabase.stream()
+            .filter(subscription -> groupIds.contains(subscription.getGroupId()))
+            .filter(subscription -> ACTIVE_LIKE_STATUSES.contains(subscription.getStatus()))
+            .map(subscription -> new SubscriptionDetail(
+                subscription.getProductId(),
+                null,
+                subscription.getId(),
+                subscription.getGroupId(),
+                null,
+                null,
+                subscription.getStatus(),
+                subscription.getExpiredDate()))
+            .toList();
+
+        List<SubscriptionDetail> result = new ArrayList<>(database);
+        result.addAll(derived);
+        return result;
     }
 
     @Override

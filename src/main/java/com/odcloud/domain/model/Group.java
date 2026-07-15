@@ -1,6 +1,11 @@
 package com.odcloud.domain.model;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.BACKUP_PRODUCT_ID;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_100GB;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_100GB_PRODUCT_ID;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_50GB;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_50GB_PRODUCT_ID;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +53,17 @@ public class Group {
         this.name = name;
         this.storageUsed = storageUsed;
         this.storageTotal = storageTotal;
+        this.regDt = regDt;
+    }
+
+    public Group(Long id, String ownerEmail, String name, Long storageUsed, Long storageTotal,
+        String backupYn, LocalDateTime regDt) {
+        this.id = id;
+        this.ownerEmail = ownerEmail;
+        this.name = name;
+        this.storageUsed = storageUsed;
+        this.storageTotal = storageTotal;
+        this.backupYn = backupYn;
         this.regDt = regDt;
     }
 
@@ -117,5 +133,21 @@ public class Group {
     public void updateBackupYn(String backupYn) {
         this.backupYn = backupYn;
         this.modDt = LocalDateTime.now();
+    }
+
+    public void applyBenefit(List<Long> activeProductIds) {
+        this.backupYn = activeProductIds.contains(BACKUP_PRODUCT_ID) ? "Y" : "N";
+        this.storageTotal = calculateStorageTotal(activeProductIds);
+        this.modDt = LocalDateTime.now();
+    }
+
+    private long calculateStorageTotal(List<Long> activeProductIds) {
+        if (activeProductIds.contains(STORAGE_100GB_PRODUCT_ID)) {
+            return STORAGE_100GB;
+        }
+        if (activeProductIds.contains(STORAGE_50GB_PRODUCT_ID)) {
+            return STORAGE_50GB;
+        }
+        return DEFAULT_STORAGE_TOTAL;
     }
 }

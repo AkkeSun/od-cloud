@@ -113,6 +113,16 @@ class GroupStorageAdapter implements GroupStoragePort {
     }
 
     @Override
+    public void updateBackupYn(Group group) {
+        queryDsl.updateBackupYn(group);
+    }
+
+    @Override
+    public void updateBenefit(Group group) {
+        queryDsl.updateBenefit(group);
+    }
+
+    @Override
     public void updateDriveFolderId(Long groupId, String driveFolderId) {
         queryDsl.updateDriveFolderId(groupId, driveFolderId);
     }

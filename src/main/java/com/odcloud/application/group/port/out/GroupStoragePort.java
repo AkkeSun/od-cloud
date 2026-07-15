@@ -42,6 +42,10 @@ public interface GroupStoragePort {
 
     void updateStorageUsed(Group group);
 
+    void updateBackupYn(Group group);
+
+    void updateBenefit(Group group);
+
     void updateDriveFolderId(Long groupId, String driveFolderId);
 
 }

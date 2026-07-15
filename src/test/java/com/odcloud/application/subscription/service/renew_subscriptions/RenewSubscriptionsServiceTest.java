@@ -2,12 +2,16 @@ package com.odcloud.application.subscription.service.renew_subscriptions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Product;
 import com.odcloud.domain.model.Subscription;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
 import com.odcloud.fakeClass.FakePgClientPort;
 import com.odcloud.fakeClass.FakeProductStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
+import com.odcloud.infrastructure.constant.CommonConstant;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +25,8 @@ class RenewSubscriptionsServiceTest {
     private FakePaymentStoragePort fakePaymentStoragePort;
     private FakeProductStoragePort fakeProductStoragePort;
     private FakePgClientPort fakePgClientPort;
+    private FakeGroupStoragePort fakeGroupStoragePort;
+    private FakeRedisStoragePort fakeRedisStoragePort;
     private RenewSubscriptionsService service;
 
     @BeforeEach
@@ -29,16 +35,28 @@ class RenewSubscriptionsServiceTest {
         fakePaymentStoragePort = new FakePaymentStoragePort();
         fakeProductStoragePort = new FakeProductStoragePort();
         fakePgClientPort = new FakePgClientPort();
+        fakeGroupStoragePort = new FakeGroupStoragePort();
+        fakeRedisStoragePort = new FakeRedisStoragePort();
         service = new RenewSubscriptionsService(
             fakeSubscriptionStoragePort,
             fakePaymentStoragePort,
             fakeProductStoragePort,
-            fakePgClientPort
+            fakePgClientPort,
+            fakeGroupStoragePort,
+            fakeRedisStoragePort
         );
         fakeProductStoragePort.database.add(Product.builder()
             .id(100L)
             .productName("CLOUD_100GB")
             .price(new BigDecimal("9900"))
+            .build());
+        fakeGroupStoragePort.groupDatabase.add(Group.builder()
+            .id(1L)
+            .name("그룹")
+            .ownerEmail("owner@example.com")
+            .storageUsed(0L)
+            .storageTotal(CommonConstant.DEFAULT_STORAGE_TOTAL)
+            .backupYn("N")
             .build());
     }
 
@@ -109,8 +127,8 @@ class RenewSubscriptionsServiceTest {
         }
 
         @Test
-        @DisplayName("[success] PENDING 상태의 구독도 결제 기일이 도래하면 갱신 대상에 포함된다")
-        void success_includesPendingStatus() {
+        @DisplayName("[success] PENDING 상태의 구독은 결제 성공 시 ACTIVE 로 활성화된다")
+        void success_activatesPendingStatus() {
             // given
             LocalDate dueDate = LocalDate.now();
             fakeSubscriptionStoragePort.subscriptionDatabase.add(
@@ -123,6 +141,57 @@ class RenewSubscriptionsServiceTest {
             assertThat(response.totalCount()).isEqualTo(1);
             assertThat(response.successCount()).isEqualTo(1);
             assertThat(fakePaymentStoragePort.database).hasSize(1);
+
+            Subscription updated = fakeSubscriptionStoragePort.findById(1L);
+            assertThat(updated.getStatus()).isEqualTo("ACTIVE");
+            assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusMonths(1));
+            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusMonths(1));
+        }
+
+        @Test
+        @DisplayName("[success] PENDING(다운그레이드 예약) 구독 활성화 시 그룹의 storageTotal 을 새 상품 기준으로 재계산한다")
+        void success_appliesGroupBenefitOnPendingActivation() {
+            // given - 100GB 스토리지 상품(productId=3) 의 PENDING 구독이 활성화되는 상황
+            fakeProductStoragePort.database.add(Product.builder()
+                .id(CommonConstant.STORAGE_100GB_PRODUCT_ID)
+                .productName("STORAGE_100GB")
+                .price(new BigDecimal("9900"))
+                .build());
+            LocalDate dueDate = LocalDate.now();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(Subscription.builder()
+                .id(1L)
+                .productId(CommonConstant.STORAGE_100GB_PRODUCT_ID)
+                .groupId(1L)
+                .buyerId(1L)
+                .status("PENDING")
+                .billingKey("billing-key-1")
+                .nextBillingDate(dueDate)
+                .expiredDate(dueDate)
+                .build());
+
+            // when
+            RenewSubscriptionsResponse response = service.renew();
+
+            // then
+            assertThat(response.successCount()).isEqualTo(1);
+            Group group = fakeGroupStoragePort.findById(1L);
+            assertThat(group.getStorageTotal()).isEqualTo(CommonConstant.STORAGE_100GB);
+        }
+
+        @Test
+        @DisplayName("[success] ACTIVE 구독의 정기 갱신은 그룹 혜택을 변경하지 않는다")
+        void success_activeRenewalDoesNotTouchGroup() {
+            // given
+            LocalDate dueDate = LocalDate.now();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(activeSubscription(1L, dueDate));
+
+            // when
+            service.renew();
+
+            // then
+            Group group = fakeGroupStoragePort.findById(1L);
+            assertThat(group.getStorageTotal()).isEqualTo(CommonConstant.DEFAULT_STORAGE_TOTAL);
+            assertThat(group.getBackupYn()).isEqualTo("N");
         }
 
         @Test

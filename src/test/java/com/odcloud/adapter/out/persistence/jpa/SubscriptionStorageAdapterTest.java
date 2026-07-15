@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.IntegrationTestSupport;
+import com.odcloud.application.subscription.port.out.SubscriptionDetail;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +33,9 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         entityManager.createQuery("DELETE FROM SubscriptionEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM ProductEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM GroupEntity").executeUpdate();
+        entityManager.createQuery("DELETE FROM AccountEntity").executeUpdate();
         entityManager.flush();
         entityManager.clear();
     }
@@ -266,6 +271,108 @@ class SubscriptionStorageAdapterTest extends IntegrationTestSupport {
             SubscriptionEntity updatedEntity = entityManager.find(SubscriptionEntity.class, entity.getId());
             assertThat(updatedEntity).isNotNull();
             assertThat(updatedEntity.getStatus()).isEqualTo("EXP_PENDING");
+        }
+    }
+
+    @Nested
+    @DisplayName("[findActiveByGroupIds] 그룹의 활성(ACTIVE/EXP_PENDING/DOWN_PENDING) 구독을 상품별로 조회하는 메소드")
+    class Describe_findActiveByGroupIds {
+
+        @Test
+        @DisplayName("[success] EXPIRED 로 변경된 구독은 결과에서 제외되고, 남은 활성 구독만 조회된다")
+        void success_excludesExpiredSubscription() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            GroupEntity group = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("테스트 그룹")
+                .regDt(now)
+                .build();
+            entityManager.persist(group);
+
+            AccountEntity buyer = AccountEntity.builder()
+                .email("buyer@example.com")
+                .nickname("buyer")
+                .picture("https://example.com/pic.jpg")
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(buyer);
+
+            ProductEntity storage50GB = ProductEntity.builder()
+                .productName("CLOUD_50GB")
+                .price(BigDecimal.valueOf(5500))
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(storage50GB);
+
+            ProductEntity storage100GB = ProductEntity.builder()
+                .productName("CLOUD_100GB")
+                .price(BigDecimal.valueOf(9900))
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(storage100GB);
+            entityManager.flush();
+
+            Long groupId = group.getId();
+
+            // 50GB 구독은 이미 만료 처리(EXPIRED)되어 결과에서 제외되어야 한다
+            entityManager.persist(SubscriptionEntity.builder()
+                .productId(storage50GB.getId())
+                .groupId(groupId)
+                .buyerId(buyer.getId())
+                .status("EXPIRED")
+                .billingKey("billing-key-1")
+                .nextBillingDate(LocalDate.now())
+                .expiredDate(LocalDate.now())
+                .regDt(now)
+                .build());
+
+            // 100GB 구독은 아직 활성 상태로 남아있다
+            entityManager.persist(SubscriptionEntity.builder()
+                .productId(storage100GB.getId())
+                .groupId(groupId)
+                .buyerId(buyer.getId())
+                .status("ACTIVE")
+                .billingKey("billing-key-2")
+                .nextBillingDate(LocalDate.now().plusMonths(1))
+                .expiredDate(LocalDate.now().plusMonths(1))
+                .regDt(now)
+                .build());
+
+            entityManager.flush();
+            entityManager.clear();
+
+            // when
+            List<SubscriptionDetail> result = adapter.findActiveByGroupIds(List.of(groupId));
+
+            // then
+            SubscriptionDetail expiredProductRow = result.stream()
+                .filter(detail -> detail.productId().equals(storage50GB.getId()))
+                .findFirst()
+                .orElseThrow();
+            assertThat(expiredProductRow.subscriptionId()).isNull();
+
+            SubscriptionDetail activeProductRow = result.stream()
+                .filter(detail -> detail.productId().equals(storage100GB.getId()))
+                .findFirst()
+                .orElseThrow();
+            assertThat(activeProductRow.subscriptionId()).isNotNull();
+            assertThat(activeProductRow.status()).isEqualTo("ACTIVE");
+            assertThat(activeProductRow.groupId()).isEqualTo(groupId);
+        }
+
+        @Test
+        @DisplayName("[success] 상품이 없으면 빈 리스트를 응답한다")
+        void success_emptyGroupIds() {
+            // when
+            List<SubscriptionDetail> result = adapter.findActiveByGroupIds(List.of());
+
+            // then
+            assertThat(result).isEmpty();
         }
     }
 }

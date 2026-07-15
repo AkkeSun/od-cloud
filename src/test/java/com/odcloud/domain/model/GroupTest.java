@@ -1,6 +1,11 @@
 package com.odcloud.domain.model;
 
+import static com.odcloud.infrastructure.constant.CommonConstant.BACKUP_PRODUCT_ID;
 import static com.odcloud.infrastructure.constant.CommonConstant.DEFAULT_STORAGE_TOTAL;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_100GB;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_100GB_PRODUCT_ID;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_50GB;
+import static com.odcloud.infrastructure.constant.CommonConstant.STORAGE_50GB_PRODUCT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
@@ -368,6 +373,133 @@ class GroupTest {
 
             // then
             assertThat(result).isTrue();
+        }
+    }
+
+    @Nested
+    @DisplayName("[applyBenefit] 활성 구독 상품 목록을 기준으로 그룹 혜택을 재계산하는 메서드")
+    class Describe_applyBenefit {
+
+        private Group group() {
+            return Group.builder()
+                .id(1L)
+                .name("테스트 그룹")
+                .ownerEmail("owner@example.com")
+                .storageUsed(0L)
+                .storageTotal(DEFAULT_STORAGE_TOTAL)
+                .backupYn("N")
+                .build();
+        }
+
+        @Test
+        @DisplayName("[success] 활성 상품 목록에 백업 상품이 포함되면 backupYn 을 Y 로 갱신한다")
+        void success_backupIncluded() {
+            // given
+            Group group = group();
+
+            // when
+            group.applyBenefit(List.of(BACKUP_PRODUCT_ID));
+
+            // then
+            assertThat(group.getBackupYn()).isEqualTo("Y");
+            assertThat(group.getStorageTotal()).isEqualTo(DEFAULT_STORAGE_TOTAL);
+        }
+
+        @Test
+        @DisplayName("[success] 활성 상품 목록에 백업 상품이 없으면 backupYn 을 N 으로 원복한다")
+        void success_backupNotIncluded() {
+            // given
+            Group group = group();
+            group.updateBackupYn("Y");
+
+            // when
+            group.applyBenefit(List.of());
+
+            // then
+            assertThat(group.getBackupYn()).isEqualTo("N");
+        }
+
+        @Test
+        @DisplayName("[success] 활성 상품 목록에 50GB 상품만 있으면 storageTotal 을 50GB 로 갱신한다")
+        void success_storage50GB() {
+            // given
+            Group group = group();
+
+            // when
+            group.applyBenefit(List.of(STORAGE_50GB_PRODUCT_ID));
+
+            // then
+            assertThat(group.getStorageTotal()).isEqualTo(STORAGE_50GB);
+        }
+
+        @Test
+        @DisplayName("[success] 활성 상품 목록에 100GB 상품만 있으면 storageTotal 을 100GB 로 갱신한다")
+        void success_storage100GB() {
+            // given
+            Group group = group();
+
+            // when
+            group.applyBenefit(List.of(STORAGE_100GB_PRODUCT_ID));
+
+            // then
+            assertThat(group.getStorageTotal()).isEqualTo(STORAGE_100GB);
+        }
+
+        @Test
+        @DisplayName("[success] 50GB(product2) 구독이 만료되어도 100GB(product3) 구독이 남아있으면 100GB 를 유지한다")
+        void success_keep100GBWhenProduct2Expires() {
+            // given
+            Group group = group();
+            group.applyBenefit(List.of(STORAGE_50GB_PRODUCT_ID, STORAGE_100GB_PRODUCT_ID));
+
+            // when
+            group.applyBenefit(List.of(STORAGE_100GB_PRODUCT_ID));
+
+            // then
+            assertThat(group.getStorageTotal()).isEqualTo(STORAGE_100GB);
+        }
+
+        @Test
+        @DisplayName("[success] 100GB(product3) 구독이 만료되고 50GB(product2) 구독만 남아있으면 50GB 로 낮춘다")
+        void success_downgradeTo50GBWhenProduct3Expires() {
+            // given
+            Group group = group();
+            group.applyBenefit(List.of(STORAGE_100GB_PRODUCT_ID));
+
+            // when
+            group.applyBenefit(List.of(STORAGE_50GB_PRODUCT_ID));
+
+            // then
+            assertThat(group.getStorageTotal()).isEqualTo(STORAGE_50GB);
+        }
+
+        @Test
+        @DisplayName("[success] 활성 스토리지 상품이 없으면 storageTotal 을 기본값(3GB)으로 원복한다")
+        void success_revertStorageToDefault() {
+            // given
+            Group group = group();
+            group.applyBenefit(List.of(STORAGE_100GB_PRODUCT_ID));
+
+            // when
+            group.applyBenefit(List.of());
+
+            // then
+            assertThat(group.getStorageTotal()).isEqualTo(DEFAULT_STORAGE_TOTAL);
+        }
+
+        @Test
+        @DisplayName("[success] 백업/50GB/100GB 상품이 모두 활성이면 backupYn=Y, storageTotal=100GB 로 갱신한다")
+        void success_allProductsActive() {
+            // given
+            Group group = group();
+
+            // when
+            group.applyBenefit(
+                List.of(BACKUP_PRODUCT_ID, STORAGE_50GB_PRODUCT_ID, STORAGE_100GB_PRODUCT_ID));
+
+            // then
+            assertThat(group.getBackupYn()).isEqualTo("Y");
+            assertThat(group.getStorageTotal()).isEqualTo(STORAGE_100GB);
         }
     }
 }

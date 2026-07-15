@@ -4,13 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Product;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.domain.service.SubscriptionPlanChangeCalculator;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
 import com.odcloud.fakeClass.FakePgClientPort;
 import com.odcloud.fakeClass.FakeProductStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
+import com.odcloud.infrastructure.constant.CommonConstant;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -32,6 +36,8 @@ class ModifySubscriptionPlanServiceTest {
     private FakeProductStoragePort fakeProductStoragePort;
     private FakePaymentStoragePort fakePaymentStoragePort;
     private FakePgClientPort fakePgClientPort;
+    private FakeGroupStoragePort fakeGroupStoragePort;
+    private FakeRedisStoragePort fakeRedisStoragePort;
     private ModifySubscriptionPlanService service;
 
     private final SubscriptionPlanChangeCalculator calculator = new SubscriptionPlanChangeCalculator();
@@ -42,8 +48,19 @@ class ModifySubscriptionPlanServiceTest {
         fakeProductStoragePort = new FakeProductStoragePort();
         fakePaymentStoragePort = new FakePaymentStoragePort();
         fakePgClientPort = new FakePgClientPort();
+        fakeGroupStoragePort = new FakeGroupStoragePort();
+        fakeRedisStoragePort = new FakeRedisStoragePort();
         service = new ModifySubscriptionPlanService(
-            fakeSubscriptionStoragePort, fakeProductStoragePort, fakePaymentStoragePort, fakePgClientPort);
+            fakeSubscriptionStoragePort, fakeProductStoragePort, fakePaymentStoragePort,
+            fakePgClientPort, fakeGroupStoragePort, fakeRedisStoragePort);
+        fakeGroupStoragePort.groupDatabase.add(Group.builder()
+            .id(GROUP_ID)
+            .name("그룹")
+            .ownerEmail("owner@example.com")
+            .storageUsed(0L)
+            .storageTotal(CommonConstant.DEFAULT_STORAGE_TOTAL)
+            .backupYn("N")
+            .build());
     }
 
     private Subscription setUpActiveSubscription(BigDecimal currentPrice, LocalDate expiredDate) {
@@ -305,5 +322,41 @@ class ModifySubscriptionPlanServiceTest {
 
         // 동시성 방어(비관적 락)는 FakeClass로는 실제 DB 락 동작을 검증할 수 없으므로
         // SubscriptionRepositoryTest(H2 통합 테스트)에서 findByIdForUpdate의 실제 락 동작을 검증한다.
+
+        @Test
+        @DisplayName("[success] 50GB 구독을 100GB 구독으로 업그레이드하면 그룹 storageTotal 이 100GB 로 즉시 갱신된다")
+        void success_upgradeUpdatesGroupStorageTotal() {
+            // given
+            LocalDate expiredDate = LocalDate.now().plusDays(15);
+            fakeProductStoragePort.database.add(Product.builder()
+                .id(CommonConstant.STORAGE_50GB_PRODUCT_ID)
+                .productName("CLOUD_50GB")
+                .price(BigDecimal.valueOf(10000))
+                .build());
+            fakeProductStoragePort.database.add(Product.builder()
+                .id(CommonConstant.STORAGE_100GB_PRODUCT_ID)
+                .productName("CLOUD_100GB")
+                .price(BigDecimal.valueOf(30000))
+                .build());
+            fakeGroupStoragePort.findById(GROUP_ID).updateStorageTotal(CommonConstant.STORAGE_50GB);
+            Subscription subscription = fakeSubscriptionStoragePort.save(Subscription.builder()
+                .productId(CommonConstant.STORAGE_50GB_PRODUCT_ID)
+                .groupId(GROUP_ID)
+                .buyerId(BUYER_ID)
+                .status("ACTIVE")
+                .billingKey("billing-key-123")
+                .nextBillingDate(expiredDate)
+                .expiredDate(expiredDate)
+                .build());
+            Account account = Account.builder().id(BUYER_ID).build();
+
+            // when
+            service.modify(command(subscription.getId(), CommonConstant.STORAGE_100GB_PRODUCT_ID,
+                account));
+
+            // then
+            assertThat(fakeGroupStoragePort.findById(GROUP_ID).getStorageTotal())
+                .isEqualTo(CommonConstant.STORAGE_100GB);
+        }
     }
 }

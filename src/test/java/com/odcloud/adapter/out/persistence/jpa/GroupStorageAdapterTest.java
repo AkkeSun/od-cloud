@@ -823,6 +823,61 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             );
         }
 
+        @Test
+        @DisplayName("[success] backupYn 이 Y 인 그룹을 조회하면 backupYn 이 Y 로 로드된다")
+        void success_backupYnLoadedAsY() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            GroupEntity group = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("백업 그룹")
+                .backupYn("Y")
+                .storageUsed(0L)
+                .storageTotal(3221225472L)
+                .regDt(now)
+                .build();
+            entityManager.persist(group);
+            entityManager.flush();
+
+            Long groupId = group.getId();
+            entityManager.clear();
+
+            // when
+            com.odcloud.domain.model.Group result = adapter.findById(groupId);
+
+            // then
+            assertThat(result.getBackupYn()).isEqualTo("Y");
+            assertThat(result.getStorageTotal()).isEqualTo(3221225472L);
+        }
+
+        @Test
+        @DisplayName("[success] backupYn 이 N 인 그룹을 조회하면 backupYn 이 N 으로 로드된다 (기본값으로 누락되지 않는다)")
+        void success_backupYnLoadedAsN() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+
+            GroupEntity group = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("일반 그룹")
+                .backupYn("N")
+                .storageUsed(0L)
+                .storageTotal(3221225472L)
+                .regDt(now)
+                .build();
+            entityManager.persist(group);
+            entityManager.flush();
+
+            Long groupId = group.getId();
+            entityManager.clear();
+
+            // when
+            com.odcloud.domain.model.Group result = adapter.findById(groupId);
+
+            // then
+            assertThat(result.getBackupYn()).isEqualTo("N");
+        }
+
     }
 
     @Nested
@@ -1100,6 +1155,177 @@ class GroupStorageAdapterTest extends IntegrationTestSupport {
             // then
             assertThat(result).isNotNull();
             assertThat(result.getNickName()).isEqualTo("gildong");
+        }
+    }
+
+    @Nested
+    @DisplayName("[updateBackupYn] 그룹의 backupYn 을 갱신하는 메소드")
+    class Describe_updateBackupYn {
+
+        @Test
+        @DisplayName("[success] backupYn 을 Y 로 갱신한다")
+        void success_updateToY() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            GroupEntity groupEntity = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("테스트 그룹")
+                .backupYn("N")
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(groupEntity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Long groupId = groupEntity.getId();
+            com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
+                .id(groupId)
+                .backupYn("Y")
+                .modDt(now.plusMinutes(1))
+                .build();
+
+            // when
+            adapter.updateBackupYn(group);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            GroupEntity result = entityManager.find(GroupEntity.class, groupId);
+            assertThat(result.getBackupYn()).isEqualTo("Y");
+        }
+
+        @Test
+        @DisplayName("[success] backupYn 을 N 으로 원복한다")
+        void success_updateToN() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            GroupEntity groupEntity = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("테스트 그룹")
+                .backupYn("Y")
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(groupEntity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Long groupId = groupEntity.getId();
+            com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
+                .id(groupId)
+                .backupYn("N")
+                .modDt(now.plusMinutes(1))
+                .build();
+
+            // when
+            adapter.updateBackupYn(group);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            GroupEntity result = entityManager.find(GroupEntity.class, groupId);
+            assertThat(result.getBackupYn()).isEqualTo("N");
+        }
+    }
+
+    @Nested
+    @DisplayName("[updateBenefit] 그룹의 혜택(backupYn, storageTotal) 을 갱신하는 메소드")
+    class Describe_updateBenefit {
+
+        @Test
+        @DisplayName("[success] backupYn 과 storageTotal, modDt 를 함께 갱신한다")
+        void success_updateBenefit() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            GroupEntity groupEntity = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("테스트 그룹")
+                .backupYn("N")
+                .storageTotal(1073741824L)
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(groupEntity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Long groupId = groupEntity.getId();
+            LocalDateTime updatedModDt = now.plusMinutes(1);
+            com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
+                .id(groupId)
+                .backupYn("Y")
+                .storageTotal(3221225472L)
+                .modDt(updatedModDt)
+                .build();
+
+            // when
+            adapter.updateBenefit(group);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            GroupEntity result = entityManager.find(GroupEntity.class, groupId);
+            assertThat(result.getBackupYn()).isEqualTo("Y");
+            assertThat(result.getStorageTotal()).isEqualTo(3221225472L);
+            assertThat(result.getModDt()).isEqualTo(updatedModDt);
+        }
+
+        @Test
+        @DisplayName("[success] 혜택을 해제하면 backupYn 이 N, storageTotal 이 기본값으로 갱신된다")
+        void success_revokeBenefit() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            GroupEntity groupEntity = GroupEntity.builder()
+                .ownerEmail("owner@example.com")
+                .name("테스트 그룹")
+                .backupYn("Y")
+                .storageTotal(3221225472L)
+                .modDt(now)
+                .regDt(now)
+                .build();
+            entityManager.persist(groupEntity);
+            entityManager.flush();
+            entityManager.clear();
+
+            Long groupId = groupEntity.getId();
+            LocalDateTime updatedModDt = now.plusMinutes(1);
+            com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
+                .id(groupId)
+                .backupYn("N")
+                .storageTotal(1073741824L)
+                .modDt(updatedModDt)
+                .build();
+
+            // when
+            adapter.updateBenefit(group);
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            GroupEntity result = entityManager.find(GroupEntity.class, groupId);
+            assertThat(result.getBackupYn()).isEqualTo("N");
+            assertThat(result.getStorageTotal()).isEqualTo(1073741824L);
+            assertThat(result.getModDt()).isEqualTo(updatedModDt);
+        }
+
+        @Test
+        @DisplayName("[error] 존재하지 않는 그룹 ID인 경우 갱신되는 로우가 없다")
+        void error_nonExistentGroup() {
+            // given
+            LocalDateTime now = LocalDateTime.now();
+            com.odcloud.domain.model.Group group = com.odcloud.domain.model.Group.builder()
+                .id(999L)
+                .backupYn("Y")
+                .storageTotal(3221225472L)
+                .modDt(now)
+                .build();
+
+            // when & then
+            org.assertj.core.api.Assertions.assertThatCode(() -> {
+                adapter.updateBenefit(group);
+                entityManager.flush();
+            }).doesNotThrowAnyException();
         }
     }
 }

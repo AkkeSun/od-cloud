@@ -68,6 +68,7 @@ class GroupRepository {
                 groupEntity.name,
                 groupEntity.storageUsed,
                 groupEntity.storageTotal,
+                groupEntity.backupYn,
                 groupEntity.regDt
             ))
             .from(groupEntity)
@@ -338,6 +339,25 @@ class GroupRepository {
     public void updateStorageUsed(Group group) {
         queryFactory.update(groupEntity)
             .set(groupEntity.storageUsed, group.getStorageUsed())
+            .set(groupEntity.modDt, group.getModDt())
+            .where(groupEntity.id.eq(group.getId()))
+            .execute();
+    }
+
+    @Transactional
+    public void updateBackupYn(Group group) {
+        queryFactory.update(groupEntity)
+            .set(groupEntity.backupYn, group.getBackupYn())
+            .set(groupEntity.modDt, group.getModDt())
+            .where(groupEntity.id.eq(group.getId()))
+            .execute();
+    }
+
+    @Transactional
+    public void updateBenefit(Group group) {
+        queryFactory.update(groupEntity)
+            .set(groupEntity.backupYn, group.getBackupYn())
+            .set(groupEntity.storageTotal, group.getStorageTotal())
             .set(groupEntity.modDt, group.getModDt())
             .where(groupEntity.id.eq(group.getId()))
             .execute();

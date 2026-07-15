@@ -176,6 +176,28 @@ public class FakeGroupStoragePort implements GroupStoragePort {
     }
 
     @Override
+    public void updateBackupYn(Group group) {
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            if (groupDatabase.get(i).getId() != null &&
+                groupDatabase.get(i).getId().equals(group.getId())) {
+                groupDatabase.set(i, group);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void updateBenefit(Group group) {
+        for (int i = 0; i < groupDatabase.size(); i++) {
+            if (groupDatabase.get(i).getId() != null &&
+                groupDatabase.get(i).getId().equals(group.getId())) {
+                groupDatabase.set(i, group);
+                break;
+            }
+        }
+    }
+
+    @Override
     public void updateDriveFolderId(Long groupId, String driveFolderId) {
         for (int i = 0; i < groupDatabase.size(); i++) {
             Group group = groupDatabase.get(i);

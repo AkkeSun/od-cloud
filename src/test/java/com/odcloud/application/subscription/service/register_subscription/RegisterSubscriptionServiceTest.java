@@ -8,10 +8,13 @@ import com.odcloud.domain.model.Group;
 import com.odcloud.domain.model.Product;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.fakeClass.FakeAccountStoragePort;
+import com.odcloud.fakeClass.FakeGroupStoragePort;
 import com.odcloud.fakeClass.FakePaymentStoragePort;
 import com.odcloud.fakeClass.FakePgClientPort;
 import com.odcloud.fakeClass.FakeProductStoragePort;
+import com.odcloud.fakeClass.FakeRedisStoragePort;
 import com.odcloud.fakeClass.FakeSubscriptionStoragePort;
+import com.odcloud.infrastructure.constant.CommonConstant;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
 import com.odcloud.infrastructure.exception.ErrorCode;
@@ -30,6 +33,8 @@ class RegisterSubscriptionServiceTest {
     private FakePaymentStoragePort fakePaymentStoragePort;
     private FakeProductStoragePort fakeProductStoragePort;
     private FakePgClientPort fakePgClientPort;
+    private FakeGroupStoragePort fakeGroupStoragePort;
+    private FakeRedisStoragePort fakeRedisStoragePort;
     private RegisterSubscriptionService service;
 
     @BeforeEach
@@ -39,12 +44,16 @@ class RegisterSubscriptionServiceTest {
         fakePaymentStoragePort = new FakePaymentStoragePort();
         fakeProductStoragePort = new FakeProductStoragePort();
         fakePgClientPort = new FakePgClientPort();
+        fakeGroupStoragePort = new FakeGroupStoragePort();
+        fakeRedisStoragePort = new FakeRedisStoragePort();
         service = new RegisterSubscriptionService(
             fakeAccountStoragePort,
             fakeSubscriptionStoragePort,
             fakePaymentStoragePort,
             fakeProductStoragePort,
-            fakePgClientPort
+            fakePgClientPort,
+            fakeGroupStoragePort,
+            fakeRedisStoragePort
         );
     }
 
@@ -55,6 +64,14 @@ class RegisterSubscriptionServiceTest {
             .groups(List.of(Group.builder().id(1L).name("개발팀").build()))
             .build();
         fakeAccountStoragePort.database.add(account);
+        fakeGroupStoragePort.groupDatabase.add(Group.builder()
+            .id(1L)
+            .name("개발팀")
+            .ownerEmail("user@example.com")
+            .storageUsed(0L)
+            .storageTotal(CommonConstant.DEFAULT_STORAGE_TOTAL)
+            .backupYn("N")
+            .build());
         return account;
     }
 
@@ -196,6 +213,55 @@ class RegisterSubscriptionServiceTest {
                 .isInstanceOf(CustomBusinessException.class)
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.Business_INVALID_BILLING_KEY);
+        }
+
+        @Test
+        @DisplayName("[success] productId=1(백업 상품) 구독시 그룹의 backupYn 을 Y 로 갱신한다")
+        void success_backupProductUpdatesGroup() {
+            // given
+            Account account = setUpAccount();
+            fakeProductStoragePort.database.add(Product.builder()
+                .id(1L)
+                .productName("BACKUP")
+                .price(new BigDecimal("3300"))
+                .build());
+            RegisterSubscriptionCommand command = RegisterSubscriptionCommand.builder()
+                .account(account)
+                .groupId(1L)
+                .productId(1L)
+                .billingKey("billing-key-123")
+                .build();
+
+            // when
+            service.register(command);
+
+            // then
+            assertThat(fakeGroupStoragePort.findById(1L).getBackupYn()).isEqualTo("Y");
+        }
+
+        @Test
+        @DisplayName("[success] productId=2(50GB 상품) 구독시 그룹의 storageTotal 을 50GB 로 갱신한다")
+        void success_storage50GBProductUpdatesGroup() {
+            // given
+            Account account = setUpAccount();
+            fakeProductStoragePort.database.add(Product.builder()
+                .id(2L)
+                .productName("CLOUD_50GB")
+                .price(new BigDecimal("5500"))
+                .build());
+            RegisterSubscriptionCommand command = RegisterSubscriptionCommand.builder()
+                .account(account)
+                .groupId(1L)
+                .productId(2L)
+                .billingKey("billing-key-123")
+                .build();
+
+            // when
+            service.register(command);
+
+            // then
+            assertThat(fakeGroupStoragePort.findById(1L).getStorageTotal())
+                .isEqualTo(CommonConstant.STORAGE_50GB);
         }
     }
 }
