@@ -122,7 +122,7 @@ class RegisterSubscriptionServiceTest {
             assertThat(savedSubscription.getExpiredDate())
                 .isEqualTo(savedSubscription.getNextBillingDate());
             assertThat(savedSubscription.getExpiredDate())
-                .isEqualTo(LocalDate.now().plusMonths(1));
+                .isEqualTo(LocalDate.now().plusDays(1));
 
             assertThat(fakePaymentStoragePort.database).hasSize(1);
             assertThat(fakePaymentStoragePort.database.get(0).getAmount())

@@ -62,7 +62,8 @@ class RegisterSubscriptionService implements RegisterSubscriptionUseCase {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDate nextBillingDate = LocalDate.now().plusMonths(1);
+        // 테스트용: 구독 만료일/갱신일을 다음날로 설정
+        LocalDate nextBillingDate = LocalDate.now().plusDays(1);
 
         Subscription savedSubscription = subscriptionStoragePort.save(Subscription.builder()
             .productId(command.productId())
