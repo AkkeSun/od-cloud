@@ -62,7 +62,7 @@ class RegisterSubscriptionService implements RegisterSubscriptionUseCase {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDate nextBillingDate = LocalDate.now().plusMonths(1);
+        LocalDate nextBillingDate = LocalDate.now().plusDays(1);
 
         Subscription savedSubscription = subscriptionStoragePort.save(Subscription.builder()
             .productId(command.productId())
