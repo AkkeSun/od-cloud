@@ -17,6 +17,8 @@ public interface SubscriptionStoragePort {
 
     Optional<Subscription> findByGroupIdAndStatus(Long groupId, String status);
 
+    Optional<Subscription> findByGroupIdAndStatusIn(Long groupId, List<String> statuses);
+
     List<Subscription> findByRenewTargets(LocalDate nextBillingDate);
 
     List<Subscription> findExpiredTargets(LocalDate expiredDate);

@@ -53,6 +53,12 @@ class SubscriptionStorageAdapter implements SubscriptionStoragePort {
     }
 
     @Override
+    public Optional<Subscription> findByGroupIdAndStatusIn(Long groupId, List<String> statuses) {
+        return repository.findByGroupIdAndStatusIn(groupId, statuses)
+            .map(SubscriptionEntity::toDomain);
+    }
+
+    @Override
     public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
         return repository.findByRenewTargets(List.of("ACTIVE", "PENDING"), nextBillingDate);
     }

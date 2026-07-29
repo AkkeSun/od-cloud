@@ -66,6 +66,13 @@ class SubscriptionRepository {
             .fetchFirst());
     }
 
+    Optional<SubscriptionEntity> findByGroupIdAndStatusIn(Long groupId, List<String> statuses) {
+        return Optional.ofNullable(queryFactory.selectFrom(subscriptionEntity)
+            .where(subscriptionEntity.groupId.eq(groupId)
+                .and(subscriptionEntity.status.in(statuses)))
+            .fetchFirst());
+    }
+
     @Transactional
     void deleteById(Long subscriptionId) {
         queryFactory.delete(subscriptionEntity)

@@ -8,6 +8,7 @@ import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,10 @@ class CancelDowngradeReservationService implements CancelDowngradeReservationUse
                 Business_INVALID_SUBSCRIPTION_STATUS_FOR_DOWNGRADE_CANCEL);
         }
 
-        subscriptionStoragePort.findByGroupIdAndStatus(subscription.getGroupId(), "PENDING")
-            .ifPresent(pending -> subscriptionStoragePort.deleteById(pending.getId()));
+        subscriptionStoragePort.findByGroupIdAndStatusIn(subscription.getGroupId(),
+                List.of("PENDING", "ACTIVE"))
+            .filter(target -> !Objects.equals(target.getId(), subscription.getId()))
+            .ifPresent(target -> subscriptionStoragePort.deleteById(target.getId()));
 
         subscription.cancelDowngradeReservation();
         subscriptionStoragePort.save(subscription);

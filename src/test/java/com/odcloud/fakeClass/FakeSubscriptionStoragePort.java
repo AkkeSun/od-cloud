@@ -91,6 +91,14 @@ public class FakeSubscriptionStoragePort implements SubscriptionStoragePort {
     }
 
     @Override
+    public Optional<Subscription> findByGroupIdAndStatusIn(Long groupId, List<String> statuses) {
+        return subscriptionDatabase.stream()
+            .filter(subscription -> subscription.getGroupId().equals(groupId)
+                && statuses.contains(subscription.getStatus()))
+            .findFirst();
+    }
+
+    @Override
     public List<Subscription> findByRenewTargets(LocalDate nextBillingDate) {
         return subscriptionDatabase.stream()
             .filter(subscription -> RENEW_TARGET_STATUSES.contains(subscription.getStatus())

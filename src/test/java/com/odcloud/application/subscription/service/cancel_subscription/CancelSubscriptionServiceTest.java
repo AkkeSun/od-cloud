@@ -110,6 +110,31 @@ class CancelSubscriptionServiceTest {
         }
 
         @Test
+        @DisplayName("[success] DOWN_PENDING 구독을 취소하면 갱신 스케줄러가 먼저 돌아 ACTIVE로 승격된 다운그레이드 대상 구독도 삭제한다")
+        void success_downPending_deletesAlreadyActivatedDowngradeTarget() {
+            // given
+            Subscription subscription = setUpSubscription(10L, "DOWN_PENDING");
+            Subscription activatedDowngrade = Subscription.builder()
+                .id(2L)
+                .productId(2L)
+                .groupId(subscription.getGroupId())
+                .buyerId(10L)
+                .status("ACTIVE")
+                .build();
+            fakeSubscriptionStoragePort.subscriptionDatabase.add(activatedDowngrade);
+            Account account = Account.builder().id(10L).build();
+
+            // when
+            CancelSubscriptionResponse response = service.cancel(command(subscription.getId(), account));
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeSubscriptionStoragePort.subscriptionDatabase)
+                .extracting(Subscription::getId)
+                .containsExactly(subscription.getId());
+        }
+
+        @Test
         @DisplayName("[success] ACTIVE 구독을 취소해도 같은 그룹의 PENDING 구독은 삭제되지 않는다")
         void success_active_doesNotDeletePendingSubscription() {
             // given

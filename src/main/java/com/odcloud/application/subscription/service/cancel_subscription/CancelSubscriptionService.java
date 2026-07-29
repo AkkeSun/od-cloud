@@ -8,6 +8,8 @@ import com.odcloud.application.subscription.port.out.SubscriptionStoragePort;
 import com.odcloud.domain.model.Subscription;
 import com.odcloud.infrastructure.exception.CustomAuthenticationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +34,10 @@ class CancelSubscriptionService implements CancelSubscriptionUseCase {
         }
 
         if (subscription.isDownPending()) {
-            subscriptionStoragePort.findByGroupIdAndStatus(subscription.getGroupId(), "PENDING")
-                .ifPresent(pending -> subscriptionStoragePort.deleteById(pending.getId()));
+            subscriptionStoragePort.findByGroupIdAndStatusIn(subscription.getGroupId(),
+                    List.of("PENDING", "ACTIVE"))
+                .filter(target -> !Objects.equals(target.getId(), subscription.getId()))
+                .ifPresent(target -> subscriptionStoragePort.deleteById(target.getId()));
         }
 
         subscription.cancel();
