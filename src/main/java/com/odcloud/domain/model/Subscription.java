@@ -60,7 +60,10 @@ public class Subscription {
     }
 
     public void renew() {
-        this.nextBillingDate = this.nextBillingDate.plusMonths(1);
+        // 테스트 용도: 구독 등록(RegisterSubscriptionService)과 동일하게 갱신 주기도 다음날로 설정한다.
+        // 갱신 주기를 한 달로 두면 최초 등록 이후 만료일이 한 달 뒤로 밀려, 만료일을 기준으로
+        // 반영되는 다운그레이드 예약이 테스트 환경에서 다음날 적용되지 않는다.
+        this.nextBillingDate = this.nextBillingDate.plusDays(1);
         this.expiredDate = this.nextBillingDate;
         this.modDt = LocalDateTime.now();
     }

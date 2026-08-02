@@ -140,7 +140,7 @@ class ModifySubscriptionPlanServiceTest {
             assertThat(newSubscription.getStatus()).isEqualTo("ACTIVE");
             assertThat(newSubscription.getProductId()).isEqualTo(NEW_PRODUCT_ID);
             assertThat(newSubscription.getBillingKey()).isEqualTo(subscription.getBillingKey());
-            assertThat(newSubscription.getExpiredDate()).isEqualTo(LocalDate.now().plusMonths(1));
+            assertThat(newSubscription.getExpiredDate()).isEqualTo(LocalDate.now().plusDays(1));
 
             assertThat(fakePaymentStoragePort.database).hasSize(1);
             assertThat(fakePaymentStoragePort.database.get(0).getAmount())

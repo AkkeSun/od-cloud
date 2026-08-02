@@ -110,7 +110,8 @@ class ModifySubscriptionPlanService implements ModifySubscriptionPlanUseCase {
         // 맞아떨어지는 것처럼 보일 뿐 로직 순서에 의존하는 취약한 구조가 된다.)
         applyPlanChangeToGroup(currentSubscription, command.newProductId());
 
-        LocalDate nextBillingDate = today.plusMonths(1);
+        // 테스트 용도: 구독 등록/갱신과 동일하게 업그레이드 후 신규 구독의 주기도 다음날로 설정한다.
+        LocalDate nextBillingDate = today.plusDays(1);
         Subscription newSubscription = subscriptionStoragePort.save(Subscription.builder()
             .productId(command.newProductId())
             .groupId(currentSubscription.getGroupId())

@@ -104,8 +104,8 @@ class RenewSubscriptionsServiceTest {
 
             Subscription updated = fakeSubscriptionStoragePort.findById(1L);
             assertThat(updated.getStatus()).isEqualTo("ACTIVE");
-            assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusMonths(1));
-            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusMonths(1));
+            assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusDays(1));
+            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusDays(1));
         }
 
         @Test
@@ -144,8 +144,8 @@ class RenewSubscriptionsServiceTest {
 
             Subscription updated = fakeSubscriptionStoragePort.findById(1L);
             assertThat(updated.getStatus()).isEqualTo("ACTIVE");
-            assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusMonths(1));
-            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusMonths(1));
+            assertThat(updated.getNextBillingDate()).isEqualTo(dueDate.plusDays(1));
+            assertThat(updated.getExpiredDate()).isEqualTo(dueDate.plusDays(1));
         }
 
         @Test
