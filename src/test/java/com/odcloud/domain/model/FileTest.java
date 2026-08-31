@@ -37,6 +37,81 @@ class FileTest {
         }
 
         @Test
+        @DisplayName("[success] 파일명이 40자를 초과하면 확장자를 제외한 앞 40자만 남긴다")
+        void success_truncateLongFileName() {
+            // given
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .build();
+
+            String longName = "a".repeat(45);
+            MultipartFile multipartFile = mock(MultipartFile.class);
+            when(multipartFile.getOriginalFilename()).thenReturn(longName + ".txt");
+
+            // when
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("a".repeat(40) + ".txt");
+        }
+
+        @Test
+        @DisplayName("[success] 확장자를 제외한 파일명이 40자면 자르지 않는다")
+        void success_notTruncateBoundaryFileName() {
+            // given
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .build();
+
+            String name = "a".repeat(40);
+            MultipartFile multipartFile = mock(MultipartFile.class);
+            when(multipartFile.getOriginalFilename()).thenReturn(name + ".txt");
+
+            // when
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo(name + ".txt");
+        }
+
+        @Test
+        @DisplayName("[success] 파일명 중간에 확장자와 같은 문자열이 있어도 마지막 확장자만 분리한다")
+        void success_duplicatedExtensionText() {
+            // given
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .build();
+
+            MultipartFile multipartFile = mock(MultipartFile.class);
+            when(multipartFile.getOriginalFilename()).thenReturn("2024.txt.report.txt");
+
+            // when
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("2024.txt.report.txt");
+            assertThat(file.getFileLoc()).endsWith(".txt");
+        }
+
+        @Test
+        @DisplayName("[success] 확장자가 없는 파일명으로 File을 생성한다")
+        void success_noExtension() {
+            // given
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .build();
+
+            MultipartFile multipartFile = mock(MultipartFile.class);
+            when(multipartFile.getOriginalFilename()).thenReturn("README");
+
+            // when
+            FileInfo file = FileInfo.create("/data", folder, multipartFile);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("README");
+        }
+
+        @Test
         @DisplayName("[success] 다양한 확장자를 가진 파일로 File을 생성한다")
         void success_variousExtensions() {
             // given
@@ -54,6 +129,89 @@ class FileTest {
             assertThat(file).isNotNull();
             assertThat(file.getFileName()).isEqualTo("image.png");
             assertThat(file.getFileLoc()).endsWith(".png");
+        }
+    }
+
+    @Nested
+    @DisplayName("[addFileNameNumber] 중복 파일명에 순번을 붙이는 메서드")
+    class Describe_addFileNameNumber {
+
+        @Test
+        @DisplayName("[success] 확장자 앞에 순번을 붙인다")
+        void success() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileName("test.txt")
+                .build();
+
+            // when
+            file.addFileNameNumber(2);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("test(2).txt");
+        }
+
+        @Test
+        @DisplayName("[success] 점이 여러 개인 파일명은 마지막 확장자 앞에 순번을 붙인다")
+        void success_multipleDots() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileName("my.report.pdf")
+                .build();
+
+            // when
+            file.addFileNameNumber(2);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("my.report(2).pdf");
+        }
+
+        @Test
+        @DisplayName("[success] 연속으로 호출해도 순번이 누적되지 않고 교체된다")
+        void success_repeatedCall() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileName("test.txt")
+                .build();
+
+            // when
+            file.addFileNameNumber(2);
+            file.addFileNameNumber(3);
+            file.addFileNameNumber(4);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("test(4).txt");
+        }
+
+        @Test
+        @DisplayName("[success] 점이 여러 개인 파일명도 순번이 누적되지 않는다")
+        void success_repeatedCallWithMultipleDots() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileName("my.report.pdf")
+                .build();
+
+            // when
+            file.addFileNameNumber(2);
+            file.addFileNameNumber(3);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("my.report(3).pdf");
+        }
+
+        @Test
+        @DisplayName("[success] 확장자가 없는 파일명은 끝에 순번을 붙인다")
+        void success_noExtension() {
+            // given
+            FileInfo file = FileInfo.builder()
+                .fileName("README")
+                .build();
+
+            // when
+            file.addFileNameNumber(2);
+
+            // then
+            assertThat(file.getFileName()).isEqualTo("README(2)");
         }
     }
 

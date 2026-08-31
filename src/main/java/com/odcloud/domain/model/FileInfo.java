@@ -4,6 +4,7 @@ import com.odcloud.infrastructure.util.DateUtil;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,9 +44,9 @@ public class FileInfo {
         MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         String extension = getFileExtension(originalFileName);
-        String onlyFileName = originalFileName.replace(extension, "");
+        String onlyFileName = removeFileExtension(originalFileName);
         if (onlyFileName.length() > 40) {
-            onlyFileName = onlyFileName.substring(0, onlyFileName.length() - 40);
+            onlyFileName = onlyFileName.substring(0, 40);
             originalFileName = onlyFileName + extension;
         }
 
@@ -68,6 +69,14 @@ public class FileInfo {
             return "";
         }
         return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    private static String removeFileExtension(String fileName) {
+        String extension = getFileExtension(fileName);
+        if (extension.isEmpty()) {
+            return fileName;
+        }
+        return fileName.substring(0, fileName.length() - extension.length());
     }
 
     public static FileInfo ofProfilePicture(String diskPath, MultipartFile multipartFile) {
@@ -100,7 +109,8 @@ public class FileInfo {
     }
 
     public void addFileNameNumber(int number) {
-        this.fileName = fileName.split("\\.")[0] + "(" + number + ")" + fileName.substring(
-            fileName.lastIndexOf("."));
+        String baseName = Pattern.compile("\\(\\d+\\)$").matcher(removeFileExtension(fileName))
+            .replaceFirst("");
+        this.fileName = baseName + "(" + number + ")" + getFileExtension(fileName);
     }
 }
