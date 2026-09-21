@@ -39,6 +39,8 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
     private static final String APPLICATION_NAME = "od-cloud-backup";
+    // 모든 그룹 백업 폴더가 생성되는 Drive 최상위 폴더
+    private static final String BACKUP_ROOT_FOLDER_NAME = "모이미즘 백업";
 
     private static final int RETRY_INITIAL_INTERVAL_MILLIS = 1_000;
     private static final int RETRY_MAX_INTERVAL_MILLIS = 16_000;
@@ -46,6 +48,7 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     private final String shareEmail;
     private final Drive drive;
+    private String backupRootFolderId;
 
     GoogleDriveAdapter(ProfileConstant profileConstant) throws IOException, GeneralSecurityException {
         this.shareEmail = profileConstant.googleDrive().shareEmail();
@@ -141,8 +144,22 @@ class GoogleDriveAdapter implements GoogleDrivePort {
         }
     }
 
+    /**
+     * 그룹 폴더는 최상위 백업 폴더(모이미즘 백업) 하위에 생성한다.
+     */
     @Override
     public String ensureFolder(String folderName) {
+        return ensureSubFolder(ensureBackupRootFolder(), folderName);
+    }
+
+    private synchronized String ensureBackupRootFolder() {
+        if (backupRootFolderId == null) {
+            backupRootFolderId = ensureRootFolder(BACKUP_ROOT_FOLDER_NAME);
+        }
+        return backupRootFolderId;
+    }
+
+    private String ensureRootFolder(String folderName) {
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and trashed=false",
