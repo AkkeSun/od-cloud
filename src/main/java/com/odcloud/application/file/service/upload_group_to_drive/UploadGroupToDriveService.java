@@ -15,6 +15,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,11 +28,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
 
+    // Drive API 계정당 호출 제한을 고려한 동시 업로드 수
+    private static final int UPLOAD_CONCURRENCY = 4;
+
     private final GroupStoragePort groupStoragePort;
     private final FileInfoStoragePort fileInfoStoragePort;
     private final FolderInfoStoragePort folderInfoStoragePort;
     private final FilePort filePort;
     private final GoogleDrivePort googleDrivePort;
+
+    private enum UploadResult {UPLOADED, SKIPPED, FAILED}
 
     @Override
     public UploadGroupToDriveResponse upload(Long groupId) {
@@ -42,59 +51,85 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
 
         List<FileInfo> files = fileInfoStoragePort.findByGroupId(groupId);
 
-        int totalFiles = files.size();
-        int uploadedCount = 0;
-        int skippedCount = 0;
-        int failedCount = 0;
-
+        // Drive 내 폴더 생성
         Map<Long, String> subFolderIdCache = new HashMap<>();
         String resolvedGroupFolderId = groupFolderId;
+        files.stream()
+            .map(FileInfo::getFolderId)
+            .filter(Objects::nonNull)
+            .distinct()
+            .forEach(folderId ->
+                resolveTargetFolder(folderId, resolvedGroupFolderId, subFolderIdCache));
 
-        for (FileInfo file : files) {
-            String targetFolderId = resolveTargetFolder(file.getFolderId(), resolvedGroupFolderId,
-                subFolderIdCache);
-            if (targetFolderId == null) {
-                failedCount++;
-                continue;
-            }
-
-            try {
-                if (googleDrivePort.fileExists(targetFolderId, file.getFileName())) {
-                    log.info(
-                        "[UploadGroupToDriveService] 동일 파일명 존재 - skip: folderId={}, fileName={}",
-                        targetFolderId, file.getFileName());
-                    skippedCount++;
-                    continue;
-                }
-
-                FileResponse fileResponse = filePort.readFile(file);
-                try (InputStream inputStream = fileResponse.resource().getInputStream()) {
-                    googleDrivePort.uploadFile(
-                        targetFolderId,
-                        file.getFileName(),
-                        inputStream,
-                        file.getFileSize() != null ? file.getFileSize() : 0L
-                    );
-                }
-                uploadedCount++;
-
-            } catch (IOException e) {
-                log.warn("[UploadGroupToDriveService] 파일 스트림 처리 실패 - fileId={}, error={}",
-                    file.getId(), e.getMessage());
-                failedCount++;
-            } catch (Exception e) {
-                log.warn("[UploadGroupToDriveService] 파일 업로드 실패 - fileId={}, error={}",
-                    file.getId(), e.getMessage());
-                failedCount++;
-            }
-        }
+        // 파일 업로드 병령 처리
+        List<UploadResult> results = uploadAll(files, resolvedGroupFolderId, subFolderIdCache);
 
         return UploadGroupToDriveResponse.builder()
-            .totalFiles(totalFiles)
-            .uploadedCount(uploadedCount)
-            .skippedCount(skippedCount)
-            .failedCount(failedCount)
+            .totalFiles(files.size())
+            .uploadedCount(count(results, UploadResult.UPLOADED))
+            .skippedCount(count(results, UploadResult.SKIPPED))
+            .failedCount(count(results, UploadResult.FAILED))
             .build();
+    }
+
+    private List<UploadResult> uploadAll(
+        List<FileInfo> files, String groupFolderId, Map<Long, String> subFolderIdCache
+    ) {
+        if (files.isEmpty()) {
+            return List.of();
+        }
+        
+        try (ExecutorService executor = Executors.newFixedThreadPool(
+            Math.min(UPLOAD_CONCURRENCY, files.size()))
+        ) {
+            List<CompletableFuture<UploadResult>> futures = files.stream()
+                .map(file -> CompletableFuture.supplyAsync(() -> {
+                    String targetFolderId = file.getFolderId() == null
+                        ? groupFolderId
+                        : subFolderIdCache.get(file.getFolderId());
+                    return uploadFile(file, targetFolderId);
+                }, executor))
+                .toList();
+            return futures.stream().map(CompletableFuture::join).toList();
+        }
+    }
+
+    private UploadResult uploadFile(FileInfo file, String targetFolderId) {
+        if (targetFolderId == null) {
+            return UploadResult.FAILED;
+        }
+
+        try {
+            if (googleDrivePort.fileExists(targetFolderId, file.getFileName())) {
+                log.info("[UploadGroupToDriveService] 동일 파일명 존재 - skip: folderId={}, fileName={}",
+                    targetFolderId, file.getFileName());
+                return UploadResult.SKIPPED;
+            }
+
+            FileResponse fileResponse = filePort.readFile(file);
+            try (InputStream inputStream = fileResponse.resource().getInputStream()) {
+                googleDrivePort.uploadFile(
+                    targetFolderId,
+                    file.getFileName(),
+                    inputStream,
+                    file.getFileSize() != null ? file.getFileSize() : 0L
+                );
+            }
+            return UploadResult.UPLOADED;
+
+        } catch (IOException e) {
+            log.warn("[UploadGroupToDriveService] 파일 스트림 처리 실패 - fileId={}, error={}",
+                file.getId(), e.getMessage());
+            return UploadResult.FAILED;
+        } catch (Exception e) {
+            log.warn("[UploadGroupToDriveService] 파일 업로드 실패 - fileId={}, error={}",
+                file.getId(), e.getMessage());
+            return UploadResult.FAILED;
+        }
+    }
+
+    private int count(List<UploadResult> results, UploadResult target) {
+        return (int) results.stream().filter(result -> result == target).count();
     }
 
     private String resolveTargetFolder(Long appFolderId, String groupFolderId,
@@ -112,9 +147,16 @@ class UploadGroupToDriveService implements UploadGroupToDriveUseCase {
         try {
             FolderInfo folderInfo = folderInfoStoragePort.findById(appFolderId);
 
-            String parentDriveFolderId = folderInfo.getParentId() == null
-                ? groupFolderId
-                : resolveTargetFolder(folderInfo.getParentId(), groupFolderId, subFolderIdCache);
+            if (folderInfo.getParentId() == null) {
+                subFolderIdCache.put(appFolderId, groupFolderId);
+                return groupFolderId;
+            }
+
+            String parentDriveFolderId = resolveTargetFolder(folderInfo.getParentId(),
+                groupFolderId, subFolderIdCache);
+            if (parentDriveFolderId == null) {
+                return null;
+            }
 
             String subFolderDriveId = googleDrivePort.ensureSubFolder(
                 parentDriveFolderId, folderInfo.getName()

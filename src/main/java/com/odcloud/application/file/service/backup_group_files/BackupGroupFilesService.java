@@ -224,22 +224,24 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
 
     // parentAppFolderId 체인을 따라가며, 이미 Drive에 존재하는 폴더만 조회한다 (생성하지 않음).
     // 체인 중간에 Drive에 없는 폴더가 있으면 null을 반환해 "아직 백업된 적 없음"을 알린다.
+    // parentAppFolderId == null 이면 그룹 루트 폴더 자신으로, Drive 그룹 폴더에 대응하므로 동기화 대상이 아니다.
     private String resolveExistingTargetFolder(Long parentAppFolderId, String name,
         String groupFolderId) {
-        String parentDriveFolderId;
         if (parentAppFolderId == null) {
-            parentDriveFolderId = groupFolderId;
-        } else {
-            FolderInfo parentFolder;
-            try {
-                parentFolder = folderInfoStoragePort.findById(parentAppFolderId);
-            } catch (CustomBusinessException e) {
-                return null;
-            }
-            parentDriveFolderId = resolveExistingTargetFolder(
-                parentFolder.getParentId(), parentFolder.getName(), groupFolderId
-            );
+            return null;
         }
+
+        FolderInfo parentFolder;
+        try {
+            parentFolder = folderInfoStoragePort.findById(parentAppFolderId);
+        } catch (CustomBusinessException e) {
+            return null;
+        }
+
+        String parentDriveFolderId = parentFolder.getParentId() == null
+            ? groupFolderId
+            : resolveExistingTargetFolder(parentFolder.getParentId(), parentFolder.getName(),
+                groupFolderId);
 
         if (parentDriveFolderId == null) {
             return null;
@@ -248,7 +250,7 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
     }
 
     // parentId 체인을 재귀적으로 따라가며 Drive 폴더 계층을 그대로 재현한다.
-    // parentId == null 이면 그룹 Drive 루트 폴더에 대응한다.
+    // parentId == null 인 폴더는 그룹 루트 폴더(FolderInfo.ofRootFolder)이므로 Drive 그룹 폴더에 대응한다.
     // 런타임 캐시로 같은 폴더에 대한 Drive API 중복 호출을 방지한다.
     private String resolveTargetFolder(Long appFolderId, String groupFolderId,
         Map<Long, String> subFolderIdCache) {
@@ -267,9 +269,16 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
         try {
             FolderInfo folderInfo = folderInfoStoragePort.findById(appFolderId);
 
-            String parentDriveFolderId = folderInfo.getParentId() == null
-                ? groupFolderId
-                : resolveTargetFolder(folderInfo.getParentId(), groupFolderId, subFolderIdCache);
+            if (folderInfo.getParentId() == null) {
+                subFolderIdCache.put(appFolderId, groupFolderId);
+                return groupFolderId;
+            }
+
+            String parentDriveFolderId = resolveTargetFolder(folderInfo.getParentId(),
+                groupFolderId, subFolderIdCache);
+            if (parentDriveFolderId == null) {
+                return null;
+            }
 
             String subFolderDriveId = googleDrivePort.ensureSubFolder(
                 parentDriveFolderId, folderInfo.getName()

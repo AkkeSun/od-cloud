@@ -6,9 +6,12 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRI
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_UPLOAD_ERROR;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
@@ -37,58 +40,87 @@ class GoogleDriveAdapter implements GoogleDrivePort {
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
     private static final String APPLICATION_NAME = "od-cloud-backup";
 
-    private final HttpTransport httpTransport;
+    private static final int RETRY_INITIAL_INTERVAL_MILLIS = 1_000;
+    private static final int RETRY_MAX_INTERVAL_MILLIS = 16_000;
+    private static final int RETRY_MAX_ELAPSED_MILLIS = 60_000;
+
     private final String shareEmail;
-    private final String clientId;
-    private final String clientSecret;
-    private final String refreshToken;
-    private final Drive serviceAccountDrive;
+    private final Drive drive;
 
     GoogleDriveAdapter(ProfileConstant profileConstant) throws IOException, GeneralSecurityException {
-        this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         this.shareEmail = profileConstant.googleDrive().shareEmail();
-
-        String userRefreshToken = profileConstant.googleDrive().userRefreshToken();
-        if (userRefreshToken != null && !userRefreshToken.isBlank()) {
-            this.clientId = profileConstant.googleDrive().clientId();
-            this.clientSecret = profileConstant.googleDrive().clientSecret();
-            this.refreshToken = userRefreshToken;
-            this.serviceAccountDrive = null;
-        } else {
-            this.clientId = null;
-            this.clientSecret = null;
-            this.refreshToken = null;
-            byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
-                .getBytes(StandardCharsets.UTF_8);
-            GoogleCredentials credentials = GoogleCredentials
-                .fromStream(new ByteArrayInputStream(keyBytes))
-                .createScoped(Collections.singletonList(DriveScopes.DRIVE));
-            this.serviceAccountDrive = new Drive.Builder(
-                httpTransport,
-                GsonFactory.getDefaultInstance(),
-                new HttpCredentialsAdapter(credentials)
-            ).setApplicationName(APPLICATION_NAME).build();
-        }
+        this.drive = new Drive.Builder(
+            GoogleNetHttpTransport.newTrustedTransport(),
+            GsonFactory.getDefaultInstance(),
+            requestInitializer(createCredentials(profileConstant))
+        ).setApplicationName(APPLICATION_NAME).build();
     }
 
     /**
-     * Refresh Token 방식: 호출마다 새로운 UserCredentials 생성 → Access Token 신규 발급
-     * Service Account 방식: 기존 Drive 인스턴스 재사용
+     * Refresh Token 방식과 Service Account 방식 모두 credentials 를 한 번만 생성해 재사용한다.
+     * Access Token 은 만료 시점에 라이브러리가 자동으로 갱신한다.
      */
-    private Drive getDriveService() {
-        if (refreshToken != null) {
-            UserCredentials freshCredentials = UserCredentials.newBuilder()
-                .setClientId(clientId)
-                .setClientSecret(clientSecret)
-                .setRefreshToken(refreshToken)
+    private GoogleCredentials createCredentials(ProfileConstant profileConstant) throws IOException {
+        String userRefreshToken = profileConstant.googleDrive().userRefreshToken();
+        if (userRefreshToken != null && !userRefreshToken.isBlank()) {
+            return UserCredentials.newBuilder()
+                .setClientId(profileConstant.googleDrive().clientId())
+                .setClientSecret(profileConstant.googleDrive().clientSecret())
+                .setRefreshToken(userRefreshToken)
                 .build();
-            return new Drive.Builder(
-                httpTransport,
-                GsonFactory.getDefaultInstance(),
-                new HttpCredentialsAdapter(freshCredentials)
-            ).setApplicationName(APPLICATION_NAME).build();
         }
-        return serviceAccountDrive;
+
+        byte[] keyBytes = profileConstant.googleDrive().serviceAccountKeyJson()
+            .getBytes(StandardCharsets.UTF_8);
+        return GoogleCredentials
+            .fromStream(new ByteArrayInputStream(keyBytes))
+            .createScoped(Collections.singletonList(DriveScopes.DRIVE));
+    }
+
+    /**
+     * 호출 제한(429, 403 rateLimitExceeded) 과 5xx 응답은 지수 백오프로 재시도한다.
+     * 401 응답은 토큰 갱신을 위해 credentialsAdapter 가 먼저 처리한다.
+     */
+    private HttpRequestInitializer requestInitializer(GoogleCredentials credentials) {
+        HttpCredentialsAdapter credentialsAdapter = new HttpCredentialsAdapter(credentials);
+        return request -> {
+            credentialsAdapter.initialize(request);
+            HttpBackOffUnsuccessfulResponseHandler backOffHandler =
+                new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff.Builder()
+                    .setInitialIntervalMillis(RETRY_INITIAL_INTERVAL_MILLIS)
+                    .setMaxIntervalMillis(RETRY_MAX_INTERVAL_MILLIS)
+                    .setMaxElapsedTimeMillis(RETRY_MAX_ELAPSED_MILLIS)
+                    .build())
+                    .setBackOffRequired(GoogleDriveAdapter::isRetryable);
+            request.setUnsuccessfulResponseHandler((req, res, supportsRetry) ->
+                credentialsAdapter.handleResponse(req, res, supportsRetry)
+                    || backOffHandler.handleResponse(req, res, supportsRetry));
+        };
+    }
+
+    private static boolean isRetryable(HttpResponse response) {
+        int statusCode = response.getStatusCode();
+        if (statusCode == 429 || statusCode / 100 == 5) {
+            log.warn("[GoogleDriveAdapter] Drive API 재시도 - statusCode={}", statusCode);
+            return true;
+        }
+        if (statusCode != 403) {
+            return false;
+        }
+
+        try {
+            String body = response.parseAsString();
+            boolean rateLimited = body.contains("rateLimitExceeded")
+                || body.contains("userRateLimitExceeded");
+            if (rateLimited) {
+                log.warn("[GoogleDriveAdapter] Drive API 호출 제한 재시도 - statusCode={}", statusCode);
+            } else {
+                log.warn("[GoogleDriveAdapter] Drive API 권한 오류 - body={}", body);
+            }
+            return rateLimited;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private void shareWithEmail(Drive drive, String folderId) {
@@ -111,7 +143,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public String ensureFolder(String folderName) {
-        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and trashed=false",
@@ -152,7 +183,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public String ensureSubFolder(String parentFolderId, String folderName) {
-        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and '%s' in parents and trashed=false",
@@ -194,7 +224,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public String findFolder(String parentFolderId, String folderName) {
-        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and mimeType='%s' and '%s' in parents and trashed=false",
@@ -221,7 +250,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void renameFolder(String folderId, String newName) {
-        Drive drive = getDriveService();
         try {
             File folderMetadata = new File();
             folderMetadata.setName(newName);
@@ -242,7 +270,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void moveFolder(String folderId, String newParentFolderId) {
-        Drive drive = getDriveService();
         try {
             File current = drive.files().get(folderId)
                 .setFields("parents")
@@ -269,7 +296,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void uploadFile(String folderId, String driveFileName, InputStream content, long fileSize) {
-        Drive drive = getDriveService();
         try {
             File fileMetadata = new File();
             fileMetadata.setName(driveFileName);
@@ -296,7 +322,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public boolean fileExists(String folderId, String fileName) {
-        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and '%s' in parents and trashed=false",
@@ -320,7 +345,6 @@ class GoogleDriveAdapter implements GoogleDrivePort {
 
     @Override
     public void deleteFile(String folderId, String fileName) {
-        Drive drive = getDriveService();
         try {
             String query = String.format(
                 "name='%s' and '%s' in parents and trashed=false",

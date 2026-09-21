@@ -101,7 +101,7 @@ public class FakeGoogleDrivePort implements GoogleDrivePort {
     }
 
     @Override
-    public void uploadFile(String folderId, String driveFileName, InputStream content, long fileSize) {
+    public synchronized void uploadFile(String folderId, String driveFileName, InputStream content, long fileSize) {
         if (shouldThrowUploadFile) {
             throw new CustomBusinessException(ErrorCode.Business_GOOGLE_DRIVE_UPLOAD_ERROR);
         }
@@ -122,7 +122,7 @@ public class FakeGoogleDrivePort implements GoogleDrivePort {
     }
 
     @Override
-    public boolean fileExists(String folderId, String fileName) {
+    public synchronized boolean fileExists(String folderId, String fileName) {
         fileExistsCallCount++;
         Set<String> existingNames = preExistingFiles.getOrDefault(folderId, Set.of());
         boolean exists = existingNames.contains(fileName);

@@ -43,6 +43,15 @@ class BackupGroupFilesServiceTest {
         );
     }
 
+    private static final Long ROOT_FOLDER_ID = 1L;
+
+    // 그룹 생성 시 함께 만들어지는 루트 폴더(FolderInfo.ofRootFolder)를 등록한다.
+    private void addRootFolder(Group group) {
+        fakeFolderStoragePort.database.add(FolderInfo.builder()
+            .id(ROOT_FOLDER_ID).groupId(group.getId()).name(group.getName()).parentId(null)
+            .regDt(LocalDateTime.now()).build());
+    }
+
     @Nested
     @DisplayName("[backup] 그룹별 Drive 증분 백업")
     class Describe_backup {
@@ -206,8 +215,9 @@ class BackupGroupFilesServiceTest {
                 .id(1L).name("계층그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             FolderInfo folder = FolderInfo.builder()
-                .id(100L).groupId(1L).name("문서폴더")
+                .id(100L).groupId(1L).name("문서폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -234,8 +244,9 @@ class BackupGroupFilesServiceTest {
                 .id(1L).name("캐시그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             FolderInfo folder = FolderInfo.builder()
-                .id(200L).groupId(1L).name("공유폴더")
+                .id(200L).groupId(1L).name("공유폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -349,8 +360,8 @@ class BackupGroupFilesServiceTest {
 
             // then
             assertThat(response.successCount()).isEqualTo(1);
-            // 루트(10) → 문서(11) → 계약서(12) 순서로 서브폴더가 3번 생성됨
-            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(3);
+            // 루트(10)는 그룹 루트 폴더이므로 Drive 그룹 폴더에 대응 → 문서(11), 계약서(12)만 생성됨
+            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(2);
             // 파일은 계약서 폴더에 업로드
             assertThat(fakeGoogleDrivePort.uploadedFolderIds.get(0))
                 .isEqualTo("fake-sub-folder-id-계약서");
@@ -365,8 +376,9 @@ class BackupGroupFilesServiceTest {
                 .id(1L).name("캐시검증그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             FolderInfo docFolder = FolderInfo.builder()
-                .id(11L).groupId(1L).name("문서").parentId(null)
+                .id(11L).groupId(1L).name("문서").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build();
             FolderInfo contractFolder = FolderInfo.builder()
                 .id(12L).groupId(1L).name("계약서").parentId(11L)
@@ -461,10 +473,11 @@ class BackupGroupFilesServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
 
             // fileId 컬럼에 folderId(100L)를, beforeFileName/afterFileName에 폴더명을 재사용
+            addRootFolder(group);
             FileHistory renameHistory = FileHistory.builder()
                 .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_RENAME)
                 .beforeFileName("이전폴더명").afterFileName("새폴더명")
-                .beforeFolderId(null).afterFolderId(null)
+                .beforeFolderId(ROOT_FOLDER_ID).afterFolderId(ROOT_FOLDER_ID)
                 .backupDt(null).regDt(LocalDateTime.now()).build();
             fakeFileHistoryStoragePort.database.add(renameHistory);
 
@@ -483,10 +496,11 @@ class BackupGroupFilesServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
             fakeGoogleDrivePort.addExistingFolder(FIXED_FOLDER_ID, "이전폴더명", "existing-drive-folder-id");
 
+            addRootFolder(group);
             FileHistory renameHistory = FileHistory.builder()
                 .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_RENAME)
                 .beforeFileName("이전폴더명").afterFileName("새폴더명")
-                .beforeFolderId(null).afterFolderId(null)
+                .beforeFolderId(ROOT_FOLDER_ID).afterFolderId(ROOT_FOLDER_ID)
                 .backupDt(null).regDt(LocalDateTime.now()).build();
             fakeFileHistoryStoragePort.database.add(renameHistory);
 
@@ -506,8 +520,9 @@ class BackupGroupFilesServiceTest {
             fakeGroupStoragePort.groupDatabase.add(group);
             fakeGoogleDrivePort.addExistingFolder(FIXED_FOLDER_ID, "폴더명", "existing-drive-folder-id");
 
+            addRootFolder(group);
             FolderInfo newParentFolder = FolderInfo.builder()
-                .id(200L).groupId(1L).name("새상위폴더").parentId(null)
+                .id(200L).groupId(1L).name("새상위폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build();
             fakeFolderStoragePort.database.add(newParentFolder);
 
@@ -515,7 +530,7 @@ class BackupGroupFilesServiceTest {
             FileHistory moveHistory = FileHistory.builder()
                 .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_MOVE)
                 .beforeFileName("폴더명").afterFileName("폴더명")
-                .beforeFolderId(null).afterFolderId(200L)
+                .beforeFolderId(ROOT_FOLDER_ID).afterFolderId(200L)
                 .backupDt(null).regDt(LocalDateTime.now()).build();
             fakeFileHistoryStoragePort.database.add(moveHistory);
 
@@ -534,8 +549,9 @@ class BackupGroupFilesServiceTest {
                 .id(1L).name("서브폴더실패그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             FolderInfo folder = FolderInfo.builder()
-                .id(400L).groupId(1L).name("실패폴더")
+                .id(400L).groupId(1L).name("실패폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build();
             fakeFolderStoragePort.database.add(folder);
 
@@ -552,6 +568,48 @@ class BackupGroupFilesServiceTest {
             assertThat(response.failCount()).isEqualTo(1);
             assertThat(fakeGoogleDrivePort.uploadFileCallCount).isEqualTo(0);
             assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).isEmpty();
+        }
+
+        @Test
+        @DisplayName("[success] 그룹 루트 폴더에 속한 파일은 Drive 그룹 폴더에 바로 업로드된다")
+        void success_rootFolderFileUploadedToGroupFolder() {
+            Group group = Group.builder()
+                .id(1L).name("루트그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            addRootFolder(group);
+
+            FileHistory history = FileHistory.builder()
+                .id(10L).groupId(1L).actionType(FileHistoryActionType.UPLOAD)
+                .afterFileName("root.pdf").afterFolderId(ROOT_FOLDER_ID)
+                .fileLoc("/disk1/1_root_20240101.pdf")
+                .fileSize(1024L).backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(history);
+
+            backupGroupFilesService.backup();
+
+            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(0);
+            assertThat(fakeGoogleDrivePort.uploadedFolderIds).containsExactly(FIXED_FOLDER_ID);
+        }
+
+        @Test
+        @DisplayName("[success] 그룹 루트 폴더의 FOLDER_RENAME 이력은 Drive 그룹 폴더를 바꾸지 않고 완료 처리된다")
+        void success_rootFolderRenameHistoryNotSynced() {
+            Group group = Group.builder()
+                .id(1L).name("루트그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            addRootFolder(group);
+
+            FileHistory renameHistory = FileHistory.builder()
+                .id(1L).fileId(ROOT_FOLDER_ID).groupId(1L).actionType(FileHistoryActionType.FOLDER_RENAME)
+                .beforeFileName("루트그룹").afterFileName("새그룹명")
+                .beforeFolderId(null).afterFolderId(null)
+                .backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(renameHistory);
+
+            backupGroupFilesService.backup();
+
+            assertThat(fakeGoogleDrivePort.renameFolderCallCount).isEqualTo(0);
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).containsKey(1L);
         }
     }
 }

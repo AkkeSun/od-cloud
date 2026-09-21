@@ -45,6 +45,15 @@ class UploadGroupToDriveServiceTest {
         );
     }
 
+    private static final Long ROOT_FOLDER_ID = 1L;
+
+    // 그룹 생성 시 함께 만들어지는 루트 폴더(FolderInfo.ofRootFolder)를 등록한다.
+    private void addRootFolder(Group group) {
+        fakeFolderStoragePort.database.add(FolderInfo.builder()
+            .id(ROOT_FOLDER_ID).groupId(group.getId()).name(group.getName()).parentId(null)
+            .regDt(LocalDateTime.now()).build());
+    }
+
     @Nested
     @DisplayName("[upload] 그룹 파일 Drive 전체 업로드")
     class Describe_upload {
@@ -143,8 +152,9 @@ class UploadGroupToDriveServiceTest {
                 .id(1L).name("계층그룹").driveFolderId(FIXED_FOLDER_ID).build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             fakeFolderStoragePort.database.add(FolderInfo.builder()
-                .id(100L).groupId(1L).name("문서폴더").parentId(null)
+                .id(100L).groupId(1L).name("문서폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build());
 
             fakeFileStoragePort.database.add(FileInfo.builder()
@@ -167,8 +177,9 @@ class UploadGroupToDriveServiceTest {
                 .id(1L).name("캐시그룹").driveFolderId(FIXED_FOLDER_ID).build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             fakeFolderStoragePort.database.add(FolderInfo.builder()
-                .id(200L).groupId(1L).name("공유폴더").parentId(null)
+                .id(200L).groupId(1L).name("공유폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build());
 
             fakeFileStoragePort.database.add(FileInfo.builder()
@@ -211,7 +222,8 @@ class UploadGroupToDriveServiceTest {
             UploadGroupToDriveResponse response = service.upload(1L);
 
             assertThat(response.uploadedCount()).isEqualTo(1);
-            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(3);
+            // 루트(10)는 그룹 루트 폴더이므로 Drive 그룹 폴더에 대응 → 문서, 계약서만 생성됨
+            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(2);
             assertThat(fakeGoogleDrivePort.uploadedFolderIds.get(0))
                 .isEqualTo("fake-sub-folder-id-계약서");
         }
@@ -250,8 +262,9 @@ class UploadGroupToDriveServiceTest {
                 .id(1L).name("테스트그룹").driveFolderId(FIXED_FOLDER_ID).build();
             fakeGroupStoragePort.groupDatabase.add(group);
 
+            addRootFolder(group);
             fakeFolderStoragePort.database.add(FolderInfo.builder()
-                .id(100L).groupId(1L).name("실패폴더").parentId(null)
+                .id(100L).groupId(1L).name("실패폴더").parentId(ROOT_FOLDER_ID)
                 .regDt(LocalDateTime.now()).build());
 
             fakeFileStoragePort.database.add(FileInfo.builder()
@@ -292,6 +305,56 @@ class UploadGroupToDriveServiceTest {
             assertThatThrownBy(() -> service.upload(1L))
                 .isInstanceOf(CustomBusinessException.class)
                 .hasMessageContaining(ErrorCode.Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR.getMessage());
+        }
+
+        @Test
+        @DisplayName("[success] 그룹 루트 폴더에 속한 파일은 Drive 그룹 폴더에 바로 업로드된다")
+        void success_rootFolderFileUploadedToGroupFolder() {
+            Group group = Group.builder()
+                .id(1L).name("루트그룹").driveFolderId(FIXED_FOLDER_ID).build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            addRootFolder(group);
+
+            fakeFileStoragePort.database.add(FileInfo.builder()
+                .id(10L).groupId(1L).folderId(ROOT_FOLDER_ID)
+                .fileName("root.pdf").fileLoc("/disk1/1_root_20240101.pdf")
+                .fileSize(1024L).regDt(LocalDateTime.now()).build());
+
+            UploadGroupToDriveResponse response = service.upload(1L);
+
+            assertThat(response.uploadedCount()).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(0);
+            assertThat(fakeGoogleDrivePort.uploadedFolderIds).containsExactly(FIXED_FOLDER_ID);
+        }
+
+        @Test
+        @DisplayName("[success] 여러 파일을 병렬로 업로드해도 모든 파일이 한 번씩 업로드되고 서브폴더는 한 번만 생성된다")
+        void success_parallelUploadCountsAreAccurate() {
+            Group group = Group.builder()
+                .id(1L).name("병렬그룹").driveFolderId(FIXED_FOLDER_ID).build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            addRootFolder(group);
+            fakeFolderStoragePort.database.add(FolderInfo.builder()
+                .id(100L).groupId(1L).name("문서폴더").parentId(ROOT_FOLDER_ID)
+                .regDt(LocalDateTime.now()).build());
+
+            int fileCount = 30;
+            for (long i = 0; i < fileCount; i++) {
+                fakeFileStoragePort.database.add(FileInfo.builder()
+                    .id(100L + i).groupId(1L).folderId(i % 2 == 0 ? 100L : ROOT_FOLDER_ID)
+                    .fileName("file" + i + ".txt").fileLoc("/disk1/1_" + i + "_20240101.txt")
+                    .fileSize(100L).regDt(LocalDateTime.now()).build());
+            }
+            fakeGoogleDrivePort.addPreExistingFile(FIXED_FOLDER_ID, "file1.txt");
+
+            UploadGroupToDriveResponse response = service.upload(1L);
+
+            assertThat(response.totalFiles()).isEqualTo(fileCount);
+            assertThat(response.uploadedCount()).isEqualTo(fileCount - 1);
+            assertThat(response.skippedCount()).isEqualTo(1);
+            assertThat(response.failedCount()).isEqualTo(0);
+            assertThat(fakeGoogleDrivePort.ensureSubFolderCallCount).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.uploadedFileNames).hasSize(fileCount - 1).doesNotHaveDuplicates();
         }
     }
 }

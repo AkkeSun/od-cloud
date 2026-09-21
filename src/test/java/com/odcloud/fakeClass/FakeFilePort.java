@@ -50,7 +50,7 @@ public class FakeFilePort implements FilePort {
     }
 
     @Override
-    public FileResponse readFile(FileInfo fileInfo) {
+    public synchronized FileResponse readFile(FileInfo fileInfo) {
         if (shouldThrowException) {
             throw new RuntimeException("File operation failure");
         }
