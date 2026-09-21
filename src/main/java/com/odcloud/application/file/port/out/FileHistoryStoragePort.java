@@ -10,7 +10,7 @@ public interface FileHistoryStoragePort {
 
     List<FileHistory> findByGroupId(Long groupId);
 
-    List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId);
+    List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId, LocalDateTime regDtAfter);
 
     void updateBackupDt(List<Long> ids, LocalDateTime backupDt);
 }

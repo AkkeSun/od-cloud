@@ -2,6 +2,7 @@ package com.odcloud.adapter.out.client.google_drive;
 
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_DELETE_ERROR;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR;
+import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_UPDATE_ERROR;
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_GOOGLE_DRIVE_UPLOAD_ERROR;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -188,6 +189,81 @@ class GoogleDriveAdapter implements GoogleDrivePort {
             log.error("[GoogleDriveAdapter] Drive 서브폴더 생성/조회 실패 - parentId={}, folderName={}, error={}",
                 parentFolderId, folderName, e.getMessage());
             throw new CustomBusinessException(Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR);
+        }
+    }
+
+    @Override
+    public String findFolder(String parentFolderId, String folderName) {
+        Drive drive = getDriveService();
+        try {
+            String query = String.format(
+                "name='%s' and mimeType='%s' and '%s' in parents and trashed=false",
+                folderName, FOLDER_MIME_TYPE, parentFolderId
+            );
+
+            FileList result = drive.files().list()
+                .setQ(query)
+                .setFields("files(id, name)")
+                .execute();
+
+            List<File> files = result.getFiles();
+            if (files == null || files.isEmpty()) {
+                return null;
+            }
+            return files.get(0).getId();
+
+        } catch (IOException e) {
+            log.error("[GoogleDriveAdapter] Drive 폴더 조회 실패 - parentFolderId={}, folderName={}, error={}",
+                parentFolderId, folderName, e.getMessage());
+            throw new CustomBusinessException(Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR);
+        }
+    }
+
+    @Override
+    public void renameFolder(String folderId, String newName) {
+        Drive drive = getDriveService();
+        try {
+            File folderMetadata = new File();
+            folderMetadata.setName(newName);
+
+            drive.files().update(folderId, folderMetadata)
+                .setFields("id")
+                .execute();
+
+            log.info("[GoogleDriveAdapter] Drive 폴더 이름 변경 완료 - folderId={}, newName={}",
+                folderId, newName);
+
+        } catch (IOException e) {
+            log.error("[GoogleDriveAdapter] Drive 폴더 이름 변경 실패 - folderId={}, newName={}, error={}",
+                folderId, newName, e.getMessage());
+            throw new CustomBusinessException(Business_GOOGLE_DRIVE_UPDATE_ERROR);
+        }
+    }
+
+    @Override
+    public void moveFolder(String folderId, String newParentFolderId) {
+        Drive drive = getDriveService();
+        try {
+            File current = drive.files().get(folderId)
+                .setFields("parents")
+                .execute();
+            String previousParents = current.getParents() == null
+                ? ""
+                : String.join(",", current.getParents());
+
+            drive.files().update(folderId, null)
+                .setAddParents(newParentFolderId)
+                .setRemoveParents(previousParents)
+                .setFields("id, parents")
+                .execute();
+
+            log.info("[GoogleDriveAdapter] Drive 폴더 이동 완료 - folderId={}, newParentFolderId={}",
+                folderId, newParentFolderId);
+
+        } catch (IOException e) {
+            log.error("[GoogleDriveAdapter] Drive 폴더 이동 실패 - folderId={}, newParentFolderId={}, error={}",
+                folderId, newParentFolderId, e.getMessage());
+            throw new CustomBusinessException(Business_GOOGLE_DRIVE_UPDATE_ERROR);
         }
     }
 

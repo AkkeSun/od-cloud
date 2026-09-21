@@ -427,6 +427,107 @@ class BackupGroupFilesServiceTest {
         }
 
         @Test
+        @DisplayName("[success] regDt가 3일을 초과한 미백업 이력은 백업 대상에서 제외된다")
+        void success_excludeHistoryOlderThan3Days() {
+            Group group = Group.builder()
+                .id(1L).name("오래된이력그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            FileHistory oldHistory = FileHistory.builder()
+                .id(10L).groupId(1L).actionType(FileHistoryActionType.UPLOAD)
+                .afterFileName("old.txt").fileLoc("/disk1/1_old_20200101.txt")
+                .fileSize(100L).backupDt(null).regDt(LocalDateTime.now().minusDays(4)).build();
+            FileHistory recentHistory = FileHistory.builder()
+                .id(11L).groupId(1L).actionType(FileHistoryActionType.UPLOAD)
+                .afterFileName("recent.txt").fileLoc("/disk1/1_recent_20240101.txt")
+                .fileSize(100L).backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(oldHistory);
+            fakeFileHistoryStoragePort.database.add(recentHistory);
+
+            BackupGroupFilesResponse response = backupGroupFilesService.backup();
+
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.uploadFileCallCount).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.uploadedFileNames).containsExactly("recent.txt");
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).containsKey(11L);
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).doesNotContainKey(10L);
+        }
+
+        @Test
+        @DisplayName("[success] 아직 Drive에 백업된 적 없는 폴더의 FOLDER_RENAME 이력은 대상이 없어 그대로 완료 처리된다")
+        void success_folderRenameHistorySkippedWhenNotBackedUpYet() {
+            Group group = Group.builder()
+                .id(1L).name("폴더미백업그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+
+            // fileId 컬럼에 folderId(100L)를, beforeFileName/afterFileName에 폴더명을 재사용
+            FileHistory renameHistory = FileHistory.builder()
+                .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_RENAME)
+                .beforeFileName("이전폴더명").afterFileName("새폴더명")
+                .beforeFolderId(null).afterFolderId(null)
+                .backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(renameHistory);
+
+            BackupGroupFilesResponse response = backupGroupFilesService.backup();
+
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.renameFolderCallCount).isEqualTo(0);
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).containsKey(1L);
+        }
+
+        @Test
+        @DisplayName("[success] 이미 Drive에 백업된 폴더의 FOLDER_RENAME 이력은 Drive 폴더 이름을 바꾼다")
+        void success_folderRenameHistorySyncsExistingDriveFolder() {
+            Group group = Group.builder()
+                .id(1L).name("폴더백업그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            fakeGoogleDrivePort.addExistingFolder(FIXED_FOLDER_ID, "이전폴더명", "existing-drive-folder-id");
+
+            FileHistory renameHistory = FileHistory.builder()
+                .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_RENAME)
+                .beforeFileName("이전폴더명").afterFileName("새폴더명")
+                .beforeFolderId(null).afterFolderId(null)
+                .backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(renameHistory);
+
+            BackupGroupFilesResponse response = backupGroupFilesService.backup();
+
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.renameFolderCallCount).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.renamedFolderNames).containsExactly("새폴더명");
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).containsKey(1L);
+        }
+
+        @Test
+        @DisplayName("[success] 이미 Drive에 백업된 폴더의 FOLDER_MOVE 이력은 Drive 폴더를 새 부모로 이동시킨다")
+        void success_folderMoveHistorySyncsExistingDriveFolder() {
+            Group group = Group.builder()
+                .id(1L).name("폴더이동그룹").driveFolderId(FIXED_FOLDER_ID).backupYn("Y").build();
+            fakeGroupStoragePort.groupDatabase.add(group);
+            fakeGoogleDrivePort.addExistingFolder(FIXED_FOLDER_ID, "폴더명", "existing-drive-folder-id");
+
+            FolderInfo newParentFolder = FolderInfo.builder()
+                .id(200L).groupId(1L).name("새상위폴더").parentId(null)
+                .regDt(LocalDateTime.now()).build();
+            fakeFolderStoragePort.database.add(newParentFolder);
+
+            // beforeFolderId/afterFolderId 컬럼을 부모 폴더 id로 재사용
+            FileHistory moveHistory = FileHistory.builder()
+                .id(1L).fileId(100L).groupId(1L).actionType(FileHistoryActionType.FOLDER_MOVE)
+                .beforeFileName("폴더명").afterFileName("폴더명")
+                .beforeFolderId(null).afterFolderId(200L)
+                .backupDt(null).regDt(LocalDateTime.now()).build();
+            fakeFileHistoryStoragePort.database.add(moveHistory);
+
+            BackupGroupFilesResponse response = backupGroupFilesService.backup();
+
+            assertThat(response.successCount()).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.moveFolderCallCount).isEqualTo(1);
+            assertThat(fakeGoogleDrivePort.movedFolderIds).containsExactly("existing-drive-folder-id");
+            assertThat(fakeFileHistoryStoragePort.updatedBackupDtMap).containsKey(1L);
+        }
+
+        @Test
         @DisplayName("[error] 서브폴더 생성 실패 시 해당 이력만 skip하고 failCount가 증가한다")
         void error_ensureSubFolderFailureSkipsItem() {
             Group group = Group.builder()

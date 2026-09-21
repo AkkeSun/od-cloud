@@ -21,16 +21,27 @@ public class FakeGoogleDrivePort implements GoogleDrivePort {
     public boolean shouldThrowEnsureSubFolder = false;
     public boolean shouldThrowUploadFile = false;
     public boolean shouldThrowDeleteFile = false;
+    public boolean shouldThrowRenameFolder = false;
+    public boolean shouldThrowMoveFolder = false;
+    public boolean shouldThrowFindFolder = false;
     public int ensureFolderCallCount = 0;
     public int ensureSubFolderCallCount = 0;
     public int uploadFileCallCount = 0;
     public int deleteFileCallCount = 0;
     public int fileExistsCallCount = 0;
+    public int renameFolderCallCount = 0;
+    public int moveFolderCallCount = 0;
+    public int findFolderCallCount = 0;
     public List<String> uploadedFileNames = new ArrayList<>();
     public List<String> uploadedFolderIds = new ArrayList<>();
     public List<String> deletedFileNames = new ArrayList<>();
+    public List<String> renamedFolderNames = new ArrayList<>();
+    public List<String> movedFolderIds = new ArrayList<>();
+    public List<String> movedToParentFolderIds = new ArrayList<>();
     // folderId → 파일명 집합: 테스트에서 사전 존재 파일을 설정할 때 사용
     public Map<String, Set<String>> preExistingFiles = new HashMap<>();
+    // "parentFolderId::name" → driveFolderId: 테스트에서 이미 Drive에 존재하는 폴더를 설정할 때 사용
+    public Map<String, String> existingFolders = new HashMap<>();
 
     @Override
     public String ensureFolder(String folderName) {
@@ -50,6 +61,43 @@ public class FakeGoogleDrivePort implements GoogleDrivePort {
         ensureSubFolderCallCount++;
         log.info("FakeGoogleDrivePort ensureSubFolder: parentFolderId={}, folderName={}", parentFolderId, folderName);
         return "fake-sub-folder-id-" + folderName;
+    }
+
+    @Override
+    public String findFolder(String parentFolderId, String folderName) {
+        if (shouldThrowFindFolder) {
+            throw new CustomBusinessException(ErrorCode.Business_GOOGLE_DRIVE_ENSURE_FOLDER_ERROR);
+        }
+        findFolderCallCount++;
+        String driveFolderId = existingFolders.get(parentFolderId + "::" + folderName);
+        log.info("FakeGoogleDrivePort findFolder: parentFolderId={}, folderName={}, found={}",
+            parentFolderId, folderName, driveFolderId != null);
+        return driveFolderId;
+    }
+
+    public void addExistingFolder(String parentFolderId, String folderName, String driveFolderId) {
+        existingFolders.put(parentFolderId + "::" + folderName, driveFolderId);
+    }
+
+    @Override
+    public void renameFolder(String folderId, String newName) {
+        if (shouldThrowRenameFolder) {
+            throw new CustomBusinessException(ErrorCode.Business_GOOGLE_DRIVE_UPDATE_ERROR);
+        }
+        renameFolderCallCount++;
+        renamedFolderNames.add(newName);
+        log.info("FakeGoogleDrivePort renameFolder: folderId={}, newName={}", folderId, newName);
+    }
+
+    @Override
+    public void moveFolder(String folderId, String newParentFolderId) {
+        if (shouldThrowMoveFolder) {
+            throw new CustomBusinessException(ErrorCode.Business_GOOGLE_DRIVE_UPDATE_ERROR);
+        }
+        moveFolderCallCount++;
+        movedFolderIds.add(folderId);
+        movedToParentFolderIds.add(newParentFolderId);
+        log.info("FakeGoogleDrivePort moveFolder: folderId={}, newParentFolderId={}", folderId, newParentFolderId);
     }
 
     @Override
@@ -91,14 +139,24 @@ public class FakeGoogleDrivePort implements GoogleDrivePort {
         shouldThrowEnsureSubFolder = false;
         shouldThrowUploadFile = false;
         shouldThrowDeleteFile = false;
+        shouldThrowRenameFolder = false;
+        shouldThrowMoveFolder = false;
+        shouldThrowFindFolder = false;
         ensureFolderCallCount = 0;
         ensureSubFolderCallCount = 0;
         uploadFileCallCount = 0;
         deleteFileCallCount = 0;
         fileExistsCallCount = 0;
+        renameFolderCallCount = 0;
+        moveFolderCallCount = 0;
+        findFolderCallCount = 0;
         uploadedFileNames.clear();
         uploadedFolderIds.clear();
         deletedFileNames.clear();
+        renamedFolderNames.clear();
+        movedFolderIds.clear();
+        movedToParentFolderIds.clear();
         preExistingFiles.clear();
+        existingFolders.clear();
     }
 }

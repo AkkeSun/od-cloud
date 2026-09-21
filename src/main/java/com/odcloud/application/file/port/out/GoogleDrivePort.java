@@ -8,6 +8,12 @@ public interface GoogleDrivePort {
 
     String ensureSubFolder(String parentFolderId, String folderName);
 
+    String findFolder(String parentFolderId, String folderName);
+
+    void renameFolder(String folderId, String newName);
+
+    void moveFolder(String folderId, String newParentFolderId);
+
     void uploadFile(String folderId, String driveFileName, InputStream content, long fileSize);
 
     void deleteFile(String folderId, String fileName);

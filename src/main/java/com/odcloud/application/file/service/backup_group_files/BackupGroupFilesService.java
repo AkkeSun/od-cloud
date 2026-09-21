@@ -12,6 +12,7 @@ import com.odcloud.domain.model.FileHistoryActionType;
 import com.odcloud.domain.model.FileInfo;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.infrastructure.exception.CustomBusinessException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -42,9 +43,11 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
         int failCount = 0;
         int skipCount = 0;
 
+        LocalDateTime regDtThreshold = LocalDateTime.now().minusDays(3);
+
         for (Group group : groups) {
             List<FileHistory> pendingHistories =
-                fileHistoryStoragePort.findByGroupIdAndBackupDtIsNull(group.getId());
+                fileHistoryStoragePort.findByGroupIdAndBackupDtIsNull(group.getId(), regDtThreshold);
 
             if (pendingHistories.isEmpty()) {
                 skipCount++;
@@ -68,9 +71,27 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
 
             // 백업 실행 중 서브폴더 ID 캐시 (같은 folderId 반복 조회 방지)
             Map<Long, String> subFolderIdCache = new HashMap<>();
-
             List<Long> backupIds = new ArrayList<>();
-            for (FileHistory history : pendingHistories) {
+
+            // 폴더 이름/위치 변경(FOLDER_RENAME, FOLDER_MOVE)을 파일 처리보다 먼저 Drive에 반영해야,
+            // 뒤이은 파일 조회가 이미 최신 이름으로 바뀐 Drive 폴더를 정확히 찾는다.
+            List<FileHistory> folderHistories = pendingHistories.stream()
+                .filter(h -> h.getActionType() == FileHistoryActionType.FOLDER_RENAME
+                    || h.getActionType() == FileHistoryActionType.FOLDER_MOVE)
+                .toList();
+            for (FileHistory history : folderHistories) {
+                if (processFolderHistory(history, groupFolderId, subFolderIdCache)) {
+                    backupIds.add(history.getId());
+                } else {
+                    failCount++;
+                }
+            }
+
+            List<FileHistory> fileHistories = pendingHistories.stream()
+                .filter(h -> h.getActionType() != FileHistoryActionType.FOLDER_RENAME
+                    && h.getActionType() != FileHistoryActionType.FOLDER_MOVE)
+                .toList();
+            for (FileHistory history : fileHistories) {
                 if (history.getActionType() == FileHistoryActionType.DELETE) {
                     if (history.getBeforeFolderId() != null && history.getBeforeFileName() != null) {
                         String oldDriveFolderId = resolveTargetFolder(
@@ -164,6 +185,66 @@ class BackupGroupFilesService implements BackupGroupFilesUseCase {
             .failCount(failCount)
             .skipCount(skipCount)
             .build();
+    }
+
+    // 폴더 이름 변경/이동 이력을 Drive에 반영한다.
+    // fileId 컬럼에는 folderId를, beforeFolderId/afterFolderId 컬럼에는 부모 폴더 id를 담아 재사용한다.
+    // 변경 전 이름/부모를 기준으로 실제 Drive 폴더를 찾아 rename/move 하며,
+    // 아직 한 번도 백업된 적 없는 폴더(Drive에 없음)는 동기화할 대상이 없으므로 처리 완료로 간주한다.
+    private boolean processFolderHistory(FileHistory history, String groupFolderId,
+        Map<Long, String> subFolderIdCache) {
+        try {
+            String oldDriveFolderId = resolveExistingTargetFolder(
+                history.getBeforeFolderId(), history.getBeforeFileName(), groupFolderId
+            );
+            if (oldDriveFolderId == null) {
+                return true;
+            }
+
+            if (history.getActionType() == FileHistoryActionType.FOLDER_RENAME) {
+                googleDrivePort.renameFolder(oldDriveFolderId, history.getAfterFileName());
+            } else if (history.getActionType() == FileHistoryActionType.FOLDER_MOVE) {
+                String newParentDriveFolderId = resolveTargetFolder(
+                    history.getAfterFolderId(), groupFolderId, subFolderIdCache
+                );
+                if (newParentDriveFolderId == null) {
+                    return false;
+                }
+                googleDrivePort.moveFolder(oldDriveFolderId, newParentDriveFolderId);
+            }
+            return true;
+
+        } catch (Exception e) {
+            log.warn(
+                "[BackupGroupFilesService] Drive 폴더 이름/위치 변경 동기화 실패 - historyId={}, error={}",
+                history.getId(), e.getMessage());
+            return false;
+        }
+    }
+
+    // parentAppFolderId 체인을 따라가며, 이미 Drive에 존재하는 폴더만 조회한다 (생성하지 않음).
+    // 체인 중간에 Drive에 없는 폴더가 있으면 null을 반환해 "아직 백업된 적 없음"을 알린다.
+    private String resolveExistingTargetFolder(Long parentAppFolderId, String name,
+        String groupFolderId) {
+        String parentDriveFolderId;
+        if (parentAppFolderId == null) {
+            parentDriveFolderId = groupFolderId;
+        } else {
+            FolderInfo parentFolder;
+            try {
+                parentFolder = folderInfoStoragePort.findById(parentAppFolderId);
+            } catch (CustomBusinessException e) {
+                return null;
+            }
+            parentDriveFolderId = resolveExistingTargetFolder(
+                parentFolder.getParentId(), parentFolder.getName(), groupFolderId
+            );
+        }
+
+        if (parentDriveFolderId == null) {
+            return null;
+        }
+        return googleDrivePort.findFolder(parentDriveFolderId, name);
     }
 
     // parentId 체인을 재귀적으로 따라가며 Drive 폴더 계층을 그대로 재현한다.

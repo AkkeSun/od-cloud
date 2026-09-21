@@ -5,7 +5,9 @@ import static com.odcloud.infrastructure.exception.ErrorCode.Business_FORBIDDEN_
 import static com.odcloud.infrastructure.exception.ErrorCode.Business_SAVED_FOLDER_NAME;
 
 import com.odcloud.application.file.port.in.UpdateFolderUseCase;
+import com.odcloud.application.file.port.out.FileHistoryStoragePort;
 import com.odcloud.application.file.port.out.FolderInfoStoragePort;
+import com.odcloud.domain.model.FileHistory;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
 import com.odcloud.infrastructure.exception.CustomBusinessException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 class UpdateFolderService implements UpdateFolderUseCase {
 
     private final FolderInfoStoragePort folderStoragePort;
+    private final FileHistoryStoragePort fileHistoryStoragePort;
 
     @Override
     @Transactional
@@ -47,13 +50,21 @@ class UpdateFolderService implements UpdateFolderUseCase {
         if (folderStoragePort.existsSameFolderName(command.parentId(), newName)) {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
+
+        Long beforeParentId = folder.getParentId();
         folder.updateParentId(command.parentId());
+        fileHistoryStoragePort.save(
+            FileHistory.ofFolderMove(folder, beforeParentId, command.account().getEmail()));
     }
 
     private void handleNameChange(FolderInfo folder, UpdateFolderCommand command) {
         if (folderStoragePort.existsSameFolderName(folder.getParentId(), command.name())) {
             throw new CustomBusinessException(Business_SAVED_FOLDER_NAME);
         }
+
+        String beforeName = folder.getName();
         folder.update(command.name());
+        fileHistoryStoragePort.save(
+            FileHistory.ofFolderRename(folder, beforeName, command.account().getEmail()));
     }
 }

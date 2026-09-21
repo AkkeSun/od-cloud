@@ -73,6 +73,38 @@ public class FileHistory {
             .build();
     }
 
+    // 폴더 이름 변경/이동은 별도 테이블 없이 file_history를 재사용한다.
+    // fileId 컬럼에는 folderId를, beforeFolderId/afterFolderId 컬럼에는 부모 폴더 id를 담는다.
+    public static FileHistory ofFolderRename(FolderInfo folderAfter, String beforeName,
+        String actorEmail) {
+        return FileHistory.builder()
+            .fileId(folderAfter.getId())
+            .groupId(folderAfter.getGroupId())
+            .actionType(FileHistoryActionType.FOLDER_RENAME)
+            .actorEmail(actorEmail)
+            .beforeFileName(beforeName)
+            .afterFileName(folderAfter.getName())
+            .beforeFolderId(folderAfter.getParentId())
+            .afterFolderId(folderAfter.getParentId())
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
+    public static FileHistory ofFolderMove(FolderInfo folderAfter, Long beforeParentId,
+        String actorEmail) {
+        return FileHistory.builder()
+            .fileId(folderAfter.getId())
+            .groupId(folderAfter.getGroupId())
+            .actionType(FileHistoryActionType.FOLDER_MOVE)
+            .actorEmail(actorEmail)
+            .beforeFileName(folderAfter.getName())
+            .afterFileName(folderAfter.getName())
+            .beforeFolderId(beforeParentId)
+            .afterFolderId(folderAfter.getParentId())
+            .regDt(LocalDateTime.now())
+            .build();
+    }
+
     public static FileHistory ofDelete(FileInfo file, String actorEmail) {
         return FileHistory.builder()
             .fileId(file.getId())

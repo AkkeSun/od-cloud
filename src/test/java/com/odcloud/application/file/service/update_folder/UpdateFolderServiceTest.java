@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.odcloud.domain.model.Account;
+import com.odcloud.domain.model.FileHistory;
+import com.odcloud.domain.model.FileHistoryActionType;
 import com.odcloud.domain.model.FolderInfo;
 import com.odcloud.domain.model.Group;
+import com.odcloud.fakeClass.FakeFileHistoryStoragePort;
 import com.odcloud.fakeClass.FakeFilePort;
 import com.odcloud.fakeClass.FakeFolderStoragePort;
 import com.odcloud.infrastructure.exception.CustomAuthorizationException;
@@ -23,13 +26,15 @@ class UpdateFolderServiceTest {
 
     private FakeFolderStoragePort fakeFolderStoragePort;
     private FakeFilePort fakeFilePort;
+    private FakeFileHistoryStoragePort fakeFileHistoryStoragePort;
     private UpdateFolderService updateFolderService;
 
     @BeforeEach
     void setUp() {
         fakeFolderStoragePort = new FakeFolderStoragePort();
         fakeFilePort = new FakeFilePort();
-        updateFolderService = new UpdateFolderService(fakeFolderStoragePort);
+        fakeFileHistoryStoragePort = new FakeFileHistoryStoragePort();
+        updateFolderService = new UpdateFolderService(fakeFolderStoragePort, fakeFileHistoryStoragePort);
     }
 
     @Nested
@@ -179,6 +184,103 @@ class UpdateFolderServiceTest {
             // 현재 서비스 로직: parentId 변경 시 이름 변경은 중복 검사에만 사용되고 실제 이름은 변경되지 않음
             assertThat(updatedFolder.getName()).isEqualTo("기존 폴더명");
             assertThat(updatedFolder.getParentId()).isEqualTo(2L);
+        }
+
+        @Test
+        @DisplayName("[success] 폴더명을 바꾸면 Drive 동기화를 위한 FOLDER_RENAME 이력이 file_history에 남는다")
+        void success_renameSavesFolderHistory() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .groups(List.of(Group.of(1L)))
+                .email("user@example.com")
+                .build();
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId(1L)
+                .name("기존 폴더명")
+                .owner("user@example.com")
+                .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
+                .build();
+
+            fakeFolderStoragePort.database.add(folder);
+
+            UpdateFolderCommand command = UpdateFolderCommand.builder()
+                .folderId(1L)
+                .account(account)
+                .name("수정된 폴더명")
+                .build();
+
+            // when
+            UpdateFolderResponse response = updateFolderService.updateFolder(command);
+
+            // then
+            assertThat(response.result()).isTrue();
+            assertThat(fakeFileHistoryStoragePort.database).hasSize(1);
+            FileHistory history = fakeFileHistoryStoragePort.database.get(0);
+            assertThat(history.getActionType()).isEqualTo(FileHistoryActionType.FOLDER_RENAME);
+            // fileId 컬럼을 folderId로 재사용
+            assertThat(history.getFileId()).isEqualTo(1L);
+            assertThat(history.getBeforeFileName()).isEqualTo("기존 폴더명");
+            assertThat(history.getAfterFileName()).isEqualTo("수정된 폴더명");
+            assertThat(history.getActorEmail()).isEqualTo("user@example.com");
+        }
+
+        @Test
+        @DisplayName("[success] 상위 폴더를 옮기면 Drive 동기화를 위한 FOLDER_MOVE 이력이 file_history에 남는다")
+        void success_moveSavesFolderHistory() {
+            // given
+            Account account = Account.builder()
+                .id(1L)
+                .groups(List.of(Group.of(1L)))
+                .email("user@example.com")
+                .build();
+
+            FolderInfo parentFolder = FolderInfo.builder()
+                .id(0L)
+                .groupId(1L)
+                .name("루트 폴더")
+                .build();
+
+            FolderInfo newParentFolder = FolderInfo.builder()
+                .id(2L)
+                .parentId(0L)
+                .groupId(1L)
+                .name("새 상위 폴더")
+                .build();
+
+            FolderInfo folder = FolderInfo.builder()
+                .id(1L)
+                .parentId(0L)
+                .groupId(1L)
+                .name("폴더명")
+                .owner("user@example.com")
+                .regDt(LocalDateTime.of(2024, 12, 31, 10, 0))
+                .build();
+
+            fakeFolderStoragePort.database.add(parentFolder);
+            fakeFolderStoragePort.database.add(newParentFolder);
+            fakeFolderStoragePort.database.add(folder);
+
+            UpdateFolderCommand command = UpdateFolderCommand.builder()
+                .folderId(1L)
+                .account(account)
+                .parentId(2L)
+                .build();
+
+            // when
+            updateFolderService.updateFolder(command);
+
+            // then
+            assertThat(fakeFileHistoryStoragePort.database).hasSize(1);
+            FileHistory history = fakeFileHistoryStoragePort.database.get(0);
+            assertThat(history.getActionType()).isEqualTo(FileHistoryActionType.FOLDER_MOVE);
+            assertThat(history.getFileId()).isEqualTo(1L);
+            // beforeFolderId/afterFolderId 컬럼을 부모 폴더 id로 재사용
+            assertThat(history.getBeforeFolderId()).isEqualTo(0L);
+            assertThat(history.getAfterFolderId()).isEqualTo(2L);
         }
 
         @Test

@@ -24,8 +24,8 @@ class FileHistoryStorageAdapter implements FileHistoryStoragePort {
     }
 
     @Override
-    public List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId) {
-        return fileHistoryRepository.findByGroupIdAndBackupDtIsNull(groupId);
+    public List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId, LocalDateTime regDtAfter) {
+        return fileHistoryRepository.findByGroupIdAndBackupDtIsNull(groupId, regDtAfter);
     }
 
     @Override

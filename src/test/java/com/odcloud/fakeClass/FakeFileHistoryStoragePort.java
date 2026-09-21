@@ -26,10 +26,11 @@ public class FakeFileHistoryStoragePort implements FileHistoryStoragePort {
     }
 
     @Override
-    public List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId) {
+    public List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId, LocalDateTime regDtAfter) {
         return database.stream()
             .filter(h -> h.getGroupId().equals(groupId))
             .filter(h -> h.getBackupDt() == null)
+            .filter(h -> h.getRegDt() != null && !h.getRegDt().isBefore(regDtAfter))
             .toList();
     }
 

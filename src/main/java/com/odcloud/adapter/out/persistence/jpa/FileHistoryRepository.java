@@ -38,12 +38,13 @@ class FileHistoryRepository {
             .toList();
     }
 
-    List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId) {
+    List<FileHistory> findByGroupIdAndBackupDtIsNull(Long groupId, LocalDateTime regDtAfter) {
         return queryFactory
             .selectFrom(fileHistoryEntity)
             .where(
                 fileHistoryEntity.groupId.eq(groupId),
-                fileHistoryEntity.backupDt.isNull()
+                fileHistoryEntity.backupDt.isNull(),
+                fileHistoryEntity.regDt.goe(regDtAfter)
             )
             .orderBy(fileHistoryEntity.regDt.asc())
             .fetch()
